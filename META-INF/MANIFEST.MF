@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Implementation-Title: mcheliext_v2
+Implementation-Version: 1.1.4
+Specification-Vendor: Murachiki27
+Specification-Title: mcheli
+Implementation-Timestamp: 2024-04-14T23:47:09+0900
+Specification-Version: 1
+Implementation-Vendor: Murachiki27
+

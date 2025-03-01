@@ -1,0 +1,23 @@
+{
+  "parent" : "item/generated",
+  "textures": {
+    "layer0" : "mcheli:items/gltd"
+  },
+  "display": {
+    "ground": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 4, 2, 4 ],
+      "scale":[ 0.5, 0.5, 0.5 ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [ 0, 180, 0 ],
+      "translation": [ -5.5, 6.0, -5.5 ],
+      "scale": [ 0.55, 0.55, 0.55 ]
+    },
+    "firstperson_righthand": {
+      "rotation": [ 10, -160, 0 ],
+      "translation": [ -4.0, 5.2, -3.0 ],
+      "scale": [ 0.7, 0.7, 0.7 ]
+    }
+  }
+}

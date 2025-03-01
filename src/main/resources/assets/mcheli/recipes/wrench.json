@@ -1,0 +1,17 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    " I ",
+    " II",
+    "I  "
+  ],
+  "key" : {
+    "I": {
+      "item": "#IRON_INGOT"
+    }
+  },
+  "result" : {
+    "item": "mcheli:wrench",
+    "count": 1
+  }
+}

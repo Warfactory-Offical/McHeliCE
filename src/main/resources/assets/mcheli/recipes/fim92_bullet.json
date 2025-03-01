@@ -1,0 +1,23 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "R  ",
+    " I ",
+    "  G"
+  ],
+  "key" : {
+    "G": {
+      "item": "#GUNPOWDER"
+    },
+    "I": {
+      "item": "#IRON_INGOT"
+    },
+    "R": {
+      "item": "#REDSTONE"
+    }
+  },
+  "result" : {
+    "item": "mcheli:fim92_bullet",
+    "count": 1
+  }
+}

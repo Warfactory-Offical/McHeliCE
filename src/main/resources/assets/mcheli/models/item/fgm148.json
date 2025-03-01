@@ -1,0 +1,18 @@
+{
+  "parent" : "item/generated",
+  "textures": {
+    "layer0" : "mcheli:items/fgm148"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [ 0, 180, 0 ],
+      "translation": [ -11.5, 13.0, -8.0 ],
+      "scale": [ 1.5, 1.5, 1.5 ]
+    },
+    "firstperson_righthand": {
+      "rotation": [ 20, 175, 0 ],
+      "translation": [ -10.0, 15.2, -8.0 ],
+      "scale": [ 2.1, 2.1, 2.1 ]
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "R  ",
+    "PCP",
+    "F F"
+  ],
+  "key" : {
+    "C": {
+      "item": "#WORKBENCH"
+    },
+    "F": {
+      "item": "#FENCE"
+    },
+    "P": {
+      "item": "#PLANKS"
+    },
+    "R": {
+      "item": "#REDSTONE"
+    }
+  },
+  "result" : {
+    "item": "mcheli:drafting_table",
+    "count": 1
+  }
+}

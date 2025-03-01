@@ -1,0 +1,23 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "G  ",
+    "III",
+    "RI "
+  ],
+  "key" : {
+    "G": {
+      "item": "#GLASS"
+    },
+    "I": {
+      "item": "#IRON_INGOT"
+    },
+    "R": {
+      "item": "#REDSTONE"
+    }
+  },
+  "result" : {
+    "item": "mcheli:fim92",
+    "count": 1
+  }
+}
