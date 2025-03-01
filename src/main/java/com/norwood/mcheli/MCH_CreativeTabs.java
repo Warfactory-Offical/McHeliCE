@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
 import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
 import com.norwood.mcheli.aircraft.MCH_ItemAircraft;
 import com.norwood.mcheli.wrapper.W_Item;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,7 +17,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MCH_CreativeTabs extends CreativeTabs {
-    private List<ItemStack> iconItems = new ArrayList<>();
+    private final List<ItemStack> iconItems = new ArrayList<>();
     private ItemStack lastItem;
     private int currentIconIndex = 0;
     private int switchItemWait = 0;
@@ -34,39 +36,42 @@ public class MCH_CreativeTabs extends CreativeTabs {
         }
     }
 
-    public ItemStack getNextIcon() {
+    private ItemStack getNextIcon() {
         if (this.iconItems.isEmpty()) {
             return ItemStack.EMPTY;
-        } else {
-            this.currentIconIndex = (this.currentIconIndex + 1) % this.iconItems.size();
-            return this.iconItems.get(this.currentIconIndex);
         }
+        this.currentIconIndex = (this.currentIconIndex + 1) % this.iconItems.size();
+        return this.iconItems.get(this.currentIconIndex);
     }
 
+    @Override
     public ItemStack getTabIconItem() {
         if (this.fixedItem != null) {
-            return new ItemStack(this.fixedItem, 1, 0);
-        } else {
-            if (this.switchItemWait > 0) {
-                --this.switchItemWait;
-            } else {
-                this.lastItem = this.getNextIcon();
-                this.switchItemWait = 60;
-            }
-
-            if (this.lastItem.isEmpty()) {
-                this.lastItem = new ItemStack(W_Item.getItemByName("iron_block"));
-            }
-
-            return this.lastItem;
+            return new ItemStack(this.fixedItem);
         }
+
+        if (this.switchItemWait > 0) {
+            this.switchItemWait--;
+        } else {
+            this.lastItem = this.getNextIcon();
+            this.switchItemWait = 60;
+        }
+
+        if (this.lastItem.isEmpty()) {
+            this.lastItem = new ItemStack(W_Item.getItemByName("iron_block"));
+        }
+
+        return this.lastItem;
     }
 
     @SideOnly(Side.CLIENT)
-    public void displayAllRelevantItems(NonNullList<ItemStack> list) {
-        super.displayAllRelevantItems(list);
+    @Override
+    public void displayAllRelevantItems(NonNullList<ItemStack> items) {
+        super.displayAllRelevantItems(items);
 
-        Comparator<ItemStack> comparator = new Comparator<ItemStack>() {
+        // Sorting items by aircraft category and name
+        items.sort(new Comparator<ItemStack>() {
+            @Override
             public int compare(ItemStack i1, ItemStack i2) {
                 if (i1.getItem() instanceof MCH_ItemAircraft && i2.getItem() instanceof MCH_ItemAircraft) {
                     MCH_AircraftInfo info1 = ((MCH_ItemAircraft) i1.getItem()).getAircraftInfo();
@@ -80,9 +85,7 @@ public class MCH_CreativeTabs extends CreativeTabs {
                 }
                 return i1.getItem().getUnlocalizedName().compareTo(i2.getItem().getUnlocalizedName());
             }
-        };
-
-        Collections.sort(list, comparator);
+        });
     }
 
     public void addIconItem(Item item) {
@@ -91,7 +94,8 @@ public class MCH_CreativeTabs extends CreativeTabs {
         }
     }
 
-    public String getTranslatedTabLabel() {
+    @Override
+    public String getTranslationKey() {
         return "MC Heli";
     }
 }
