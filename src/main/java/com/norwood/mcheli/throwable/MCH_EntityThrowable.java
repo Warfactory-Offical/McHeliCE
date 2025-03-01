@@ -56,13 +56,13 @@ public class MCH_EntityThrowable extends EntityThrowable implements IThrowableEn
       this.field_70163_u -= 0.10000000149011612D;
       this.field_70161_v -= (double)(MathHelper.func_76126_a(this.field_70177_z / 180.0F * 3.1415927F) * 0.16F);
       this.func_70107_b(this.field_70165_t, this.field_70163_u, this.field_70161_v);
-      this.func_184538_a((Entity)null, pitch, yaw, 0.0F, 1.5F, 1.0F);
+      this.func_184538_a(null, pitch, yaw, 0.0F, 1.5F, 1.0F);
    }
 
    public void init() {
       this.lastOnImpact = null;
       this.countOnUpdate = 0;
-      this.setInfo((MCH_ThrowableInfo)null);
+      this.setInfo(null);
       this.noInfoCount = 0;
       this.field_70180_af.func_187214_a(INFO_NAME, "");
    }
@@ -170,7 +170,7 @@ public class MCH_EntityThrowable extends EntityThrowable implements IThrowableEn
 
          for(int i = 0; i < num; ++i) {
             MCH_ParticleParam prm = new MCH_ParticleParam(this.field_70170_p, "smoke", this.field_70169_q + x * (double)i, 1.0D + this.field_70167_r + y * (double)i, this.field_70166_s + z * (double)i);
-            prm.setMotion((double)mx, (double)my, (double)mz);
+            prm.setMotion(mx, my, mz);
             prm.size = size;
             prm.setColor(1.0F, r, g, b);
             prm.isEffectWind = true;

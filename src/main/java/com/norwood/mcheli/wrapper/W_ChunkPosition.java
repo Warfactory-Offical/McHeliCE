@@ -4,14 +4,14 @@ import net.minecraft.util.math.BlockPos;
 
 public class W_ChunkPosition {
    public static int getChunkPosX(BlockPos c) {
-      return c.func_177958_n();
+      return c.getX();
    }
 
    public static int getChunkPosY(BlockPos c) {
-      return c.func_177956_o();
+      return c.getY();
    }
 
    public static int getChunkPosZ(BlockPos c) {
-      return c.func_177952_p();
+      return c.getZ();
    }
 }
