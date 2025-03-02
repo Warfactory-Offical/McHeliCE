@@ -1,9 +1,11 @@
 package com.norwood.mcheli;
 
 import javax.annotation.Nullable;
+
 import com.norwood.mcheli.wrapper.W_Entity;
 import com.norwood.mcheli.wrapper.W_EntityRenderer;
 import com.norwood.mcheli.wrapper.W_Lib;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
@@ -15,33 +17,38 @@ public class MCH_Camera {
    private int[] mode;
    private boolean[] canUseShader;
    private int[] lastMode;
+
    public double posX;
    public double posY;
    public double posZ;
+
    public float rotationYaw;
    public float rotationPitch;
    public float prevRotationYaw;
    public float prevRotationPitch;
+
    private int lastZoomDir;
+
    public float partRotationYaw;
    public float partRotationPitch;
    public float prevPartRotationYaw;
    public float prevPartRotationPitch;
+
    public static final int MODE_NORMAL = 0;
    public static final int MODE_NIGHTVISION = 1;
    public static final int MODE_THERMALVISION = 2;
 
-   public MCH_Camera(World w, Entity p) {
-      this.worldObj = w;
-      this.mode = new int[]{0, 0};
+   public MCH_Camera(World world, Entity player) {
+      this.worldObj = world;
+      this.mode = new int[]{MODE_NORMAL, MODE_NORMAL};
       this.zoom = 1.0F;
       this.lastMode = new int[this.getUserMax()];
       this.lastZoomDir = 0;
       this.canUseShader = new boolean[this.getUserMax()];
    }
 
-   public MCH_Camera(World w, Entity p, double x, double y, double z) {
-      this(w, p);
+   public MCH_Camera(World world, Entity player, double x, double y, double z) {
+      this(world, player);
       this.setPosition(x, y, z);
       this.setCameraZoom(1.0F);
    }
@@ -52,35 +59,35 @@ public class MCH_Camera {
 
    public void initCamera(int uid, @Nullable Entity viewer) {
       this.setCameraZoom(1.0F);
-      this.setMode(uid, 0);
+      this.setMode(uid, MODE_NORMAL);
       this.updateViewer(uid, viewer);
    }
 
-   public void setMode(int uid, int m) {
+   public void setMode(int uid, int mode) {
       if (this.isValidUid(uid)) {
-         this.mode[uid] = m < 0 ? 0 : m % this.getModeNum(uid);
-         switch(this.mode[uid]) {
-         case 0:
-         case 1:
-            if (this.worldObj.isRemote) {
-               W_EntityRenderer.deactivateShader();
-            }
-            break;
-         case 2:
-            if (this.worldObj.isRemote) {
-               W_EntityRenderer.activateShader("pencil");
-            }
-         }
+         this.mode[uid] = mode < 0 ? MODE_NORMAL : mode % this.getModeNum(uid);
 
+         switch (this.mode[uid]) {
+            case MODE_NORMAL:
+            case MODE_NIGHTVISION:
+               if (this.worldObj.isRemote) {
+                  W_EntityRenderer.deactivateShader();
+               }
+               break;
+            case MODE_THERMALVISION:
+               if (this.worldObj.isRemote) {
+                  W_EntityRenderer.activateShader("pencil");
+               }
+               break;
+         }
       }
    }
 
-   public void setShaderSupport(int uid, Boolean b) {
+   public void setShaderSupport(int uid, Boolean enabled) {
       if (this.isValidUid(uid)) {
-         this.setMode(uid, 0);
-         this.canUseShader[uid] = b;
+         this.setMode(uid, MODE_NORMAL);
+         this.canUseShader[uid] = enabled;
       }
-
    }
 
    public boolean isValidUid(int uid) {
@@ -88,48 +95,51 @@ public class MCH_Camera {
    }
 
    public int getModeNum(int uid) {
-      if (!this.isValidUid(uid)) {
-         return 2;
-      } else {
-         return this.canUseShader[uid] ? 3 : 2;
-      }
+      return this.isValidUid(uid) ? (this.canUseShader[uid] ? 3 : 2) : 2;
    }
 
    public int getMode(int uid) {
-      return this.isValidUid(uid) ? this.mode[uid] : 0;
+      return this.isValidUid(uid) ? this.mode[uid] : MODE_NORMAL;
    }
 
    public String getModeName(int uid) {
-      if (this.getMode(uid) == 1) {
-         return "NIGHT VISION";
-      } else {
-         return this.getMode(uid) == 2 ? "THERMAL VISION" : "";
+      switch (this.getMode(uid)) {
+         case MODE_NIGHTVISION:
+            return "NIGHT VISION";
+         case MODE_THERMALVISION:
+            return "THERMAL VISION";
+         default:
+            return "";
       }
    }
 
    public void updateViewer(int uid, @Nullable Entity viewer) {
       if (this.isValidUid(uid) && viewer != null) {
-         if (W_Lib.isEntityLivingBase(viewer) && !viewer.field_70128_L) {
-            PotionEffect pe;
-            if (this.getMode(uid) == 0 && this.lastMode[uid] != 0) {
-               pe = W_Entity.getActivePotionEffect(viewer, MobEffects.field_76439_r);
-               if (pe != null && pe.func_76459_b() > 0 && pe.func_76459_b() < 500) {
+         if (W_Lib.isEntityLivingBase(viewer) && !viewer.isDead) {
+            PotionEffect effect;
+
+            // Remove night vision if switching back to normal mode
+            if (this.getMode(uid) == MODE_NORMAL && this.lastMode[uid] != MODE_NORMAL) {
+               effect = W_Entity.getActivePotionEffect(viewer, MobEffects.NIGHT_VISION);
+
+               if (effect != null && effect.getDuration() > 0 && effect.getDuration() < 500) {
                   if (viewer.world.isRemote) {
-                     W_Entity.removePotionEffectClient(viewer, MobEffects.field_76439_r);
+                     W_Entity.removePotionEffectClient(viewer, MobEffects.NIGHT_VISION);
                   } else {
-                     W_Entity.removePotionEffect(viewer, MobEffects.field_76439_r);
+                     W_Entity.removePotionEffect(viewer, MobEffects.NIGHT_VISION);
                   }
                }
             }
 
-            if (this.getMode(uid) == 1 || this.getMode(uid) == 2) {
-               pe = W_Entity.getActivePotionEffect(viewer, MobEffects.field_76439_r);
-               if ((pe == null || pe != null && pe.func_76459_b() < 500) && !viewer.world.isRemote) {
-                  W_Entity.addPotionEffect(viewer, new PotionEffect(MobEffects.field_76439_r, 250, 0, true, false));
+            // Apply night vision for night/thermal vision modes
+            if (this.getMode(uid) == MODE_NIGHTVISION || this.getMode(uid) == MODE_THERMALVISION) {
+               effect = W_Entity.getActivePotionEffect(viewer, MobEffects.NIGHT_VISION);
+
+               if ((effect == null || (effect.getDuration() < 500)) && !viewer.world.isRemote) {
+                  W_Entity.addPotionEffect(viewer, new PotionEffect(MobEffects.NIGHT_VISION, 250, 0, true, false));
                }
             }
          }
-
          this.lastMode[uid] = this.getMode(uid);
       }
    }
@@ -140,9 +150,10 @@ public class MCH_Camera {
       this.posZ = z;
    }
 
-   public void setCameraZoom(float z) {
+   public void setCameraZoom(float zoomLevel) {
       float prevZoom = this.zoom;
-      this.zoom = z < 1.0F ? 1.0F : z;
+      this.zoom = Math.max(1.0F, zoomLevel);
+
       if (this.zoom > prevZoom) {
          this.lastZoomDir = 1;
       } else if (this.zoom < prevZoom) {
@@ -150,7 +161,6 @@ public class MCH_Camera {
       } else {
          this.lastZoomDir = 0;
       }
-
    }
 
    public float getCameraZoom() {
