@@ -70,7 +70,7 @@ public class MCH_GuiTitle extends MCH_Gui {
    }
 
    private String formatColors(String s) {
-      return Minecraft.func_71410_x().field_71474_y.field_74344_o ? s : TextFormatting.func_110646_a(s);
+      return Minecraft.getMinecraft().field_71474_y.field_74344_o ? s : TextFormatting.func_110646_a(s);
    }
 
    private int calculateChatboxWidth() {

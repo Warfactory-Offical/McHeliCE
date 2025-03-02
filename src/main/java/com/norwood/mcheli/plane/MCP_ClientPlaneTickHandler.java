@@ -54,7 +54,7 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
       }
 
       this.isBeforeRiding = this.isRiding;
-      EntityPlayer player = this.mc.field_71439_g;
+      EntityPlayer player = this.mc.player;
       MCP_EntityPlane plane = null;
       boolean isPilot = true;
       if (player != null) {
@@ -76,7 +76,7 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
 
       if (plane != null && plane.getAcInfo() != null) {
          this.update(player, plane);
-         MCH_ViewEntityDummy viewEntityDummy = MCH_ViewEntityDummy.getInstance(this.mc.field_71441_e);
+         MCH_ViewEntityDummy viewEntityDummy = MCH_ViewEntityDummy.getInstance(this.mc.world);
          viewEntityDummy.update(plane.camera);
          if (!inGUI) {
             if (!plane.isDestroyed()) {
@@ -107,7 +107,7 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
 
       if (!this.isBeforeRiding && this.isRiding && plane != null) {
          W_Reflection.setThirdPersonDistance(plane.thirdPersonDist);
-         MCH_ViewEntityDummy.getInstance(this.mc.field_71441_e).func_70107_b(plane.posX, plane.posY + 0.5D, plane.posZ);
+         MCH_ViewEntityDummy.getInstance(this.mc.world).func_70107_b(plane.posX, plane.posY + 0.5D, plane.posZ);
       } else if (this.isBeforeRiding && !this.isRiding) {
          W_Reflection.restoreDefaultThirdPersonDistance();
          MCH_Lib.enableFirstPersonItemRender();

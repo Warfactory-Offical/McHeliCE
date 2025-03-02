@@ -58,7 +58,7 @@ public class MCH_RenderTest extends W_Render<Entity> {
       }
    }
 
-   protected ResourceLocation func_110775_a(Entity entity) {
+   protected ResourceLocation getEntityTexture(Entity entity) {
       return TEX_DEFAULT;
    }
 }

@@ -82,7 +82,7 @@ public abstract class MCH_ClientTickHandlerBase {
       boolean cancelEvent = false;
       if (wheel != 0 && MCH_Config.SwitchWeaponWithMouseWheel.prmBool) {
          setMouseWheel(0);
-         EntityPlayer player = Minecraft.func_71410_x().field_71439_g;
+         EntityPlayer player = Minecraft.getMinecraft().player;
          if (player != null) {
             MCH_EntityAircraft ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
             if (ac != null) {

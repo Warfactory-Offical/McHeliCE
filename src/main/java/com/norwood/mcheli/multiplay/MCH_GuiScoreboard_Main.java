@@ -43,7 +43,7 @@ public class MCH_GuiScoreboard_Main extends MCH_GuiScoreboard_Base {
 
    protected void func_73869_a(char c, int code) throws IOException {
       if (code == 1) {
-         this.field_146297_k.field_71439_g.func_71053_j();
+         this.field_146297_k.player.func_71053_j();
       }
 
    }

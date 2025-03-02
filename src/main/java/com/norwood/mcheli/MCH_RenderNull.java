@@ -20,7 +20,7 @@ public class MCH_RenderNull extends W_Render<Entity> {
    public void func_76986_a(Entity entity, double posX, double posY, double posZ, float par8, float tickTime) {
    }
 
-   protected ResourceLocation func_110775_a(Entity entity) {
+   protected ResourceLocation getEntityTexture(Entity entity) {
       return TEX_DEFAULT;
    }
 }

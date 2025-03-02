@@ -23,7 +23,7 @@ public class MCH_RenderTvMissile extends MCH_RenderBulletBase<MCH_EntityBaseBull
 
    public void renderBullet(MCH_EntityBaseBullet entity, double posX, double posY, double posZ, float par8, float par9) {
       MCH_EntityAircraft ac = null;
-      Entity ridingEntity = Minecraft.func_71410_x().field_71439_g.func_184187_bx();
+      Entity ridingEntity = Minecraft.getMinecraft().player.func_184187_bx();
       if (ridingEntity instanceof MCH_EntityAircraft) {
          ac = (MCH_EntityAircraft)ridingEntity;
       } else if (ridingEntity instanceof MCH_EntitySeat) {
@@ -32,7 +32,7 @@ public class MCH_RenderTvMissile extends MCH_RenderBulletBase<MCH_EntityBaseBull
          ac = ((MCH_EntityUavStation)ridingEntity).getControlAircract();
       }
 
-      if (ac == null || ac.isRenderBullet(entity, Minecraft.func_71410_x().field_71439_g)) {
+      if (ac == null || ac.isRenderBullet(entity, Minecraft.getMinecraft().player)) {
          if (entity instanceof MCH_EntityBaseBullet) {
             GL11.glPushMatrix();
             GL11.glTranslated(posX, posY, posZ);

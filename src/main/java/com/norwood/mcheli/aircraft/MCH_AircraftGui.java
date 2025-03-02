@@ -70,7 +70,7 @@ public class MCH_AircraftGui extends W_GuiContainer {
 
    public void closeScreen() {
       MCH_PacketCommandSave.send(this.editCommand.func_146179_b());
-      this.field_146297_k.field_71439_g.func_71053_j();
+      this.field_146297_k.player.func_71053_j();
    }
 
    public boolean canReload(EntityPlayer player) {

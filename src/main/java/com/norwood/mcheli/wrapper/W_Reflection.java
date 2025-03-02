@@ -40,7 +40,7 @@ public class W_Reflection {
 
    public static void setCameraZoom(float zoom) {
       try {
-         Minecraft mc = Minecraft.func_71410_x();
+         Minecraft mc = Minecraft.getMinecraft();
          ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, mc.field_71460_t, zoom, "field_78503_V");
          MCH_CameraManager.setCameraZoom(zoom);
       } catch (Exception var2) {
@@ -56,7 +56,7 @@ public class W_Reflection {
 
    public static void setCreativeDigSpeed(int n) {
       try {
-         Minecraft mc = Minecraft.func_71410_x();
+         Minecraft mc = Minecraft.getMinecraft();
          ObfuscationReflectionHelper.setPrivateValue(PlayerControllerMP.class, mc.field_71442_b, n, "field_78781_i");
       } catch (Exception var2) {
          var2.printStackTrace();
@@ -65,7 +65,7 @@ public class W_Reflection {
    }
 
    public static ItemRenderer getItemRenderer() {
-      return Minecraft.func_71410_x().field_71460_t.field_78516_c;
+      return Minecraft.getMinecraft().field_71460_t.field_78516_c;
    }
 
    public static void setItemRendererMainHand(ItemStack itemToRender) {

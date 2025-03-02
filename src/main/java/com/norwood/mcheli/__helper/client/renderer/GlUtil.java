@@ -203,7 +203,7 @@ public class GlUtil extends GlStateManager {
    }
 
    public static boolean enableStencilBuffer() {
-      Framebuffer framebuffer = Minecraft.func_71410_x().func_147110_a();
+      Framebuffer framebuffer = Minecraft.getMinecraft().func_147110_a();
       if (!framebuffer.isStencilEnabled() && OpenGlHelper.func_148822_b()) {
          framebuffer.enableStencil();
          return true;
@@ -213,7 +213,7 @@ public class GlUtil extends GlStateManager {
    }
 
    public static boolean isEnableStencilBuffer() {
-      return Minecraft.func_71410_x().func_147110_a().isStencilEnabled();
+      return Minecraft.getMinecraft().func_147110_a().isStencilEnabled();
    }
 
    public static Matrix4f translateAsMatrix(float x, float y, float z) {

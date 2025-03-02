@@ -351,10 +351,10 @@ public class MCH_ExplosionV2 extends Explosion {
          }
 
          MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "explode", px, py, pz, mx, my, mz, this.field_77280_f < 8.0F ? this.field_77280_f * 2.0F : (this.field_77280_f < 2.0F ? 2.0F : 16.0F));
-         prm.r = prm.g = prm.b = 0.3F + this.world.field_73012_v.nextFloat() * 0.4F;
-         prm.r += 0.1F;
-         prm.g += 0.05F;
-         prm.b += 0.0F;
+         prm.red = prm.green = prm.blue = 0.3F + this.world.field_73012_v.nextFloat() * 0.4F;
+         prm.red += 0.1F;
+         prm.green += 0.05F;
+         prm.blue += 0.0F;
          prm.age = 10 + this.world.field_73012_v.nextInt(30);
          prm.age = (int)((float)prm.age * (this.field_77280_f < 6.0F ? this.field_77280_f : 6.0F));
          prm.age = prm.age * 2 / 3;

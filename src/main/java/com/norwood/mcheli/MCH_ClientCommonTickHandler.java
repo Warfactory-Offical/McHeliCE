@@ -142,7 +142,7 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
          k.update();
       }
 
-      EntityPlayer player = this.mc.field_71439_g;
+      EntityPlayer player = this.mc.player;
       if (player != null && this.mc.field_71462_r == null) {
          if (MCH_ServerSettings.enableCamDistChange && (this.KeyCamDistUp.isKeyDown() || this.KeyCamDistDown.isKeyDown())) {
             camdist = (int)W_Reflection.getThirdPersonDistance();
@@ -218,14 +218,14 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
    }
 
    public void onTickPre() {
-      if (this.mc.field_71439_g != null && this.mc.field_71441_e != null) {
+      if (this.mc.player != null && this.mc.world != null) {
          this.onTick();
       }
 
    }
 
    public void onTickPost() {
-      if (this.mc.field_71439_g != null && this.mc.field_71441_e != null) {
+      if (this.mc.player != null && this.mc.world != null) {
          MCH_GuiTargetMarker.onClientTick();
       }
 
@@ -237,7 +237,7 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
 
    public static double getCurrentStickY() {
       double inv = 1.0D;
-      if (Minecraft.func_71410_x().field_71474_y.field_74338_d) {
+      if (Minecraft.getMinecraft().field_71474_y.field_74338_d) {
          inv = -inv;
       }
 
@@ -305,12 +305,12 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
    public void onRenderTickPre(float partialTicks) {
       MCH_GuiTargetMarker.clearMarkEntityPos();
       if (!MCH_ServerSettings.enableDebugBoundingBox) {
-         Minecraft.func_71410_x().func_175598_ae().func_178629_b(false);
+         Minecraft.getMinecraft().func_175598_ae().func_178629_b(false);
       }
 
       MCH_ClientEventHook.haveSearchLightAircraft.clear();
-      if (this.mc != null && this.mc.field_71441_e != null) {
-         Iterator var2 = Minecraft.func_71410_x().field_71441_e.field_72996_f.iterator();
+      if (this.mc != null && this.mc.world != null) {
+         Iterator var2 = Minecraft.getMinecraft().world.field_72996_f.iterator();
 
          while(var2.hasNext()) {
             Object o = var2.next();
@@ -321,7 +321,7 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
       }
 
       if (!W_McClient.isGamePaused()) {
-         EntityPlayer player = this.mc.field_71439_g;
+         EntityPlayer player = this.mc.player;
          if (player != null) {
             ItemStack currentItemstack = player.func_184586_b(EnumHand.MAIN_HAND);
             if (currentItemstack != null && currentItemstack.func_77973_b() instanceof MCH_ItemWrench && player.func_184605_cv() > 0) {
@@ -543,14 +543,14 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
    }
 
    public void onRenderTickPost(float partialTicks) {
-      if (this.mc.field_71439_g != null) {
-         MCH_ClientTickHandlerBase.applyRotLimit(this.mc.field_71439_g);
-         Entity e = MCH_ViewEntityDummy.getInstance(this.mc.field_71439_g.world);
+      if (this.mc.player != null) {
+         MCH_ClientTickHandlerBase.applyRotLimit(this.mc.player);
+         Entity e = MCH_ViewEntityDummy.getInstance(this.mc.player.world);
          if (e != null) {
-            e.field_70125_A = this.mc.field_71439_g.field_70125_A;
-            e.field_70177_z = this.mc.field_71439_g.field_70177_z;
-            e.field_70127_C = this.mc.field_71439_g.field_70127_C;
-            e.field_70126_B = this.mc.field_71439_g.field_70126_B;
+            e.field_70125_A = this.mc.player.field_70125_A;
+            e.field_70177_z = this.mc.player.field_70177_z;
+            e.field_70127_C = this.mc.player.field_70127_C;
+            e.field_70126_B = this.mc.player.field_70126_B;
          }
       }
 
@@ -579,7 +579,7 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
    }
 
    public boolean drawGui(MCH_Gui gui, float partialTicks) {
-      if (gui.isDrawGui(this.mc.field_71439_g)) {
+      if (gui.isDrawGui(this.mc.player)) {
          gui.func_73863_a(0, 0, partialTicks);
          return true;
       } else {

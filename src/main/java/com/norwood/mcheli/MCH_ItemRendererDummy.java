@@ -21,9 +21,9 @@ public class MCH_ItemRendererDummy extends ItemRenderer {
    }
 
    public void func_78440_a(float par1) {
-      if (mc.field_71439_g == null) {
+      if (mc.player == null) {
          super.func_78440_a(par1);
-      } else if (!(mc.field_71439_g.func_184187_bx() instanceof MCH_EntityAircraft) && !(mc.field_71439_g.func_184187_bx() instanceof MCH_EntityUavStation) && !(mc.field_71439_g.func_184187_bx() instanceof MCH_EntityGLTD)) {
+      } else if (!(mc.player.func_184187_bx() instanceof MCH_EntityAircraft) && !(mc.player.func_184187_bx() instanceof MCH_EntityUavStation) && !(mc.player.func_184187_bx() instanceof MCH_EntityGLTD)) {
          super.func_78440_a(par1);
       }
 
@@ -31,7 +31,7 @@ public class MCH_ItemRendererDummy extends ItemRenderer {
 
    public static void enableDummyItemRenderer() {
       if (instance == null) {
-         instance = new MCH_ItemRendererDummy(Minecraft.func_71410_x());
+         instance = new MCH_ItemRendererDummy(Minecraft.getMinecraft());
       }
 
       if (!(mc.field_71460_t.field_78516_c instanceof MCH_ItemRendererDummy)) {

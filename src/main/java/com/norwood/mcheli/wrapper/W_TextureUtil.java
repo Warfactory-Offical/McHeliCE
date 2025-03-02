@@ -13,7 +13,7 @@ public class W_TextureUtil {
    }
 
    public static W_TextureUtil.TextureParam getTextureInfo(String domain, String name) {
-      TextureManager textureManager = Minecraft.func_71410_x().func_110434_K();
+      TextureManager textureManager = Minecraft.getMinecraft().func_110434_K();
       ResourceLocation r = new ResourceLocation(domain, name);
       textureManager.func_110577_a(r);
       W_TextureUtil.TextureParam info = instance.newParam();

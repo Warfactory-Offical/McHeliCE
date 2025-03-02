@@ -89,7 +89,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
       this.dataManager.func_187227_b(TEAM_NAME, name);
    }
 
-   public Team func_96124_cp() {
+   public Team getTeam() {
       return this.world.func_96441_U().func_96508_e(this.getTeamName());
    }
 
@@ -98,7 +98,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
    }
 
    public ITextComponent func_145748_c_() {
-      Team team = this.func_96124_cp();
+      Team team = this.getTeam();
       if (team != null) {
          String name = MCH_MOD.isTodaySep01() ? "'s EMB4" : " Gunner";
          return new TextComponentString(ScorePlayerTeam.func_96667_a(team, team.func_96661_b() + name));
@@ -126,7 +126,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
       } else if (this.isCreative) {
          player.func_145747_a(new TextComponentString("Creative mode only."));
          return false;
-      } else if (this.func_96124_cp() != null && !this.func_184191_r(player)) {
+      } else if (this.getTeam() != null && !this.func_184191_r(player)) {
          player.func_145747_a(new TextComponentString("You are other team."));
          return false;
       } else {
@@ -151,7 +151,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
             name = " on " + ac.getAcInfo().displayName + " seat " + (ac.getSeatIdByEntity(this) + 1);
          }
 
-         String playerName = ScorePlayerTeam.func_96667_a(player.func_96124_cp(), player.func_145748_c_().func_150254_d());
+         String playerName = ScorePlayerTeam.func_96667_a(player.getTeam(), player.func_145748_c_().func_150254_d());
          if (MCH_MOD.isTodaySep01()) {
             player.func_145747_a(new TextComponentTranslation("chat.type.text", new Object[]{"EMB4", new TextComponentString("Bye " + playerName + "! Good vehicle" + name)}));
          } else {
@@ -298,7 +298,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
                         prm.setPosition(ac.posX, ac.posY, ac.posZ);
                         prm.user = this;
                         prm.entity = ac;
-                        prm.option1 = cw instanceof MCH_WeaponEntitySeeker ? this.targetEntity.func_145782_y() : 0;
+                        prm.option1 = cw instanceof MCH_WeaponEntitySeeker ? this.targetEntity.getEntityId() : 0;
                         if (ac.useCurrentWeapon(prm) && ws.getInfo().maxHeatCount > 0 && ws.currentHeat > ws.getInfo().maxHeatCount * 4 / 5) {
                            this.waitCooldown = true;
                         }

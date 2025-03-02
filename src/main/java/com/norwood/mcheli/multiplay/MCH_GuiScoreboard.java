@@ -42,13 +42,13 @@ public class MCH_GuiScoreboard extends W_GuiContainer implements MCH_IGuiScorebo
          s.initGui(this.field_146292_n, this);
       }
 
-      this.lastTeamNum = this.field_146297_k.field_71441_e.func_96441_U().func_96525_g().size();
+      this.lastTeamNum = this.field_146297_k.world.func_96441_U().func_96525_g().size();
       this.switchScreen(MCH_GuiScoreboard_Base.SCREEN_ID.MAIN);
    }
 
    public void func_73876_c() {
       super.func_73876_c();
-      int nowTeamNum = this.field_146297_k.field_71441_e.func_96441_U().func_96525_g().size();
+      int nowTeamNum = this.field_146297_k.world.func_96441_U().func_96525_g().size();
       if (this.lastTeamNum != nowTeamNum) {
          this.lastTeamNum = nowTeamNum;
          this.func_73866_w_();

@@ -98,7 +98,7 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
    public String lastLoadHUDPath = "";
 
    public String getDataDir() {
-      return Minecraft.func_71410_x().field_71412_D.getPath();
+      return Minecraft.getMinecraft().field_71412_D.getPath();
    }
 
    public void registerRenderer() {
@@ -398,7 +398,7 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
    }
 
    public void registerClientTick() {
-      Minecraft mc = Minecraft.func_71410_x();
+      Minecraft mc = Minecraft.getMinecraft();
       MCH_ClientCommonTickHandler.instance = new MCH_ClientCommonTickHandler(mc, MCH_MOD.config);
       W_TickRegistry.registerTickHandler(MCH_ClientCommonTickHandler.instance, Side.CLIENT);
    }
@@ -412,7 +412,7 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
    }
 
    public MCH_SoundUpdater CreateSoundUpdater(MCH_EntityAircraft aircraft) {
-      return aircraft != null && aircraft.world.isRemote ? new MCH_SoundUpdater(Minecraft.func_71410_x(), aircraft, Minecraft.func_71410_x().field_71439_g) : null;
+      return aircraft != null && aircraft.world.isRemote ? new MCH_SoundUpdater(Minecraft.getMinecraft(), aircraft, Minecraft.getMinecraft().player) : null;
    }
 
    public void registerSounds() {
@@ -484,7 +484,7 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
 
    public void loadConfig(String fileName) {
       this.lastConfigFileName = fileName;
-      this.config = new MCH_Config(Minecraft.func_71410_x().field_71412_D.getPath(), "/" + fileName);
+      this.config = new MCH_Config(Minecraft.getMinecraft().field_71412_D.getPath(), "/" + fileName);
       this.config.load();
       this.config.write();
    }
@@ -500,7 +500,7 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
    }
 
    public Entity getClientPlayer() {
-      return Minecraft.func_71410_x().field_71439_g;
+      return Minecraft.getMinecraft().player;
    }
 
    public void init() {
@@ -513,16 +513,16 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
    }
 
    public boolean isFirstPerson() {
-      return Minecraft.func_71410_x().field_71474_y.field_74320_O == 0;
+      return Minecraft.getMinecraft().field_71474_y.field_74320_O == 0;
    }
 
    public boolean isSinglePlayer() {
-      return Minecraft.func_71410_x().func_71356_B();
+      return Minecraft.getMinecraft().func_71356_B();
    }
 
    public void readClientModList() {
       try {
-         Minecraft mc = Minecraft.func_71410_x();
+         Minecraft mc = Minecraft.getMinecraft();
          MCH_MultiplayClient.readModList(mc.func_110432_I().func_148255_b(), mc.func_110432_I().func_111285_a());
       } catch (Exception var2) {
          var2.printStackTrace();
@@ -559,6 +559,6 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
    }
 
    public void registerRecipeDescriptions() {
-      RecipeDescriptionManager.registerDescriptionInfos(Minecraft.func_71410_x().func_110442_L());
+      RecipeDescriptionManager.registerDescriptionInfos(Minecraft.getMinecraft().func_110442_L());
    }
 }

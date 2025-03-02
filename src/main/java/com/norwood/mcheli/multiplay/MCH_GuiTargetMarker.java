@@ -54,7 +54,7 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
    }
 
    public static void onClientTick() {
-      if (!Minecraft.func_71410_x().func_147113_T()) {
+      if (!Minecraft.getMinecraft().func_147113_T()) {
          ++spotedEntityCountdown;
       }
 
@@ -85,7 +85,7 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
       if (entity == null) {
          return false;
       } else {
-         int entityId = entity.func_145782_y();
+         int entityId = entity.getEntityId();
          Iterator i$ = spotedEntity.keySet().iterator();
 
          int key;
@@ -120,7 +120,7 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
    public static void addMarkEntityPos(int reserve, ITargetMarkerObject target, double x, double y, double z, boolean nazo) {
       if (isEnableEntityMarker()) {
          com.norwood.mcheli.multiplay.MCH_TargetType spotType = MCH_TargetType.NONE;
-         EntityPlayer clientPlayer = s_minecraft.field_71439_g;
+         EntityPlayer clientPlayer = s_minecraft.player;
          Entity entity = target.getEntity();
          if (entity instanceof MCH_EntityAircraft) {
             MCH_EntityAircraft ac = (MCH_EntityAircraft)entity;
@@ -136,7 +136,7 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
                return;
             }
 
-            if (clientPlayer.func_96124_cp() != null && clientPlayer.func_184191_r(entity)) {
+            if (clientPlayer.getTeam() != null && clientPlayer.func_184191_r(entity)) {
                spotType = MCH_TargetType.SAME_TEAM_PLAYER;
             }
          }
@@ -174,7 +174,7 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
    }
 
    public static boolean isEnableEntityMarker() {
-      return MCH_Config.DisplayEntityMarker.prmBool && (Minecraft.func_71410_x().func_71356_B() || MCH_ServerSettings.enableEntityMarker) && MCH_Config.EntityMarkerSize.prmDouble > 0.0D;
+      return MCH_Config.DisplayEntityMarker.prmBool && (Minecraft.getMinecraft().func_71356_B() || MCH_ServerSettings.enableEntityMarker) && MCH_Config.EntityMarkerSize.prmDouble > 0.0D;
    }
 
    public void drawGui(EntityPlayer player, boolean isThirdPersonView) {
@@ -237,7 +237,7 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
                   double MARK_SIZE = MCH_Config.BlockMarkerSize.prmDouble;
                   double S;
                   if (z < 1.0D && x >= 0.0D && x <= (double)(DSW - 20) && y >= 0.0D && y <= (double)(DSH - 40)) {
-                     S = this.field_146297_k.field_71439_g.func_70011_f(target.getX(), target.getY(), target.getZ());
+                     S = this.field_146297_k.player.func_70011_f(target.getX(), target.getY(), target.getZ());
                      GL11.glEnable(3553);
                      this.drawCenteredString(String.format("%.0fm", S), (int)x, (int)(y + MARK_SIZE * 1.1D + 16.0D), color);
                      if (x >= (double)(DSW / 2 - 20) && x <= (double)(DSW / 2 + 20) && y >= (double)(DSH / 2 - 20) && y <= (double)(DSH / 2 + 20)) {
@@ -329,7 +329,7 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
    }
 
    public static void markPoint(int px, int py, int pz) {
-      EntityPlayer player = Minecraft.func_71410_x().field_71439_g;
+      EntityPlayer player = Minecraft.getMinecraft().player;
       if (player != null && player.world != null) {
          if (py < 1000) {
             MCH_ParticlesUtil.spawnMarkPoint(player, 0.5D + (double)px, 1.0D + (double)py, 0.5D + (double)pz);

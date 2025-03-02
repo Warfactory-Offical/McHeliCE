@@ -37,7 +37,7 @@ public class MCH_ClientEventHook extends W_ClientEventHook {
 
    public void renderLivingEventSpecialsPre(Pre<EntityLivingBase> event) {
       if (MCH_Config.DisableRenderLivingSpecials.prmBool) {
-         MCH_EntityAircraft ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(Minecraft.func_71410_x().field_71439_g);
+         MCH_EntityAircraft ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(Minecraft.getMinecraft().player);
          if (ac != null && ac.isMountedEntity(event.getEntity())) {
             event.setCanceled(true);
             return;
@@ -55,7 +55,7 @@ public class MCH_ClientEventHook extends W_ClientEventHook {
          int ticks = entity.field_70173_aa % 20;
          if (ticks < 4) {
             float alpha = ticks != 2 && ticks != 1 ? 0.5F : 1.0F;
-            EntityPlayer player = Minecraft.func_71410_x().field_71439_g;
+            EntityPlayer player = Minecraft.getMinecraft().player;
             if (player != null) {
                if (player.func_184191_r(entity)) {
                   int j = 240;
@@ -161,7 +161,7 @@ public class MCH_ClientEventHook extends W_ClientEventHook {
    public void entityJoinWorldEvent(EntityJoinWorldEvent event) {
       if (event.getEntity().func_70028_i(MCH_Lib.getClientPlayer())) {
          MCH_Lib.DbgLog(true, "MCH_ClientEventHook.entityJoinWorldEvent : " + event.getEntity());
-         MCH_ItemRangeFinder.mode = Minecraft.func_71410_x().func_71356_B() ? 1 : 0;
+         MCH_ItemRangeFinder.mode = Minecraft.getMinecraft().func_71356_B() ? 1 : 0;
          MCH_ParticlesUtil.clearMarkPoint();
       }
 

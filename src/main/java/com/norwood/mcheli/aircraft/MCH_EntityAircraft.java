@@ -1915,7 +1915,7 @@ public abstract class MCH_EntityAircraft extends W_EntityContainer implements MC
                if (this.serverNoMoveCount >= 20) {
                   this.serverNoMoveCount = 0;
                   if (this.world instanceof WorldServer) {
-                     ((WorldServer)this.world).func_73039_n().func_151247_a(this, new SPacketEntityVelocity(this.func_145782_y(), 0.0D, 0.0D, 0.0D));
+                     ((WorldServer)this.world).func_73039_n().func_151247_a(this, new SPacketEntityVelocity(this.getEntityId(), 0.0D, 0.0D, 0.0D));
                   }
                }
             }
@@ -3089,7 +3089,7 @@ public abstract class MCH_EntityAircraft extends W_EntityContainer implements MC
                double dx = (double)MathHelper.func_76134_b(r);
                double dz = (double)MathHelper.func_76126_a(r);
                MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "smoke", this.posX + dx * (double)scale * 3.0D, particlePosY + (this.field_70146_Z.nextDouble() - 0.5D) * (double)scale, this.posZ + dz * (double)scale * 3.0D, (double)scale * dx * 0.3D, (double)scale * -0.4D * 0.05D, (double)scale * dz * 0.3D, scale * 5.0F);
-               prm.setColor(prm.a * 0.6F, prm.r, prm.g, prm.b);
+               prm.setColor(prm.alpha * 0.6F, prm.red, prm.green, prm.blue);
                prm.age = (int)(10.0F * scale);
                prm.motionYUpAge = seaOnly ? 0.2F : 0.1F;
                MCH_ParticlesUtil.spawnParticle(prm);
@@ -4410,7 +4410,7 @@ public abstract class MCH_EntityAircraft extends W_EntityContainer implements MC
    }
 
    public boolean isMountedSameTeamEntity(@Nullable EntityLivingBase player) {
-      if (player != null && player.func_96124_cp() != null) {
+      if (player != null && player.getTeam() != null) {
          if (this.getRiddenByEntity() instanceof EntityLivingBase && player.func_184191_r(this.getRiddenByEntity())) {
             return true;
          } else {
@@ -4438,7 +4438,7 @@ public abstract class MCH_EntityAircraft extends W_EntityContainer implements MC
          EntityLivingBase target = null;
          if (this.getRiddenByEntity() instanceof EntityLivingBase) {
             target = (EntityLivingBase)this.getRiddenByEntity();
-            if (player.func_96124_cp() != null && target.func_96124_cp() != null && !player.func_184191_r(target)) {
+            if (player.getTeam() != null && target.getTeam() != null && !player.func_184191_r(target)) {
                return true;
             }
          }
@@ -4450,7 +4450,7 @@ public abstract class MCH_EntityAircraft extends W_EntityContainer implements MC
             MCH_EntitySeat seat = var3[var5];
             if (seat != null && seat.getRiddenByEntity() instanceof EntityLivingBase) {
                target = (EntityLivingBase)seat.getRiddenByEntity();
-               if (player.func_96124_cp() != null && target.func_96124_cp() != null && !player.func_184191_r(target)) {
+               if (player.getTeam() != null && target.getTeam() != null && !player.func_184191_r(target)) {
                   return true;
                }
             }
@@ -4486,7 +4486,7 @@ public abstract class MCH_EntityAircraft extends W_EntityContainer implements MC
          Entity entity = this.getEntityBySeatId(i);
          if (entity instanceof EntityPlayer || entity instanceof MCH_EntityGunner) {
             EntityLivingBase riddenEntity = (EntityLivingBase)entity;
-            if (riddenEntity.func_96124_cp() != null && !riddenEntity.func_184191_r(player)) {
+            if (riddenEntity.getTeam() != null && !riddenEntity.func_184191_r(player)) {
                return false;
             }
          }
@@ -5334,11 +5334,11 @@ public abstract class MCH_EntityAircraft extends W_EntityContainer implements MC
             p.size = mf.size;
 
             for(int i = 0; i < mf.num; ++i) {
-               p.a = mf.a * 0.9F + w.field_73012_v.nextFloat() * 0.1F;
+               p.alpha = mf.a * 0.9F + w.field_73012_v.nextFloat() * 0.1F;
                float color = w.field_73012_v.nextFloat() * 0.1F;
-               p.r = color + mf.r * 0.9F;
-               p.g = color + mf.g * 0.9F;
-               p.b = color + mf.b * 0.9F;
+               p.red = color + mf.r * 0.9F;
+               p.green = color + mf.g * 0.9F;
+               p.blue = color + mf.b * 0.9F;
                p.age = (int)((double)mf.age + 0.1D * (double)mf.age * (double)w.field_73012_v.nextFloat());
                p.posX = x + (w.field_73012_v.nextDouble() - 0.5D) * (double)mf.range;
                p.posY = y + (w.field_73012_v.nextDouble() - 0.5D) * (double)mf.range;

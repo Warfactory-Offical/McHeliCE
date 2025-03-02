@@ -36,7 +36,7 @@ public class MCH_PacketNotifyLock extends MCH_Packet {
    public static void send(Entity target) {
       if (target != null) {
          MCH_PacketNotifyLock s = new MCH_PacketNotifyLock();
-         s.entityID = target.func_145782_y();
+         s.entityID = target.getEntityId();
          W_Network.sendToServer(s);
       }
 

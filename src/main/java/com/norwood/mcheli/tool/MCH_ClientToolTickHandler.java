@@ -39,8 +39,8 @@ public class MCH_ClientToolTickHandler extends MCH_ClientTickHandlerBase {
          k.update();
       }
 
-      this.onTick_ItemWrench(inGUI, this.mc.field_71439_g);
-      this.onTick_ItemRangeFinder(inGUI, this.mc.field_71439_g);
+      this.onTick_ItemWrench(inGUI, this.mc.player);
+      this.onTick_ItemRangeFinder(inGUI, this.mc.player);
    }
 
    private void onTick_ItemRangeFinder(boolean inGUI, EntityPlayer player) {

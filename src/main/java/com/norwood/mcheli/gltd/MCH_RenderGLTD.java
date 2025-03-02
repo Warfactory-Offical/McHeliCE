@@ -31,7 +31,7 @@ public class MCH_RenderGLTD extends W_Render<MCH_EntityGLTD> {
       GL11.glTranslated(posX, posY + 0.25D, posZ);
       this.setCommonRenderParam(true, entity.func_70070_b());
       this.bindTexture("textures/gltd.png");
-      Minecraft mc = Minecraft.func_71410_x();
+      Minecraft mc = Minecraft.getMinecraft();
       boolean isNotRenderHead = false;
       if (entity.getRiddenByEntity() != null) {
          entity.isUsedPlayer = true;

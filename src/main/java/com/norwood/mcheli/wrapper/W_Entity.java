@@ -33,7 +33,7 @@ public abstract class W_Entity extends Entity {
    }
 
    public static int getEntityId(@Nullable Entity entity) {
-      return entity != null ? entity.func_145782_y() : -1;
+      return entity != null ? entity.getEntityId() : -1;
    }
 
    public static boolean isEqual(@Nullable Entity e1, @Nullable Entity e2) {
@@ -47,7 +47,7 @@ public abstract class W_Entity extends Entity {
    }
 
    public String getEntityName() {
-      return super.func_70022_Q();
+      return super.getName();
    }
 
    public boolean attackEntityFrom(DamageSource par1DamageSource, int par2) {
@@ -102,7 +102,7 @@ public abstract class W_Entity extends Entity {
 
    public static void addPotionEffect(Entity entity, PotionEffect pe) {
       if (entity instanceof EntityLivingBase) {
-         ((EntityLivingBase)entity).func_70690_d(pe);
+         ((EntityLivingBase)entity).addPotionEffect(pe);
       }
 
    }

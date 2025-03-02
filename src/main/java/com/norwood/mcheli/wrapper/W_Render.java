@@ -24,7 +24,7 @@ public abstract class W_Render<T extends Entity> extends Render<T> {
       super.func_110776_a(new ResourceLocation(W_MOD.DOMAIN, path));
    }
 
-   protected ResourceLocation func_110775_a(T entity) {
+   protected ResourceLocation getEntityTexture(T entity) {
       return TEX_DEFAULT;
    }
 

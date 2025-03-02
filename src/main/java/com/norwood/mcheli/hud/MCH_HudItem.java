@@ -127,7 +127,7 @@ public abstract class MCH_HudItem extends Gui {
       float fy = (float)(1.0D / (double)textureHeight);
       Tessellator tessellator = Tessellator.getInstance();
       BufferBuilder builder = tessellator.getBuffer();
-      builder.begin(7, DefaultVertexFormats.field_181707_g);
+      builder.begin(7, DefaultVertexFormats.POSITION_TEX);
       builder.pos(-width / 2.0D, height / 2.0D, (double)this.field_73735_i).func_187315_a(uLeft * (double)fx, (vTop + vHeight) * (double)fy).func_181675_d();
       builder.pos(width / 2.0D, height / 2.0D, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)fx, (vTop + vHeight) * (double)fy).func_181675_d();
       builder.pos(width / 2.0D, -height / 2.0D, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)fx, vTop * (double)fy).func_181675_d();

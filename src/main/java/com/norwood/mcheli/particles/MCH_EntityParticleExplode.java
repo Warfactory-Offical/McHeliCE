@@ -24,7 +24,7 @@ public class MCH_EntityParticleExplode extends MCH_EntityParticleBase {
 
    public MCH_EntityParticleExplode(World w, double x, double y, double z, double size, double age, double mz) {
       super(w, x, y, z, 0.0D, 0.0D, 0.0D);
-      this.theRenderEngine = Minecraft.func_71410_x().field_71446_o;
+      this.theRenderEngine = Minecraft.getMinecraft().field_71446_o;
       this.endCount = 1 + (int)age;
       this.size = (float)size;
    }
@@ -43,9 +43,9 @@ public class MCH_EntityParticleExplode extends MCH_EntityParticleBase {
          float f8 = (float)(i / 4) / 4.0F;
          float f9 = f8 + 0.24975F;
          float f10 = 2.0F * this.size;
-         float f11 = (float)(this.field_187123_c + (this.field_187126_f - this.field_187123_c) * (double)p_70539_2_ - field_70556_an);
-         float f12 = (float)(this.field_187124_d + (this.field_187127_g - this.field_187124_d) * (double)p_70539_2_ - field_70554_ao);
-         float f13 = (float)(this.field_187125_e + (this.field_187128_h - this.field_187125_e) * (double)p_70539_2_ - field_70555_ap);
+         float f11 = (float)(this.field_187123_c + (this.posX - this.field_187123_c) * (double)p_70539_2_ - field_70556_an);
+         float f12 = (float)(this.field_187124_d + (this.posY - this.field_187124_d) * (double)p_70539_2_ - field_70554_ao);
+         float f13 = (float)(this.field_187125_e + (this.posZ - this.field_187125_e) * (double)p_70539_2_ - field_70555_ap);
          GlStateManager.func_179131_c(1.0F, 1.0F, 1.0F, 1.0F);
          RenderHelper.func_74518_a();
          int j = 15728880;
@@ -71,9 +71,9 @@ public class MCH_EntityParticleExplode extends MCH_EntityParticleBase {
    }
 
    public void func_189213_a() {
-      this.field_187123_c = this.field_187126_f;
-      this.field_187124_d = this.field_187127_g;
-      this.field_187125_e = this.field_187128_h;
+      this.field_187123_c = this.posX;
+      this.field_187124_d = this.posY;
+      this.field_187125_e = this.posZ;
       ++this.nowCount;
       if (this.nowCount == this.endCount) {
          this.func_187112_i();

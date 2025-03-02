@@ -68,10 +68,10 @@ public class MCH_EntityFlare extends W_Entity implements IEntityAdditionalSpawnD
             prm.motionX = (this.field_70146_Z.nextDouble() - 0.5D) * 0.45D;
             prm.motionY = (this.field_70146_Z.nextDouble() - 0.5D) * 0.01D;
             prm.motionZ = (this.field_70146_Z.nextDouble() - 0.5D) * 0.45D;
-            prm.a = this.field_70146_Z.nextFloat() * 0.1F + 0.85F;
-            prm.b = this.field_70146_Z.nextFloat() * 0.2F + 0.5F;
-            prm.g = prm.b + 0.05F;
-            prm.r = prm.b + 0.1F;
+            prm.alpha = this.field_70146_Z.nextFloat() * 0.1F + 0.85F;
+            prm.blue = this.field_70146_Z.nextFloat() * 0.2F + 0.5F;
+            prm.green = prm.blue + 0.05F;
+            prm.red = prm.blue + 0.1F;
             MCH_ParticlesUtil.spawnParticle(prm);
          }
       }
@@ -121,16 +121,16 @@ public class MCH_EntityFlare extends W_Entity implements IEntityAdditionalSpawnD
                MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "smoke", this.field_70169_q + x * (double)i, this.field_70167_r + y * (double)i, this.field_70166_s + z * (double)i);
                prm.size = 6.0F + this.field_70146_Z.nextFloat();
                if (this.size < 5.0F) {
-                  prm.a = (float)((double)prm.a * 0.75D);
+                  prm.alpha = (float)((double)prm.alpha * 0.75D);
                   if (this.field_70146_Z.nextInt(2) == 0) {
                   }
                }
 
                if (this.fuseCount > 0) {
-                  prm.a = this.field_70146_Z.nextFloat() * 0.1F + 0.85F;
-                  prm.b = this.field_70146_Z.nextFloat() * 0.1F + 0.5F;
-                  prm.g = prm.b + 0.05F;
-                  prm.r = prm.b + 0.1F;
+                  prm.alpha = this.field_70146_Z.nextFloat() * 0.1F + 0.85F;
+                  prm.blue = this.field_70146_Z.nextFloat() * 0.1F + 0.5F;
+                  prm.green = prm.blue + 0.05F;
+                  prm.red = prm.blue + 0.1F;
                }
 
                MCH_ParticlesUtil.spawnParticle(prm);

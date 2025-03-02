@@ -119,7 +119,7 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
       }
 
       this.isBeforeHeldItem = this.isHeldItem;
-      EntityPlayer player = this.mc.field_71439_g;
+      EntityPlayer player = this.mc.player;
       if (this.prevThePlayer == null || this.prevThePlayer != player) {
          this.initWeaponParam(player);
          this.prevThePlayer = player;

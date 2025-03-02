@@ -184,7 +184,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
       }
 
       this.listDevelopButtons = new ArrayList();
-      if (Minecraft.func_71410_x().func_71356_B()) {
+      if (Minecraft.getMinecraft().func_71356_B()) {
          this.buttonReloadAircraftInfo = new W_GuiButton(400, x1, y + 50, 150, 20, "Reload aircraft setting");
          this.buttonReloadWeaponInfo = new W_GuiButton(401, x1, y + 75, 150, 20, "Reload All Weapons");
          this.buttonReloadAllHUD = new W_GuiButton(402, x1, y + 100, 150, 20, "Reload All HUD");
@@ -368,10 +368,10 @@ public class MCH_ConfigGui extends W_GuiContainer {
    }
 
    public void sendClientSettings() {
-      if (this.field_146297_k.field_71439_g != null) {
-         MCH_EntityAircraft ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(this.field_146297_k.field_71439_g);
+      if (this.field_146297_k.player != null) {
+         MCH_EntityAircraft ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(this.field_146297_k.player);
          if (ac != null) {
-            int seatId = ac.getSeatIdByEntity(this.field_146297_k.field_71439_g);
+            int seatId = ac.getSeatIdByEntity(this.field_146297_k.player);
             if (seatId == 0) {
                ac.updateClientSettings(seatId);
             }
@@ -502,16 +502,16 @@ public class MCH_ConfigGui extends W_GuiContainer {
             break;
          case 100:
             this.saveAndApplyConfig();
-            this.field_146297_k.field_71439_g.func_71053_j();
+            this.field_146297_k.player.func_71053_j();
             break;
          case 101:
-            this.field_146297_k.field_71439_g.func_71053_j();
+            this.field_146297_k.player.func_71053_j();
             break;
          case 401:
             MCH_Lib.DbgLog(true, "MCH_BaseInfo.reload all weapon info.");
             ContentRegistries.get(MCH_WeaponInfo.class).reloadAll();
             MCH_PacketNotifyInfoReloaded.sendRealodAllWeapon();
-            List<Entity> list = this.field_146297_k.field_71441_e.field_72996_f;
+            List<Entity> list = this.field_146297_k.world.field_72996_f;
             Set<String> reloaded = Sets.newHashSet();
 
             for(i = 0; i < list.size(); ++i) {
@@ -526,7 +526,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
                }
             }
 
-            this.field_146297_k.field_71439_g.func_71053_j();
+            this.field_146297_k.player.func_71053_j();
             break;
          case 402:
             MCH_MOD.proxy.reloadHUD();
@@ -536,7 +536,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
                String name = ac.getAcInfo().name;
                MCH_Lib.DbgLog(true, "MCH_BaseInfo.reload : " + name);
                ContentRegistries.get(ac.getAcInfo().getClass()).reload(name);
-               List<Entity> list = this.field_146297_k.field_71441_e.field_72996_f;
+               List<Entity> list = this.field_146297_k.world.field_72996_f;
 
                for(i = 0; i < list.size(); ++i) {
                   if (list.get(i) instanceof MCH_EntityAircraft) {
@@ -551,7 +551,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
                MCH_PacketNotifyInfoReloaded.sendRealodAc();
             }
 
-            this.field_146297_k.field_71439_g.func_71053_j();
+            this.field_146297_k.player.func_71053_j();
          }
       } catch (Exception var7) {
          var7.printStackTrace();
@@ -677,7 +677,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
       float fh = (float)(1.0D / texHeight);
       Tessellator tessellator = Tessellator.getInstance();
       BufferBuilder buffer = tessellator.getBuffer();
-      buffer.begin(7, DefaultVertexFormats.field_181707_g);
+      buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
       buffer.pos(-width / 2.0D, height / 2.0D, (double)this.field_73735_i).func_187315_a(uLeft * (double)fw, (vTop + vHeight) * (double)fh).func_181675_d();
       buffer.pos(width / 2.0D, height / 2.0D, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)fw, (vTop + vHeight) * (double)fh).func_181675_d();
       buffer.pos(width / 2.0D, -height / 2.0D, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)fw, vTop * (double)fh).func_181675_d();

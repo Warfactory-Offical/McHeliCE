@@ -43,7 +43,7 @@ public class MCH_ClientSeatTickHandler extends MCH_ClientTickHandlerBase {
       }
 
       this.isBeforeRiding = this.isRiding;
-      EntityPlayer player = this.mc.field_71439_g;
+      EntityPlayer player = this.mc.player;
       MCH_EntityAircraft ac = null;
       if (player != null && player.func_184187_bx() instanceof MCH_EntitySeat) {
          MCH_EntitySeat seat = (MCH_EntitySeat)player.func_184187_bx();

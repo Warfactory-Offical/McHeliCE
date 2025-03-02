@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.Side;
 )
 public class MCH_CameraManager {
    private static final float DEF_THIRD_CAMERA_DIST = 4.0F;
-   private static final Minecraft mc = Minecraft.func_71410_x();
+   private static final Minecraft mc = Minecraft.getMinecraft();
    private static float cameraRoll = 0.0F;
    private static float cameraDistance = 4.0F;
    private static float cameraZoom = 1.0F;
@@ -42,7 +42,7 @@ public class MCH_CameraManager {
       }
 
       MCH_EntityAircraft ridingEntity = ridingAircraft;
-      if (ridingEntity != null && ridingEntity.canSwitchFreeLook() && ridingEntity.isPilot(mc.field_71439_g)) {
+      if (ridingEntity != null && ridingEntity.canSwitchFreeLook() && ridingEntity.isPilot(mc.player)) {
          boolean flag = !(entity instanceof MCH_ViewEntityDummy);
          GlStateManager.func_179109_b(0.0F, -f, 0.0F);
          if (flag) {
@@ -66,8 +66,8 @@ public class MCH_CameraManager {
 
    @SubscribeEvent
    static void onFOVModifierEvent(FOVModifier event) {
-      MCH_ViewEntityDummy viewer = MCH_ViewEntityDummy.getInstance(mc.field_71441_e);
-      if (viewer == event.getEntity() || MCH_ItemRangeFinder.isUsingScope(mc.field_71439_g)) {
+      MCH_ViewEntityDummy viewer = MCH_ViewEntityDummy.getInstance(mc.world);
+      if (viewer == event.getEntity() || MCH_ItemRangeFinder.isUsingScope(mc.player)) {
          event.setFOV(event.getFOV() * (1.0F / cameraZoom));
       }
 

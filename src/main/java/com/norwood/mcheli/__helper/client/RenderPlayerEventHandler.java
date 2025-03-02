@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.Side;
    value = {Side.CLIENT}
 )
 public class RenderPlayerEventHandler {
-   private static final Minecraft mc = Minecraft.func_71410_x();
+   private static final Minecraft mc = Minecraft.getMinecraft();
    private static Entity cacheViewEntity;
 
    @SubscribeEvent

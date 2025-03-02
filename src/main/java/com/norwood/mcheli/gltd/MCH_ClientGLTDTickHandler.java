@@ -71,13 +71,13 @@ public class MCH_ClientGLTDTickHandler extends MCH_ClientTickHandlerBase {
       }
 
       this.isBeforeRiding = this.isRiding;
-      EntityPlayer player = this.mc.field_71439_g;
+      EntityPlayer player = this.mc.player;
       MCH_ViewEntityDummy viewEntityDummy = null;
       if (player != null && player.func_184187_bx() instanceof MCH_EntityGLTD) {
          MCH_EntityGLTD gltd = (MCH_EntityGLTD)player.func_184187_bx();
          this.updateGLTD(player, gltd);
          MCH_Lib.disableFirstPersonItemRender(player.func_184614_ca());
-         viewEntityDummy = MCH_ViewEntityDummy.getInstance(this.mc.field_71441_e);
+         viewEntityDummy = MCH_ViewEntityDummy.getInstance(this.mc.world);
          viewEntityDummy.update(gltd.camera);
          if (!inGUI) {
             this.playerControl(player, gltd);

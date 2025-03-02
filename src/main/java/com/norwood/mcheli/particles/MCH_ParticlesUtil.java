@@ -28,9 +28,9 @@ public class MCH_ParticlesUtil {
    public static void spawnParticleExplode(World w, double x, double y, double z, float size, float r, float g, float b, float a, int age) {
       MCH_EntityParticleExplode epe = new MCH_EntityParticleExplode(w, x, y, z, (double)size, (double)age, 0.0D);
       epe.setParticleMaxAge(age);
-      epe.func_70538_b(r, g, b);
-      epe.func_82338_g(a);
-      FMLClientHandler.instance().getClient().field_71452_i.func_78873_a(epe);
+      epe.setRBGColorF(r, g, b);
+      epe.setAlphaF(a);
+      FMLClientHandler.instance().getClient().effectRenderer.addEffect(epe);
    }
 
    public static void spawnParticleTileCrack(World w, int blockX, int blockY, int blockZ, double x, double y, double z, double mx, double my, double mz) {
@@ -70,10 +70,10 @@ public class MCH_ParticlesUtil {
    }
 
    public static Particle doSpawnParticle(String type, double x, double y, double z, double mx, double my, double mz, int... params) {
-      Minecraft mc = Minecraft.func_71410_x();
-      if (mc != null && mc.func_175606_aa() != null && mc.field_71452_i != null) {
+      Minecraft mc = Minecraft.getMinecraft();
+      if (mc != null && mc.func_175606_aa() != null && mc.effectRenderer != null) {
          int i = mc.field_71474_y.field_74362_aa;
-         if (i == 1 && mc.field_71441_e.field_73012_v.nextInt(3) == 0) {
+         if (i == 1 && mc.world.field_73012_v.nextInt(3) == 0) {
             i = 2;
          }
 
@@ -82,14 +82,14 @@ public class MCH_ParticlesUtil {
          double d8 = mc.func_175606_aa().posZ - z;
          Particle entityfx = null;
          if (type.equalsIgnoreCase("hugeexplosion")) {
-            entityfx = create(Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
-            mc.field_71452_i.func_78873_a(entityfx);
+            entityfx = create(Factory::new, mc.world, x, y, z, mx, my, mz);
+            mc.effectRenderer.addEffect(entityfx);
          } else if (type.equalsIgnoreCase("largeexplode")) {
-            entityfx = create(net.minecraft.client.particle.ParticleExplosionLarge.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
-            mc.field_71452_i.func_78873_a(entityfx);
+            entityfx = create(net.minecraft.client.particle.ParticleExplosionLarge.Factory::new, mc.world, x, y, z, mx, my, mz);
+            mc.effectRenderer.addEffect(entityfx);
          } else if (type.equalsIgnoreCase("fireworksSpark")) {
-            entityfx = create(net.minecraft.client.particle.ParticleFirework.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
-            mc.field_71452_i.func_78873_a(entityfx);
+            entityfx = create(net.minecraft.client.particle.ParticleFirework.Factory::new, mc.world, x, y, z, mx, my, mz);
+            mc.effectRenderer.addEffect(entityfx);
          }
 
          if (entityfx != null) {
@@ -102,79 +102,79 @@ public class MCH_ParticlesUtil {
                return null;
             } else {
                if (type.equalsIgnoreCase("bubble")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleBubble.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleBubble.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("suspended")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleSuspend.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleSuspend.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("depthsuspend")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleSuspendedTown.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleSuspendedTown.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("townaura")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleSuspendedTown.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleSuspendedTown.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("crit")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleCrit.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleCrit.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("magicCrit")) {
-                  entityfx = create(MagicFactory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(MagicFactory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("smoke")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleSmokeNormal.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleSmokeNormal.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("mobSpell")) {
-                  entityfx = create(MobFactory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(MobFactory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("mobSpellAmbient")) {
-                  entityfx = create(AmbientMobFactory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(AmbientMobFactory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("spell")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleSpell.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleSpell.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("instantSpell")) {
-                  entityfx = create(InstantFactory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(InstantFactory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("witchMagic")) {
-                  entityfx = create(WitchFactory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(WitchFactory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("note")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleNote.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleNote.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("portal")) {
-                  entityfx = create(net.minecraft.client.particle.ParticlePortal.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticlePortal.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("enchantmenttable")) {
-                  entityfx = create(EnchantmentTable::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(EnchantmentTable::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("explode")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleExplosion.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleExplosion.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("flame")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleFlame.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleFlame.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("lava")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleLava.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleLava.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("footstep")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleFootStep.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleFootStep.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("splash")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleSplash.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleSplash.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("wake")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleWaterWake.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleWaterWake.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("largesmoke")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleSmokeLarge.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleSmokeLarge.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("cloud")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleCloud.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleCloud.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("reddust")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleRedstone.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleRedstone.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("snowballpoof")) {
-                  entityfx = create(SnowballFactory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(SnowballFactory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("dripWater")) {
-                  entityfx = create(WaterFactory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(WaterFactory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("dripLava")) {
-                  entityfx = create(LavaFactory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(LavaFactory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("snowshovel")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleSnowShovel.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleSnowShovel.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("slime")) {
-                  entityfx = create(SlimeFactory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(SlimeFactory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("heart")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleHeart.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(net.minecraft.client.particle.ParticleHeart.Factory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("angryVillager")) {
-                  entityfx = create(AngryVillagerFactory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(AngryVillagerFactory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.equalsIgnoreCase("happyVillager")) {
-                  entityfx = create(HappyVillagerFactory::new, mc.field_71441_e, x, y, z, mx, my, mz);
+                  entityfx = create(HappyVillagerFactory::new, mc.world, x, y, z, mx, my, mz);
                } else if (type.startsWith("iconcrack")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleBreaking.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz, params);
+                  entityfx = create(net.minecraft.client.particle.ParticleBreaking.Factory::new, mc.world, x, y, z, mx, my, mz, params);
                } else if (type.startsWith("blockcrack")) {
-                  entityfx = create(net.minecraft.client.particle.ParticleDigging.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz, params);
+                  entityfx = create(net.minecraft.client.particle.ParticleDigging.Factory::new, mc.world, x, y, z, mx, my, mz, params);
                } else if (type.startsWith("blockdust")) {
-                  entityfx = create(MCH_EntityBlockDustFX.Factory::new, mc.field_71441_e, x, y, z, mx, my, mz, params);
+                  entityfx = create(MCH_EntityBlockDustFX.Factory::new, mc.world, x, y, z, mx, my, mz, params);
                }
 
                if (entityfx != null) {
-                  mc.field_71452_i.func_78873_a(entityfx);
+                  mc.effectRenderer.addEffect(entityfx);
                }
 
                return entityfx;
@@ -185,42 +185,42 @@ public class MCH_ParticlesUtil {
       }
    }
 
-   public static void spawnParticle(MCH_ParticleParam p) {
-      if (p.world.isRemote) {
+   public static void spawnParticle(MCH_ParticleParam particleParam) {
+      if (particleParam.world.isRemote) {
          MCH_EntityParticleBase entityFX = null;
-         if (p.name.equalsIgnoreCase("Splash")) {
-            entityFX = new MCH_EntityParticleSplash(p.world, p.posX, p.posY, p.posZ, p.motionX, p.motionY, p.motionZ);
+         if (particleParam.name.equalsIgnoreCase("Splash")) {
+            entityFX = new MCH_EntityParticleSplash(particleParam.world, particleParam.posX, particleParam.posY, particleParam.posZ, particleParam.motionX, particleParam.motionY, particleParam.motionZ);
          } else {
-            entityFX = new MCH_EntityParticleSmoke(p.world, p.posX, p.posY, p.posZ, p.motionX, p.motionY, p.motionZ);
+            entityFX = new MCH_EntityParticleSmoke(particleParam.world, particleParam.posX, particleParam.posY, particleParam.posZ, particleParam.motionX, particleParam.motionY, particleParam.motionZ);
          }
 
-         ((MCH_EntityParticleBase)entityFX).func_70538_b(p.r, p.g, p.b);
-         ((MCH_EntityParticleBase)entityFX).func_82338_g(p.a);
-         if (p.age > 0) {
-            ((MCH_EntityParticleBase)entityFX).setParticleMaxAge(p.age);
+         ((MCH_EntityParticleBase)entityFX).setRBGColorF(particleParam.red, particleParam.green, particleParam.blue);
+         ((MCH_EntityParticleBase)entityFX).setAlphaF(particleParam.alpha);
+         if (particleParam.age > 0) {
+            ((MCH_EntityParticleBase)entityFX).setParticleMaxAge(particleParam.age);
          }
 
-         ((MCH_EntityParticleBase)entityFX).moutionYUpAge = p.motionYUpAge;
-         ((MCH_EntityParticleBase)entityFX).gravity = p.gravity;
-         ((MCH_EntityParticleBase)entityFX).isEffectedWind = p.isEffectWind;
-         ((MCH_EntityParticleBase)entityFX).diffusible = p.diffusible;
-         ((MCH_EntityParticleBase)entityFX).toWhite = p.toWhite;
-         if (p.diffusible) {
-            ((MCH_EntityParticleBase)entityFX).setParticleScale(p.size * 0.2F);
-            ((MCH_EntityParticleBase)entityFX).particleMaxScale = p.size * 2.0F;
+         ((MCH_EntityParticleBase)entityFX).moutionYUpAge = particleParam.motionYUpAge;
+         ((MCH_EntityParticleBase)entityFX).gravity = particleParam.gravity;
+         ((MCH_EntityParticleBase)entityFX).isEffectedWind = particleParam.isEffectWind;
+         ((MCH_EntityParticleBase)entityFX).diffusible = particleParam.diffusible;
+         ((MCH_EntityParticleBase)entityFX).toWhite = particleParam.toWhite;
+         if (particleParam.diffusible) {
+            ((MCH_EntityParticleBase)entityFX).setParticleScale(particleParam.size * 0.2F);
+            ((MCH_EntityParticleBase)entityFX).particleMaxScale = particleParam.size * 2.0F;
          } else {
-            ((MCH_EntityParticleBase)entityFX).setParticleScale(p.size);
+            ((MCH_EntityParticleBase)entityFX).setParticleScale(particleParam.size);
          }
 
-         FMLClientHandler.instance().getClient().field_71452_i.func_78873_a((Particle)entityFX);
+         FMLClientHandler.instance().getClient().effectRenderer.addEffect((Particle)entityFX);
       }
 
    }
 
    public static void spawnMarkPoint(EntityPlayer player, double x, double y, double z) {
       clearMarkPoint();
-      markPoint = new MCH_EntityParticleMarkPoint(player.world, x, y, z, player.func_96124_cp());
-      FMLClientHandler.instance().getClient().field_71452_i.func_78873_a(markPoint);
+      markPoint = new MCH_EntityParticleMarkPoint(player.world, x, y, z, player.getTeam());
+      FMLClientHandler.instance().getClient().effectRenderer.addEffect(markPoint);
    }
 
    public static void clearMarkPoint() {
@@ -232,6 +232,6 @@ public class MCH_ParticlesUtil {
    }
 
    private static Particle create(Supplier<IParticleFactory> factoryFunc, World world, double x, double y, double z, double mx, double my, double mz, int... param) {
-      return ((IParticleFactory)factoryFunc.get()).func_178902_a(-1, world, x, y, z, mx, my, mz, param);
+      return ((IParticleFactory)factoryFunc.get()).createParticle(-1, world, x, y, z, mx, my, mz, param);
    }
 }

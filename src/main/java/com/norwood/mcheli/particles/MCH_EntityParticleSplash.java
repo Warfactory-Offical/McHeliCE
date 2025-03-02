@@ -18,9 +18,9 @@ public class MCH_EntityParticleSplash extends MCH_EntityParticleBase {
    }
 
    public void func_189213_a() {
-      this.field_187123_c = this.field_187126_f;
-      this.field_187124_d = this.field_187127_g;
-      this.field_187125_e = this.field_187128_h;
+      this.field_187123_c = this.posX;
+      this.field_187124_d = this.posY;
+      this.field_187125_e = this.posZ;
       if (this.field_70546_d < this.field_70547_e) {
          this.func_70536_a((int)(8.0D * (double)this.field_70546_d / (double)this.field_70547_e));
          ++this.field_70546_d;
@@ -29,17 +29,17 @@ public class MCH_EntityParticleSplash extends MCH_EntityParticleBase {
       }
 
       this.field_187130_j -= 0.05999999865889549D;
-      Block block = W_WorldFunc.getBlock(this.field_187122_b, (int)(this.field_187126_f + 0.5D), (int)(this.field_187127_g + 0.5D), (int)(this.field_187128_h + 0.5D));
+      Block block = W_WorldFunc.getBlock(this.field_187122_b, (int)(this.posX + 0.5D), (int)(this.posY + 0.5D), (int)(this.posZ + 0.5D));
       boolean beforeInWater = W_Block.func_149680_a(block, W_Block.getWater());
       this.func_187110_a(this.field_187129_i, this.field_187130_j, this.field_187131_k);
-      block = W_WorldFunc.getBlock(this.field_187122_b, (int)(this.field_187126_f + 0.5D), (int)(this.field_187127_g + 0.5D), (int)(this.field_187128_h + 0.5D));
+      block = W_WorldFunc.getBlock(this.field_187122_b, (int)(this.posX + 0.5D), (int)(this.posY + 0.5D), (int)(this.posZ + 0.5D));
       boolean nowInWater = W_Block.func_149680_a(block, W_Block.getWater());
       if (this.field_187130_j < -0.6D && !beforeInWater && nowInWater) {
          double p = -this.field_187130_j * 10.0D;
 
          for(int i = 0; (double)i < p; ++i) {
-            this.field_187122_b.func_175688_a(EnumParticleTypes.WATER_SPLASH, this.field_187126_f + 0.5D + (this.field_187136_p.nextDouble() - 0.5D) * 2.0D, this.field_187127_g + this.field_187136_p.nextDouble(), this.field_187128_h + 0.5D + (this.field_187136_p.nextDouble() - 0.5D) * 2.0D, (this.field_187136_p.nextDouble() - 0.5D) * 2.0D, 4.0D, (this.field_187136_p.nextDouble() - 0.5D) * 2.0D, new int[0]);
-            this.field_187122_b.func_175688_a(EnumParticleTypes.WATER_BUBBLE, this.field_187126_f + 0.5D + (this.field_187136_p.nextDouble() - 0.5D) * 2.0D, this.field_187127_g - this.field_187136_p.nextDouble(), this.field_187128_h + 0.5D + (this.field_187136_p.nextDouble() - 0.5D) * 2.0D, (this.field_187136_p.nextDouble() - 0.5D) * 2.0D, -0.5D, (this.field_187136_p.nextDouble() - 0.5D) * 2.0D, new int[0]);
+            this.field_187122_b.func_175688_a(EnumParticleTypes.WATER_SPLASH, this.posX + 0.5D + (this.field_187136_p.nextDouble() - 0.5D) * 2.0D, this.posY + this.field_187136_p.nextDouble(), this.posZ + 0.5D + (this.field_187136_p.nextDouble() - 0.5D) * 2.0D, (this.field_187136_p.nextDouble() - 0.5D) * 2.0D, 4.0D, (this.field_187136_p.nextDouble() - 0.5D) * 2.0D, new int[0]);
+            this.field_187122_b.func_175688_a(EnumParticleTypes.WATER_BUBBLE, this.posX + 0.5D + (this.field_187136_p.nextDouble() - 0.5D) * 2.0D, this.posY - this.field_187136_p.nextDouble(), this.posZ + 0.5D + (this.field_187136_p.nextDouble() - 0.5D) * 2.0D, (this.field_187136_p.nextDouble() - 0.5D) * 2.0D, -0.5D, (this.field_187136_p.nextDouble() - 0.5D) * 2.0D, new int[0]);
          }
       } else if (this.field_187132_l) {
          this.func_187112_i();
@@ -56,9 +56,9 @@ public class MCH_EntityParticleSplash extends MCH_EntityParticleBase {
       float f8 = 0.0F;
       float f9 = 1.0F;
       float f10 = 0.1F * this.field_70544_f;
-      float f11 = (float)(this.field_187123_c + (this.field_187126_f - this.field_187123_c) * (double)par2 - field_70556_an);
-      float f12 = (float)(this.field_187124_d + (this.field_187127_g - this.field_187124_d) * (double)par2 - field_70554_ao);
-      float f13 = (float)(this.field_187125_e + (this.field_187128_h - this.field_187125_e) * (double)par2 - field_70555_ap);
+      float f11 = (float)(this.field_187123_c + (this.posX - this.field_187123_c) * (double)par2 - field_70556_an);
+      float f12 = (float)(this.field_187124_d + (this.posY - this.field_187124_d) * (double)par2 - field_70554_ao);
+      float f13 = (float)(this.field_187125_e + (this.posZ - this.field_187125_e) * (double)par2 - field_70555_ap);
       float f14 = 1.0F;
       int i = this.func_189214_a(par2);
       int j = i >> 16 & '\uffff';

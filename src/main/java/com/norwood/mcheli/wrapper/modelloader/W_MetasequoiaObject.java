@@ -35,7 +35,7 @@ public class W_MetasequoiaObject extends W_ModelCustom {
       this.fileName = resource.toString();
 
       try {
-         IResource res = Minecraft.func_71410_x().func_110442_L().func_110536_a(resource);
+         IResource res = Minecraft.getMinecraft().func_110442_L().func_110536_a(resource);
          this.loadObjModel(res.func_110527_b());
       } catch (IOException var3) {
          throw new _ModelFormatException("IO Exception reading model format:" + this.fileName, var3);

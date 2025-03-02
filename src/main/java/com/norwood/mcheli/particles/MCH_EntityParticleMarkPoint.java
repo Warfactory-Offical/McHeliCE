@@ -16,24 +16,24 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 public class MCH_EntityParticleMarkPoint extends MCH_EntityParticleBase implements ITargetMarkerObject {
-   final Team taem;
+   final Team team;
 
    public MCH_EntityParticleMarkPoint(World par1World, double x, double y, double z, Team team) {
       super(par1World, x, y, z, 0.0D, 0.0D, 0.0D);
       this.setParticleMaxAge(30);
-      this.taem = team;
+      this.team = team;
    }
 
    public void func_189213_a() {
-      this.field_187123_c = this.field_187126_f;
-      this.field_187124_d = this.field_187127_g;
-      this.field_187125_e = this.field_187128_h;
-      EntityPlayer player = Minecraft.func_71410_x().field_71439_g;
+      this.field_187123_c = this.posX;
+      this.field_187124_d = this.posY;
+      this.field_187125_e = this.posZ;
+      EntityPlayer player = Minecraft.getMinecraft().player;
       if (player == null) {
          this.func_187112_i();
-      } else if (player.func_96124_cp() == null && this.taem != null) {
+      } else if (player.getTeam() == null && this.team != null) {
          this.func_187112_i();
-      } else if (player.func_96124_cp() != null && !player.func_184194_a(this.taem)) {
+      } else if (player.getTeam() != null && !player.func_184194_a(this.team)) {
          this.func_187112_i();
       }
 
@@ -50,8 +50,8 @@ public class MCH_EntityParticleMarkPoint extends MCH_EntityParticleBase implemen
 
    public void func_180434_a(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
       GL11.glPushMatrix();
-      Minecraft mc = Minecraft.func_71410_x();
-      EntityPlayer player = mc.field_71439_g;
+      Minecraft mc = Minecraft.getMinecraft();
+      EntityPlayer player = mc.player;
       if (player != null) {
          double ix = field_70556_an;
          double iy = field_70554_ao;
@@ -81,9 +81,9 @@ public class MCH_EntityParticleMarkPoint extends MCH_EntityParticleBase implemen
             iz += v.z * (block_dist / dist);
          }
 
-         double px = (double)((float)(this.field_187123_c + (this.field_187126_f - this.field_187123_c) * (double)partialTicks - ix));
-         double py = (double)((float)(this.field_187124_d + (this.field_187127_g - this.field_187124_d) * (double)partialTicks - iy));
-         double pz = (double)((float)(this.field_187125_e + (this.field_187128_h - this.field_187125_e) * (double)partialTicks - iz));
+         double px = (double)((float)(this.field_187123_c + (this.posX - this.field_187123_c) * (double)partialTicks - ix));
+         double py = (double)((float)(this.field_187124_d + (this.posY - this.field_187124_d) * (double)partialTicks - iy));
+         double pz = (double)((float)(this.field_187125_e + (this.posZ - this.field_187125_e) * (double)partialTicks - iz));
          double scale = Math.sqrt(px * px + py * py + pz * pz) / 100.0D;
          if (scale < 1.0D) {
             scale = 1.0D;
@@ -95,14 +95,14 @@ public class MCH_EntityParticleMarkPoint extends MCH_EntityParticleBase implemen
    }
 
    public double getX() {
-      return this.field_187126_f;
+      return this.posX;
    }
 
    public double getY() {
-      return this.field_187127_g;
+      return this.posY;
    }
 
    public double getZ() {
-      return this.field_187128_h;
+      return this.posZ;
    }
 }

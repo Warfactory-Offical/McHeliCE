@@ -25,12 +25,12 @@ public class W_EntityRenderer {
    }
 
    public static void activateShader(ResourceLocation r) {
-      Minecraft mc = Minecraft.func_71410_x();
+      Minecraft mc = Minecraft.getMinecraft();
       mc.field_71460_t.func_175069_a(r);
    }
 
    public static void deactivateShader() {
-      Minecraft.func_71410_x().field_71460_t.func_181022_b();
+      Minecraft.getMinecraft().field_71460_t.func_181022_b();
    }
 
    public static void renderEntityWithPosYaw(RenderManager rm, Entity par1Entity, double par2, double par4, double par6, float par8, float par9, boolean b) {

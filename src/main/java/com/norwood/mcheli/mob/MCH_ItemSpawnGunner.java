@@ -96,7 +96,7 @@ public class MCH_ItemSpawnGunner extends W_Item {
       if (target instanceof MCH_EntityGunner) {
          ((Entity)target).func_184230_a(player, handIn);
          return ActionResult.newResult(EnumActionResult.SUCCESS, itemstack);
-      } else if (this.targetType == 1 && !world.isRemote && player.func_96124_cp() == null) {
+      } else if (this.targetType == 1 && !world.isRemote && player.getTeam() == null) {
          player.func_145747_a(new TextComponentString("You are not on team."));
          return ActionResult.newResult(EnumActionResult.FAIL, itemstack);
       } else if (target == null) {
@@ -121,7 +121,7 @@ public class MCH_ItemSpawnGunner extends W_Item {
             gunner.func_184220_m((Entity)target);
             W_WorldFunc.MOD_playSoundAtEntity(gunner, "wrench", 1.0F, 3.0F);
             ac = target instanceof MCH_EntityAircraft ? (MCH_EntityAircraft)target : ((MCH_EntitySeat)target).getParent();
-            String teamPlayerName = ScorePlayerTeam.func_96667_a(player.func_96124_cp(), player.func_145748_c_().func_150254_d());
+            String teamPlayerName = ScorePlayerTeam.func_96667_a(player.getTeam(), player.func_145748_c_().func_150254_d());
             String displayName = TextFormatting.GOLD + ac.getAcInfo().displayName + TextFormatting.RESET;
             int seatNo = ac.getSeatIdByEntity(gunner) + 1;
             if (MCH_MOD.isTodaySep01()) {

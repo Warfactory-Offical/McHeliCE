@@ -55,7 +55,7 @@ public class MCH_ClientHeliTickHandler extends MCH_AircraftClientTickHandler {
       }
 
       this.isBeforeRiding = this.isRiding;
-      EntityPlayer player = this.mc.field_71439_g;
+      EntityPlayer player = this.mc.player;
       MCH_EntityHeli heli = null;
       boolean isPilot = true;
       if (player != null) {
@@ -77,7 +77,7 @@ public class MCH_ClientHeliTickHandler extends MCH_AircraftClientTickHandler {
 
       if (heli != null && heli.getAcInfo() != null) {
          this.update(player, heli, isPilot);
-         MCH_ViewEntityDummy viewEntityDummy = MCH_ViewEntityDummy.getInstance(this.mc.field_71441_e);
+         MCH_ViewEntityDummy viewEntityDummy = MCH_ViewEntityDummy.getInstance(this.mc.world);
          viewEntityDummy.update(heli.camera);
          if (!inGUI) {
             if (!heli.isDestroyed()) {

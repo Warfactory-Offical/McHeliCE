@@ -38,7 +38,7 @@ public class MCH_ItemRenderRangeFinder implements _IItemRenderer {
          GL11.glRotatef(-130.0F, 0.0F, 1.0F, 0.0F);
          GL11.glRotatef(70.0F, 1.0F, 0.0F, 0.0F);
          GL11.glRotatef(5.0F, 0.0F, 0.0F, 1.0F);
-         if (Minecraft.func_71410_x().field_71439_g.func_184612_cw() > 0) {
+         if (Minecraft.getMinecraft().player.func_184612_cw() > 0) {
             GL11.glTranslatef(0.4F, -0.35F, -0.3F);
          } else {
             GL11.glTranslatef(0.2F, -0.35F, -0.3F);
@@ -47,7 +47,7 @@ public class MCH_ItemRenderRangeFinder implements _IItemRenderer {
          MCH_ModelManager.render("rangefinder");
          break;
       case EQUIPPED_FIRST_PERSON:
-         if (!MCH_ItemRangeFinder.isUsingScope(Minecraft.func_71410_x().field_71439_g)) {
+         if (!MCH_ItemRangeFinder.isUsingScope(Minecraft.getMinecraft().player)) {
             size = 2.2F;
             GL11.glScalef(size, size, size);
             GL11.glRotatef(-210.0F, 0.0F, 1.0F, 0.0F);

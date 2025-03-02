@@ -36,7 +36,7 @@ public class MCH_RenderGunner extends RenderLivingBase<MCH_EntityGunner> {
    }
 
    protected boolean canRenderName(MCH_EntityGunner targetEntity) {
-      return targetEntity.func_96124_cp() != null;
+      return targetEntity.getTeam() != null;
    }
 
    public void doRender(MCH_EntityGunner entity, double x, double y, double z, float entityYaw, float partialTicks) {

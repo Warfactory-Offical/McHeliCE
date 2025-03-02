@@ -12,10 +12,10 @@ public class MCH_ParticleParam {
    public double motionY;
    public double motionZ;
    public float size;
-   public float a;
-   public float r;
-   public float g;
-   public float b;
+   public float alpha;
+   public float red;
+   public float green;
+   public float blue;
    public boolean isEffectWind;
    public int age;
    public boolean diffusible;
@@ -28,10 +28,10 @@ public class MCH_ParticleParam {
       this.motionY = 0.0D;
       this.motionZ = 0.0D;
       this.size = 1.0F;
-      this.a = 1.0F;
-      this.r = 1.0F;
-      this.g = 1.0F;
-      this.b = 1.0F;
+      this.alpha = 1.0F;
+      this.red = 1.0F;
+      this.green = 1.0F;
+      this.blue = 1.0F;
       this.isEffectWind = false;
       this.age = 0;
       this.diffusible = false;
@@ -54,10 +54,10 @@ public class MCH_ParticleParam {
    }
 
    public void setColor(float a, float r, float g, float b) {
-      this.a = a;
-      this.r = r;
-      this.g = g;
-      this.b = b;
+      this.alpha = a;
+      this.red = r;
+      this.green = g;
+      this.blue = b;
    }
 
    public void setMotion(double x, double y, double z) {

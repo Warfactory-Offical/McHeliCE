@@ -14,7 +14,7 @@ public class MCH_ViewEntityDummy extends EntityPlayerSP {
    private float zoom;
 
    private MCH_ViewEntityDummy(World world) {
-      super(Minecraft.func_71410_x(), world, Minecraft.func_71410_x().func_147114_u(), new StatisticsManager(), new RecipeBook());
+      super(Minecraft.getMinecraft(), world, Minecraft.getMinecraft().func_147114_u(), new StatisticsManager(), new RecipeBook());
       this.field_70737_aN = 0;
       this.field_70738_aO = 1;
       this.func_70105_a(1.0F, 1.0F);
@@ -23,8 +23,8 @@ public class MCH_ViewEntityDummy extends EntityPlayerSP {
    public static MCH_ViewEntityDummy getInstance(World w) {
       if ((instance == null || instance.field_70128_L) && w.isRemote) {
          instance = new MCH_ViewEntityDummy(w);
-         if (Minecraft.func_71410_x().field_71439_g != null) {
-            instance.field_71158_b = Minecraft.func_71410_x().field_71439_g.field_71158_b;
+         if (Minecraft.getMinecraft().player != null) {
+            instance.field_71158_b = Minecraft.getMinecraft().player.field_71158_b;
          }
 
          instance.func_70107_b(0.0D, -4.0D, 0.0D);

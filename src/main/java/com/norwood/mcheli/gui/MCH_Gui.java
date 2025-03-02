@@ -55,8 +55,8 @@ public abstract class MCH_Gui extends GuiScreen {
          this.centerY = this.field_146295_m / 2;
          GL11.glPushMatrix();
          GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-         if (this.field_146297_k.field_71439_g != null) {
-            this.drawGui(this.field_146297_k.field_71439_g, this.field_146297_k.field_71474_y.field_74320_O != 0);
+         if (this.field_146297_k.player != null) {
+            this.drawGui(this.field_146297_k.player, this.field_146297_k.field_71474_y.field_74320_O != 0);
          }
 
          GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -72,7 +72,7 @@ public abstract class MCH_Gui extends GuiScreen {
       float f = 0.00390625F;
       Tessellator tessellator = Tessellator.getInstance();
       BufferBuilder builder = tessellator.getBuffer();
-      builder.begin(7, DefaultVertexFormats.field_181707_g);
+      builder.begin(7, DefaultVertexFormats.POSITION_TEX);
       builder.pos(-width / 2.0D, height / 2.0D, (double)this.field_73735_i).func_187315_a(uLeft * (double)f, (vTop + vHeight) * (double)f).func_181675_d();
       builder.pos(width / 2.0D, height / 2.0D, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)f, (vTop + vHeight) * (double)f).func_181675_d();
       builder.pos(width / 2.0D, -height / 2.0D, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)f, vTop * (double)f).func_181675_d();
@@ -86,7 +86,7 @@ public abstract class MCH_Gui extends GuiScreen {
       float fy = (float)(1.0D / textureHeight);
       Tessellator tessellator = Tessellator.getInstance();
       BufferBuilder builder = tessellator.getBuffer();
-      builder.begin(7, DefaultVertexFormats.field_181707_g);
+      builder.begin(7, DefaultVertexFormats.POSITION_TEX);
       builder.pos(left, top + height, (double)this.field_73735_i).func_187315_a(uLeft * (double)fx, (vTop + vHeight) * (double)fy).func_181675_d();
       builder.pos(left + width, top + height, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)fx, (vTop + vHeight) * (double)fy).func_181675_d();
       builder.pos(left + width, top, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)fx, vTop * (double)fy).func_181675_d();

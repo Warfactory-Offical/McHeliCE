@@ -398,9 +398,9 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
    }
 
    protected void func_73869_a(char par1, int keycode) throws IOException {
-      if (keycode == 1 || keycode == W_KeyBinding.getKeyCode(Minecraft.func_71410_x().field_71474_y.field_151445_Q)) {
+      if (keycode == 1 || keycode == W_KeyBinding.getKeyCode(Minecraft.getMinecraft().field_71474_y.field_151445_Q)) {
          if (this.getScreenId() == 0) {
-            this.field_146297_k.field_71439_g.func_71053_j();
+            this.field_146297_k.player.func_71053_j();
          } else {
             this.switchScreen(0);
          }
@@ -722,7 +722,7 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
       float h = 0.001953125F;
       Tessellator tessellator = Tessellator.getInstance();
       BufferBuilder buffer = tessellator.getBuffer();
-      buffer.begin(7, DefaultVertexFormats.field_181707_g);
+      buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
       buffer.pos((double)(par1 + 0), (double)(par2 + par6), (double)this.field_73735_i).func_187315_a((double)((float)(par3 + 0) * w), (double)((float)(par4 + par6) * h)).func_181675_d();
       buffer.pos((double)(par1 + par5), (double)(par2 + par6), (double)this.field_73735_i).func_187315_a((double)((float)(par3 + par5) * w), (double)((float)(par4 + par6) * h)).func_181675_d();
       buffer.pos((double)(par1 + par5), (double)(par2 + 0), (double)this.field_73735_i).func_187315_a((double)((float)(par3 + par5) * w), (double)((float)(par4 + 0) * h)).func_181675_d();
@@ -735,7 +735,7 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
       float h = 0.001953125F;
       Tessellator tessellator = Tessellator.getInstance();
       BufferBuilder buffer = tessellator.getBuffer();
-      buffer.begin(7, DefaultVertexFormats.field_181707_g);
+      buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
       buffer.pos((double)(dx + 0), (double)(dy + dh), (double)this.field_73735_i).func_187315_a((double)((float)(u + 0) * w), (double)((float)(v + th) * h)).func_181675_d();
       buffer.pos((double)(dx + dw), (double)(dy + dh), (double)this.field_73735_i).func_187315_a((double)((float)(u + tw) * w), (double)((float)(v + th) * h)).func_181675_d();
       buffer.pos((double)(dx + dw), (double)(dy + 0), (double)this.field_73735_i).func_187315_a((double)((float)(u + tw) * w), (double)((float)(v + 0) * h)).func_181675_d();

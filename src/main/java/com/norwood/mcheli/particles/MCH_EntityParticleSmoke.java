@@ -27,9 +27,9 @@ public class MCH_EntityParticleSmoke extends MCH_EntityParticleBase {
    }
 
    public void func_189213_a() {
-      this.field_187123_c = this.field_187126_f;
-      this.field_187124_d = this.field_187127_g;
-      this.field_187125_e = this.field_187128_h;
+      this.field_187123_c = this.posX;
+      this.field_187124_d = this.posY;
+      this.field_187125_e = this.posZ;
       if (this.field_70546_d < this.field_70547_e) {
          this.func_70536_a((int)(8.0D * (double)this.field_70546_d / (double)this.field_70547_e));
          ++this.field_70546_d;
@@ -95,8 +95,8 @@ public class MCH_EntityParticleSmoke extends MCH_EntityParticleBase {
             if (ac.getThrottle() > 0.10000000149011612D) {
                float dist = this.getDistance(ac);
                double vel = (23.0D - (double)dist) * 0.009999999776482582D * ac.getThrottle();
-               double mx = ac.posX - this.field_187126_f;
-               double mz = ac.posZ - this.field_187128_h;
+               double mx = ac.posX - this.posX;
+               double mz = ac.posZ - this.posZ;
                this.field_187129_i -= mx * vel;
                this.field_187131_k -= mz * vel;
             }
@@ -111,10 +111,10 @@ public class MCH_EntityParticleSmoke extends MCH_EntityParticleBase {
 
    @SideOnly(Side.CLIENT)
    public int func_189214_a(float p_70070_1_) {
-      double y = this.field_187127_g;
-      this.field_187127_g += 3000.0D;
+      double y = this.posY;
+      this.posY += 3000.0D;
       int i = super.func_189214_a(p_70070_1_);
-      this.field_187127_g = y;
+      this.posY = y;
       return i;
    }
 
@@ -132,9 +132,9 @@ public class MCH_EntityParticleSmoke extends MCH_EntityParticleBase {
       float f8 = 0.0F;
       float f9 = 1.0F;
       float f10 = 0.1F * this.field_70544_f;
-      float f11 = (float)(this.field_187123_c + (this.field_187126_f - this.field_187123_c) * (double)par2 - field_70556_an);
-      float f12 = (float)(this.field_187124_d + (this.field_187127_g - this.field_187124_d) * (double)par2 - field_70554_ao);
-      float f13 = (float)(this.field_187125_e + (this.field_187128_h - this.field_187125_e) * (double)par2 - field_70555_ap);
+      float f11 = (float)(this.field_187123_c + (this.posX - this.field_187123_c) * (double)par2 - field_70556_an);
+      float f12 = (float)(this.field_187124_d + (this.posY - this.field_187124_d) * (double)par2 - field_70554_ao);
+      float f13 = (float)(this.field_187125_e + (this.posZ - this.field_187125_e) * (double)par2 - field_70555_ap);
       int i = this.func_189214_a(par2);
       int j = i >> 16 & '\uffff';
       int k = i & '\uffff';
@@ -151,9 +151,9 @@ public class MCH_EntityParticleSmoke extends MCH_EntityParticleBase {
    }
 
    private float getDistance(MCH_EntityAircraft entity) {
-      float f = (float)(this.field_187126_f - entity.posX);
-      float f1 = (float)(this.field_187127_g - entity.posY);
-      float f2 = (float)(this.field_187128_h - entity.posZ);
+      float f = (float)(this.posX - entity.posX);
+      float f1 = (float)(this.posY - entity.posY);
+      float f2 = (float)(this.posZ - entity.posZ);
       return MathHelper.func_76129_c(f * f + f1 * f1 + f2 * f2);
    }
 

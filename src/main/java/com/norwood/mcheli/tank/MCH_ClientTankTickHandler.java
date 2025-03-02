@@ -52,7 +52,7 @@ public class MCH_ClientTankTickHandler extends MCH_AircraftClientTickHandler {
       }
 
       this.isBeforeRiding = this.isRiding;
-      EntityPlayer player = this.mc.field_71439_g;
+      EntityPlayer player = this.mc.player;
       MCH_EntityTank tank = null;
       boolean isPilot = true;
       if (player != null) {
@@ -74,7 +74,7 @@ public class MCH_ClientTankTickHandler extends MCH_AircraftClientTickHandler {
 
       if (tank != null && tank.getAcInfo() != null) {
          this.update(player, tank);
-         MCH_ViewEntityDummy viewEntityDummy = MCH_ViewEntityDummy.getInstance(this.mc.field_71441_e);
+         MCH_ViewEntityDummy viewEntityDummy = MCH_ViewEntityDummy.getInstance(this.mc.world);
          viewEntityDummy.update(tank.camera);
          if (!inGUI) {
             if (!tank.isDestroyed()) {
@@ -105,7 +105,7 @@ public class MCH_ClientTankTickHandler extends MCH_AircraftClientTickHandler {
 
       if (!this.isBeforeRiding && this.isRiding && tank != null) {
          W_Reflection.setThirdPersonDistance(tank.thirdPersonDist);
-         MCH_ViewEntityDummy.getInstance(this.mc.field_71441_e).func_70107_b(tank.posX, tank.posY + 0.5D, tank.posZ);
+         MCH_ViewEntityDummy.getInstance(this.mc.world).func_70107_b(tank.posX, tank.posY + 0.5D, tank.posZ);
       } else if (this.isBeforeRiding && !this.isRiding) {
          W_Reflection.restoreDefaultThirdPersonDistance();
          MCH_Lib.enableFirstPersonItemRender();

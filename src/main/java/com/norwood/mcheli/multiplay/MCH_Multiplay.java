@@ -65,7 +65,7 @@ public class MCH_Multiplay {
          return MCH_TargetType.NONE;
       } else {
          EntityLivingBase spotter = (EntityLivingBase)user;
-         int col = spotter.func_96124_cp() == null ? 0 : 1;
+         int col = spotter.getTeam() == null ? 0 : 1;
          int row = 0;
          if (target instanceof EntityLivingBase) {
             if (!isMonster(target)) {
@@ -75,10 +75,10 @@ public class MCH_Multiplay {
             }
          }
 
-         if (spotter.func_96124_cp() != null) {
+         if (spotter.getTeam() != null) {
             if (target instanceof EntityPlayer) {
                EntityPlayer player = (EntityPlayer)target;
-               if (player.func_96124_cp() == null) {
+               if (player.getTeam() == null) {
                   row = 3;
                } else if (spotter.func_184191_r(player)) {
                   row = 4;
@@ -90,7 +90,7 @@ public class MCH_Multiplay {
                EntityPlayer rideEntity = ac.getFirstMountPlayer();
                if (rideEntity == null) {
                   row = 6;
-               } else if (rideEntity.func_96124_cp() == null) {
+               } else if (rideEntity.getTeam() == null) {
                   row = 7;
                } else if (spotter.func_184191_r(rideEntity)) {
                   row = 8;
@@ -263,7 +263,7 @@ public class MCH_Multiplay {
                      double v = Math.atan2(cy, Math.sqrt(cx * cx + cz * cz)) * 180.0D / 3.141592653589793D;
                      v = Math.abs(v + (double)player.field_70125_A);
                      if (h < (double)(angle * 2.0F) && v < (double)(angle * 2.0F)) {
-                        entityList.add(entity.func_145782_y());
+                        entityList.add(entity.getEntityId());
                      }
                   }
                }

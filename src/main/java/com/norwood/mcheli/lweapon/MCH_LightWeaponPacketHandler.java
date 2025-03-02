@@ -32,7 +32,7 @@ public class MCH_LightWeaponPacketHandler {
                if (is.func_77973_b() instanceof MCH_ItemLightWeaponBase) {
                   MCH_ItemLightWeaponBase lweapon = (MCH_ItemLightWeaponBase)is.func_77973_b();
                   if (pc.camMode == 2 && MCH_ItemLightWeaponBase.isHeld(player)) {
-                     player.func_70690_d(new PotionEffect(MobEffects.field_76439_r, 255, 0, false, false));
+                     player.addPotionEffect(new PotionEffect(MobEffects.field_76439_r, 255, 0, false, false));
                   }
 
                   if (pc.camMode > 0) {

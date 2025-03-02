@@ -163,7 +163,7 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
       super.func_70071_h_();
       if (this.user != null && !this.world.isRemote) {
          if (this.ac != null) {
-            this.dataManager.func_187227_b(AC_ID, new Integer(this.ac.func_145782_y()));
+            this.dataManager.func_187227_b(AC_ID, new Integer(this.ac.getEntityId()));
          }
 
          this.user.func_184205_a(this, true);

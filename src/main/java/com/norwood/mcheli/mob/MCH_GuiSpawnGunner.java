@@ -72,7 +72,7 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
          return (Entity)target;
       } else {
          MCH_ItemSpawnGunner item = (MCH_ItemSpawnGunner)player.func_184614_ca().func_77973_b();
-         if (item.targetType == 1 && !player.world.isRemote && player.func_96124_cp() == null) {
+         if (item.targetType == 1 && !player.world.isRemote && player.getTeam() == null) {
             return null;
          } else {
             List<MCH_EntitySeat> list1 = player.world.func_72872_a(MCH_EntitySeat.class, player.func_174813_aQ().func_72314_b(5.0D, 5.0D, 5.0D));

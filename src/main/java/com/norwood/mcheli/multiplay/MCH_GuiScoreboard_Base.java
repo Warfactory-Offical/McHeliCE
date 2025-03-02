@@ -45,7 +45,7 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
    public MCH_GuiScoreboard_Base(MCH_IGuiScoreboard switcher, EntityPlayer player) {
       super(new MCH_ContainerScoreboard(player));
       this.screen_switcher = switcher;
-      this.field_146297_k = Minecraft.func_71410_x();
+      this.field_146297_k = Minecraft.getMinecraft();
    }
 
    public void func_73866_w_() {
@@ -53,7 +53,7 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
 
    public void initGui(List<GuiButton> buttonList, GuiScreen parents) {
       this.listGui = new ArrayList();
-      this.field_146297_k = Minecraft.func_71410_x();
+      this.field_146297_k = Minecraft.getMinecraft();
       this.field_146289_q = this.field_146297_k.field_71466_p;
       this.field_146294_l = parents.field_146294_l;
       this.field_146295_m = parents.field_146295_m;
@@ -88,7 +88,7 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
    }
 
    public int getTeamNum() {
-      return this.field_146297_k.field_71441_e.func_96441_U().func_96525_g().size();
+      return this.field_146297_k.world.func_96441_U().func_96525_g().size();
    }
 
    protected void acviveScreen() {
@@ -151,7 +151,7 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
    public static int getScoreboradWidth(Minecraft mc) {
       ScaledResolution scaledresolution = new W_ScaledResolution(mc, mc.field_71443_c, mc.field_71440_d);
       int ScaledWidth = scaledresolution.func_78326_a() - 40;
-      int width = ScaledWidth * 3 / 4 / (mc.field_71441_e.func_96441_U().func_96525_g().size() + 1);
+      int width = ScaledWidth * 3 / 4 / (mc.world.func_96441_U().func_96525_g().size() + 1);
       if (width > 150) {
          width = 150;
       }
@@ -168,7 +168,7 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
    public static void drawList(Minecraft mc, FontRenderer fontRendererObj, boolean mng) {
       ArrayList<ScorePlayerTeam> teamList = new ArrayList();
       teamList.add((Object)null);
-      Iterator var4 = mc.field_71441_e.func_96441_U().func_96525_g().iterator();
+      Iterator var4 = mc.world.func_96441_U().func_96525_g().iterator();
 
       while(var4.hasNext()) {
          Object team = var4.next();
@@ -200,8 +200,8 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
    public static void drawPlayersList(Minecraft mc, FontRenderer fontRendererObj, ScorePlayerTeam team, int teamIndex, int teamNum) {
       ScaledResolution scaledresolution = new W_ScaledResolution(mc, mc.field_71443_c, mc.field_71440_d);
       int ScaledHeight = scaledresolution.func_78328_b();
-      ScoreObjective scoreobjective = mc.field_71441_e.func_96441_U().func_96539_a(0);
-      NetHandlerPlayClient nethandlerplayclient = mc.field_71439_g.field_71174_a;
+      ScoreObjective scoreobjective = mc.world.func_96441_U().func_96539_a(0);
+      NetHandlerPlayClient nethandlerplayclient = mc.player.field_71174_a;
       List<NetworkPlayerInfo> list = Lists.newArrayList(nethandlerplayclient.func_175106_d());
       int MaxPlayers = (list.size() / 5 + 1) * 5;
       MaxPlayers = MaxPlayers < 10 ? 10 : MaxPlayers;
@@ -230,7 +230,7 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
          if (i < list.size()) {
             NetworkPlayerInfo guiplayerinfo = (NetworkPlayerInfo)list.get(i);
             String playerName = guiplayerinfo.func_178845_a().getName();
-            ScorePlayerTeam steam = mc.field_71441_e.func_96441_U().func_96509_i(playerName);
+            ScorePlayerTeam steam = mc.world.func_96441_U().func_96509_i(playerName);
             if (steam == null && team == null || steam != null && team != null && steam.func_142054_a(team)) {
                ++drawY;
                fontRendererObj.func_175063_a(playerName, (float)listLeft, (float)y, -1);
@@ -253,7 +253,7 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
 
    public static void drawResponseTime(int x, int y, int responseTime) {
       GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-      Minecraft.func_71410_x().func_110434_K().func_110577_a(field_110324_m);
+      Minecraft.getMinecraft().func_110434_K().func_110577_a(field_110324_m);
       byte b2;
       if (responseTime < 0) {
          b2 = 5;
@@ -275,7 +275,7 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
    public static void static_drawTexturedModalRect(int x, int y, int x2, int y2, int x3, int y3, double zLevel) {
       Tessellator tessellator = Tessellator.getInstance();
       BufferBuilder builder = tessellator.getBuffer();
-      builder.begin(7, DefaultVertexFormats.field_181707_g);
+      builder.begin(7, DefaultVertexFormats.POSITION_TEX);
       builder.pos((double)(x + 0), (double)(y + y3), zLevel).func_187315_a((double)((float)(x2 + 0) * 0.00390625F), (double)((float)(y2 + y3) * 0.00390625F)).func_181675_d();
       builder.pos((double)(x + x3), (double)(y + y3), zLevel).func_187315_a((double)((float)(x2 + x3) * 0.00390625F), (double)((float)(y2 + y3) * 0.00390625F)).func_181675_d();
       builder.pos((double)(x + x3), (double)(y + 0), zLevel).func_187315_a((double)((float)(x2 + x3) * 0.00390625F), (double)((float)(y2 + 0) * 0.00390625F)).func_181675_d();

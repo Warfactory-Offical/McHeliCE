@@ -52,7 +52,7 @@ public class MCH_ClientVehicleTickHandler extends MCH_AircraftClientTickHandler 
       }
 
       this.isBeforeRiding = this.isRiding;
-      EntityPlayer player = this.mc.field_71439_g;
+      EntityPlayer player = this.mc.player;
       MCH_EntityVehicle vehicle = null;
       boolean isPilot = true;
       if (player != null) {
@@ -70,7 +70,7 @@ public class MCH_ClientVehicleTickHandler extends MCH_AircraftClientTickHandler 
       if (vehicle != null && vehicle.getAcInfo() != null) {
          MCH_Lib.disableFirstPersonItemRender(player.func_184614_ca());
          this.update(player, vehicle, vehicle.getVehicleInfo());
-         MCH_ViewEntityDummy viewEntityDummy = MCH_ViewEntityDummy.getInstance(this.mc.field_71441_e);
+         MCH_ViewEntityDummy viewEntityDummy = MCH_ViewEntityDummy.getInstance(this.mc.world);
          viewEntityDummy.update(vehicle.camera);
          if (!inGUI) {
             if (!vehicle.isDestroyed()) {

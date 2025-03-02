@@ -151,7 +151,7 @@ public class MCH_Hud extends MCH_BaseInfo {
 
    public void draw(MCH_EntityAircraft ac, EntityPlayer player, float partialTicks) {
       if (MCH_HudItem.mc == null) {
-         MCH_HudItem.mc = Minecraft.func_71410_x();
+         MCH_HudItem.mc = Minecraft.getMinecraft();
       }
 
       MCH_HudItem.ac = ac;

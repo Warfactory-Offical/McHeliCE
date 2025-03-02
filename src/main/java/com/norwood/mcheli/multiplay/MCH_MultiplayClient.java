@@ -37,7 +37,7 @@ public class MCH_MultiplayClient {
    private static List<String> modList = new ArrayList();
 
    public static void startSendImageData() {
-      Minecraft mc = Minecraft.func_71410_x();
+      Minecraft mc = Minecraft.getMinecraft();
       sendScreenShot(mc.field_71443_c, mc.field_71440_d, mc.func_147110_a());
    }
 
@@ -164,7 +164,7 @@ public class MCH_MultiplayClient {
          }
       }
 
-      Minecraft mc = Minecraft.func_71410_x();
+      Minecraft mc = Minecraft.getMinecraft();
       MCH_FileSearch search = new MCH_FileSearch();
       File[] files = search.listFiles((new File(mc.field_71412_D, "mods")).getAbsolutePath(), "*.jar");
       modList.add(TextFormatting.YELLOW + "=== Manifest ===");

@@ -109,7 +109,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
 
    private void renderEntityOnFire(Entity entity, double x, double y, double z, float tick) {
       GL11.glDisable(2896);
-      TextureMap texturemap = Minecraft.func_71410_x().func_147117_R();
+      TextureMap texturemap = Minecraft.getMinecraft().func_147117_R();
       TextureAtlasSprite textureatlassprite = texturemap.func_110572_b("minecraft:blocks/fire_layer_0");
       TextureAtlasSprite textureatlassprite1 = texturemap.func_110572_b("minecraft:blocks/fire_layer_1");
       GL11.glPushMatrix();
@@ -127,7 +127,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
       GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
       float f6 = 0.0F;
       int i = 0;
-      bufferbuilder.begin(7, DefaultVertexFormats.field_181707_g);
+      bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
 
       while(f4 > 0.0F) {
          TextureAtlasSprite textureatlassprite2 = i % 2 == 0 ? textureatlassprite : textureatlassprite1;
@@ -1084,7 +1084,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
    }
 
    public static void renderEntityMarker(Entity entity) {
-      Entity player = Minecraft.func_71410_x().field_71439_g;
+      Entity player = Minecraft.getMinecraft().player;
       if (player != null) {
          if (!W_Entity.isEqual(player, entity)) {
             MCH_EntityAircraft ac = null;
@@ -1100,7 +1100,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
                if (!W_Entity.isEqual(ac, entity)) {
                   MCH_WeaponGuidanceSystem gs = ac.getCurrentWeapon(player).getCurrentWeapon().getGuidanceSystem();
                   if (gs != null && gs.canLockEntity(entity)) {
-                     RenderManager rm = Minecraft.func_71410_x().func_175598_ae();
+                     RenderManager rm = Minecraft.getMinecraft().func_175598_ae();
                      double dist = entity.func_70068_e(rm.field_78734_h);
                      double x = entity.posX - TileEntityRendererDispatcher.field_147554_b;
                      double y = entity.posY - TileEntityRendererDispatcher.field_147555_c;
@@ -1144,7 +1144,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
 
                         tessellator.draw();
                         GL11.glPopMatrix();
-                        if (!ac.isUAV() && isLockEntity && Minecraft.func_71410_x().field_71474_y.field_74320_O == 0) {
+                        if (!ac.isUAV() && isLockEntity && Minecraft.getMinecraft().field_71474_y.field_74320_O == 0) {
                            GL11.glPushMatrix();
                            builder.begin(1, MCH_Verts.POS_COLOR_LMAP);
                            GL11.glLineWidth(1.0F);

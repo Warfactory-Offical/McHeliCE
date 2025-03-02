@@ -49,7 +49,7 @@ public class MCH_ItemLightWeaponBase extends W_Item {
    public void onUsingTick(ItemStack stack, EntityLivingBase player, int count) {
       PotionEffect pe = player.func_70660_b(MobEffects.field_76439_r);
       if (pe != null && pe.func_76459_b() < 220) {
-         player.func_70690_d(new PotionEffect(MobEffects.field_76439_r, 250, 0, false, false));
+         player.addPotionEffect(new PotionEffect(MobEffects.field_76439_r, 250, 0, false, false));
       }
 
    }
