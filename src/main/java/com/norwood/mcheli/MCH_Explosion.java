@@ -14,7 +14,7 @@ public class MCH_Explosion {
    }
 
    public static MCH_Explosion.ExplosionResult newExplosion(World w, @Nullable Entity entityExploded, @Nullable Entity player, double x, double y, double z, float size, float sizeBlock, boolean playSound, boolean isSmoking, boolean isFlaming, boolean isDestroyBlock, int countSetFireEntity, MCH_DamageFactor df) {
-      if (w.field_72995_K) {
+      if (w.isRemote) {
          return null;
       } else {
          MCH_ExplosionV2 exp = new MCH_ExplosionV2(w, entityExploded, player, x, y, z, size, isFlaming, w.func_82736_K().func_82766_b("mobGriefing"));
@@ -41,7 +41,7 @@ public class MCH_Explosion {
 
    @Nullable
    public static MCH_Explosion.ExplosionResult newExplosionInWater(World w, @Nullable Entity entityExploded, @Nullable Entity player, double x, double y, double z, float size, float sizeBlock, boolean playSound, boolean isSmoking, boolean isFlaming, boolean isDestroyBlock, int countSetFireEntity, MCH_DamageFactor df) {
-      if (w.field_72995_K) {
+      if (w.isRemote) {
          return null;
       } else {
          MCH_ExplosionV2 exp = new MCH_ExplosionV2(w, entityExploded, player, x, y, z, size, isFlaming, w.func_82736_K().func_82766_b("mobGriefing"));

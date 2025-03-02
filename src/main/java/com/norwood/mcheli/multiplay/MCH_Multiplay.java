@@ -105,8 +105,8 @@ public class MCH_Multiplay {
          MCH_TargetType ret = ENTITY_SPOT_TABLE[row][col];
          if (checkSee && ret != MCH_TargetType.NONE) {
             Vec3d vs = new Vec3d(posX, posY, posZ);
-            Vec3d ve = new Vec3d(target.field_70165_t, target.field_70163_u + (double)target.func_70047_e(), target.field_70161_v);
-            RayTraceResult mop = target.field_70170_p.func_72933_a(vs, ve);
+            Vec3d ve = new Vec3d(target.posX, target.posY + (double)target.func_70047_e(), target.posZ);
+            RayTraceResult mop = target.world.func_72933_a(vs, ve);
             if (mop != null && mop.field_72313_a == Type.BLOCK) {
                ret = MCH_TargetType.NONE;
             }
@@ -170,7 +170,7 @@ public class MCH_Multiplay {
                   }
 
                   if (cc == null) {
-                     cc = jumpPlayer.field_70170_p.field_73011_w.getRandomizedSpawnPoint();
+                     cc = jumpPlayer.world.field_73011_w.getRandomizedSpawnPoint();
                   }
                }
 
@@ -187,7 +187,7 @@ public class MCH_Multiplay {
    }
 
    public static void shuffleTeam(EntityPlayer player) {
-      Collection<ScorePlayerTeam> teams = player.field_70170_p.func_96441_U().func_96525_g();
+      Collection<ScorePlayerTeam> teams = player.world.func_96441_U().func_96525_g();
       int teamNum = teams.size();
       MCH_Lib.DbgLog(false, "ShuffleTeam:%d teams ----------", teamNum);
       if (teamNum > 0) {
@@ -236,16 +236,16 @@ public class MCH_Multiplay {
 
    public static boolean spotEntity(EntityLivingBase player, @Nullable MCH_EntityAircraft ac, double posX, double posY, double posZ, int targetFilter, float spotLength, int markTime, float angle) {
       boolean ret = false;
-      if (!player.field_70170_p.field_72995_K) {
+      if (!player.world.isRemote) {
          float acRoll = 0.0F;
          if (ac != null) {
             acRoll = ac.getRotRoll();
          }
 
          Vec3d vv = MCH_Lib.RotVec3(0.0D, 0.0D, 1.0D, -player.field_70177_z, -player.field_70125_A, -acRoll);
-         double tx = vv.field_72450_a;
-         double tz = vv.field_72449_c;
-         List<Entity> list = player.field_70170_p.func_72839_b(player, player.func_174813_aQ().func_72314_b((double)spotLength, (double)spotLength, (double)spotLength));
+         double tx = vv.x;
+         double tz = vv.z;
+         List<Entity> list = player.world.func_72839_b(player, player.func_174813_aQ().func_72314_b((double)spotLength, (double)spotLength, (double)spotLength));
          List<Integer> entityList = new ArrayList();
          Vec3d pos = new Vec3d(posX, posY, posZ);
 
@@ -254,11 +254,11 @@ public class MCH_Multiplay {
             if (canSpotEntityWithFilter(targetFilter, entity)) {
                MCH_TargetType stopType = canSpotEntity(player, posX, posY, posZ, entity, true);
                if (stopType != MCH_TargetType.NONE && stopType != MCH_TargetType.SAME_TEAM_PLAYER) {
-                  double dist = entity.func_70092_e(pos.field_72450_a, pos.field_72448_b, pos.field_72449_c);
+                  double dist = entity.func_70092_e(pos.x, pos.y, pos.z);
                   if (dist > 1.0D && dist < (double)(spotLength * spotLength)) {
-                     double cx = entity.field_70165_t - pos.field_72450_a;
-                     double cy = entity.field_70163_u - pos.field_72448_b;
-                     double cz = entity.field_70161_v - pos.field_72449_c;
+                     double cx = entity.posX - pos.x;
+                     double cy = entity.posY - pos.y;
+                     double cz = entity.posZ - pos.z;
                      double h = (double)MCH_Lib.getPosAngle(tx, tz, cx, cz);
                      double v = Math.atan2(cy, Math.sqrt(cx * cx + cz * cz)) * 180.0D / 3.141592653589793D;
                      v = Math.abs(v + (double)player.field_70125_A);
@@ -308,8 +308,8 @@ public class MCH_Multiplay {
    public static boolean markPoint(EntityPlayer player, double posX, double posY, double posZ) {
       Vec3d vs = new Vec3d(posX, posY, posZ);
       Vec3d ve = MCH_Lib.Rot2Vec3(player.field_70177_z, player.field_70125_A);
-      ve = vs.func_72441_c(ve.field_72450_a * 300.0D, ve.field_72448_b * 300.0D, ve.field_72449_c * 300.0D);
-      RayTraceResult mop = player.field_70170_p.func_72901_a(vs, ve, true);
+      ve = vs.func_72441_c(ve.x * 300.0D, ve.y * 300.0D, ve.z * 300.0D);
+      RayTraceResult mop = player.world.func_72901_a(vs, ve, true);
       if (mop != null && mop.field_72313_a == Type.BLOCK) {
          sendMarkPointToSameTeam(player, mop.func_178782_a().func_177958_n(), mop.func_178782_a().func_177956_o(), mop.func_178782_a().func_177952_p());
          return true;

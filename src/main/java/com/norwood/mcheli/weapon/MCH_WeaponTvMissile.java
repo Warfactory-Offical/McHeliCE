@@ -19,7 +19,7 @@ public class MCH_WeaponTvMissile extends MCH_WeaponBase {
       this.acceleration = 2.0F;
       this.explosionPower = 4;
       this.interval = -100;
-      if (w.field_72995_K) {
+      if (w.isRemote) {
          this.interval -= 10;
       }
 
@@ -44,7 +44,7 @@ public class MCH_WeaponTvMissile extends MCH_WeaponBase {
 
    public void update(int countWait) {
       super.update(countWait);
-      if (!this.worldObj.field_72995_K) {
+      if (!this.worldObj.isRemote) {
          if (this.isTVGuided && this.tick <= 9) {
             if (this.tick % 3 == 0 && this.lastShotTvMissile != null && !this.lastShotTvMissile.field_70128_L && this.lastShotEntity != null && !this.lastShotEntity.field_70128_L) {
                MCH_PacketNotifyTVMissileEntity.send(W_Entity.getEntityId(this.lastShotEntity), W_Entity.getEntityId(this.lastShotTvMissile));
@@ -64,7 +64,7 @@ public class MCH_WeaponTvMissile extends MCH_WeaponBase {
    }
 
    public boolean shot(MCH_WeaponParam prm) {
-      return this.worldObj.field_72995_K ? this.shotClient(prm.entity, prm.user) : this.shotServer(prm);
+      return this.worldObj.isRemote ? this.shotClient(prm.entity, prm.user) : this.shotServer(prm);
    }
 
    protected boolean shotClient(Entity entity, Entity user) {

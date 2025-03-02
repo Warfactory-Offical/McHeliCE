@@ -15,14 +15,14 @@ public class MCH_EntityTofu extends Entity {
       this.func_70107_b(x, y, z);
    }
 
-   protected void func_70088_a() {
+   protected void entityInit() {
       this.func_189654_d(true);
    }
 
    public void func_70071_h_() {
       super.func_70071_h_();
       this.func_70091_d(MoverType.SELF, 1.0D, 0.0D, 0.0D);
-      if (!this.field_70170_p.field_72995_K && this.field_70173_aa > 100) {
+      if (!this.world.isRemote && this.field_70173_aa > 100) {
          this.func_70106_y();
       }
 

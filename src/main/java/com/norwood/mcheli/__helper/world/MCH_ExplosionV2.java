@@ -43,7 +43,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class MCH_ExplosionV2 extends Explosion {
    private static Random explosionRNG = new Random();
    public final int field_77289_h;
-   public World field_77287_j;
+   public World world;
    public final Entity field_77283_e;
    public final double field_77284_b;
    public final double field_77285_c;
@@ -71,7 +71,7 @@ public class MCH_ExplosionV2 extends Explosion {
       super(worldIn, exploderIn, x, y, z, size, flaming, damagesTerrain);
       this.field_77289_h = 16;
       this.damageFactor = null;
-      this.field_77287_j = worldIn;
+      this.world = worldIn;
       this.field_77283_e = exploderIn;
       this.explodedPlayer = player instanceof EntityPlayer ? (EntityPlayer)player : null;
       this.field_77284_b = x;
@@ -105,7 +105,7 @@ public class MCH_ExplosionV2 extends Explosion {
                   d3 /= d6;
                   d4 /= d6;
                   d5 /= d6;
-                  float f1 = this.explosionSizeBlock * (0.7F + this.field_77287_j.field_73012_v.nextFloat() * 0.6F);
+                  float f1 = this.explosionSizeBlock * (0.7F + this.world.field_73012_v.nextFloat() * 0.6F);
                   double d0 = this.field_77284_b;
                   double d1 = this.field_77285_c;
 
@@ -113,25 +113,25 @@ public class MCH_ExplosionV2 extends Explosion {
                      int l = MathHelper.func_76128_c(d0);
                      int i1 = MathHelper.func_76128_c(d1);
                      int j1 = MathHelper.func_76128_c(d2);
-                     int k1 = W_WorldFunc.getBlockId(this.field_77287_j, l, i1, j1);
+                     int k1 = W_WorldFunc.getBlockId(this.world, l, i1, j1);
                      BlockPos blockpos = new BlockPos(l, i1, j1);
-                     IBlockState iblockstate = this.field_77287_j.func_180495_p(blockpos);
+                     IBlockState iblockstate = this.world.func_180495_p(blockpos);
                      Block block = iblockstate.func_177230_c();
                      if (k1 > 0) {
                         if (this.field_77283_e != null) {
-                           damage = W_Entity.getBlockExplosionResistance(this.field_77283_e, this, this.field_77287_j, l, i1, j1, block);
+                           damage = W_Entity.getBlockExplosionResistance(this.field_77283_e, this, this.world, l, i1, j1, block);
                         } else {
-                           damage = block.getExplosionResistance(this.field_77287_j, blockpos, this.field_77283_e, this);
+                           damage = block.getExplosionResistance(this.world, blockpos, this.field_77283_e, this);
                         }
 
                         if (this.isInWater) {
-                           damage *= this.field_77287_j.field_73012_v.nextFloat() * 0.2F + 0.2F;
+                           damage *= this.world.field_73012_v.nextFloat() * 0.2F + 0.2F;
                         }
 
                         f1 -= (damage + 0.3F) * 0.3F;
                      }
 
-                     if (f1 > 0.0F && (this.field_77283_e == null || W_Entity.shouldExplodeBlock(this.field_77283_e, this, this.field_77287_j, l, i1, j1, k1, f1))) {
+                     if (f1 > 0.0F && (this.field_77283_e == null || W_Entity.shouldExplodeBlock(this.field_77283_e, this, this.world, l, i1, j1, k1, f1))) {
                         hashset.add(blockpos);
                      }
 
@@ -152,16 +152,16 @@ public class MCH_ExplosionV2 extends Explosion {
       int l1 = MathHelper.func_76128_c(this.field_77285_c + (double)f + 1.0D);
       int i2 = MathHelper.func_76128_c(this.field_77282_d - (double)f - 1.0D);
       int j2 = MathHelper.func_76128_c(this.field_77282_d + (double)f + 1.0D);
-      List<Entity> list = this.field_77287_j.func_72839_b(this.field_77283_e, W_AxisAlignedBB.getAABB((double)j, (double)k, (double)i2, (double)k, (double)l1, (double)j2));
-      Vec3d vec3 = W_WorldFunc.getWorldVec3(this.field_77287_j, this.field_77284_b, this.field_77285_c, this.field_77282_d);
+      List<Entity> list = this.world.func_72839_b(this.field_77283_e, W_AxisAlignedBB.getAABB((double)j, (double)k, (double)i2, (double)k, (double)l1, (double)j2));
+      Vec3d vec3 = W_WorldFunc.getWorldVec3(this.world, this.field_77284_b, this.field_77285_c, this.field_77282_d);
 
       for(int k2 = 0; k2 < list.size(); ++k2) {
          Entity entity = (Entity)list.get(k2);
          double d7 = entity.func_70011_f(this.field_77284_b, this.field_77285_c, this.field_77282_d) / (double)f;
          if (d7 <= 1.0D) {
-            double d0 = entity.field_70165_t - this.field_77284_b;
-            double d1 = entity.field_70163_u + (double)entity.func_70047_e() - this.field_77285_c;
-            double d2 = entity.field_70161_v - this.field_77282_d;
+            double d0 = entity.posX - this.field_77284_b;
+            double d1 = entity.posY + (double)entity.func_70047_e() - this.field_77285_c;
+            double d2 = entity.posZ - this.field_77282_d;
             double d8 = (double)MathHelper.func_76133_a(d0 * d0 + d1 * d1 + d2 * d2);
             if (d8 != 0.0D) {
                d0 /= d8;
@@ -174,10 +174,10 @@ public class MCH_ExplosionV2 extends Explosion {
                   if (entity instanceof MCH_EntityBaseBullet && this.explodedPlayer instanceof EntityPlayer) {
                      if (!W_Entity.isEqual(((MCH_EntityBaseBullet)entity).shootingEntity, this.explodedPlayer)) {
                         this.result.hitEntity = true;
-                        MCH_Lib.DbgLog(this.field_77287_j, "MCH_Explosion.doExplosionA:Damage=%.1f:HitEntityBullet=" + entity.getClass(), damage);
+                        MCH_Lib.DbgLog(this.world, "MCH_Explosion.doExplosionA:Damage=%.1f:HitEntityBullet=" + entity.getClass(), damage);
                      }
                   } else {
-                     MCH_Lib.DbgLog(this.field_77287_j, "MCH_Explosion.doExplosionA:Damage=%.1f:HitEntity=" + entity.getClass(), damage);
+                     MCH_Lib.DbgLog(this.world, "MCH_Explosion.doExplosionA:Damage=%.1f:HitEntity=" + entity.getClass(), damage);
                      this.result.hitEntity = true;
                   }
                }
@@ -199,7 +199,7 @@ public class MCH_ExplosionV2 extends Explosion {
                }
 
                if (entity instanceof EntityPlayer) {
-                  this.func_77277_b().put((EntityPlayer)entity, W_WorldFunc.getWorldVec3(this.field_77287_j, d0 * d10, d1 * d10, d2 * d10));
+                  this.func_77277_b().put((EntityPlayer)entity, W_WorldFunc.getWorldVec3(this.world, d0 * d10, d1 * d10, d2 * d10));
                }
 
                if (damage > 0.0F && this.countSetFireEntity > 0) {
@@ -228,7 +228,7 @@ public class MCH_ExplosionV2 extends Explosion {
                   double d3 = bb.field_72340_a + (bb.field_72336_d - bb.field_72340_a) * (double)f;
                   double d4 = bb.field_72338_b + (bb.field_72337_e - bb.field_72338_b) * (double)f1;
                   double d5 = bb.field_72339_c + (bb.field_72334_f - bb.field_72339_c) * (double)f2;
-                  if (this.field_77287_j.func_147447_a(new Vec3d(d3, d4, d5), vec3, false, true, false) == null) {
+                  if (this.world.func_147447_a(new Vec3d(d3, d4, d5), vec3, false, true, false) == null) {
                      ++i;
                   }
 
@@ -249,7 +249,7 @@ public class MCH_ExplosionV2 extends Explosion {
 
    private void doExplosionB(boolean spawnParticles, boolean vanillaMode) {
       if (this.isPlaySound) {
-         this.field_77287_j.func_184148_a((EntityPlayer)null, this.field_77284_b, this.field_77285_c, this.field_77282_d, SoundEvents.field_187539_bB, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.field_77287_j.field_73012_v.nextFloat() - this.field_77287_j.field_73012_v.nextFloat()) * 0.2F) * 0.7F);
+         this.world.func_184148_a((EntityPlayer)null, this.field_77284_b, this.field_77285_c, this.field_77282_d, SoundEvents.field_187539_bB, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.field_73012_v.nextFloat() - this.world.field_73012_v.nextFloat()) * 0.2F) * 0.7F);
       }
 
       Iterator iterator;
@@ -266,7 +266,7 @@ public class MCH_ExplosionV2 extends Explosion {
             i = W_ChunkPosition.getChunkPosX(chunkposition);
             j = W_ChunkPosition.getChunkPosY(chunkposition);
             int k = W_ChunkPosition.getChunkPosZ(chunkposition);
-            int l = W_WorldFunc.getBlockId(this.field_77287_j, i, j, k);
+            int l = W_WorldFunc.getBlockId(this.world, i, j, k);
             ++cnt;
             if (spawnParticles) {
                if (vanillaMode) {
@@ -279,10 +279,10 @@ public class MCH_ExplosionV2 extends Explosion {
             if (l > 0 && this.isDestroyBlock && this.explosionSizeBlock > 0.0F && MCH_Config.Explosion_DestroyBlock.prmBool) {
                Block block = W_Block.getBlockById(l);
                if (block.func_149659_a(this)) {
-                  block.func_180653_a(this.field_77287_j, chunkposition, this.field_77287_j.func_180495_p(chunkposition), 1.0F / this.explosionSizeBlock, 0);
+                  block.func_180653_a(this.world, chunkposition, this.world.func_180495_p(chunkposition), 1.0F / this.explosionSizeBlock, 0);
                }
 
-               block.onBlockExploded(this.field_77287_j, chunkposition, this);
+               block.onBlockExploded(this.world, chunkposition, this);
             }
          }
       }
@@ -295,11 +295,11 @@ public class MCH_ExplosionV2 extends Explosion {
             flareCnt = W_ChunkPosition.getChunkPosX(chunkposition);
             int j = W_ChunkPosition.getChunkPosY(chunkposition);
             i = W_ChunkPosition.getChunkPosZ(chunkposition);
-            j = W_WorldFunc.getBlockId(this.field_77287_j, flareCnt, j, i);
-            IBlockState iblockstate = this.field_77287_j.func_180495_p(chunkposition.func_177977_b());
+            j = W_WorldFunc.getBlockId(this.world, flareCnt, j, i);
+            IBlockState iblockstate = this.world.func_180495_p(chunkposition.func_177977_b());
             Block b = iblockstate.func_177230_c();
             if (j == 0 && b != null && iblockstate.func_185914_p() && explosionRNG.nextInt(3) == 0) {
-               W_WorldFunc.setBlock(this.field_77287_j, flareCnt, j, i, W_Blocks.field_150480_ab);
+               W_WorldFunc.setBlock(this.world, flareCnt, j, i, W_Blocks.field_150480_ab);
             }
          }
       }
@@ -308,9 +308,9 @@ public class MCH_ExplosionV2 extends Explosion {
 
    private boolean spawnExlosionEffect(int cnt, int i, int j, int k, boolean spawnFlare) {
       boolean spawnedFlare = false;
-      double d0 = (double)((float)i + this.field_77287_j.field_73012_v.nextFloat());
-      double d1 = (double)((float)j + this.field_77287_j.field_73012_v.nextFloat());
-      double d2 = (double)((float)k + this.field_77287_j.field_73012_v.nextFloat());
+      double d0 = (double)((float)i + this.world.field_73012_v.nextFloat());
+      double d1 = (double)((float)j + this.world.field_73012_v.nextFloat());
+      double d2 = (double)((float)k + this.world.field_73012_v.nextFloat());
       double mx = d0 - this.field_77284_b;
       double my = d1 - this.field_77285_c;
       double mz = d2 - this.field_77282_d;
@@ -319,28 +319,28 @@ public class MCH_ExplosionV2 extends Explosion {
       my /= d6;
       mz /= d6;
       double d7 = 0.5D / (d6 / (double)this.field_77280_f + 0.1D);
-      d7 *= (double)(this.field_77287_j.field_73012_v.nextFloat() * this.field_77287_j.field_73012_v.nextFloat() + 0.3F);
+      d7 *= (double)(this.world.field_73012_v.nextFloat() * this.world.field_73012_v.nextFloat() + 0.3F);
       mx *= d7 * 0.5D;
       my *= d7 * 0.5D;
       mz *= d7 * 0.5D;
       double px = (d0 + this.field_77284_b * 1.0D) / 2.0D;
       double py = (d1 + this.field_77285_c * 1.0D) / 2.0D;
       double pz = (d2 + this.field_77282_d * 1.0D) / 2.0D;
-      double r = 3.141592653589793D * (double)this.field_77287_j.field_73012_v.nextInt(360) / 180.0D;
+      double r = 3.141592653589793D * (double)this.world.field_73012_v.nextInt(360) / 180.0D;
       if (this.field_77280_f >= 4.0F && spawnFlare) {
-         double a = Math.min((double)(this.field_77280_f / 12.0F), 0.6D) * (double)(0.5F + this.field_77287_j.field_73012_v.nextFloat() * 0.5F);
-         this.field_77287_j.func_72838_d(new MCH_EntityFlare(this.field_77287_j, px, py + 2.0D, pz, Math.sin(r) * a, (1.0D + my / 5.0D) * a, Math.cos(r) * a, 2.0F, 0));
+         double a = Math.min((double)(this.field_77280_f / 12.0F), 0.6D) * (double)(0.5F + this.world.field_73012_v.nextFloat() * 0.5F);
+         this.world.func_72838_d(new MCH_EntityFlare(this.world, px, py + 2.0D, pz, Math.sin(r) * a, (1.0D + my / 5.0D) * a, Math.cos(r) * a, 2.0F, 0));
          spawnedFlare = true;
       }
 
       if (cnt % 4 == 0) {
-         float bdf = Math.min(this.field_77280_f / 3.0F, 2.0F) * (0.5F + this.field_77287_j.field_73012_v.nextFloat() * 0.5F);
-         MCH_ParticlesUtil.spawnParticleTileDust(this.field_77287_j, (int)(px + 0.5D), (int)(py - 0.5D), (int)(pz + 0.5D), px, py + 1.0D, pz, Math.sin(r) * (double)bdf, 0.5D + my / 5.0D * (double)bdf, Math.cos(r) * (double)bdf, Math.min(this.field_77280_f / 2.0F, 3.0F) * (0.5F + this.field_77287_j.field_73012_v.nextFloat() * 0.5F));
+         float bdf = Math.min(this.field_77280_f / 3.0F, 2.0F) * (0.5F + this.world.field_73012_v.nextFloat() * 0.5F);
+         MCH_ParticlesUtil.spawnParticleTileDust(this.world, (int)(px + 0.5D), (int)(py - 0.5D), (int)(pz + 0.5D), px, py + 1.0D, pz, Math.sin(r) * (double)bdf, 0.5D + my / 5.0D * (double)bdf, Math.cos(r) * (double)bdf, Math.min(this.field_77280_f / 2.0F, 3.0F) * (0.5F + this.world.field_73012_v.nextFloat() * 0.5F));
       }
 
       int es = (int)(this.field_77280_f >= 4.0F ? this.field_77280_f : 4.0F);
       if (this.field_77280_f <= 1.0F || cnt % es == 0) {
-         if (this.field_77287_j.field_73012_v.nextBoolean()) {
+         if (this.world.field_73012_v.nextBoolean()) {
             my *= 3.0D;
             mx *= 0.1D;
             mz *= 0.1D;
@@ -350,12 +350,12 @@ public class MCH_ExplosionV2 extends Explosion {
             mz *= 3.0D;
          }
 
-         MCH_ParticleParam prm = new MCH_ParticleParam(this.field_77287_j, "explode", px, py, pz, mx, my, mz, this.field_77280_f < 8.0F ? this.field_77280_f * 2.0F : (this.field_77280_f < 2.0F ? 2.0F : 16.0F));
-         prm.r = prm.g = prm.b = 0.3F + this.field_77287_j.field_73012_v.nextFloat() * 0.4F;
+         MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "explode", px, py, pz, mx, my, mz, this.field_77280_f < 8.0F ? this.field_77280_f * 2.0F : (this.field_77280_f < 2.0F ? 2.0F : 16.0F));
+         prm.r = prm.g = prm.b = 0.3F + this.world.field_73012_v.nextFloat() * 0.4F;
          prm.r += 0.1F;
          prm.g += 0.05F;
          prm.b += 0.0F;
-         prm.age = 10 + this.field_77287_j.field_73012_v.nextInt(30);
+         prm.age = 10 + this.world.field_73012_v.nextInt(30);
          prm.age = (int)((float)prm.age * (this.field_77280_f < 6.0F ? this.field_77280_f : 6.0F));
          prm.age = prm.age * 2 / 3;
          prm.diffusible = true;
@@ -366,9 +366,9 @@ public class MCH_ExplosionV2 extends Explosion {
    }
 
    private void spawnVanillaExlosionEffect(int i, int j, int k) {
-      double d0 = (double)((float)i + this.field_77287_j.field_73012_v.nextFloat());
-      double d1 = (double)((float)j + this.field_77287_j.field_73012_v.nextFloat());
-      double d2 = (double)((float)k + this.field_77287_j.field_73012_v.nextFloat());
+      double d0 = (double)((float)i + this.world.field_73012_v.nextFloat());
+      double d1 = (double)((float)j + this.world.field_73012_v.nextFloat());
+      double d2 = (double)((float)k + this.world.field_73012_v.nextFloat());
       double d3 = d0 - this.field_77284_b;
       double d4 = d1 - this.field_77285_c;
       double d5 = d2 - this.field_77282_d;
@@ -377,7 +377,7 @@ public class MCH_ExplosionV2 extends Explosion {
       d4 /= d6;
       d5 /= d6;
       double d7 = 0.5D / (d6 / (double)this.field_77280_f + 0.1D);
-      d7 *= (double)(this.field_77287_j.field_73012_v.nextFloat() * this.field_77287_j.field_73012_v.nextFloat() + 0.3F);
+      d7 *= (double)(this.world.field_73012_v.nextFloat() * this.world.field_73012_v.nextFloat() + 0.3F);
       d3 *= d7;
       d4 *= d7;
       d5 *= d7;

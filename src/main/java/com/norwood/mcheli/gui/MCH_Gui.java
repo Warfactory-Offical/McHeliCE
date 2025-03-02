@@ -70,28 +70,28 @@ public abstract class MCH_Gui extends GuiScreen {
       GL11.glTranslated(left + width / 2.0D, top + height / 2.0D, 0.0D);
       GL11.glRotatef(rot, 0.0F, 0.0F, 1.0F);
       float f = 0.00390625F;
-      Tessellator tessellator = Tessellator.func_178181_a();
-      BufferBuilder builder = tessellator.func_178180_c();
-      builder.func_181668_a(7, DefaultVertexFormats.field_181707_g);
-      builder.func_181662_b(-width / 2.0D, height / 2.0D, (double)this.field_73735_i).func_187315_a(uLeft * (double)f, (vTop + vHeight) * (double)f).func_181675_d();
-      builder.func_181662_b(width / 2.0D, height / 2.0D, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)f, (vTop + vHeight) * (double)f).func_181675_d();
-      builder.func_181662_b(width / 2.0D, -height / 2.0D, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)f, vTop * (double)f).func_181675_d();
-      builder.func_181662_b(-width / 2.0D, -height / 2.0D, (double)this.field_73735_i).func_187315_a(uLeft * (double)f, vTop * (double)f).func_181675_d();
-      tessellator.func_78381_a();
+      Tessellator tessellator = Tessellator.getInstance();
+      BufferBuilder builder = tessellator.getBuffer();
+      builder.begin(7, DefaultVertexFormats.field_181707_g);
+      builder.pos(-width / 2.0D, height / 2.0D, (double)this.field_73735_i).func_187315_a(uLeft * (double)f, (vTop + vHeight) * (double)f).func_181675_d();
+      builder.pos(width / 2.0D, height / 2.0D, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)f, (vTop + vHeight) * (double)f).func_181675_d();
+      builder.pos(width / 2.0D, -height / 2.0D, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)f, vTop * (double)f).func_181675_d();
+      builder.pos(-width / 2.0D, -height / 2.0D, (double)this.field_73735_i).func_187315_a(uLeft * (double)f, vTop * (double)f).func_181675_d();
+      tessellator.draw();
       GL11.glPopMatrix();
    }
 
    public void drawTexturedRect(double left, double top, double width, double height, double uLeft, double vTop, double uWidth, double vHeight, double textureWidth, double textureHeight) {
       float fx = (float)(1.0D / textureWidth);
       float fy = (float)(1.0D / textureHeight);
-      Tessellator tessellator = Tessellator.func_178181_a();
-      BufferBuilder builder = tessellator.func_178180_c();
-      builder.func_181668_a(7, DefaultVertexFormats.field_181707_g);
-      builder.func_181662_b(left, top + height, (double)this.field_73735_i).func_187315_a(uLeft * (double)fx, (vTop + vHeight) * (double)fy).func_181675_d();
-      builder.func_181662_b(left + width, top + height, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)fx, (vTop + vHeight) * (double)fy).func_181675_d();
-      builder.func_181662_b(left + width, top, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)fx, vTop * (double)fy).func_181675_d();
-      builder.func_181662_b(left, top, (double)this.field_73735_i).func_187315_a(uLeft * (double)fx, vTop * (double)fy).func_181675_d();
-      tessellator.func_78381_a();
+      Tessellator tessellator = Tessellator.getInstance();
+      BufferBuilder builder = tessellator.getBuffer();
+      builder.begin(7, DefaultVertexFormats.field_181707_g);
+      builder.pos(left, top + height, (double)this.field_73735_i).func_187315_a(uLeft * (double)fx, (vTop + vHeight) * (double)fy).func_181675_d();
+      builder.pos(left + width, top + height, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)fx, (vTop + vHeight) * (double)fy).func_181675_d();
+      builder.pos(left + width, top, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)fx, vTop * (double)fy).func_181675_d();
+      builder.pos(left, top, (double)this.field_73735_i).func_187315_a(uLeft * (double)fx, vTop * (double)fy).func_181675_d();
+      tessellator.draw();
    }
 
    public void drawLineStipple(double[] line, int color, int factor, int pattern) {
@@ -142,15 +142,15 @@ public abstract class MCH_Gui extends GuiScreen {
       GL11.glDisable(3553);
       GL11.glBlendFunc(770, 771);
       GL11.glColor4ub((byte)(color >> 16 & 255), (byte)(color >> 8 & 255), (byte)(color >> 0 & 255), (byte)(color >> 24 & 255));
-      Tessellator tessellator = Tessellator.func_178181_a();
-      BufferBuilder builder = tessellator.func_178180_c();
-      builder.func_181668_a(mode, DefaultVertexFormats.field_181705_e);
+      Tessellator tessellator = Tessellator.getInstance();
+      BufferBuilder builder = tessellator.getBuffer();
+      builder.begin(mode, DefaultVertexFormats.field_181705_e);
 
       for(int i = 0; i < line.length; i += 2) {
-         builder.func_181662_b(line[i + 0], line[i + 1], (double)this.field_73735_i).func_181675_d();
+         builder.pos(line[i + 0], line[i + 1], (double)this.field_73735_i).func_181675_d();
       }
 
-      tessellator.func_78381_a();
+      tessellator.draw();
       GL11.glEnable(3553);
       GL11.glDisable(3042);
       GL11.glColor4b((byte)-1, (byte)-1, (byte)-1, (byte)-1);
@@ -165,15 +165,15 @@ public abstract class MCH_Gui extends GuiScreen {
       GL11.glBlendFunc(770, 771);
       GL11.glColor4ub((byte)(color >> 16 & 255), (byte)(color >> 8 & 255), (byte)(color >> 0 & 255), (byte)(color >> 24 & 255));
       GL11.glPointSize((float)pointWidth);
-      Tessellator tessellator = Tessellator.func_178181_a();
-      BufferBuilder builder = tessellator.func_178180_c();
-      builder.func_181668_a(0, DefaultVertexFormats.field_181705_e);
+      Tessellator tessellator = Tessellator.getInstance();
+      BufferBuilder builder = tessellator.getBuffer();
+      builder.begin(0, DefaultVertexFormats.field_181705_e);
 
       for(int i = 0; i < points.length; i += 2) {
-         builder.func_181662_b(points[i], points[i + 1], 0.0D).func_181675_d();
+         builder.pos(points[i], points[i + 1], 0.0D).func_181675_d();
       }
 
-      tessellator.func_78381_a();
+      tessellator.draw();
       GL11.glEnable(3553);
       GL11.glDisable(3042);
       GL11.glPopMatrix();
@@ -189,15 +189,15 @@ public abstract class MCH_Gui extends GuiScreen {
       GL11.glBlendFunc(770, 771);
       GL11.glColor4ub((byte)(color >> 16 & 255), (byte)(color >> 8 & 255), (byte)(color >> 0 & 255), (byte)(color >> 24 & 255));
       GL11.glPointSize((float)pointWidth);
-      Tessellator tessellator = Tessellator.func_178181_a();
-      BufferBuilder builder = tessellator.func_178180_c();
-      builder.func_181668_a(0, DefaultVertexFormats.field_181705_e);
+      Tessellator tessellator = Tessellator.getInstance();
+      BufferBuilder builder = tessellator.getBuffer();
+      builder.begin(0, DefaultVertexFormats.field_181705_e);
 
       for(int i = 0; i < points.size(); i += 2) {
-         builder.func_181662_b((Double)points.get(i), (Double)points.get(i + 1), 0.0D).func_181675_d();
+         builder.pos((Double)points.get(i), (Double)points.get(i + 1), 0.0D).func_181675_d();
       }
 
-      tessellator.func_78381_a();
+      tessellator.draw();
       GL11.glEnable(3553);
       GL11.glDisable(3042);
       GL11.glPopMatrix();

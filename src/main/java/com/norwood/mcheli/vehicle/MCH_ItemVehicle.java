@@ -32,7 +32,7 @@ public class MCH_ItemVehicle extends MCH_ItemAircraft {
          vehicle.field_70166_s = z;
          vehicle.camera.setPosition(x, y, z);
          vehicle.setTypeName(info.name);
-         if (!world.field_72995_K) {
+         if (!world.isRemote) {
             vehicle.setTextureName(info.getTextureName());
          }
 

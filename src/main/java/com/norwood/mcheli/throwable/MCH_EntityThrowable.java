@@ -52,10 +52,10 @@ public class MCH_EntityThrowable extends EntityThrowable implements IThrowableEn
       this(worldIn);
       this.func_70105_a(0.25F, 0.25F);
       this.func_70012_b(x, y, z, yaw, pitch);
-      this.field_70165_t -= (double)(MathHelper.func_76134_b(this.field_70177_z / 180.0F * 3.1415927F) * 0.16F);
-      this.field_70163_u -= 0.10000000149011612D;
-      this.field_70161_v -= (double)(MathHelper.func_76126_a(this.field_70177_z / 180.0F * 3.1415927F) * 0.16F);
-      this.func_70107_b(this.field_70165_t, this.field_70163_u, this.field_70161_v);
+      this.posX -= (double)(MathHelper.func_76134_b(this.field_70177_z / 180.0F * 3.1415927F) * 0.16F);
+      this.posY -= 0.10000000149011612D;
+      this.posZ -= (double)(MathHelper.func_76126_a(this.field_70177_z / 180.0F * 3.1415927F) * 0.16F);
+      this.func_70107_b(this.posX, this.posY, this.posZ);
       this.func_184538_a(null, pitch, yaw, 0.0F, 1.5F, 1.0F);
    }
 
@@ -64,7 +64,7 @@ public class MCH_EntityThrowable extends EntityThrowable implements IThrowableEn
       this.countOnUpdate = 0;
       this.setInfo(null);
       this.noInfoCount = 0;
-      this.field_70180_af.func_187214_a(INFO_NAME, "");
+      this.dataManager.register(INFO_NAME, "");
    }
 
    public void func_184538_a(Entity entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity, float inaccuracy) {
@@ -77,17 +77,17 @@ public class MCH_EntityThrowable extends EntityThrowable implements IThrowableEn
 
    public void func_70106_y() {
       String s = this.getInfo() != null ? this.getInfo().name : "null";
-      MCH_Lib.DbgLog(this.field_70170_p, "MCH_EntityThrowable.setDead(%s)", s);
+      MCH_Lib.DbgLog(this.world, "MCH_EntityThrowable.setDead(%s)", s);
       super.func_70106_y();
    }
 
    public void func_70071_h_() {
-      this.boundPosX = this.field_70165_t;
-      this.boundPosY = this.field_70163_u;
-      this.boundPosZ = this.field_70161_v;
+      this.boundPosX = this.posX;
+      this.boundPosY = this.posY;
+      this.boundPosZ = this.posZ;
       if (this.getInfo() != null) {
-         Block block = W_WorldFunc.getBlock(this.field_70170_p, (int)(this.field_70165_t + 0.5D), (int)this.field_70163_u, (int)(this.field_70161_v + 0.5D));
-         Material mat = W_WorldFunc.getBlockMaterial(this.field_70170_p, (int)(this.field_70165_t + 0.5D), (int)this.field_70163_u, (int)(this.field_70161_v + 0.5D));
+         Block block = W_WorldFunc.getBlock(this.world, (int)(this.posX + 0.5D), (int)this.posY, (int)(this.posZ + 0.5D));
+         Material mat = W_WorldFunc.getBlockMaterial(this.world, (int)(this.posX + 0.5D), (int)this.posY, (int)(this.posZ + 0.5D));
          if (block != null && mat == Material.field_151586_h) {
             this.field_70181_x += (double)this.getInfo().gravityInWater;
          } else {
@@ -107,7 +107,7 @@ public class MCH_EntityThrowable extends EntityThrowable implements IThrowableEn
          this.func_70106_y();
       } else {
          if (this.getInfo() == null) {
-            String s = (String)this.field_70180_af.func_187225_a(INFO_NAME);
+            String s = (String)this.dataManager.func_187225_a(INFO_NAME);
             if (!s.isEmpty()) {
                this.setInfo(MCH_ThrowableInfoManager.get(s));
             }
@@ -123,9 +123,9 @@ public class MCH_EntityThrowable extends EntityThrowable implements IThrowableEn
          }
 
          if (!this.field_70128_L) {
-            if (!this.field_70170_p.field_72995_K) {
+            if (!this.world.isRemote) {
                if (this.countOnUpdate == this.getInfo().timeFuse && this.getInfo().explosion > 0) {
-                  MCH_Explosion.newExplosion(this.field_70170_p, (Entity)null, (Entity)null, this.field_70165_t, this.field_70163_u, this.field_70161_v, (float)this.getInfo().explosion, (float)this.getInfo().explosion, true, true, false, true, 0);
+                  MCH_Explosion.newExplosion(this.world, (Entity)null, (Entity)null, this.posX, this.posY, this.posZ, (float)this.getInfo().explosion, (float)this.getInfo().explosion, true, true, false, true, 0);
                   this.func_70106_y();
                   return;
                }
@@ -159,17 +159,17 @@ public class MCH_EntityThrowable extends EntityThrowable implements IThrowableEn
    }
 
    public void spawnParticle(String name, int num, float size, float r, float g, float b, float mx, float my, float mz) {
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          if (name.isEmpty() || num < 1) {
             return;
          }
 
-         double x = (this.field_70165_t - this.field_70169_q) / (double)num;
-         double y = (this.field_70163_u - this.field_70167_r) / (double)num;
-         double z = (this.field_70161_v - this.field_70166_s) / (double)num;
+         double x = (this.posX - this.field_70169_q) / (double)num;
+         double y = (this.posY - this.field_70167_r) / (double)num;
+         double z = (this.posZ - this.field_70166_s) / (double)num;
 
          for(int i = 0; i < num; ++i) {
-            MCH_ParticleParam prm = new MCH_ParticleParam(this.field_70170_p, "smoke", this.field_70169_q + x * (double)i, 1.0D + this.field_70167_r + y * (double)i, this.field_70166_s + z * (double)i);
+            MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "smoke", this.field_70169_q + x * (double)i, 1.0D + this.field_70167_r + y * (double)i, this.field_70166_s + z * (double)i);
             prm.setMotion(mx, my, mz);
             prm.size = size;
             prm.setColor(1.0F, r, g, b);
@@ -193,7 +193,7 @@ public class MCH_EntityThrowable extends EntityThrowable implements IThrowableEn
          case UP:
             this.field_70159_w *= 0.8999999761581421D;
             this.field_70179_y *= 0.8999999761581421D;
-            this.boundPosY = m.field_72307_f.field_72448_b;
+            this.boundPosY = m.field_72307_f.y;
             if ((m.field_178784_b != EnumFacing.DOWN || !(this.field_70181_x > 0.0D)) && (m.field_178784_b != EnumFacing.UP || !(this.field_70181_x < 0.0D))) {
                this.field_70181_x = 0.0D;
             } else {
@@ -238,8 +238,8 @@ public class MCH_EntityThrowable extends EntityThrowable implements IThrowableEn
 
    public void setInfo(MCH_ThrowableInfo info) {
       this.throwableInfo = info;
-      if (info != null && !this.field_70170_p.field_72995_K) {
-         this.field_70180_af.func_187227_b(INFO_NAME, info.name);
+      if (info != null && !this.world.isRemote) {
+         this.dataManager.func_187227_b(INFO_NAME, info.name);
       }
 
    }
@@ -252,6 +252,6 @@ public class MCH_EntityThrowable extends EntityThrowable implements IThrowableEn
    }
 
    static {
-      INFO_NAME = EntityDataManager.func_187226_a(MCH_EntityThrowable.class, DataSerializers.field_187194_d);
+      INFO_NAME = EntityDataManager.createKey(MCH_EntityThrowable.class, DataSerializers.STRING);
    }
 }

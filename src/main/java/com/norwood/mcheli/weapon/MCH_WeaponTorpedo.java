@@ -15,7 +15,7 @@ public class MCH_WeaponTorpedo extends MCH_WeaponBase {
       this.explosionPower = 8;
       this.power = 35;
       this.interval = -100;
-      if (w.field_72995_K) {
+      if (w.isRemote) {
          this.interval -= 10;
       }
 
@@ -30,7 +30,7 @@ public class MCH_WeaponTorpedo extends MCH_WeaponBase {
    }
 
    protected boolean shotNoGuided(MCH_WeaponParam prm) {
-      if (this.worldObj.field_72995_K) {
+      if (this.worldObj.isRemote) {
          return true;
       } else {
          float yaw = prm.rotYaw;
@@ -59,11 +59,11 @@ public class MCH_WeaponTorpedo extends MCH_WeaponBase {
       float yaw = prm.user.field_70177_z;
       float pitch = prm.user.field_70125_A;
       Vec3d v = MCH_Lib.RotVec3(0.0D, 0.0D, 1.0D, -yaw, -pitch, -prm.rotRoll);
-      double tX = v.field_72450_a;
-      double tZ = v.field_72449_c;
-      double tY = v.field_72448_b;
+      double tX = v.x;
+      double tZ = v.z;
+      double tY = v.y;
       double dist = (double)MathHelper.func_76133_a(tX * tX + tY * tY + tZ * tZ);
-      if (this.worldObj.field_72995_K) {
+      if (this.worldObj.isRemote) {
          tX = tX * 100.0D / dist;
          tY = tY * 100.0D / dist;
          tZ = tZ * 100.0D / dist;
@@ -73,11 +73,11 @@ public class MCH_WeaponTorpedo extends MCH_WeaponBase {
          tZ = tZ * 150.0D / dist;
       }
 
-      Vec3d src = W_WorldFunc.getWorldVec3(this.worldObj, prm.user.field_70165_t, prm.user.field_70163_u, prm.user.field_70161_v);
-      Vec3d dst = W_WorldFunc.getWorldVec3(this.worldObj, prm.user.field_70165_t + tX, prm.user.field_70163_u + tY, prm.user.field_70161_v + tZ);
+      Vec3d src = W_WorldFunc.getWorldVec3(this.worldObj, prm.user.posX, prm.user.posY, prm.user.posZ);
+      Vec3d dst = W_WorldFunc.getWorldVec3(this.worldObj, prm.user.posX + tX, prm.user.posY + tY, prm.user.posZ + tZ);
       RayTraceResult m = W_WorldFunc.clip(this.worldObj, src, dst);
       if (m != null && W_MovingObjectPosition.isHitTypeTile(m) && MCH_Lib.isBlockInWater(this.worldObj, m.func_178782_a().func_177958_n(), m.func_178782_a().func_177956_o(), m.func_178782_a().func_177952_p())) {
-         if (!this.worldObj.field_72995_K) {
+         if (!this.worldObj.isRemote) {
             double mx = (double)(-MathHelper.func_76126_a(yaw / 180.0F * 3.1415927F) * MathHelper.func_76134_b(pitch / 180.0F * 3.1415927F));
             double mz = (double)(MathHelper.func_76134_b(yaw / 180.0F * 3.1415927F) * MathHelper.func_76134_b(pitch / 180.0F * 3.1415927F));
             double my = (double)(-MathHelper.func_76126_a(pitch / 180.0F * 3.1415927F));
@@ -88,9 +88,9 @@ public class MCH_WeaponTorpedo extends MCH_WeaponBase {
             MCH_EntityTorpedo e = new MCH_EntityTorpedo(this.worldObj, prm.posX, prm.posY, prm.posZ, prm.entity.field_70159_w, prm.entity.field_70181_x, prm.entity.field_70179_y, yaw, 0.0F, (double)this.acceleration);
             e.setName(this.name);
             e.setParameterFromWeapon(this, prm.entity, prm.user);
-            e.targetPosX = m.field_72307_f.field_72450_a;
-            e.targetPosY = m.field_72307_f.field_72448_b;
-            e.targetPosZ = m.field_72307_f.field_72449_c;
+            e.targetPosX = m.field_72307_f.x;
+            e.targetPosY = m.field_72307_f.y;
+            e.targetPosZ = m.field_72307_f.z;
             e.field_70159_w = mx;
             e.field_70181_x = my;
             e.field_70179_y = mz;

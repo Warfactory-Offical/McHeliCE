@@ -38,7 +38,7 @@ public class MCH_MultiplayPacketHandler {
 
    @HandleSide({Side.SERVER})
    public static void onPacket_Command(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-      if (!player.field_70170_p.field_72995_K) {
+      if (!player.world.isRemote) {
          MCH_PacketIndMultiplayCommand pc = new MCH_PacketIndMultiplayCommand();
          pc.readData(data);
          scheduler.func_152344_a(() -> {
@@ -75,7 +75,7 @@ public class MCH_MultiplayPacketHandler {
    private static void destoryAllAircraft(EntityPlayer player) {
       CommandSummon cmd = new CommandSummon();
       if (cmd.func_184882_a(MCH_Utils.getServer(), player)) {
-         Iterator var2 = player.field_70170_p.field_72996_f.iterator();
+         Iterator var2 = player.world.field_72996_f.iterator();
 
          while(var2.hasNext()) {
             Entity e = (Entity)var2.next();
@@ -89,7 +89,7 @@ public class MCH_MultiplayPacketHandler {
 
    @HandleSide({Side.CLIENT})
    public static void onPacket_NotifySpotedEntity(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-      if (player.field_70170_p.field_72995_K) {
+      if (player.world.isRemote) {
          MCH_PacketNotifySpotedEntity pc = new MCH_PacketNotifySpotedEntity();
          pc.readData(data);
          scheduler.func_152344_a(() -> {
@@ -105,7 +105,7 @@ public class MCH_MultiplayPacketHandler {
 
    @HandleSide({Side.CLIENT})
    public static void onPacket_NotifyMarkPoint(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-      if (player.field_70170_p.field_72995_K) {
+      if (player.world.isRemote) {
          MCH_PacketNotifyMarkPoint pc = new MCH_PacketNotifyMarkPoint();
          pc.readData(data);
          scheduler.func_152344_a(() -> {
@@ -116,7 +116,7 @@ public class MCH_MultiplayPacketHandler {
 
    @HandleSide({Side.SERVER})
    public static void onPacket_LargeData(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-      if (!player.field_70170_p.field_72995_K) {
+      if (!player.world.isRemote) {
          MCH_PacketLargeData pc = new MCH_PacketLargeData();
          pc.readData(data);
          scheduler.func_152344_a(() -> {
@@ -191,7 +191,7 @@ public class MCH_MultiplayPacketHandler {
 
    @HandleSide({Side.CLIENT})
    public static void onPacket_IndClient(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-      if (player.field_70170_p.field_72995_K) {
+      if (player.world.isRemote) {
          MCH_PacketIndClient pc = new MCH_PacketIndClient();
          pc.readData(data);
          scheduler.func_152344_a(() -> {
@@ -219,9 +219,9 @@ public class MCH_MultiplayPacketHandler {
    public static void onPacket_ModList(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
       MCH_PacketModList pc = new MCH_PacketModList();
       pc.readData(data);
-      if (player.field_70170_p.field_72995_K) {
+      if (player.world.isRemote) {
          scheduler.func_152344_a(() -> {
-            MCH_Lib.DbgLog(player.field_70170_p, "MCH_MultiplayPacketHandler.onPacket_ModList : ID=%d, Num=%d", pc.id, pc.num);
+            MCH_Lib.DbgLog(player.world, "MCH_MultiplayPacketHandler.onPacket_ModList : ID=%d, Num=%d", pc.id, pc.num);
             if (pc.firstData) {
                MCH_Lib.Log(TextFormatting.RED + "###### " + player.func_145748_c_() + " ######");
             }

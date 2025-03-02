@@ -13,7 +13,7 @@ public class MCH_VehiclePacketHandler {
    @HandleSide({Side.SERVER})
    public static void onPacket_PlayerControl(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
       if (player.func_184187_bx() instanceof MCH_EntityVehicle) {
-         if (!player.field_70170_p.field_72995_K) {
+         if (!player.world.isRemote) {
             MCH_PacketVehiclePlayerControl pc = new MCH_PacketVehiclePlayerControl();
             pc.readData(data);
             scheduler.func_152344_a(() -> {
@@ -57,7 +57,7 @@ public class MCH_VehiclePacketHandler {
                   }
 
                   if (pc.unhitchChainId >= 0) {
-                     Entity e = player.field_70170_p.func_73045_a(pc.unhitchChainId);
+                     Entity e = player.world.func_73045_a(pc.unhitchChainId);
                      if (e instanceof MCH_EntityChain) {
                         e.func_70106_y();
                      }

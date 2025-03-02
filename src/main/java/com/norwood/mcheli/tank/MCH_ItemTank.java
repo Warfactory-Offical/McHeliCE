@@ -32,7 +32,7 @@ public class MCH_ItemTank extends MCH_ItemAircraft {
          tank.field_70166_s = z;
          tank.camera.setPosition(x, y, z);
          tank.setTypeName(info.name);
-         if (!world.field_72995_K) {
+         if (!world.isRemote) {
             tank.setTextureName(info.getTextureName());
          }
 

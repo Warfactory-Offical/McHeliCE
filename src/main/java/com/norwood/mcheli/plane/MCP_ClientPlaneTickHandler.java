@@ -107,7 +107,7 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
 
       if (!this.isBeforeRiding && this.isRiding && plane != null) {
          W_Reflection.setThirdPersonDistance(plane.thirdPersonDist);
-         MCH_ViewEntityDummy.getInstance(this.mc.field_71441_e).func_70107_b(plane.field_70165_t, plane.field_70163_u + 0.5D, plane.field_70161_v);
+         MCH_ViewEntityDummy.getInstance(this.mc.field_71441_e).func_70107_b(plane.posX, plane.posY + 0.5D, plane.posZ);
       } else if (this.isBeforeRiding && !this.isRiding) {
          W_Reflection.restoreDefaultThirdPersonDistance();
          MCH_Lib.enableFirstPersonItemRender();

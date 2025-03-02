@@ -51,12 +51,12 @@ public class MCH_EntityParticleExplode extends MCH_EntityParticleBase {
          int j = 15728880;
          int k = j >> 16 & '\uffff';
          int l = j & '\uffff';
-         buffer.func_181668_a(7, VERTEX_FORMAT);
-         buffer.func_181662_b((double)(f11 - p_70539_3_ * f10 - p_70539_6_ * f10), (double)(f12 - p_70539_4_ * f10), (double)(f13 - p_70539_5_ * f10 - p_70539_7_ * f10)).func_187315_a((double)f7, (double)f9).func_181666_a(this.field_70552_h, this.field_70553_i, this.field_70551_j, this.field_82339_as).func_187314_a(k, l).func_181663_c(0.0F, 1.0F, 0.0F).func_181675_d();
-         buffer.func_181662_b((double)(f11 - p_70539_3_ * f10 + p_70539_6_ * f10), (double)(f12 + p_70539_4_ * f10), (double)(f13 - p_70539_5_ * f10 + p_70539_7_ * f10)).func_187315_a((double)f7, (double)f8).func_181666_a(this.field_70552_h, this.field_70553_i, this.field_70551_j, this.field_82339_as).func_187314_a(k, l).func_181663_c(0.0F, 1.0F, 0.0F).func_181675_d();
-         buffer.func_181662_b((double)(f11 + p_70539_3_ * f10 + p_70539_6_ * f10), (double)(f12 + p_70539_4_ * f10), (double)(f13 + p_70539_5_ * f10 + p_70539_7_ * f10)).func_187315_a((double)f6, (double)f8).func_181666_a(this.field_70552_h, this.field_70553_i, this.field_70551_j, this.field_82339_as).func_187314_a(k, l).func_181663_c(0.0F, 1.0F, 0.0F).func_181675_d();
-         buffer.func_181662_b((double)(f11 + p_70539_3_ * f10 - p_70539_6_ * f10), (double)(f12 - p_70539_4_ * f10), (double)(f13 + p_70539_5_ * f10 - p_70539_7_ * f10)).func_187315_a((double)f6, (double)f9).func_181666_a(this.field_70552_h, this.field_70553_i, this.field_70551_j, this.field_82339_as).func_187314_a(k, l).func_181663_c(0.0F, 1.0F, 0.0F).func_181675_d();
-         Tessellator.func_178181_a().func_78381_a();
+         buffer.begin(7, VERTEX_FORMAT);
+         buffer.pos((double)(f11 - p_70539_3_ * f10 - p_70539_6_ * f10), (double)(f12 - p_70539_4_ * f10), (double)(f13 - p_70539_5_ * f10 - p_70539_7_ * f10)).func_187315_a((double)f7, (double)f9).func_181666_a(this.field_70552_h, this.field_70553_i, this.field_70551_j, this.field_82339_as).func_187314_a(k, l).func_181663_c(0.0F, 1.0F, 0.0F).func_181675_d();
+         buffer.pos((double)(f11 - p_70539_3_ * f10 + p_70539_6_ * f10), (double)(f12 + p_70539_4_ * f10), (double)(f13 - p_70539_5_ * f10 + p_70539_7_ * f10)).func_187315_a((double)f7, (double)f8).func_181666_a(this.field_70552_h, this.field_70553_i, this.field_70551_j, this.field_82339_as).func_187314_a(k, l).func_181663_c(0.0F, 1.0F, 0.0F).func_181675_d();
+         buffer.pos((double)(f11 + p_70539_3_ * f10 + p_70539_6_ * f10), (double)(f12 + p_70539_4_ * f10), (double)(f13 + p_70539_5_ * f10 + p_70539_7_ * f10)).func_187315_a((double)f6, (double)f8).func_181666_a(this.field_70552_h, this.field_70553_i, this.field_70551_j, this.field_82339_as).func_187314_a(k, l).func_181663_c(0.0F, 1.0F, 0.0F).func_181675_d();
+         buffer.pos((double)(f11 + p_70539_3_ * f10 - p_70539_6_ * f10), (double)(f12 - p_70539_4_ * f10), (double)(f13 + p_70539_5_ * f10 - p_70539_7_ * f10)).func_187315_a((double)f6, (double)f9).func_181666_a(this.field_70552_h, this.field_70553_i, this.field_70551_j, this.field_82339_as).func_187314_a(k, l).func_181663_c(0.0F, 1.0F, 0.0F).func_181675_d();
+         Tessellator.getInstance().draw();
          GlStateManager.func_179136_a(0.0F, 0.0F);
          GlStateManager.func_179145_e();
          GlStateManager.func_179089_o();

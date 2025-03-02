@@ -24,21 +24,21 @@ public class MCH_EntityBullet extends MCH_EntityBaseBullet {
 
    public void func_70071_h_() {
       super.func_70071_h_();
-      if (!this.field_70128_L && !this.field_70170_p.field_72995_K && this.getCountOnUpdate() > 1 && this.getInfo() != null && this.explosionPower > 0) {
+      if (!this.field_70128_L && !this.world.isRemote && this.getCountOnUpdate() > 1 && this.getInfo() != null && this.explosionPower > 0) {
          float pDist = this.getInfo().proximityFuseDist;
          if ((double)pDist > 0.1D) {
             ++pDist;
             float rng = pDist + MathHelper.func_76135_e(this.getInfo().acceleration);
-            List<Entity> list = this.field_70170_p.func_72839_b(this, this.func_174813_aQ().func_72314_b((double)rng, (double)rng, (double)rng));
+            List<Entity> list = this.world.func_72839_b(this, this.func_174813_aQ().func_72314_b((double)rng, (double)rng, (double)rng));
 
             for(int i = 0; i < list.size(); ++i) {
                Entity entity1 = (Entity)list.get(i);
                if (this.canBeCollidedEntity(entity1) && entity1.func_70068_e(this) < (double)(pDist * pDist)) {
-                  MCH_Lib.DbgLog(this.field_70170_p, "MCH_EntityBullet.onUpdate:proximityFuse:" + entity1);
-                  this.field_70165_t = (entity1.field_70165_t + this.field_70165_t) / 2.0D;
-                  this.field_70163_u = (entity1.field_70163_u + this.field_70163_u) / 2.0D;
-                  this.field_70161_v = (entity1.field_70161_v + this.field_70161_v) / 2.0D;
-                  RayTraceResult mop = W_MovingObjectPosition.newMOP((int)this.field_70165_t, (int)this.field_70163_u, (int)this.field_70161_v, 0, W_WorldFunc.getWorldVec3EntityPos(this), false);
+                  MCH_Lib.DbgLog(this.world, "MCH_EntityBullet.onUpdate:proximityFuse:" + entity1);
+                  this.posX = (entity1.posX + this.posX) / 2.0D;
+                  this.posY = (entity1.posY + this.posY) / 2.0D;
+                  this.posZ = (entity1.posZ + this.posZ) / 2.0D;
+                  RayTraceResult mop = W_MovingObjectPosition.newMOP((int)this.posX, (int)this.posY, (int)this.posZ, 0, W_WorldFunc.getWorldVec3EntityPos(this), false);
                   this.onImpact(mop, 1.0F);
                   break;
                }
@@ -57,14 +57,14 @@ public class MCH_EntityBullet extends MCH_EntityBaseBullet {
 
       Vec3d vec31;
       for(int i = 0; i < 5; ++i) {
-         vec31 = W_WorldFunc.getWorldVec3(this.field_70170_p, this.field_70165_t, this.field_70163_u, this.field_70161_v);
-         Vec3d vec31 = W_WorldFunc.getWorldVec3(this.field_70170_p, this.field_70165_t + mx, this.field_70163_u + my, this.field_70161_v + mz);
-         m = W_WorldFunc.clip(this.field_70170_p, vec31, vec31);
+         vec31 = W_WorldFunc.getWorldVec3(this.world, this.posX, this.posY, this.posZ);
+         Vec3d vec31 = W_WorldFunc.getWorldVec3(this.world, this.posX + mx, this.posY + my, this.posZ + mz);
+         m = W_WorldFunc.clip(this.world, vec31, vec31);
          boolean continueClip = false;
          if (this.shootingEntity != null && W_MovingObjectPosition.isHitTypeTile(m)) {
-            Block block = W_WorldFunc.getBlock(this.field_70170_p, m.func_178782_a());
+            Block block = W_WorldFunc.getBlock(this.world, m.func_178782_a());
             if (MCH_Config.bulletBreakableBlocks.contains(block)) {
-               W_WorldFunc.destroyBlock(this.field_70170_p, m.func_178782_a(), true);
+               W_WorldFunc.destroyBlock(this.world, m.func_178782_a(), true);
                continueClip = true;
             }
          }
@@ -74,8 +74,8 @@ public class MCH_EntityBullet extends MCH_EntityBaseBullet {
          }
       }
 
-      Vec3d vec3 = W_WorldFunc.getWorldVec3(this.field_70170_p, this.field_70165_t, this.field_70163_u, this.field_70161_v);
-      vec31 = W_WorldFunc.getWorldVec3(this.field_70170_p, this.field_70165_t + mx, this.field_70163_u + my, this.field_70161_v + mz);
+      Vec3d vec3 = W_WorldFunc.getWorldVec3(this.world, this.posX, this.posY, this.posZ);
+      vec31 = W_WorldFunc.getWorldVec3(this.world, this.posX + mx, this.posY + my, this.posZ + mz);
       if (this.getInfo().delayFuse > 0) {
          if (m != null) {
             this.boundBullet(m.field_178784_b);
@@ -86,11 +86,11 @@ public class MCH_EntityBullet extends MCH_EntityBaseBullet {
 
       } else {
          if (m != null) {
-            vec31 = W_WorldFunc.getWorldVec3(this.field_70170_p, m.field_72307_f.field_72450_a, m.field_72307_f.field_72448_b, m.field_72307_f.field_72449_c);
+            vec31 = W_WorldFunc.getWorldVec3(this.world, m.field_72307_f.x, m.field_72307_f.y, m.field_72307_f.z);
          }
 
          Entity entity = null;
-         List<Entity> list = this.field_70170_p.func_72839_b(this, this.func_174813_aQ().func_72321_a(mx, my, mz).func_72314_b(21.0D, 21.0D, 21.0D));
+         List<Entity> list = this.world.func_72839_b(this, this.func_174813_aQ().func_72321_a(mx, my, mz).func_72314_b(21.0D, 21.0D, 21.0D));
          double d0 = 0.0D;
 
          for(int j = 0; j < list.size(); ++j) {

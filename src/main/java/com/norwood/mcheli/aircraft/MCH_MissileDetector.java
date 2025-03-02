@@ -28,12 +28,12 @@ public class MCH_MissileDetector {
             --this.alertCount;
          }
 
-         boolean isLocked = this.ac.getEntityData().func_74767_n("Tracking");
+         boolean isLocked = this.ac.getEntityData().getBoolean("Tracking");
          if (isLocked) {
-            this.ac.getEntityData().func_74757_a("Tracking", false);
+            this.ac.getEntityData().setBoolean("Tracking", false);
          }
 
-         if (this.ac.getEntityData().func_74767_n("LockOn")) {
+         if (this.ac.getEntityData().getBoolean("LockOn")) {
             if (this.alertCount == 0) {
                this.alertCount = 10;
                if (this.ac != null && this.ac.haveFlare() && !this.ac.isDestroyed()) {
@@ -46,7 +46,7 @@ public class MCH_MissileDetector {
                }
             }
 
-            this.ac.getEntityData().func_74757_a("LockOn", false);
+            this.ac.getEntityData().setBoolean("LockOn", false);
          }
 
          if (!this.ac.isDestroyed()) {
@@ -58,12 +58,12 @@ public class MCH_MissileDetector {
             if (rider != null) {
                if (this.ac.isFlareUsing()) {
                   this.destroyMissile();
-               } else if (!this.ac.isUAV() && !this.world.field_72995_K) {
+               } else if (!this.ac.isUAV() && !this.world.isRemote) {
                   if (this.alertCount == 0 && (isLocked || this.isLockedByMissile())) {
                      this.alertCount = 20;
                      W_WorldFunc.MOD_playSoundAtEntity(this.ac, "alert", 1.0F, 1.0F);
                   }
-               } else if (this.ac.isUAV() && this.world.field_72995_K && this.alertCount == 0 && (isLocked || this.isLockedByMissile())) {
+               } else if (this.ac.isUAV() && this.world.isRemote && this.alertCount == 0 && (isLocked || this.isLockedByMissile())) {
                   this.alertCount = 20;
                   if (W_Lib.isClientPlayer(rider)) {
                      W_McClient.MOD_playSoundFX("alert", 1.0F, 1.0F);

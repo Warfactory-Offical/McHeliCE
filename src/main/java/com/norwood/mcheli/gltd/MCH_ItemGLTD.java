@@ -28,9 +28,9 @@ public class MCH_ItemGLTD extends W_Item {
       float f = 1.0F;
       float f1 = par3EntityPlayer.field_70127_C + (par3EntityPlayer.field_70125_A - par3EntityPlayer.field_70127_C) * f;
       float f2 = par3EntityPlayer.field_70126_B + (par3EntityPlayer.field_70177_z - par3EntityPlayer.field_70126_B) * f;
-      double d0 = par3EntityPlayer.field_70169_q + (par3EntityPlayer.field_70165_t - par3EntityPlayer.field_70169_q) * (double)f;
-      double d1 = par3EntityPlayer.field_70167_r + (par3EntityPlayer.field_70163_u - par3EntityPlayer.field_70167_r) * (double)f + (double)par3EntityPlayer.func_70047_e();
-      double d2 = par3EntityPlayer.field_70166_s + (par3EntityPlayer.field_70161_v - par3EntityPlayer.field_70166_s) * (double)f;
+      double d0 = par3EntityPlayer.field_70169_q + (par3EntityPlayer.posX - par3EntityPlayer.field_70169_q) * (double)f;
+      double d1 = par3EntityPlayer.field_70167_r + (par3EntityPlayer.posY - par3EntityPlayer.field_70167_r) * (double)f + (double)par3EntityPlayer.func_70047_e();
+      double d2 = par3EntityPlayer.field_70166_s + (par3EntityPlayer.posZ - par3EntityPlayer.field_70166_s) * (double)f;
       Vec3d vec3 = W_WorldFunc.getWorldVec3(par2World, d0, d1, d2);
       float f3 = MathHelper.func_76134_b(-f2 * 0.017453292F - 3.1415927F);
       float f4 = MathHelper.func_76126_a(-f2 * 0.017453292F - 3.1415927F);
@@ -47,7 +47,7 @@ public class MCH_ItemGLTD extends W_Item {
          Vec3d vec32 = par3EntityPlayer.func_70676_i(f);
          boolean flag = false;
          float f9 = 1.0F;
-         List<Entity> list = par2World.func_72839_b(par3EntityPlayer, par3EntityPlayer.func_174813_aQ().func_72321_a(vec32.field_72450_a * d3, vec32.field_72448_b * d3, vec32.field_72449_c * d3).func_72314_b((double)f9, (double)f9, (double)f9));
+         List<Entity> list = par2World.func_72839_b(par3EntityPlayer, par3EntityPlayer.func_174813_aQ().func_72321_a(vec32.x * d3, vec32.y * d3, vec32.z * d3).func_72314_b((double)f9, (double)f9, (double)f9));
 
          for(int i = 0; i < list.size(); ++i) {
             Entity entity = (Entity)list.get(i);
@@ -74,7 +74,7 @@ public class MCH_ItemGLTD extends W_Item {
                   return ActionResult.newResult(EnumActionResult.FAIL, itemstack);
                }
 
-               if (!par2World.field_72995_K) {
+               if (!par2World.isRemote) {
                   par2World.func_72838_d(entityboat);
                }
 

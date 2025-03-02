@@ -45,16 +45,16 @@ public class MCH_BoundingBox {
    public void updatePosition(double posX, double posY, double posZ, float yaw, float pitch, float roll) {
       Vec3d v = new Vec3d(this.offsetX, this.offsetY, this.offsetZ);
       this.rotatedOffset = MCH_Lib.RotVec3(v, -yaw, -pitch, -roll);
-      this.add(posX + this.rotatedOffset.field_72450_a, posY + this.rotatedOffset.field_72448_b, posZ + this.rotatedOffset.field_72449_c);
+      this.add(posX + this.rotatedOffset.x, posY + this.rotatedOffset.y, posZ + this.rotatedOffset.z);
       int index = MCH_Config.HitBoxDelayTick.prmInt;
       Vec3d cp = index + 0 < this.pos.size() ? (Vec3d)this.pos.get(index + 0) : (Vec3d)this.pos.get(this.pos.size() - 1);
       Vec3d pp = index + 1 < this.pos.size() ? (Vec3d)this.pos.get(index + 1) : (Vec3d)this.pos.get(this.pos.size() - 1);
-      double sx = ((double)this.width + Math.abs(cp.field_72450_a - pp.field_72450_a)) / 2.0D;
-      double sy = ((double)this.height + Math.abs(cp.field_72448_b - pp.field_72448_b)) / 2.0D;
-      double sz = ((double)this.width + Math.abs(cp.field_72449_c - pp.field_72449_c)) / 2.0D;
-      double x = (cp.field_72450_a + pp.field_72450_a) / 2.0D;
-      double y = (cp.field_72448_b + pp.field_72448_b) / 2.0D;
-      double z = (cp.field_72449_c + pp.field_72449_c) / 2.0D;
+      double sx = ((double)this.width + Math.abs(cp.x - pp.x)) / 2.0D;
+      double sy = ((double)this.height + Math.abs(cp.y - pp.y)) / 2.0D;
+      double sz = ((double)this.width + Math.abs(cp.z - pp.z)) / 2.0D;
+      double x = (cp.x + pp.x) / 2.0D;
+      double y = (cp.y + pp.y) / 2.0D;
+      double z = (cp.z + pp.z) / 2.0D;
       this.boundingBox = new AxisAlignedBB(x - sx, y - sy, z - sz, x + sx, y + sy, z + sz);
    }
 

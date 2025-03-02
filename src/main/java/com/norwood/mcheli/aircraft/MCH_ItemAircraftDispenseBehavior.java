@@ -16,7 +16,7 @@ public class MCH_ItemAircraftDispenseBehavior extends BehaviorDefaultDispenseIte
       if (itemStack.func_77973_b() instanceof MCH_ItemAircraft) {
          MCH_EntityAircraft ac = ((MCH_ItemAircraft)itemStack.func_77973_b()).onTileClick(itemStack, bs.func_82618_k(), 0.0F, (int)x, (int)y, (int)z);
          if (ac != null && ac.getAcInfo() != null && !ac.getAcInfo().creativeOnly && !ac.isUAV()) {
-            if (!bs.func_82618_k().field_72995_K) {
+            if (!bs.func_82618_k().isRemote) {
                ac.getAcDataFromItem(itemStack);
                bs.func_82618_k().func_72838_d(ac);
             }

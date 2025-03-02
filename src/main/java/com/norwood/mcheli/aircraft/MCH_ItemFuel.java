@@ -21,7 +21,7 @@ public class MCH_ItemFuel extends W_Item {
 
    public ActionResult<ItemStack> func_77659_a(World world, EntityPlayer player, EnumHand handIn) {
       ItemStack stack = player.func_184586_b(handIn);
-      if (!world.field_72995_K && stack.func_77951_h() && !player.field_71075_bZ.field_75098_d) {
+      if (!world.isRemote && stack.func_77951_h() && !player.field_71075_bZ.field_75098_d) {
          this.refuel(stack, player, 1);
          this.refuel(stack, player, 0);
          return new ActionResult(EnumActionResult.SUCCESS, stack);

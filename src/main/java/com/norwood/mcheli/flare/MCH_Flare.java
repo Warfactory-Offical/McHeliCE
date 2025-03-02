@@ -31,7 +31,7 @@ public class MCH_Flare {
       this.numFlare = 0;
       this.flareType = 0;
       if (FLARE_DATA == null) {
-         int delay = w.field_72995_K ? 50 : 0;
+         int delay = w.isRemote ? 50 : 0;
          FLARE_DATA = new MCH_Flare.FlareParam[11];
          FLARE_DATA[1] = new MCH_Flare.FlareParam(1, 3, 200 + delay, 100, 16);
          FLARE_DATA[2] = new MCH_Flare.FlareParam(3, 5, 300 + delay, 200, 16);
@@ -62,14 +62,14 @@ public class MCH_Flare {
    }
 
    public void spawnParticle(String name, int num, float size) {
-      if (this.worldObj.field_72995_K) {
+      if (this.worldObj.isRemote) {
          if (name.isEmpty() || num < 1 || num > 50) {
             return;
          }
 
-         double x = (this.aircraft.field_70165_t - this.aircraft.field_70169_q) / (double)num;
-         double y = (this.aircraft.field_70163_u - this.aircraft.field_70167_r) / (double)num;
-         double z = (this.aircraft.field_70161_v - this.aircraft.field_70166_s) / (double)num;
+         double x = (this.aircraft.posX - this.aircraft.field_70169_q) / (double)num;
+         double y = (this.aircraft.posY - this.aircraft.field_70167_r) / (double)num;
+         double z = (this.aircraft.posZ - this.aircraft.field_70166_s) / (double)num;
 
          for(int i = 0; i < num; ++i) {
             MCH_ParticleParam prm = new MCH_ParticleParam(this.worldObj, "smoke", this.aircraft.field_70169_q + x * (double)i, this.aircraft.field_70167_r + y * (double)i, this.aircraft.field_70166_s + z * (double)i);
@@ -82,12 +82,12 @@ public class MCH_Flare {
 
    public boolean use(int type) {
       boolean result = false;
-      MCH_Lib.DbgLog(this.aircraft.field_70170_p, "MCH_Flare.use type = %d", type);
+      MCH_Lib.DbgLog(this.aircraft.world, "MCH_Flare.use type = %d", type);
       this.flareType = type;
       if (type <= 0 && type >= FLARE_DATA.length) {
          return false;
       } else {
-         if (this.worldObj.field_72995_K) {
+         if (this.worldObj.isRemote) {
             if (this.tick == 0) {
                this.tick = FLARE_DATA[this.getFlareType()].tickWait;
                result = true;
@@ -98,7 +98,7 @@ public class MCH_Flare {
             result = true;
             this.numFlare = 0;
             this.tick = FLARE_DATA[this.getFlareType()].tickWait;
-            this.aircraft.getEntityData().func_74757_a("FlareUsing", true);
+            this.aircraft.getEntityData().setBoolean("FlareUsing", true);
          }
 
          return result;
@@ -112,14 +112,14 @@ public class MCH_Flare {
             --this.tick;
          }
 
-         if (!this.worldObj.field_72995_K && this.tick > 0 && this.tick % FLARE_DATA[type].interval == 0 && this.numFlare < FLARE_DATA[type].numFlareMax) {
+         if (!this.worldObj.isRemote && this.tick > 0 && this.tick % FLARE_DATA[type].interval == 0 && this.numFlare < FLARE_DATA[type].numFlareMax) {
             Vec3d v = this.aircraft.getAcInfo().flare.pos;
-            v = this.aircraft.getTransformedPosition(v.field_72450_a, v.field_72448_b, v.field_72449_c, this.aircraft.field_70169_q, this.aircraft.field_70167_r, this.aircraft.field_70166_s);
+            v = this.aircraft.getTransformedPosition(v.x, v.y, v.z, this.aircraft.field_70169_q, this.aircraft.field_70167_r, this.aircraft.field_70166_s);
             this.spawnFlare(v);
          }
 
-         if (!this.isUsing() && this.aircraft.getEntityData().func_74767_n("FlareUsing")) {
-            this.aircraft.getEntityData().func_74757_a("FlareUsing", false);
+         if (!this.isUsing() && this.aircraft.getEntityData().getBoolean("FlareUsing")) {
+            this.aircraft.getEntityData().setBoolean("FlareUsing", false);
          }
 
       }
@@ -129,15 +129,15 @@ public class MCH_Flare {
       ++this.numFlare;
       int type = this.getFlareType();
       int num = FLARE_DATA[type].num;
-      double x = v.field_72450_a - this.aircraft.field_70159_w * 2.0D;
-      double y = v.field_72448_b - this.aircraft.field_70181_x * 2.0D - 1.0D;
-      double z = v.field_72449_c - this.aircraft.field_70179_y * 2.0D;
+      double x = v.x - this.aircraft.field_70159_w * 2.0D;
+      double y = v.y - this.aircraft.field_70181_x * 2.0D - 1.0D;
+      double z = v.z - this.aircraft.field_70179_y * 2.0D;
       this.worldObj.func_184133_a((EntityPlayer)null, new BlockPos(x, y, z), SoundEvents.field_187646_bt, SoundCategory.BLOCKS, 0.5F, 2.6F + (this.worldObj.field_73012_v.nextFloat() - this.worldObj.field_73012_v.nextFloat()) * 0.8F);
 
       for(int i = 0; i < num; ++i) {
-         x = v.field_72450_a - this.aircraft.field_70159_w * 2.0D;
-         y = v.field_72448_b - this.aircraft.field_70181_x * 2.0D - 1.0D;
-         z = v.field_72449_c - this.aircraft.field_70179_y * 2.0D;
+         x = v.x - this.aircraft.field_70159_w * 2.0D;
+         y = v.y - this.aircraft.field_70181_x * 2.0D - 1.0D;
+         z = v.z - this.aircraft.field_70179_y * 2.0D;
          double tx = 0.0D;
          double ty = this.aircraft.field_70181_x;
          double tz = 0.0D;

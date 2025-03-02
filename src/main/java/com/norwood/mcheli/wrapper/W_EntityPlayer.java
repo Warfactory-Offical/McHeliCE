@@ -16,7 +16,7 @@ public abstract class W_EntityPlayer extends EntityPlayer {
 
    public static void closeScreen(Entity p) {
       if (p != null) {
-         if (p.field_70170_p.field_72995_K) {
+         if (p.world.isRemote) {
             W_EntityPlayerSP.closeScreen(p);
          } else if (p instanceof EntityPlayerMP) {
             ((EntityPlayerMP)p).func_71053_j();

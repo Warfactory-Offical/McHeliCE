@@ -72,9 +72,9 @@ public class MCH_Lib {
    }
 
    public static Vec3d calculateFaceNormal(Vec3d[] vertices) {
-      Vec3d v1 = new Vec3d(vertices[1].field_72450_a - vertices[0].field_72450_a, vertices[1].field_72448_b - vertices[0].field_72448_b, vertices[1].field_72449_c - vertices[0].field_72449_c);
-      Vec3d v2 = new Vec3d(vertices[2].field_72450_a - vertices[0].field_72450_a, vertices[2].field_72448_b - vertices[0].field_72448_b, vertices[2].field_72449_c - vertices[0].field_72449_c);
-      return v1.func_72431_c(v2).func_72432_b();
+      Vec3d v1 = new Vec3d(vertices[1].x - vertices[0].x, vertices[1].y - vertices[0].y, vertices[1].z - vertices[0].z);
+      Vec3d v2 = new Vec3d(vertices[2].x - vertices[0].x, vertices[2].y - vertices[0].y, vertices[2].z - vertices[0].z);
+      return v1.crossProduct(v2).normalize();
    }
 
    public static double parseDouble(String s) {
@@ -156,14 +156,14 @@ public class MCH_Lib {
    }
 
    public static Vec3d RotVec3(Vec3d vin, float yaw, float pitch) {
-      Vec3d v = new Vec3d(vin.field_72450_a, vin.field_72448_b, vin.field_72449_c);
+      Vec3d v = new Vec3d(vin.x, vin.y, vin.z);
       v = v.func_178789_a(pitch / 180.0F * 3.1415927F);
       v = v.func_178785_b(yaw / 180.0F * 3.1415927F);
       return v;
    }
 
    public static Vec3d RotVec3(Vec3d vin, float yaw, float pitch, float roll) {
-      Vec3d v = new Vec3d(vin.field_72450_a, vin.field_72448_b, vin.field_72449_c);
+      Vec3d v = new Vec3d(vin.x, vin.y, vin.z);
       v = W_Vec3.rotateRoll(roll / 180.0F * 3.1415927F, v);
       v = v.func_178789_a(pitch / 180.0F * 3.1415927F);
       v = v.func_178785_b(yaw / 180.0F * 3.1415927F);
@@ -186,7 +186,7 @@ public class MCH_Lib {
 
    public static void Log(World world, String format, Object... data) {
       if (world != null) {
-         Log((world.field_72995_K ? "[ClientWorld]" : "[ServerWorld]") + " " + format, data);
+         Log((world.isRemote ? "[ClientWorld]" : "[ServerWorld]") + " " + format, data);
       } else {
          Log("[UnknownWorld]" + format, data);
       }
@@ -195,7 +195,7 @@ public class MCH_Lib {
 
    public static void Log(Entity entity, String format, Object... data) {
       if (entity != null) {
-         Log(entity.field_70170_p, format, data);
+         Log(entity.world, format, data);
       } else {
          Log((World)null, format, data);
       }
@@ -217,7 +217,7 @@ public class MCH_Lib {
    }
 
    public static void DbgLog(World w, String format, Object... data) {
-      DbgLog(w.field_72995_K, format, data);
+      DbgLog(w.isRemote, format, data);
    }
 
    public static String getTime() {
@@ -298,11 +298,11 @@ public class MCH_Lib {
    }
 
    public static Block getBlockY(Entity entity, int size, int lenY, boolean canColliableOnly) {
-      return getBlockY(entity.field_70170_p, entity.field_70165_t, entity.field_70163_u, entity.field_70161_v, size, lenY, canColliableOnly);
+      return getBlockY(entity.world, entity.posX, entity.posY, entity.posZ, size, lenY, canColliableOnly);
    }
 
    public static Block getBlockY(World world, Vec3d pos, int size, int lenY, boolean canColliableOnly) {
-      return getBlockY(world, pos.field_72450_a, pos.field_72448_b, pos.field_72449_c, size, lenY, canColliableOnly);
+      return getBlockY(world, pos.x, pos.y, pos.z, size, lenY, canColliableOnly);
    }
 
    public static Block getBlockY(World world, double posX, double posY, double posZ, int size, int lenY, boolean canColliableOnly) {
@@ -341,7 +341,7 @@ public class MCH_Lib {
    }
 
    public static Vec3d getYawPitchFromVec(Vec3d v) {
-      return getYawPitchFromVec(v.field_72450_a, v.field_72448_b, v.field_72449_c);
+      return getYawPitchFromVec(v.x, v.y, v.z);
    }
 
    public static Vec3d getYawPitchFromVec(double x, double y, double z) {

@@ -90,7 +90,7 @@ public class MCH_WeaponGuidanceSystem {
    }
 
    public void update() {
-      if (this.worldObj != null && this.worldObj.field_72995_K) {
+      if (this.worldObj != null && this.worldObj.isRemote) {
          if (this.lockCount != this.prevLockCount) {
             this.prevLockCount = this.lockCount;
          } else {
@@ -107,11 +107,11 @@ public class MCH_WeaponGuidanceSystem {
          }
 
          for(int i = 0; i < 12; ++i) {
-            int x = (int)(entity.field_70165_t + 0.5D);
-            int y = (int)(entity.field_70163_u + 0.5D) - i;
-            int z = (int)(entity.field_70161_v + 0.5D);
-            int blockId = W_WorldFunc.getBlockId(entity.field_70170_p, x, y, z);
-            if (blockId != 0 && !W_WorldFunc.isBlockWater(entity.field_70170_p, x, y, z)) {
+            int x = (int)(entity.posX + 0.5D);
+            int y = (int)(entity.posY + 0.5D) - i;
+            int z = (int)(entity.posZ + 0.5D);
+            int blockId = W_WorldFunc.getBlockId(entity.world, x, y, z);
+            if (blockId != 0 && !W_WorldFunc.isBlockWater(entity.world, x, y, z)) {
                return true;
             }
          }
@@ -125,7 +125,7 @@ public class MCH_WeaponGuidanceSystem {
    }
 
    public boolean lock(Entity user, boolean isLockContinue) {
-      if (!this.worldObj.field_72995_K) {
+      if (!this.worldObj.isRemote) {
          return false;
       } else {
          boolean result = false;
@@ -139,17 +139,17 @@ public class MCH_WeaponGuidanceSystem {
             for(int i = 0; i < list.size(); ++i) {
                Entity entity = (Entity)list.get(i);
                if (this.canLockEntity(entity)) {
-                  dz = entity.field_70165_t - user.field_70165_t;
-                  double dy = entity.field_70163_u - user.field_70163_u;
-                  double dz = entity.field_70161_v - user.field_70161_v;
+                  dz = entity.posX - user.posX;
+                  double dy = entity.posY - user.posY;
+                  double dz = entity.posZ - user.posZ;
                   double d = dz * dz + dy * dy + dz * dz;
                   Entity entityLocker = this.getLockEntity(user);
                   float stealth = 1.0F - getEntityStealth(entity);
                   double range = this.lockRange * (double)stealth;
                   float angle = (float)this.lockAngle * (stealth / 2.0F + 0.5F);
                   if (d < range * range && d < dx && inLockRange(entityLocker, user.field_70177_z, user.field_70125_A, entity, angle)) {
-                     Vec3d v1 = W_WorldFunc.getWorldVec3(this.worldObj, entityLocker.field_70165_t, entityLocker.field_70163_u + (double)entityLocker.func_70047_e(), entityLocker.field_70161_v);
-                     Vec3d v2 = W_WorldFunc.getWorldVec3(this.worldObj, entity.field_70165_t, entity.field_70163_u + (double)(entity.field_70131_O / 2.0F), entity.field_70161_v);
+                     Vec3d v1 = W_WorldFunc.getWorldVec3(this.worldObj, entityLocker.posX, entityLocker.posY + (double)entityLocker.func_70047_e(), entityLocker.posZ);
+                     Vec3d v2 = W_WorldFunc.getWorldVec3(this.worldObj, entity.posX, entity.posY + (double)(entity.field_70131_O / 2.0F), entity.posZ);
                      RayTraceResult m = W_WorldFunc.clip(this.worldObj, v1, v2, false, true, false);
                      if (m == null || W_MovingObjectPosition.isHitTypeEntity(m)) {
                         tgtEnt = entity;
@@ -178,13 +178,13 @@ public class MCH_WeaponGuidanceSystem {
             }
 
             if (canLock) {
-               dx = this.targetEntity.field_70165_t - user.field_70165_t;
-               double dy = this.targetEntity.field_70163_u - user.field_70163_u;
-               dz = this.targetEntity.field_70161_v - user.field_70161_v;
+               dx = this.targetEntity.posX - user.posX;
+               double dy = this.targetEntity.posY - user.posY;
+               dz = this.targetEntity.posZ - user.posZ;
                float stealth = 1.0F - getEntityStealth(this.targetEntity);
                double range = this.lockRange * (double)stealth;
                if (dx * dx + dy * dy + dz * dz < range * range) {
-                  if (this.worldObj.field_72995_K && this.lockSoundCount == 1) {
+                  if (this.worldObj.isRemote && this.lockSoundCount == 1) {
                      MCH_PacketNotifyLock.send(this.getTargetEntity());
                   }
 
@@ -285,9 +285,9 @@ public class MCH_WeaponGuidanceSystem {
    }
 
    public static boolean inLockRange(Entity entity, float rotationYaw, float rotationPitch, Entity target, float lockAng) {
-      double dx = target.field_70165_t - entity.field_70165_t;
-      double dy = target.field_70163_u + (double)(target.field_70131_O / 2.0F) - entity.field_70163_u;
-      double dz = target.field_70161_v - entity.field_70161_v;
+      double dx = target.posX - entity.posX;
+      double dy = target.posY + (double)(target.field_70131_O / 2.0F) - entity.posY;
+      double dz = target.posZ - entity.posZ;
       float entityYaw = (float)MCH_Lib.getRotate360((double)rotationYaw);
       float targetYaw = (float)MCH_Lib.getRotate360(Math.atan2(dz, dx) * 180.0D / 3.141592653589793D);
       float diffYaw = (float)MCH_Lib.getRotate360((double)(targetYaw - entityYaw - 90.0F));

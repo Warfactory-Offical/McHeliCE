@@ -19,11 +19,11 @@ public class MCH_EntityAAMissile extends MCH_EntityBaseBullet {
          this.spawnParticle(this.getInfo().trajectoryParticleName, 3, 7.0F * this.getInfo().smokeSize * 0.5F);
       }
 
-      if (!this.field_70170_p.field_72995_K && this.getInfo() != null) {
+      if (!this.world.isRemote && this.getInfo() != null) {
          if (this.shootingEntity != null && this.targetEntity != null && !this.targetEntity.field_70128_L) {
-            double x = this.field_70165_t - this.targetEntity.field_70165_t;
-            double y = this.field_70163_u - this.targetEntity.field_70163_u;
-            double z = this.field_70161_v - this.targetEntity.field_70161_v;
+            double x = this.posX - this.targetEntity.posX;
+            double y = this.posY - this.targetEntity.posY;
+            double z = this.posZ - this.targetEntity.posZ;
             double d = x * x + y * y + z * z;
             if (d > 3422500.0D) {
                this.func_70106_y();
@@ -35,12 +35,12 @@ public class MCH_EntityAAMissile extends MCH_EntityBaseBullet {
 
                if (this.getInfo().proximityFuseDist >= 0.1F && d < (double)this.getInfo().proximityFuseDist) {
                   RayTraceResult mop = new RayTraceResult(this.targetEntity);
-                  this.field_70165_t = (this.targetEntity.field_70165_t + this.field_70165_t) / 2.0D;
-                  this.field_70163_u = (this.targetEntity.field_70163_u + this.field_70163_u) / 2.0D;
-                  this.field_70161_v = (this.targetEntity.field_70161_v + this.field_70161_v) / 2.0D;
+                  this.posX = (this.targetEntity.posX + this.posX) / 2.0D;
+                  this.posY = (this.targetEntity.posY + this.posY) / 2.0D;
+                  this.posZ = (this.targetEntity.posZ + this.posZ) / 2.0D;
                   this.onImpact(mop, 1.0F);
                } else {
-                  this.guidanceToTarget(this.targetEntity.field_70165_t, this.targetEntity.field_70163_u, this.targetEntity.field_70161_v);
+                  this.guidanceToTarget(this.targetEntity.posX, this.targetEntity.posY, this.targetEntity.posZ);
                }
             }
          } else {

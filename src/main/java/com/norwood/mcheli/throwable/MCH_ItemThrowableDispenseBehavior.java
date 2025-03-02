@@ -19,7 +19,7 @@ public class MCH_ItemThrowableDispenseBehavior extends BehaviorDefaultDispenseIt
          MCH_ThrowableInfo info = MCH_ThrowableInfoManager.get(itemStack.func_77973_b());
          if (info != null) {
             bs.func_82618_k().func_184134_a(x, y, z, SoundEvents.field_187737_v, SoundCategory.BLOCKS, 0.5F, 0.4F / (bs.func_82618_k().field_73012_v.nextFloat() * 0.4F + 0.8F), false);
-            if (!bs.func_82618_k().field_72995_K) {
+            if (!bs.func_82618_k().isRemote) {
                MCH_Lib.DbgLog(bs.func_82618_k(), "MCH_ItemThrowableDispenseBehavior.dispenseStack(%s)", info.name);
                MCH_EntityThrowable entity = new MCH_EntityThrowable(bs.func_82618_k(), x, y, z);
                entity.field_70159_w = (double)((float)enumfacing.func_82601_c() * info.dispenseAcceleration);

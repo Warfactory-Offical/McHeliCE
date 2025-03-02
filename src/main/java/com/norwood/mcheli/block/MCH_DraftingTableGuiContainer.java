@@ -49,7 +49,7 @@ public class MCH_DraftingTableGuiContainer extends Container {
          }
       };
       this.func_75146_a(a);
-      MCH_Lib.DbgLog(player.field_70170_p, "MCH_DraftingTableGuiContainer.MCH_DraftingTableGuiContainer");
+      MCH_Lib.DbgLog(player.world, "MCH_DraftingTableGuiContainer.MCH_DraftingTableGuiContainer");
    }
 
    public void func_75142_b() {
@@ -57,7 +57,7 @@ public class MCH_DraftingTableGuiContainer extends Container {
    }
 
    public boolean func_75145_c(EntityPlayer player) {
-      Block block = W_WorldFunc.getBlock(player.field_70170_p, this.posX, this.posY, this.posZ);
+      Block block = W_WorldFunc.getBlock(player.world, this.posX, this.posY, this.posZ);
       if (!W_Block.isEqual(block, MCH_MOD.blockDraftingTable) && !W_Block.isEqual(block, MCH_MOD.blockDraftingTableLit)) {
          return false;
       } else {
@@ -98,22 +98,22 @@ public class MCH_DraftingTableGuiContainer extends Container {
 
    public void func_75134_a(EntityPlayer player) {
       super.func_75134_a(player);
-      if (!player.field_70170_p.field_72995_K) {
+      if (!player.world.isRemote) {
          ItemStack itemstack = this.func_75139_a(this.outputSlotIndex).func_75211_c();
          if (!itemstack.func_190926_b()) {
             W_EntityPlayer.dropPlayerItemWithRandomChoice(player, itemstack, false, false);
          }
       }
 
-      MCH_Lib.DbgLog(player.field_70170_p, "MCH_DraftingTableGuiContainer.onContainerClosed");
+      MCH_Lib.DbgLog(player.world, "MCH_DraftingTableGuiContainer.onContainerClosed");
    }
 
    public void createRecipeItem(@Nullable IRecipe recipe) {
       boolean isCreativeMode = this.player.field_71075_bZ.field_75098_d;
       if (this.func_75139_a(this.outputSlotIndex).func_75216_d() && !isCreativeMode) {
-         MCH_Lib.DbgLog(this.player.field_70170_p, "MCH_DraftingTableGuiContainer.createRecipeItem:OutputSlot is not empty");
+         MCH_Lib.DbgLog(this.player.world, "MCH_DraftingTableGuiContainer.createRecipeItem:OutputSlot is not empty");
       } else if (recipe == null) {
-         MCH_Lib.DbgLog(this.player.field_70170_p, "Error:MCH_DraftingTableGuiContainer.createRecipeItem:recipe is null : ");
+         MCH_Lib.DbgLog(this.player.world, "Error:MCH_DraftingTableGuiContainer.createRecipeItem:recipe is null : ");
       } else {
          boolean result = false;
          if (recipe != null && (isCreativeMode || MCH_Recipes.canCraft(this.player, recipe))) {
@@ -125,7 +125,7 @@ public class MCH_DraftingTableGuiContainer extends Container {
             result = true;
          }
 
-         MCH_Lib.DbgLog(this.player.field_70170_p, "MCH_DraftingTableGuiContainer:Result=" + result + ":Recipe=" + recipe.getRegistryName());
+         MCH_Lib.DbgLog(this.player.world, "MCH_DraftingTableGuiContainer:Result=" + result + ":Recipe=" + recipe.getRegistryName());
       }
    }
 

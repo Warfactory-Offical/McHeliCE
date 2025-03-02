@@ -23,7 +23,7 @@ public class W_Sound extends MovingSound {
       this.setVolumeAndPitch(volume, pitch);
       Entity entity = W_McClient.getRenderEntity();
       if (entity != null) {
-         this.setPosition(entity.field_70165_t, entity.field_70163_u, entity.field_70161_v);
+         this.setPosition(entity.posX, entity.posY, entity.posZ);
       }
 
    }
@@ -57,7 +57,7 @@ public class W_Sound extends MovingSound {
    }
 
    public void setPosition(Entity e) {
-      this.setPosition(e.field_70165_t, e.field_70163_u, e.field_70161_v);
+      this.setPosition(e.posX, e.posY, e.posZ);
    }
 
    public void func_73660_a() {

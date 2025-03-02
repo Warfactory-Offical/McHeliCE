@@ -13,7 +13,7 @@ public class MCH_WeaponAAMissile extends MCH_WeaponEntitySeeker {
       this.acceleration = 2.5F;
       this.explosionPower = 4;
       this.interval = 5;
-      if (w.field_72995_K) {
+      if (w.isRemote) {
          this.interval += 5;
       }
 
@@ -31,8 +31,8 @@ public class MCH_WeaponAAMissile extends MCH_WeaponEntitySeeker {
 
    public boolean shot(MCH_WeaponParam prm) {
       boolean result = false;
-      if (!this.worldObj.field_72995_K) {
-         Entity tgtEnt = prm.user.field_70170_p.func_73045_a(prm.option1);
+      if (!this.worldObj.isRemote) {
+         Entity tgtEnt = prm.user.world.func_73045_a(prm.option1);
          if (tgtEnt != null && !tgtEnt.field_70128_L) {
             this.playSound(prm.entity);
             float yaw = prm.entity.field_70177_z + this.fixRotationYaw;

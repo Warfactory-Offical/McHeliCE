@@ -39,7 +39,7 @@ public class MCH_EntityChain extends W_Entity {
       this.towEntityUUID = "";
       this.towedEntityUUID = "";
       this.isTowing = false;
-      this.field_70158_ak = true;
+      this.noClip = true;
       this.setChainLength(4);
       this.isServerTowEntitySearchCount = 50;
    }
@@ -59,9 +59,9 @@ public class MCH_EntityChain extends W_Entity {
       return false;
    }
 
-   protected void func_70088_a() {
-      this.field_70180_af.func_187214_a(TOWED_ID, 0);
-      this.field_70180_af.func_187214_a(TOW_ID, 0);
+   protected void entityInit() {
+      this.dataManager.register(TOWED_ID, 0);
+      this.dataManager.register(TOW_ID, 0);
    }
 
    public AxisAlignedBB func_70114_g(Entity par1Entity) {
@@ -117,9 +117,9 @@ public class MCH_EntityChain extends W_Entity {
          this.isTowing = true;
          this.towedEntity = towedEntity;
          this.towEntity = towEntity;
-         if (!this.field_70170_p.field_72995_K) {
-            this.field_70180_af.func_187227_b(TOWED_ID, W_Entity.getEntityId(towedEntity));
-            this.field_70180_af.func_187227_b(TOW_ID, W_Entity.getEntityId(towEntity));
+         if (!this.world.isRemote) {
+            this.dataManager.func_187227_b(TOWED_ID, W_Entity.getEntityId(towedEntity));
+            this.dataManager.func_187227_b(TOW_ID, W_Entity.getEntityId(towEntity));
             this.isServerTowEntitySearchCount = 0;
          }
 
@@ -140,7 +140,7 @@ public class MCH_EntityChain extends W_Entity {
 
    public void searchTowingEntity() {
       if ((this.towedEntity == null || this.towEntity == null) && !this.towedEntityUUID.isEmpty() && !this.towEntityUUID.isEmpty() && this.func_174813_aQ() != null) {
-         List<Entity> list = this.field_70170_p.func_72839_b(this, this.func_174813_aQ().func_72314_b(32.0D, 32.0D, 32.0D));
+         List<Entity> list = this.world.func_72839_b(this, this.func_174813_aQ().func_72314_b(32.0D, 32.0D, 32.0D));
          if (list != null) {
             for(int i = 0; i < list.size(); ++i) {
                Entity entity = (Entity)list.get(i);
@@ -171,10 +171,10 @@ public class MCH_EntityChain extends W_Entity {
          this.towedEntity.field_70143_R = 0.0F;
       }
 
-      this.field_70169_q = this.field_70165_t;
-      this.field_70167_r = this.field_70163_u;
-      this.field_70166_s = this.field_70161_v;
-      if (this.field_70170_p.field_72995_K) {
+      this.field_70169_q = this.posX;
+      this.field_70167_r = this.posY;
+      this.field_70166_s = this.posZ;
+      if (this.world.isRemote) {
          this.onUpdate_Client();
       } else {
          this.onUpdate_Server();
@@ -184,12 +184,12 @@ public class MCH_EntityChain extends W_Entity {
 
    public void onUpdate_Client() {
       if (!this.isTowingEntity()) {
-         this.setTowEntity(this.field_70170_p.func_73045_a((Integer)this.field_70180_af.func_187225_a(TOWED_ID)), this.field_70170_p.func_73045_a((Integer)this.field_70180_af.func_187225_a(TOW_ID)));
+         this.setTowEntity(this.world.func_73045_a((Integer)this.dataManager.func_187225_a(TOWED_ID)), this.world.func_73045_a((Integer)this.dataManager.func_187225_a(TOW_ID)));
       }
 
-      double d4 = this.field_70165_t + this.field_70159_w;
-      double d5 = this.field_70163_u + this.field_70181_x;
-      double d11 = this.field_70161_v + this.field_70179_y;
+      double d4 = this.posX + this.field_70159_w;
+      double d5 = this.posY + this.field_70181_x;
+      double d11 = this.posZ + this.field_70179_y;
       this.func_70107_b(d4, d5, d11);
       if (this.field_70122_E) {
          this.field_70159_w *= 0.5D;
@@ -223,7 +223,7 @@ public class MCH_EntityChain extends W_Entity {
 
       this.func_70091_d(MoverType.SELF, this.field_70159_w, this.field_70181_x, this.field_70179_y);
       if (this.isTowingEntity()) {
-         this.func_70107_b(this.towEntity.field_70165_t, this.towEntity.field_70163_u + 2.0D, this.towEntity.field_70161_v);
+         this.func_70107_b(this.towEntity.posX, this.towEntity.posY + 2.0D, this.towEntity.posZ);
          this.updateTowingEntityPosRot();
       }
 
@@ -233,9 +233,9 @@ public class MCH_EntityChain extends W_Entity {
    }
 
    public void updateTowingEntityPosRot() {
-      double dx = this.towedEntity.field_70165_t - this.towEntity.field_70165_t;
-      double dy = this.towedEntity.field_70163_u - this.towEntity.field_70163_u;
-      double dz = this.towedEntity.field_70161_v - this.towEntity.field_70161_v;
+      double dx = this.towedEntity.posX - this.towEntity.posX;
+      double dy = this.towedEntity.posY - this.towEntity.posY;
+      double dz = this.towedEntity.posZ - this.towEntity.posZ;
       double dist = (double)MathHelper.func_76133_a(dx * dx + dy * dy + dz * dz);
       float DIST = (float)this.getChainLength();
       float MAX_DIST = (float)(this.getChainLength() + 2);
@@ -251,21 +251,21 @@ public class MCH_EntityChain extends W_Entity {
          var10000 = this.towedEntity;
          var10000.field_70179_y -= dz * (double)accl / tmp;
          if (dist > (double)MAX_DIST) {
-            this.towedEntity.func_70107_b(this.towEntity.field_70165_t + dx * (double)MAX_DIST / dist, this.towEntity.field_70163_u + dy * (double)MAX_DIST / dist, this.towEntity.field_70161_v + dz * (double)MAX_DIST / dist);
+            this.towedEntity.func_70107_b(this.towEntity.posX + dx * (double)MAX_DIST / dist, this.towEntity.posY + dy * (double)MAX_DIST / dist, this.towEntity.posZ + dz * (double)MAX_DIST / dist);
          }
       }
 
    }
 
    public void playDisconnectTowingEntity() {
-      W_WorldFunc.MOD_playSoundEffect(this.field_70170_p, this.field_70165_t, this.field_70163_u, this.field_70161_v, "chain_ct", 1.0F, 1.0F);
+      W_WorldFunc.MOD_playSoundEffect(this.world, this.posX, this.posY, this.posZ, "chain_ct", 1.0F, 1.0F);
    }
 
    protected void func_70014_b(NBTTagCompound nbt) {
       if (this.isTowing && this.towEntity != null && !this.towEntity.field_70128_L && this.towedEntity != null && !this.towedEntity.field_70128_L) {
-         nbt.func_74778_a("TowEntityUUID", this.towEntity.getPersistentID().toString());
-         nbt.func_74778_a("TowedEntityUUID", this.towedEntity.getPersistentID().toString());
-         nbt.func_74768_a("ChainLength", this.getChainLength());
+         nbt.setString("TowEntityUUID", this.towEntity.getPersistentID().toString());
+         nbt.setString("TowedEntityUUID", this.towedEntity.getPersistentID().toString());
+         nbt.setInteger("ChainLength", this.getChainLength());
       }
 
    }
@@ -286,7 +286,7 @@ public class MCH_EntityChain extends W_Entity {
    }
 
    static {
-      TOWED_ID = EntityDataManager.func_187226_a(MCH_EntityChain.class, DataSerializers.field_187192_b);
-      TOW_ID = EntityDataManager.func_187226_a(MCH_EntityChain.class, DataSerializers.field_187192_b);
+      TOWED_ID = EntityDataManager.createKey(MCH_EntityChain.class, DataSerializers.VARINT);
+      TOW_ID = EntityDataManager.createKey(MCH_EntityChain.class, DataSerializers.VARINT);
    }
 }

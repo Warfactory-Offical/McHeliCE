@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class MCH_DraftingTablePacketHandler {
    @HandleSide({Side.SERVER})
    public static void onPacketCreate(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-      if (!player.field_70170_p.field_72995_K) {
+      if (!player.world.isRemote) {
          MCH_DraftingTableCreatePacket packet = new MCH_DraftingTableCreatePacket();
          packet.readData(data);
          scheduler.func_152344_a(() -> {

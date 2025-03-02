@@ -58,7 +58,7 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
    }
 
    public void changeType(String type) {
-      MCH_Lib.DbgLog(this.field_70170_p, "MCH_EntityVehicle.changeType " + type + " : " + this);
+      MCH_Lib.DbgLog(this.world, "MCH_EntityVehicle.changeType " + type + " : " + this);
       if (!type.isEmpty()) {
          this.vehicleInfo = MCH_VehicleInfoManager.get(type);
       }
@@ -79,8 +79,8 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
       return MCH_Config.MountMinecartVehicle.prmBool;
    }
 
-   protected void func_70088_a() {
-      super.func_70088_a();
+   protected void entityInit() {
+      super.entityInit();
    }
 
    protected void func_70014_b(NBTTagCompound par1NBTTagCompound) {
@@ -181,29 +181,29 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
    public void onUpdateAircraft() {
       if (this.vehicleInfo == null) {
          this.changeType(this.getTypeName());
-         this.field_70169_q = this.field_70165_t;
-         this.field_70167_r = this.field_70163_u;
-         this.field_70166_s = this.field_70161_v;
+         this.field_70169_q = this.posX;
+         this.field_70167_r = this.posY;
+         this.field_70166_s = this.posZ;
       } else {
          if (this.field_70173_aa >= 200 && MCH_Config.FixVehicleAtPlacedPoint.prmBool) {
             this.func_184210_p();
             this.field_70159_w = 0.0D;
             this.field_70181_x = 0.0D;
             this.field_70179_y = 0.0D;
-            if (this.field_70170_p.field_72995_K && this.field_70173_aa % 4 == 0) {
-               this.fixPosY = this.field_70163_u;
+            if (this.world.isRemote && this.field_70173_aa % 4 == 0) {
+               this.fixPosY = this.posY;
             }
 
-            this.func_70107_b((this.field_70165_t + this.fixPosX) / 2.0D, (this.field_70163_u + this.fixPosY) / 2.0D, (this.field_70161_v + this.fixPosZ) / 2.0D);
+            this.func_70107_b((this.posX + this.fixPosX) / 2.0D, (this.posY + this.fixPosY) / 2.0D, (this.posZ + this.fixPosZ) / 2.0D);
          } else {
-            this.fixPosX = this.field_70165_t;
-            this.fixPosY = this.field_70163_u;
-            this.fixPosZ = this.field_70161_v;
+            this.fixPosX = this.posX;
+            this.fixPosY = this.posY;
+            this.fixPosZ = this.posZ;
          }
 
          if (!this.isRequestedSyncStatus) {
             this.isRequestedSyncStatus = true;
-            if (this.field_70170_p.field_72995_K) {
+            if (this.world.isRemote) {
                MCH_PacketStatusRequest.requestStatus(this);
             }
          }
@@ -217,14 +217,14 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
          this.updateWeapons();
          this.onUpdate_Seats();
          this.onUpdate_Control();
-         this.field_70169_q = this.field_70165_t;
-         this.field_70167_r = this.field_70163_u;
-         this.field_70166_s = this.field_70161_v;
+         this.field_70169_q = this.posX;
+         this.field_70167_r = this.posY;
+         this.field_70166_s = this.posZ;
          if (this.func_70090_H()) {
             this.field_70125_A *= 0.9F;
          }
 
-         if (this.field_70170_p.field_72995_K) {
+         if (this.world.isRemote) {
             this.onUpdate_Client();
          } else {
             this.onUpdate_Server();
@@ -248,7 +248,7 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
          this.setCurrentThrottle(0.0D);
       }
 
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          if (!W_Lib.isClientPlayer(this.getRiddenByEntity())) {
             double ct = this.getThrottle();
             if (this.getCurrentThrottle() > ct) {
@@ -266,7 +266,7 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
    }
 
    protected void onUpdate_ControlOnGround() {
-      if (!this.field_70170_p.field_72995_K) {
+      if (!this.world.isRemote) {
          boolean move = false;
          float yaw = this.field_70177_z;
          double x = 0.0D;
@@ -307,7 +307,7 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
    }
 
    protected void onUpdate_Particle() {
-      double particlePosY = this.field_70163_u;
+      double particlePosY = this.posY;
       boolean b = false;
 
       int y;
@@ -317,9 +317,9 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
          int z;
          for(x = -1; x <= 1; ++x) {
             for(z = -1; z <= 1; ++z) {
-               i = W_WorldFunc.getBlockId(this.field_70170_p, (int)(this.field_70165_t + 0.5D) + x, (int)(this.field_70163_u + 0.5D) - y, (int)(this.field_70161_v + 0.5D) + z);
+               i = W_WorldFunc.getBlockId(this.world, (int)(this.posX + 0.5D) + x, (int)(this.posY + 0.5D) - y, (int)(this.posZ + 0.5D) + z);
                if (i != 0 && !b) {
-                  particlePosY = (int)(this.field_70163_u + 1.0D) - y;
+                  particlePosY = (int)(this.posY + 1.0D) - y;
                   b = true;
                }
             }
@@ -327,9 +327,9 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
 
          for(x = -3; b && x <= 3; ++x) {
             for(z = -3; z <= 3; ++z) {
-               if (W_WorldFunc.isBlockWater(this.field_70170_p, (int)(this.field_70165_t + 0.5D) + x, (int)(this.field_70163_u + 0.5D) - y, (int)(this.field_70161_v + 0.5D) + z)) {
+               if (W_WorldFunc.isBlockWater(this.world, (int)(this.posX + 0.5D) + x, (int)(this.posY + 0.5D) - y, (int)(this.posZ + 0.5D) + z)) {
                   for(i = 0; (double)i < 7.0D * this.getCurrentThrottle(); ++i) {
-                     this.field_70170_p.func_175688_a(EnumParticleTypes.WATER_SPLASH, this.field_70165_t + 0.5D + (double)x + (this.field_70146_Z.nextDouble() - 0.5D) * 2.0D, particlePosY + this.field_70146_Z.nextDouble(), this.field_70161_v + 0.5D + (double)z + (this.field_70146_Z.nextDouble() - 0.5D) * 2.0D, (double)x + (this.field_70146_Z.nextDouble() - 0.5D) * 2.0D, -0.3D, (double)z + (this.field_70146_Z.nextDouble() - 0.5D) * 2.0D, new int[0]);
+                     this.world.func_175688_a(EnumParticleTypes.WATER_SPLASH, this.posX + 0.5D + (double)x + (this.field_70146_Z.nextDouble() - 0.5D) * 2.0D, particlePosY + this.field_70146_Z.nextDouble(), this.posZ + 0.5D + (double)z + (this.field_70146_Z.nextDouble() - 0.5D) * 2.0D, (double)x + (this.field_70146_Z.nextDouble() - 0.5D) * 2.0D, -0.3D, (double)z + (this.field_70146_Z.nextDouble() - 0.5D) * 2.0D, new int[0]);
                   }
                }
             }
@@ -339,7 +339,7 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
       double pn = (double)(5 - y + 1) / 5.0D;
       if (b) {
          for(i = 0; i < (int)(this.getCurrentThrottle() * 6.0D * pn); ++i) {
-            this.field_70170_p.func_175688_a(EnumParticleTypes.EXPLOSION_NORMAL, this.field_70165_t + (this.field_70146_Z.nextDouble() - 0.5D), particlePosY + (this.field_70146_Z.nextDouble() - 0.5D), this.field_70161_v + (this.field_70146_Z.nextDouble() - 0.5D), (this.field_70146_Z.nextDouble() - 0.5D) * 2.0D, -0.4D, (this.field_70146_Z.nextDouble() - 0.5D) * 2.0D, new int[0]);
+            this.world.func_175688_a(EnumParticleTypes.EXPLOSION_NORMAL, this.posX + (this.field_70146_Z.nextDouble() - 0.5D), particlePosY + (this.field_70146_Z.nextDouble() - 0.5D), this.posZ + (this.field_70146_Z.nextDouble() - 0.5D), (this.field_70146_Z.nextDouble() - 0.5D) * 2.0D, -0.4D, (this.field_70146_Z.nextDouble() - 0.5D) * 2.0D, new int[0]);
          }
       }
 
@@ -356,11 +356,11 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
          double yaw = MathHelper.func_76138_g(this.aircraftYaw - (double)this.field_70177_z);
          this.field_70177_z = (float)((double)this.field_70177_z + yaw / rpinc);
          this.field_70125_A = (float)((double)this.field_70125_A + (this.aircraftPitch - (double)this.field_70125_A) / rpinc);
-         this.func_70107_b(this.field_70165_t + (this.aircraftX - this.field_70165_t) / rpinc, this.field_70163_u + (this.aircraftY - this.field_70163_u) / rpinc, this.field_70161_v + (this.aircraftZ - this.field_70161_v) / rpinc);
+         this.func_70107_b(this.posX + (this.aircraftX - this.posX) / rpinc, this.posY + (this.aircraftY - this.posY) / rpinc, this.posZ + (this.aircraftZ - this.posZ) / rpinc);
          this.func_70101_b(this.field_70177_z, this.field_70125_A);
          --this.aircraftPosRotInc;
       } else {
-         this.func_70107_b(this.field_70165_t + this.field_70159_w, this.field_70163_u + this.field_70181_x, this.field_70161_v + this.field_70179_y);
+         this.func_70107_b(this.posX + this.field_70159_w, this.posY + this.field_70181_x, this.posZ + this.field_70179_y);
          if (this.field_70122_E) {
             this.field_70159_w *= 0.95D;
             this.field_70179_y *= 0.95D;
@@ -375,7 +375,7 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
       if (this.getRiddenByEntity() != null) {
       }
 
-      this.updateCamera(this.field_70165_t, this.field_70163_u, this.field_70161_v);
+      this.updateCamera(this.posX, this.posY, this.posZ);
    }
 
    private void onUpdate_Server() {

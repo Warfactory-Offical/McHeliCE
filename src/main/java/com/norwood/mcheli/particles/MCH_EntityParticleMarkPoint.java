@@ -62,11 +62,11 @@ public class MCH_EntityParticleMarkPoint extends MCH_EntityParticleBase implemen
             float pitch = mc.field_71474_y.field_74320_O != 2 ? -entityIn.field_70125_A : -entityIn.field_70125_A;
             Vec3d v = MCH_Lib.RotVec3(0.0D, 0.0D, -dist, yaw, pitch);
             if (mc.field_71474_y.field_74320_O == 2) {
-               v = new Vec3d(-v.field_72450_a, -v.field_72448_b, -v.field_72449_c);
+               v = new Vec3d(-v.x, -v.y, -v.z);
             }
 
-            Vec3d vs = new Vec3d(entityIn.field_70165_t, entityIn.field_70163_u + (double)entityIn.func_70047_e(), entityIn.field_70161_v);
-            RayTraceResult mop = entityIn.field_70170_p.func_72933_a(vs.func_72441_c(0.0D, 0.0D, 0.0D), vs.func_72441_c(v.field_72450_a, v.field_72448_b, v.field_72449_c));
+            Vec3d vs = new Vec3d(entityIn.posX, entityIn.posY + (double)entityIn.func_70047_e(), entityIn.posZ);
+            RayTraceResult mop = entityIn.world.func_72933_a(vs.func_72441_c(0.0D, 0.0D, 0.0D), vs.func_72441_c(v.x, v.y, v.z));
             double block_dist = dist;
             if (mop != null && mop.field_72313_a == Type.BLOCK) {
                block_dist = vs.func_72438_d(mop.field_72307_f) - 0.4D;
@@ -75,10 +75,10 @@ public class MCH_EntityParticleMarkPoint extends MCH_EntityParticleBase implemen
                }
             }
 
-            GL11.glTranslated(v.field_72450_a * (block_dist / dist), v.field_72448_b * (block_dist / dist), v.field_72449_c * (block_dist / dist));
-            ix += v.field_72450_a * (block_dist / dist);
-            iy += v.field_72448_b * (block_dist / dist);
-            iz += v.field_72449_c * (block_dist / dist);
+            GL11.glTranslated(v.x * (block_dist / dist), v.y * (block_dist / dist), v.z * (block_dist / dist));
+            ix += v.x * (block_dist / dist);
+            iy += v.y * (block_dist / dist);
+            iz += v.z * (block_dist / dist);
          }
 
          double px = (double)((float)(this.field_187123_c + (this.field_187126_f - this.field_187123_c) * (double)partialTicks - ix));

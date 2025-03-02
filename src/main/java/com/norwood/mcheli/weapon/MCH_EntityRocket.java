@@ -21,8 +21,8 @@ public class MCH_EntityRocket extends MCH_EntityBaseBullet {
    }
 
    public void sprinkleBomblet() {
-      if (!this.field_70170_p.field_72995_K) {
-         MCH_EntityRocket e = new MCH_EntityRocket(this.field_70170_p, this.field_70165_t, this.field_70163_u, this.field_70161_v, this.field_70159_w, this.field_70181_x, this.field_70179_y, this.field_70177_z, this.field_70125_A, this.acceleration);
+      if (!this.world.isRemote) {
+         MCH_EntityRocket e = new MCH_EntityRocket(this.world, this.posX, this.posY, this.posZ, this.field_70159_w, this.field_70181_x, this.field_70179_y, this.field_70177_z, this.field_70125_A, this.acceleration);
          e.setName(this.func_70005_c_());
          e.setParameterFromWeapon(this, this.shootingAircraft, this.shootingEntity);
          float MOTION = this.getInfo().bombletDiff;
@@ -30,7 +30,7 @@ public class MCH_EntityRocket extends MCH_EntityBaseBullet {
          e.field_70181_x += ((double)this.field_70146_Z.nextFloat() - 0.5D) * (double)MOTION;
          e.field_70179_y += ((double)this.field_70146_Z.nextFloat() - 0.5D) * (double)MOTION;
          e.setBomblet();
-         this.field_70170_p.func_72838_d(e);
+         this.world.func_72838_d(e);
       }
 
    }

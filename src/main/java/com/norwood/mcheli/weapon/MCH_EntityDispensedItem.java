@@ -31,7 +31,7 @@ public class MCH_EntityDispensedItem extends MCH_EntityBaseBullet {
          this.spawnParticle(this.getInfo().trajectoryParticleName, 3, 7.0F * this.getInfo().smokeSize);
       }
 
-      if (!this.field_70170_p.field_72995_K && this.getInfo() != null) {
+      if (!this.world.isRemote && this.getInfo() != null) {
          if (this.acceleration < 1.0E-4D) {
             this.field_70159_w *= 0.999D;
             this.field_70179_y *= 0.999D;
@@ -48,7 +48,7 @@ public class MCH_EntityDispensedItem extends MCH_EntityBaseBullet {
    }
 
    protected void onImpact(RayTraceResult m, float damageFactor) {
-      if (!this.field_70170_p.field_72995_K) {
+      if (!this.world.isRemote) {
          this.func_174826_a(this.func_174813_aQ().func_72317_d(0.0D, 2000.0D, 0.0D));
          EntityPlayer player = null;
          Item item = null;
@@ -67,7 +67,7 @@ public class MCH_EntityDispensedItem extends MCH_EntityBaseBullet {
          }
 
          if (player != null && !player.field_70128_L && item != null) {
-            EntityPlayer dummyPlayer = new MCH_DummyEntityPlayer(this.field_70170_p, player);
+            EntityPlayer dummyPlayer = new MCH_DummyEntityPlayer(this.world, player);
             dummyPlayer.field_70125_A = 90.0F;
             int RNG = this.getInfo().dispenseRange - 1;
 
@@ -95,37 +95,37 @@ public class MCH_EntityDispensedItem extends MCH_EntityBaseBullet {
    }
 
    private void useItemToBlock(BlockPos blockpos, Item item, int itemDamage, EntityPlayer dummyPlayer) {
-      dummyPlayer.field_70165_t = (double)blockpos.func_177958_n() + 0.5D;
-      dummyPlayer.field_70163_u = (double)blockpos.func_177956_o() + 2.5D;
-      dummyPlayer.field_70161_v = (double)blockpos.func_177952_p() + 0.5D;
+      dummyPlayer.posX = (double)blockpos.func_177958_n() + 0.5D;
+      dummyPlayer.posY = (double)blockpos.func_177956_o() + 2.5D;
+      dummyPlayer.posZ = (double)blockpos.func_177952_p() + 0.5D;
       dummyPlayer.field_70177_z = (float)this.field_70146_Z.nextInt(360);
-      IBlockState iblockstate = this.field_70170_p.func_180495_p(blockpos);
+      IBlockState iblockstate = this.world.func_180495_p(blockpos);
       Block block = iblockstate.func_177230_c();
       Material blockMat = iblockstate.func_185904_a();
       if (block != W_Blocks.field_150350_a && blockMat != Material.field_151579_a) {
          if (item == W_Item.getItemByName("water_bucket")) {
             if (MCH_Config.Collision_DestroyBlock.prmBool) {
                if (blockMat == Material.field_151581_o) {
-                  this.field_70170_p.func_175698_g(blockpos);
+                  this.world.func_175698_g(blockpos);
                } else if (blockMat == Material.field_151587_i) {
                   int metadata = block.func_176201_c(iblockstate);
                   if (metadata == 0) {
-                     this.field_70170_p.func_175656_a(blockpos, ForgeEventFactory.fireFluidPlaceBlockEvent(this.field_70170_p, blockpos, blockpos, W_Blocks.field_150343_Z.func_176223_P()));
+                     this.world.func_175656_a(blockpos, ForgeEventFactory.fireFluidPlaceBlockEvent(this.world, blockpos, blockpos, W_Blocks.field_150343_Z.func_176223_P()));
                   } else if (metadata <= 4) {
-                     this.field_70170_p.func_175656_a(blockpos, ForgeEventFactory.fireFluidPlaceBlockEvent(this.field_70170_p, blockpos, blockpos, W_Blocks.field_150347_e.func_176223_P()));
+                     this.world.func_175656_a(blockpos, ForgeEventFactory.fireFluidPlaceBlockEvent(this.world, blockpos, blockpos, W_Blocks.field_150347_e.func_176223_P()));
                   }
                }
             }
-         } else if (item.onItemUseFirst(dummyPlayer, this.field_70170_p, blockpos, EnumFacing.UP, (float)blockpos.func_177958_n(), (float)blockpos.func_177956_o(), (float)blockpos.func_177952_p(), EnumHand.MAIN_HAND) == EnumActionResult.PASS && item.func_180614_a(dummyPlayer, this.field_70170_p, blockpos, EnumHand.MAIN_HAND, EnumFacing.UP, (float)blockpos.func_177958_n(), (float)blockpos.func_177956_o(), (float)blockpos.func_177952_p()) == EnumActionResult.PASS) {
-            item.func_77659_a(this.field_70170_p, dummyPlayer, EnumHand.MAIN_HAND);
+         } else if (item.onItemUseFirst(dummyPlayer, this.world, blockpos, EnumFacing.UP, (float)blockpos.func_177958_n(), (float)blockpos.func_177956_o(), (float)blockpos.func_177952_p(), EnumHand.MAIN_HAND) == EnumActionResult.PASS && item.func_180614_a(dummyPlayer, this.world, blockpos, EnumHand.MAIN_HAND, EnumFacing.UP, (float)blockpos.func_177958_n(), (float)blockpos.func_177956_o(), (float)blockpos.func_177952_p()) == EnumActionResult.PASS) {
+            item.func_77659_a(this.world, dummyPlayer, EnumHand.MAIN_HAND);
          }
       }
 
    }
 
    public void sprinkleBomblet() {
-      if (!this.field_70170_p.field_72995_K) {
-         MCH_EntityDispensedItem e = new MCH_EntityDispensedItem(this.field_70170_p, this.field_70165_t, this.field_70163_u, this.field_70161_v, this.field_70159_w, this.field_70181_x, this.field_70179_y, (float)this.field_70146_Z.nextInt(360), 0.0F, this.acceleration);
+      if (!this.world.isRemote) {
+         MCH_EntityDispensedItem e = new MCH_EntityDispensedItem(this.world, this.posX, this.posY, this.posZ, this.field_70159_w, this.field_70181_x, this.field_70179_y, (float)this.field_70146_Z.nextInt(360), 0.0F, this.acceleration);
          e.setParameterFromWeapon(this, this.shootingAircraft, this.shootingEntity);
          e.setName(this.func_70005_c_());
          float RANDOM = this.getInfo().bombletDiff;
@@ -133,7 +133,7 @@ public class MCH_EntityDispensedItem extends MCH_EntityBaseBullet {
          e.field_70181_x = this.field_70181_x * 1.0D / 2.0D + (double)((this.field_70146_Z.nextFloat() - 0.5F) * RANDOM / 2.0F);
          e.field_70179_y = this.field_70179_y * 1.0D + (double)((this.field_70146_Z.nextFloat() - 0.5F) * RANDOM);
          e.setBomblet();
-         this.field_70170_p.func_72838_d(e);
+         this.world.func_72838_d(e);
       }
 
    }

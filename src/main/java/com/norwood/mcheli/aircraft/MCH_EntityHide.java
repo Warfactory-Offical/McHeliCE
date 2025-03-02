@@ -63,15 +63,15 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
 
    public MCH_EntityHide(World par1World, double x, double y, double z) {
       this(par1World);
-      this.field_70165_t = x;
-      this.field_70163_u = y;
-      this.field_70161_v = z;
+      this.posX = x;
+      this.posY = y;
+      this.posZ = z;
    }
 
-   protected void func_70088_a() {
-      super.func_70088_a();
+   protected void entityInit() {
+      super.entityInit();
       this.createRopeIndex(-1);
-      this.field_70180_af.func_187214_a(AC_ID, new Integer(0));
+      this.dataManager.register(AC_ID, new Integer(0));
    }
 
    public void setParent(MCH_EntityAircraft ac, Entity user, int ropeIdx) {
@@ -124,15 +124,15 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
    }
 
    public void createRopeIndex(int defaultValue) {
-      this.field_70180_af.func_187214_a(ROPE_INDEX, new Integer(defaultValue));
+      this.dataManager.register(ROPE_INDEX, new Integer(defaultValue));
    }
 
    public int getRopeIndex() {
-      return (Integer)this.field_70180_af.func_187225_a(ROPE_INDEX);
+      return (Integer)this.dataManager.func_187225_a(ROPE_INDEX);
    }
 
    public void setRopeIndex(int value) {
-      this.field_70180_af.func_187227_b(ROPE_INDEX, new Integer(value));
+      this.dataManager.func_187227_b(ROPE_INDEX, new Integer(value));
    }
 
    @SideOnly(Side.CLIENT)
@@ -161,28 +161,28 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
 
    public void func_70071_h_() {
       super.func_70071_h_();
-      if (this.user != null && !this.field_70170_p.field_72995_K) {
+      if (this.user != null && !this.world.isRemote) {
          if (this.ac != null) {
-            this.field_70180_af.func_187227_b(AC_ID, new Integer(this.ac.func_145782_y()));
+            this.dataManager.func_187227_b(AC_ID, new Integer(this.ac.func_145782_y()));
          }
 
          this.user.func_184205_a(this, true);
          this.user = null;
       }
 
-      if (this.ac == null && this.field_70170_p.field_72995_K) {
-         int id = (Integer)this.field_70180_af.func_187225_a(AC_ID);
+      if (this.ac == null && this.world.isRemote) {
+         int id = (Integer)this.dataManager.func_187225_a(AC_ID);
          if (id > 0) {
-            Entity entity = this.field_70170_p.func_73045_a(id);
+            Entity entity = this.world.func_73045_a(id);
             if (entity instanceof MCH_EntityAircraft) {
                this.ac = (MCH_EntityAircraft)entity;
             }
          }
       }
 
-      this.field_70169_q = this.field_70165_t;
-      this.field_70167_r = this.field_70163_u;
-      this.field_70166_s = this.field_70161_v;
+      this.field_70169_q = this.posX;
+      this.field_70167_r = this.posY;
+      this.field_70166_s = this.posZ;
       this.field_70143_R = 0.0F;
       Entity riddenByEntity = this.getRiddenByEntity();
       if (riddenByEntity != null) {
@@ -197,13 +197,13 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
          int id = this.getRopeIndex();
          if (id >= 0) {
             Vec3d v = this.ac.getRopePos(id);
-            this.field_70165_t = v.field_72450_a;
-            this.field_70161_v = v.field_72449_c;
+            this.posX = v.STRING;
+            this.posZ = v.z;
          }
       }
 
-      this.func_70107_b(this.field_70165_t, this.field_70163_u, this.field_70161_v);
-      if (this.field_70170_p.field_72995_K) {
+      this.func_70107_b(this.posX, this.posY, this.posZ);
+      if (this.world.isRemote) {
          this.onUpdateClient();
       } else {
          this.onUpdateServer();
@@ -213,9 +213,9 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
 
    public void onUpdateClient() {
       if (this.paraPosRotInc > 0) {
-         double x = this.field_70165_t + (this.paraX - this.field_70165_t) / (double)this.paraPosRotInc;
-         double y = this.field_70163_u + (this.paraY - this.field_70163_u) / (double)this.paraPosRotInc;
-         double z = this.field_70161_v + (this.paraZ - this.field_70161_v) / (double)this.paraPosRotInc;
+         double x = this.posX + (this.paraX - this.posX) / (double)this.paraPosRotInc;
+         double y = this.posY + (this.paraY - this.posY) / (double)this.paraPosRotInc;
+         double z = this.posZ + (this.paraZ - this.posZ) / (double)this.paraPosRotInc;
          double yaw = MathHelper.func_76138_g(this.paraYaw - (double)this.field_70177_z);
          this.field_70177_z = (float)((double)this.field_70177_z + yaw / (double)this.paraPosRotInc);
          this.field_70125_A = (float)((double)this.field_70125_A + (this.paraPitch - (double)this.field_70125_A) / (double)this.paraPosRotInc);
@@ -227,7 +227,7 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
             this.func_70101_b(riddenByEntity.field_70126_B, this.field_70125_A);
          }
       } else {
-         this.func_70107_b(this.field_70165_t + this.field_70159_w, this.field_70163_u + this.field_70181_x, this.field_70161_v + this.field_70179_y);
+         this.func_70107_b(this.posX + this.field_70159_w, this.posY + this.field_70181_x, this.posZ + this.field_70179_y);
          this.field_70159_w *= 0.99D;
          this.field_70181_x *= 0.95D;
          this.field_70179_y *= 0.99D;
@@ -247,7 +247,7 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
          int id = this.getRopeIndex();
          if (this.ac != null && id >= 0) {
             Vec3d v = this.ac.getRopePos(id);
-            if (Math.abs(this.field_70163_u - v.field_72448_b) > (double)(Math.abs(this.ac.ropesLength) + 5.0F)) {
+            if (Math.abs(this.posY - v.y) > (double)(Math.abs(this.ac.ropesLength) + 5.0F)) {
                this.onGroundAndDead();
             }
          }
@@ -267,9 +267,9 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
       int l = MathHelper.func_76143_f(aabb.field_72337_e) + 1;
       int i1 = MathHelper.func_76128_c(aabb.field_72339_c) - 1;
       int j1 = MathHelper.func_76143_f(aabb.field_72334_f) + 1;
-      WorldBorder worldborder = this.field_70170_p.func_175723_af();
+      WorldBorder worldborder = this.world.func_175723_af();
       boolean flag = entityIn != null && entityIn.func_174832_aS();
-      boolean flag1 = entityIn != null && this.field_70170_p.func_191503_g(entityIn);
+      boolean flag1 = entityIn != null && this.world.func_191503_g(entityIn);
       IBlockState iblockstate = Blocks.field_150348_b.func_176223_P();
       PooledMutableBlockPos blockpos$pooledmutableblockpos = PooledMutableBlockPos.func_185346_s();
 
@@ -278,7 +278,7 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
             for(int l1 = i1; l1 < j1; ++l1) {
                boolean flag2 = k1 == i || k1 == j - 1;
                boolean flag3 = l1 == i1 || l1 == j1 - 1;
-               if ((!flag2 || !flag3) && this.field_70170_p.func_175667_e(blockpos$pooledmutableblockpos.func_181079_c(k1, 64, l1))) {
+               if ((!flag2 || !flag3) && this.world.func_175667_e(blockpos$pooledmutableblockpos.func_181079_c(k1, 64, l1))) {
                   for(int i2 = k; i2 < l; ++i2) {
                      if (!flag2 && !flag3 || i2 != l - 1) {
                         if (entityIn != null && flag == flag1) {
@@ -290,10 +290,10 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
                         if (!worldborder.func_177746_a(blockpos$pooledmutableblockpos) && flag1) {
                            iblockstate1 = iblockstate;
                         } else {
-                           iblockstate1 = this.field_70170_p.func_180495_p(blockpos$pooledmutableblockpos);
+                           iblockstate1 = this.world.func_180495_p(blockpos$pooledmutableblockpos);
                         }
 
-                        iblockstate1.func_185908_a(this.field_70170_p, blockpos$pooledmutableblockpos, aabb, outList, entityIn, false);
+                        iblockstate1.func_185908_a(this.world, blockpos$pooledmutableblockpos, aabb, outList, entityIn, false);
                      }
                   }
                }
@@ -310,7 +310,7 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
       List<AxisAlignedBB> list = new ArrayList();
       this.getCollisionBoxes(par1Entity, par2AxisAlignedBB, list);
       if (par1Entity != null) {
-         List<Entity> list1 = this.field_70170_p.func_72839_b(par1Entity, par2AxisAlignedBB.func_186662_g(0.25D));
+         List<Entity> list1 = this.world.func_72839_b(par1Entity, par2AxisAlignedBB.func_186662_g(0.25D));
 
          for(int i = 0; i < list1.size(); ++i) {
             Entity entity = (Entity)list1.get(i);
@@ -332,7 +332,7 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
    }
 
    public void func_70091_d(MoverType type, double x, double y, double z) {
-      this.field_70170_p.field_72984_F.func_76320_a("move");
+      this.world.field_72984_F.func_76320_a("move");
       double d2 = x;
       double d3 = y;
       double d4 = z;
@@ -455,21 +455,21 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
          }
       }
 
-      this.field_70170_p.field_72984_F.func_76319_b();
-      this.field_70170_p.field_72984_F.func_76320_a("rest");
+      this.world.field_72984_F.func_76319_b();
+      this.world.field_72984_F.func_76320_a("rest");
       this.func_174829_m();
       this.field_70123_F = x != x || z != z;
       this.field_70124_G = y != y;
       this.field_70122_E = this.field_70124_G && d3 < 0.0D;
       this.field_70132_H = this.field_70123_F || this.field_70124_G;
-      k5 = MathHelper.func_76128_c(this.field_70165_t);
-      i1 = MathHelper.func_76128_c(this.field_70163_u - 0.20000000298023224D);
-      int k6 = MathHelper.func_76128_c(this.field_70161_v);
+      k5 = MathHelper.func_76128_c(this.posX);
+      i1 = MathHelper.func_76128_c(this.posY - 0.20000000298023224D);
+      int k6 = MathHelper.func_76128_c(this.posZ);
       BlockPos blockpos = new BlockPos(k5, i1, k6);
-      IBlockState iblockstate = this.field_70170_p.func_180495_p(blockpos);
+      IBlockState iblockstate = this.world.func_180495_p(blockpos);
       if (iblockstate.func_185904_a() == Material.field_151579_a) {
          BlockPos blockpos1 = blockpos.func_177977_b();
-         IBlockState iblockstate1 = this.field_70170_p.func_180495_p(blockpos1);
+         IBlockState iblockstate1 = this.world.func_180495_p(blockpos1);
          Block block1 = iblockstate1.func_177230_c();
          if (block1 instanceof BlockFence || block1 instanceof BlockWall || block1 instanceof BlockFenceGate) {
             iblockstate = iblockstate1;
@@ -488,7 +488,7 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
 
       Block block = iblockstate.func_177230_c();
       if (d3 != y) {
-         block.func_176216_a(this.field_70170_p, this);
+         block.func_176216_a(this.world, this);
       }
 
       try {
@@ -500,11 +500,11 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
          throw new ReportedException(crashreport);
       }
 
-      this.field_70170_p.field_72984_F.func_76319_b();
+      this.world.field_72984_F.func_76319_b();
    }
 
    public void onGroundAndDead() {
-      this.field_70163_u += 0.5D;
+      this.posY += 0.5D;
       this.func_184232_k(this.getRiddenByEntity());
       this.func_70106_y();
    }
@@ -516,7 +516,7 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
    }
 
    static {
-      ROPE_INDEX = EntityDataManager.func_187226_a(MCH_EntityHide.class, DataSerializers.field_187192_b);
-      AC_ID = EntityDataManager.func_187226_a(MCH_EntityHide.class, DataSerializers.field_187192_b);
+      ROPE_INDEX = EntityDataManager.createKey(MCH_EntityHide.class, DataSerializers.VARINT);
+      AC_ID = EntityDataManager.createKey(MCH_EntityHide.class, DataSerializers.VARINT);
    }
 }

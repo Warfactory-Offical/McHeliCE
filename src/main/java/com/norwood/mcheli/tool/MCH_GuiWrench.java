@@ -23,7 +23,7 @@ public class MCH_GuiWrench extends MCH_Gui {
    }
 
    public boolean isDrawGui(EntityPlayer player) {
-      return player != null && player.field_70170_p != null && !player.func_184614_ca().func_190926_b() && player.func_184614_ca().func_77973_b() instanceof MCH_ItemWrench;
+      return player != null && player.world != null && !player.func_184614_ca().func_190926_b() && player.func_184614_ca().func_77973_b() instanceof MCH_ItemWrench;
    }
 
    public void drawGui(EntityPlayer player, boolean isThirdPersonView) {

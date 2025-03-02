@@ -83,8 +83,8 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
       this.sprinkleTime = 0;
       this.isBomblet = -1;
       this.weaponInfo = null;
-      this.field_70158_ak = true;
-      if (par1World.field_72995_K) {
+      this.noClip = true;
+      if (par1World.isRemote) {
          this.model = null;
       }
 
@@ -128,24 +128,24 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
 
    @SideOnly(Side.CLIENT)
    public void func_180426_a(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
-      this.func_70107_b(x, (y + this.field_70163_u * 2.0D) / 3.0D, z);
+      this.func_70107_b(x, (y + this.posY * 2.0D) / 3.0D, z);
       this.func_70101_b(yaw, pitch);
    }
 
-   protected void func_70088_a() {
-      super.func_70088_a();
-      this.field_70180_af.func_187214_a(TARGET_ID, 0);
-      this.field_70180_af.func_187214_a(INFO_NAME, "");
-      this.field_70180_af.func_187214_a(BULLET_MODEL, "");
-      this.field_70180_af.func_187214_a(BOMBLET_FLAG, (byte)0);
+   protected void entityInit() {
+      super.entityInit();
+      this.dataManager.register(TARGET_ID, 0);
+      this.dataManager.register(INFO_NAME, "");
+      this.dataManager.register(BULLET_MODEL, "");
+      this.dataManager.register(BOMBLET_FLAG, (byte)0);
    }
 
    public void setName(String s) {
       if (s != null && !s.isEmpty()) {
          this.weaponInfo = MCH_WeaponInfoManager.get(s);
          if (this.weaponInfo != null) {
-            if (!this.field_70170_p.field_72995_K) {
-               this.field_70180_af.func_187227_b(INFO_NAME, s);
+            if (!this.world.isRemote) {
+               this.dataManager.func_187227_b(INFO_NAME, s);
             }
 
             this.onSetWeasponInfo();
@@ -155,7 +155,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
    }
 
    public String func_70005_c_() {
-      return (String)this.field_70180_af.func_187225_a(INFO_NAME);
+      return (String)this.dataManager.func_187225_a(INFO_NAME);
    }
 
    @Nullable
@@ -164,7 +164,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
    }
 
    public void onSetWeasponInfo() {
-      if (!this.field_70170_p.field_72995_K) {
+      if (!this.world.isRemote) {
          this.isBomblet = 0;
       }
 
@@ -190,34 +190,34 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
    public void setBomblet() {
       this.isBomblet = 1;
       this.sprinkleTime = 0;
-      this.field_70180_af.func_187227_b(BOMBLET_FLAG, (byte)1);
+      this.dataManager.func_187227_b(BOMBLET_FLAG, (byte)1);
    }
 
    public byte getBomblet() {
-      return (Byte)this.field_70180_af.func_187225_a(BOMBLET_FLAG);
+      return (Byte)this.dataManager.func_187225_a(BOMBLET_FLAG);
    }
 
    public void setTargetEntity(@Nullable Entity entity) {
       this.targetEntity = entity;
-      if (!this.field_70170_p.field_72995_K) {
+      if (!this.world.isRemote) {
          if (this.targetEntity instanceof EntityPlayerMP) {
-            MCH_Lib.DbgLog(this.field_70170_p, "MCH_EntityBaseBullet.setTargetEntity alert" + this.targetEntity + " / " + this.targetEntity.func_184187_bx());
+            MCH_Lib.DbgLog(this.world, "MCH_EntityBaseBullet.setTargetEntity alert" + this.targetEntity + " / " + this.targetEntity.func_184187_bx());
             if (this.targetEntity.func_184187_bx() != null && !(this.targetEntity.func_184187_bx() instanceof MCH_EntityAircraft) && !(this.targetEntity.func_184187_bx() instanceof MCH_EntitySeat)) {
                W_WorldFunc.MOD_playSoundAtEntity(this.targetEntity, "alert", 2.0F, 1.0F);
             }
          }
 
          if (entity != null) {
-            this.field_70180_af.func_187227_b(TARGET_ID, W_Entity.getEntityId(entity));
+            this.dataManager.func_187227_b(TARGET_ID, W_Entity.getEntityId(entity));
          } else {
-            this.field_70180_af.func_187227_b(TARGET_ID, 0);
+            this.dataManager.func_187227_b(TARGET_ID, 0);
          }
       }
 
    }
 
    public int getTargetEntityID() {
-      return this.targetEntity != null ? W_Entity.getEntityId(this.targetEntity) : (Integer)this.field_70180_af.func_187225_a(TARGET_ID);
+      return this.targetEntity != null ? W_Entity.getEntityId(this.targetEntity) : (Integer)this.dataManager.func_187225_a(TARGET_ID);
    }
 
    public MCH_BulletModel getBulletModel() {
@@ -248,21 +248,21 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
    }
 
    public void spawnParticle(String name, int num, float size) {
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          if (name.isEmpty() || num < 1 || num > 50) {
             return;
          }
 
-         double x = (this.field_70165_t - this.field_70169_q) / (double)num;
-         double y = (this.field_70163_u - this.field_70167_r) / (double)num;
-         double z = (this.field_70161_v - this.field_70166_s) / (double)num;
+         double x = (this.posX - this.field_70169_q) / (double)num;
+         double y = (this.posY - this.field_70167_r) / (double)num;
+         double z = (this.posZ - this.field_70166_s) / (double)num;
          double x2 = (this.field_70169_q - this.prevPosX2) / (double)num;
          double y2 = (this.field_70167_r - this.prevPosY2) / (double)num;
          double z2 = (this.field_70166_s - this.prevPosZ2) / (double)num;
          int i;
          if (name.equals("explode")) {
             for(i = 0; i < num; ++i) {
-               MCH_ParticleParam prm = new MCH_ParticleParam(this.field_70170_p, "smoke", (this.field_70169_q + x * (double)i + this.prevPosX2 + x2 * (double)i) / 2.0D, (this.field_70167_r + y * (double)i + this.prevPosY2 + y2 * (double)i) / 2.0D, (this.field_70166_s + z * (double)i + this.prevPosZ2 + z2 * (double)i) / 2.0D);
+               MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "smoke", (this.field_70169_q + x * (double)i + this.prevPosX2 + x2 * (double)i) / 2.0D, (this.field_70167_r + y * (double)i + this.prevPosY2 + y2 * (double)i) / 2.0D, (this.field_70166_s + z * (double)i + this.prevPosZ2 + z2 * (double)i) / 2.0D);
                prm.size = size + this.field_70146_Z.nextFloat();
                MCH_ParticlesUtil.spawnParticle(prm);
             }
@@ -276,14 +276,14 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
    }
 
    public void DEF_spawnParticle(String name, int num, float size) {
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          if (name.isEmpty() || num < 1 || num > 50) {
             return;
          }
 
-         double x = (this.field_70165_t - this.field_70169_q) / (double)num;
-         double y = (this.field_70163_u - this.field_70167_r) / (double)num;
-         double z = (this.field_70161_v - this.field_70166_s) / (double)num;
+         double x = (this.posX - this.field_70169_q) / (double)num;
+         double y = (this.posY - this.field_70167_r) / (double)num;
+         double z = (this.posZ - this.field_70166_s) / (double)num;
          double x2 = (this.field_70169_q - this.prevPosX2) / (double)num;
          double y2 = (this.field_70167_r - this.prevPosY2) / (double)num;
          double z2 = (this.field_70166_s - this.prevPosZ2) / (double)num;
@@ -337,10 +337,10 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
 
    public boolean usingFlareOfTarget(Entity entity) {
       if (this.getCountOnUpdate() % 3 == 0) {
-         List<Entity> list = this.field_70170_p.func_72839_b(this, entity.func_174813_aQ().func_72314_b(15.0D, 15.0D, 15.0D));
+         List<Entity> list = this.world.func_72839_b(this, entity.func_174813_aQ().func_72314_b(15.0D, 15.0D, 15.0D));
 
          for(int i = 0; i < list.size(); ++i) {
-            if (((Entity)list.get(i)).getEntityData().func_74767_n("FlareUsing")) {
+            if (((Entity)list.get(i)).getEntityData().getBoolean("FlareUsing")) {
                return true;
             }
          }
@@ -354,9 +354,9 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
    }
 
    public void guidanceToTarget(double targetPosX, double targetPosY, double targetPosZ, float accelerationFactor) {
-      double tx = targetPosX - this.field_70165_t;
-      double ty = targetPosY - this.field_70163_u;
-      double tz = targetPosZ - this.field_70161_v;
+      double tx = targetPosX - this.posX;
+      double ty = targetPosY - this.posY;
+      double tz = targetPosZ - this.posZ;
       double d = (double)MathHelper.func_76133_a(tx * tx + ty * ty + tz * tz);
       double mx = tx * this.acceleration / d;
       double my = ty * this.acceleration / d;
@@ -375,9 +375,9 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
          return false;
       } else {
          Entity shooter = this.shootingAircraft != null && this.shootingAircraft.field_70128_L && this.shootingEntity == null ? this.shootingAircraft : this.shootingEntity;
-         double x = this.field_70165_t - shooter.field_70165_t;
-         double z = this.field_70161_v - shooter.field_70161_v;
-         return x * x + z * z < 3.38724E7D && this.field_70163_u > -10.0D;
+         double x = this.posX - shooter.posX;
+         double z = this.posZ - shooter.posZ;
+         return x * x + z * z < 3.38724E7D && this.posY > -10.0D;
       }
    }
 
@@ -390,15 +390,15 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
    }
 
    public void func_70071_h_() {
-      if (this.field_70170_p.field_72995_K && this.countOnUpdate == 0) {
+      if (this.world.isRemote && this.countOnUpdate == 0) {
          int tgtEttId = this.getTargetEntityID();
          if (tgtEttId > 0) {
-            this.setTargetEntity(this.field_70170_p.func_73045_a(tgtEttId));
+            this.setTargetEntity(this.world.func_73045_a(tgtEttId));
          }
       }
 
-      if (!this.field_70170_p.field_72995_K && this.getCountOnUpdate() % 20 == 19 && this.targetEntity instanceof EntityPlayerMP) {
-         MCH_Lib.DbgLog(this.field_70170_p, "MCH_EntityBaseBullet.onUpdate alert" + this.targetEntity + " / " + this.targetEntity.func_184187_bx());
+      if (!this.world.isRemote && this.getCountOnUpdate() % 20 == 19 && this.targetEntity instanceof EntityPlayerMP) {
+         MCH_Lib.DbgLog(this.world, "MCH_EntityBaseBullet.onUpdate alert" + this.targetEntity + " / " + this.targetEntity.func_184187_bx());
          if (this.targetEntity.func_184187_bx() != null && !(this.targetEntity.func_184187_bx() instanceof MCH_EntityAircraft) && !(this.targetEntity.func_184187_bx() instanceof MCH_EntitySeat)) {
             W_WorldFunc.MOD_playSoundAtEntity(this.targetEntity, "alert", 2.0F, 1.0F);
          }
@@ -441,13 +441,13 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
          this.field_70179_y *= 0.9D;
       }
 
-      if (this.field_70170_p.field_72995_K && this.isBomblet < 0) {
+      if (this.world.isRemote && this.isBomblet < 0) {
          this.isBomblet = this.getBomblet();
       }
 
-      if (!this.field_70170_p.field_72995_K) {
-         BlockPos blockpos = new BlockPos(this.field_70165_t, this.field_70163_u, this.field_70161_v);
-         if ((int)this.field_70163_u <= 255 && !this.field_70170_p.func_175667_e(blockpos)) {
+      if (!this.world.isRemote) {
+         BlockPos blockpos = new BlockPos(this.posX, this.posY, this.posZ);
+         if ((int)this.posY <= 255 && !this.world.func_175667_e(blockpos)) {
             if (this.getInfo().delayFuse <= 0) {
                this.func_70106_y();
                return;
@@ -479,7 +479,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
          }
 
          if (this.getInfo().explosionAltitude > 0 && MCH_Lib.getBlockIdY(this, 3, -this.getInfo().explosionAltitude) != 0) {
-            RayTraceResult mop = new RayTraceResult(new Vec3d(this.field_70165_t, this.field_70163_u, this.field_70161_v), EnumFacing.DOWN, new BlockPos(this.field_70165_t, this.field_70163_u, this.field_70161_v));
+            RayTraceResult mop = new RayTraceResult(new Vec3d(this.posX, this.posY, this.posZ), EnumFacing.DOWN, new BlockPos(this.posX, this.posY, this.posZ));
             this.onImpact(mop, 1.0F);
          }
       }
@@ -494,28 +494,28 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
          this.onUpdateCollided();
       }
 
-      this.field_70165_t += this.field_70159_w * this.accelerationFactor;
-      this.field_70163_u += this.field_70181_x * this.accelerationFactor;
-      this.field_70161_v += this.field_70179_y * this.accelerationFactor;
-      if (this.field_70170_p.field_72995_K) {
+      this.posX += this.field_70159_w * this.accelerationFactor;
+      this.posY += this.field_70181_x * this.accelerationFactor;
+      this.posZ += this.field_70179_y * this.accelerationFactor;
+      if (this.world.isRemote) {
          this.updateSplash();
       }
 
       if (this.func_70090_H()) {
          float f3 = 0.25F;
-         this.field_70170_p.func_175688_a(EnumParticleTypes.WATER_BUBBLE, this.field_70165_t - this.field_70159_w * (double)f3, this.field_70163_u - this.field_70181_x * (double)f3, this.field_70161_v - this.field_70179_y * (double)f3, this.field_70159_w, this.field_70181_x, this.field_70179_y, new int[0]);
+         this.world.func_175688_a(EnumParticleTypes.WATER_BUBBLE, this.posX - this.field_70159_w * (double)f3, this.posY - this.field_70181_x * (double)f3, this.posZ - this.field_70179_y * (double)f3, this.field_70159_w, this.field_70181_x, this.field_70179_y, new int[0]);
       }
 
-      this.func_70107_b(this.field_70165_t, this.field_70163_u, this.field_70161_v);
+      this.func_70107_b(this.posX, this.posY, this.posZ);
    }
 
    public void updateSplash() {
       if (this.getInfo() != null) {
          if (this.getInfo().power > 0) {
-            if (!W_WorldFunc.isBlockWater(this.field_70170_p, (int)(this.field_70169_q + 0.5D), (int)(this.field_70167_r + 0.5D), (int)(this.field_70166_s + 0.5D)) && W_WorldFunc.isBlockWater(this.field_70170_p, (int)(this.field_70165_t + 0.5D), (int)(this.field_70163_u + 0.5D), (int)(this.field_70161_v + 0.5D))) {
-               double x = this.field_70165_t - this.field_70169_q;
-               double y = this.field_70163_u - this.field_70167_r;
-               double z = this.field_70161_v - this.field_70166_s;
+            if (!W_WorldFunc.isBlockWater(this.world, (int)(this.field_70169_q + 0.5D), (int)(this.field_70167_r + 0.5D), (int)(this.field_70166_s + 0.5D)) && W_WorldFunc.isBlockWater(this.world, (int)(this.posX + 0.5D), (int)(this.posY + 0.5D), (int)(this.posZ + 0.5D))) {
+               double x = this.posX - this.field_70169_q;
+               double y = this.posY - this.field_70167_r;
+               double z = this.posZ - this.field_70166_s;
                double d = Math.sqrt(x * x + y * y + z * z);
                if (d <= 0.15D) {
                   return;
@@ -532,13 +532,13 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
                   px += x;
                   py += y;
                   pz += z;
-                  if (W_WorldFunc.isBlockWater(this.field_70170_p, (int)(px + 0.5D), (int)(py + 0.5D), (int)(pz + 0.5D))) {
+                  if (W_WorldFunc.isBlockWater(this.world, (int)(px + 0.5D), (int)(py + 0.5D), (int)(pz + 0.5D))) {
                      float pwr = this.getInfo().power < 20 ? (float)this.getInfo().power : 20.0F;
                      int n = this.field_70146_Z.nextInt(1 + (int)pwr / 3) + (int)pwr / 2 + 1;
                      pwr *= 0.03F;
 
                      for(int j = 0; j < n; ++j) {
-                        MCH_ParticleParam prm = new MCH_ParticleParam(this.field_70170_p, "splash", px, py + 0.5D, pz, (double)pwr * (this.field_70146_Z.nextDouble() - 0.5D) * 0.3D, (double)pwr * (this.field_70146_Z.nextDouble() * 0.5D + 0.5D) * 1.8D, (double)pwr * (this.field_70146_Z.nextDouble() - 0.5D) * 0.3D, pwr * 5.0F);
+                        MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "splash", px, py + 0.5D, pz, (double)pwr * (this.field_70146_Z.nextDouble() - 0.5D) * 0.3D, (double)pwr * (this.field_70146_Z.nextDouble() * 0.5D + 0.5D) * 1.8D, (double)pwr * (this.field_70146_Z.nextDouble() - 0.5D) * 0.3D, pwr * 5.0F);
                         MCH_ParticlesUtil.spawnParticle(prm);
                      }
 
@@ -554,10 +554,10 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
    public void onUpdateTimeout() {
       if (this.func_70090_H()) {
          if (this.explosionPowerInWater > 0) {
-            this.newExplosion(this.field_70165_t, this.field_70163_u, this.field_70161_v, (float)this.explosionPowerInWater, (float)this.explosionPowerInWater, true);
+            this.newExplosion(this.posX, this.posY, this.posZ, (float)this.explosionPowerInWater, (float)this.explosionPowerInWater, true);
          }
       } else if (this.explosionPower > 0) {
-         this.newExplosion(this.field_70165_t, this.field_70163_u, this.field_70161_v, (float)this.explosionPower, (float)this.getInfo().explosionBlock, false);
+         this.newExplosion(this.posX, this.posY, this.posZ, (float)this.explosionPower, (float)this.getInfo().explosionBlock, false);
       } else if (this.explosionPower < 0) {
          this.playExplosionSound();
       }
@@ -565,7 +565,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
    }
 
    public void onUpdateBomblet() {
-      if (!this.field_70170_p.field_72995_K && this.sprinkleTime > 0 && !this.field_70128_L) {
+      if (!this.world.isRemote && this.sprinkleTime > 0 && !this.field_70128_L) {
          --this.sprinkleTime;
          if (this.sprinkleTime == 0) {
             for(int i = 0; i < this.getInfo().bomblet; ++i) {
@@ -594,28 +594,28 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
          if (this.field_70179_y > 0.0D) {
             this.field_70179_y = -this.field_70179_y * (double)this.getInfo().bound;
          } else {
-            this.field_70161_v += this.field_70179_y;
+            this.posZ += this.field_70179_y;
          }
          break;
       case SOUTH:
          if (this.field_70179_y < 0.0D) {
             this.field_70179_y = -this.field_70179_y * (double)this.getInfo().bound;
          } else {
-            this.field_70161_v += this.field_70179_y;
+            this.posZ += this.field_70179_y;
          }
          break;
       case WEST:
          if (this.field_70159_w > 0.0D) {
             this.field_70159_w = -this.field_70159_w * (double)this.getInfo().bound;
          } else {
-            this.field_70165_t += this.field_70159_w;
+            this.posX += this.field_70159_w;
          }
          break;
       case EAST:
          if (this.field_70159_w < 0.0D) {
             this.field_70159_w = -this.field_70159_w * (double)this.getInfo().bound;
          } else {
-            this.field_70165_t += this.field_70159_w;
+            this.posX += this.field_70159_w;
          }
       }
 
@@ -636,14 +636,14 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
 
       Vec3d vec31;
       for(int i = 0; i < 5; ++i) {
-         vec31 = W_WorldFunc.getWorldVec3(this.field_70170_p, this.field_70165_t, this.field_70163_u, this.field_70161_v);
-         Vec3d vec31 = W_WorldFunc.getWorldVec3(this.field_70170_p, this.field_70165_t + mx, this.field_70163_u + my, this.field_70161_v + mz);
-         m = W_WorldFunc.clip(this.field_70170_p, vec31, vec31);
+         vec31 = W_WorldFunc.getWorldVec3(this.world, this.posX, this.posY, this.posZ);
+         Vec3d vec31 = W_WorldFunc.getWorldVec3(this.world, this.posX + mx, this.posY + my, this.posZ + mz);
+         m = W_WorldFunc.clip(this.world, vec31, vec31);
          boolean continueClip = false;
          if (this.shootingEntity != null && W_MovingObjectPosition.isHitTypeTile(m)) {
-            Block block = W_WorldFunc.getBlock(this.field_70170_p, m.func_178782_a());
+            Block block = W_WorldFunc.getBlock(this.world, m.func_178782_a());
             if (MCH_Config.bulletBreakableBlocks.contains(block)) {
-               W_WorldFunc.destroyBlock(this.field_70170_p, m.func_178782_a(), true);
+               W_WorldFunc.destroyBlock(this.world, m.func_178782_a(), true);
                continueClip = true;
             }
          }
@@ -653,8 +653,8 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
          }
       }
 
-      Vec3d vec3 = W_WorldFunc.getWorldVec3(this.field_70170_p, this.field_70165_t, this.field_70163_u, this.field_70161_v);
-      vec31 = W_WorldFunc.getWorldVec3(this.field_70170_p, this.field_70165_t + mx, this.field_70163_u + my, this.field_70161_v + mz);
+      Vec3d vec3 = W_WorldFunc.getWorldVec3(this.world, this.posX, this.posY, this.posZ);
+      vec31 = W_WorldFunc.getWorldVec3(this.world, this.posX + mx, this.posY + my, this.posZ + mz);
       if (this.getInfo().delayFuse > 0) {
          if (m != null) {
             this.boundBullet(m.field_178784_b);
@@ -665,11 +665,11 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
 
       } else {
          if (m != null) {
-            vec31 = W_WorldFunc.getWorldVec3(this.field_70170_p, m.field_72307_f.field_72450_a, m.field_72307_f.field_72448_b, m.field_72307_f.field_72449_c);
+            vec31 = W_WorldFunc.getWorldVec3(this.world, m.field_72307_f.x, m.field_72307_f.y, m.field_72307_f.z);
          }
 
          Entity entity = null;
-         List<Entity> list = this.field_70170_p.func_72839_b(this, this.func_174813_aQ().func_72321_a(mx, my, mz).func_72314_b(21.0D, 21.0D, 21.0D));
+         List<Entity> list = this.world.func_72839_b(this, this.func_174813_aQ().func_72321_a(mx, my, mz).func_72314_b(21.0D, 21.0D, 21.0D));
          double d0 = 0.0D;
 
          for(int j = 0; j < list.size(); ++j) {
@@ -706,7 +706,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
          return false;
       } else {
          if (entity instanceof MCH_EntityBaseBullet) {
-            if (this.field_70170_p.field_72995_K) {
+            if (this.world.isRemote) {
                return false;
             }
 
@@ -766,7 +766,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
 
    protected void onImpact(RayTraceResult m, float damageFactor) {
       float expPower;
-      if (!this.field_70170_p.field_72995_K) {
+      if (!this.world.isRemote) {
          if (m.field_72308_g != null) {
             this.onImpactEntity(m.field_72308_g, damageFactor);
             this.piercing = 0;
@@ -780,26 +780,26 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
          if (this.piercing > 0) {
             --this.piercing;
             if (expPower > 0.0F) {
-               this.newExplosion(m.field_72307_f.field_72450_a + dx, m.field_72307_f.field_72448_b + dy, m.field_72307_f.field_72449_c + dz, 1.0F, 1.0F, false);
+               this.newExplosion(m.field_72307_f.x + dx, m.field_72307_f.y + dy, m.field_72307_f.z + dz, 1.0F, 1.0F, false);
             }
          } else {
             if (expPowerInWater == 0.0F) {
                if (this.getInfo().isFAE) {
-                  this.newFAExplosion(this.field_70165_t, this.field_70163_u, this.field_70161_v, expPower, (float)this.getInfo().explosionBlock);
+                  this.newFAExplosion(this.posX, this.posY, this.posZ, expPower, (float)this.getInfo().explosionBlock);
                } else if (expPower > 0.0F) {
-                  this.newExplosion(m.field_72307_f.field_72450_a + dx, m.field_72307_f.field_72448_b + dy, m.field_72307_f.field_72449_c + dz, expPower, (float)this.getInfo().explosionBlock, false);
+                  this.newExplosion(m.field_72307_f.x + dx, m.field_72307_f.y + dy, m.field_72307_f.z + dz, expPower, (float)this.getInfo().explosionBlock, false);
                } else if (expPower < 0.0F) {
                   this.playExplosionSound();
                }
             } else if (m.field_72308_g != null) {
                if (this.func_70090_H()) {
-                  this.newExplosion(m.field_72307_f.field_72450_a + dx, m.field_72307_f.field_72448_b + dy, m.field_72307_f.field_72449_c + dz, expPowerInWater, expPowerInWater, true);
+                  this.newExplosion(m.field_72307_f.x + dx, m.field_72307_f.y + dy, m.field_72307_f.z + dz, expPowerInWater, expPowerInWater, true);
                } else {
-                  this.newExplosion(m.field_72307_f.field_72450_a + dx, m.field_72307_f.field_72448_b + dy, m.field_72307_f.field_72449_c + dz, expPower, (float)this.getInfo().explosionBlock, false);
+                  this.newExplosion(m.field_72307_f.x + dx, m.field_72307_f.y + dy, m.field_72307_f.z + dz, expPower, (float)this.getInfo().explosionBlock, false);
                }
-            } else if (!this.func_70090_H() && !MCH_Lib.isBlockInWater(this.field_70170_p, m.func_178782_a().func_177958_n(), m.func_178782_a().func_177956_o(), m.func_178782_a().func_177952_p())) {
+            } else if (!this.func_70090_H() && !MCH_Lib.isBlockInWater(this.world, m.func_178782_a().func_177958_n(), m.func_178782_a().func_177956_o(), m.func_178782_a().func_177952_p())) {
                if (expPower > 0.0F) {
-                  this.newExplosion(m.field_72307_f.field_72450_a + dx, m.field_72307_f.field_72448_b + dy, m.field_72307_f.field_72449_c + dz, expPower, (float)this.getInfo().explosionBlock, false);
+                  this.newExplosion(m.field_72307_f.x + dx, m.field_72307_f.y + dy, m.field_72307_f.z + dz, expPower, (float)this.getInfo().explosionBlock, false);
                } else if (expPower < 0.0F) {
                   this.playExplosionSound();
                }
@@ -813,7 +813,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
          expPower = (float)this.getInfo().power;
 
          for(int i = 0; (float)i < expPower / 3.0F; ++i) {
-            MCH_ParticlesUtil.spawnParticleTileCrack(this.field_70170_p, m.func_178782_a().func_177958_n(), m.func_178782_a().func_177956_o(), m.func_178782_a().func_177952_p(), m.field_72307_f.field_72450_a + ((double)this.field_70146_Z.nextFloat() - 0.5D) * (double)expPower / 10.0D, m.field_72307_f.field_72448_b + 0.1D, m.field_72307_f.field_72449_c + ((double)this.field_70146_Z.nextFloat() - 0.5D) * (double)expPower / 10.0D, -this.field_70159_w * (double)expPower / 2.0D, (double)(expPower / 2.0F), -this.field_70179_y * (double)expPower / 2.0D);
+            MCH_ParticlesUtil.spawnParticleTileCrack(this.world, m.func_178782_a().func_177958_n(), m.func_178782_a().func_177956_o(), m.func_178782_a().func_177952_p(), m.field_72307_f.x + ((double)this.field_70146_Z.nextFloat() - 0.5D) * (double)expPower / 10.0D, m.field_72307_f.y + 0.1D, m.field_72307_f.z + ((double)this.field_70146_Z.nextFloat() - 0.5D) * (double)expPower / 10.0D, -this.field_70159_w * (double)expPower / 2.0D, (double)(expPower / 2.0F), -this.field_70179_y * (double)expPower / 2.0D);
          }
       }
 
@@ -821,7 +821,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
 
    public void onImpactEntity(Entity entity, float damageFactor) {
       if (!entity.field_70128_L) {
-         MCH_Lib.DbgLog(this.field_70170_p, "MCH_EntityBaseBullet.onImpactEntity:Damage=%d:" + entity.getClass(), this.getPower());
+         MCH_Lib.DbgLog(this.world, "MCH_EntityBaseBullet.onImpactEntity:Damage=%d:" + entity.getClass(), this.getPower());
          MCH_Lib.applyEntityHurtResistantTimeConfig(entity);
          DamageSource ds = DamageSource.func_76356_a(this, this.shootingEntity);
          float damage = MCH_Config.applyDamageVsEntity(entity, ds, (float)this.getPower() * damageFactor);
@@ -839,7 +839,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
    }
 
    public void newFAExplosion(double x, double y, double z, float exp, float expBlock) {
-      MCH_Explosion.ExplosionResult result = MCH_Explosion.newExplosion(this.field_70170_p, this, this.shootingEntity, x, y, z, exp, expBlock, true, true, this.getInfo().flaming, false, 15);
+      MCH_Explosion.ExplosionResult result = MCH_Explosion.newExplosion(this.world, this, this.shootingEntity, x, y, z, exp, expBlock, true, true, this.getInfo().flaming, false, 15);
       if (result != null && result.hitEntity) {
          this.notifyHitBullet();
       }
@@ -849,9 +849,9 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
    public void newExplosion(double x, double y, double z, float exp, float expBlock, boolean inWater) {
       MCH_Explosion.ExplosionResult result;
       if (!inWater) {
-         result = MCH_Explosion.newExplosion(this.field_70170_p, this, this.shootingEntity, x, y, z, exp, expBlock, this.field_70146_Z.nextInt(3) == 0, true, this.getInfo().flaming, true, 0, this.getInfo() != null ? this.getInfo().damageFactor : null);
+         result = MCH_Explosion.newExplosion(this.world, this, this.shootingEntity, x, y, z, exp, expBlock, this.field_70146_Z.nextInt(3) == 0, true, this.getInfo().flaming, true, 0, this.getInfo() != null ? this.getInfo().damageFactor : null);
       } else {
-         result = MCH_Explosion.newExplosionInWater(this.field_70170_p, this, this.shootingEntity, x, y, z, exp, expBlock, this.field_70146_Z.nextInt(3) == 0, true, this.getInfo().flaming, true, 0, this.getInfo() != null ? this.getInfo().damageFactor : null);
+         result = MCH_Explosion.newExplosionInWater(this.world, this, this.shootingEntity, x, y, z, exp, expBlock, this.field_70146_Z.nextInt(3) == 0, true, this.getInfo().flaming, true, 0, this.getInfo() != null ? this.getInfo().damageFactor : null);
       }
 
       if (result != null && result.hitEntity) {
@@ -861,12 +861,12 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
    }
 
    public void playExplosionSound() {
-      MCH_Explosion.playExplosionSound(this.field_70170_p, this.field_70165_t, this.field_70163_u, this.field_70161_v);
+      MCH_Explosion.playExplosionSound(this.world, this.posX, this.posY, this.posZ);
    }
 
    public void func_70014_b(NBTTagCompound par1NBTTagCompound) {
       par1NBTTagCompound.func_74782_a("direction", this.func_70087_a(new double[]{this.field_70159_w, this.field_70181_x, this.field_70179_y}));
-      par1NBTTagCompound.func_74778_a("WeaponName", this.func_70005_c_());
+      par1NBTTagCompound.setString("WeaponName", this.func_70005_c_());
    }
 
    public void func_70037_a(NBTTagCompound par1NBTTagCompound) {
@@ -884,9 +884,9 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
    public boolean func_70097_a(DamageSource ds, float par2) {
       if (this.func_180431_b(ds)) {
          return false;
-      } else if (!this.field_70170_p.field_72995_K && par2 > 0.0F && ds.func_76355_l().equalsIgnoreCase("thrown")) {
+      } else if (!this.world.isRemote && par2 > 0.0F && ds.func_76355_l().equalsIgnoreCase("thrown")) {
          this.func_70018_K();
-         Vec3d pos = new Vec3d(this.field_70165_t, this.field_70163_u, this.field_70161_v);
+         Vec3d pos = new Vec3d(this.posX, this.posY, this.posZ);
          RayTraceResult m = new RayTraceResult(pos, EnumFacing.DOWN, new BlockPos(pos));
          this.onImpact(m, 1.0F);
          return true;
@@ -918,9 +918,9 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
    }
 
    static {
-      TARGET_ID = EntityDataManager.func_187226_a(MCH_EntityBaseBullet.class, DataSerializers.field_187192_b);
-      INFO_NAME = EntityDataManager.func_187226_a(MCH_EntityBaseBullet.class, DataSerializers.field_187194_d);
-      BULLET_MODEL = EntityDataManager.func_187226_a(MCH_EntityBaseBullet.class, DataSerializers.field_187194_d);
-      BOMBLET_FLAG = EntityDataManager.func_187226_a(MCH_EntityBaseBullet.class, DataSerializers.field_187191_a);
+      TARGET_ID = EntityDataManager.createKey(MCH_EntityBaseBullet.class, DataSerializers.VARINT);
+      INFO_NAME = EntityDataManager.createKey(MCH_EntityBaseBullet.class, DataSerializers.STRING);
+      BULLET_MODEL = EntityDataManager.createKey(MCH_EntityBaseBullet.class, DataSerializers.STRING);
+      BOMBLET_FLAG = EntityDataManager.createKey(MCH_EntityBaseBullet.class, DataSerializers.field_187191_a);
    }
 }

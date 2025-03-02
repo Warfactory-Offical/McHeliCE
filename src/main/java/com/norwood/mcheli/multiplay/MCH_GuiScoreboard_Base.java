@@ -273,14 +273,14 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
    }
 
    public static void static_drawTexturedModalRect(int x, int y, int x2, int y2, int x3, int y3, double zLevel) {
-      Tessellator tessellator = Tessellator.func_178181_a();
-      BufferBuilder builder = tessellator.func_178180_c();
-      builder.func_181668_a(7, DefaultVertexFormats.field_181707_g);
-      builder.func_181662_b((double)(x + 0), (double)(y + y3), zLevel).func_187315_a((double)((float)(x2 + 0) * 0.00390625F), (double)((float)(y2 + y3) * 0.00390625F)).func_181675_d();
-      builder.func_181662_b((double)(x + x3), (double)(y + y3), zLevel).func_187315_a((double)((float)(x2 + x3) * 0.00390625F), (double)((float)(y2 + y3) * 0.00390625F)).func_181675_d();
-      builder.func_181662_b((double)(x + x3), (double)(y + 0), zLevel).func_187315_a((double)((float)(x2 + x3) * 0.00390625F), (double)((float)(y2 + 0) * 0.00390625F)).func_181675_d();
-      builder.func_181662_b((double)(x + 0), (double)(y + 0), zLevel).func_187315_a((double)((float)(x2 + 0) * 0.00390625F), (double)((float)(y2 + 0) * 0.00390625F)).func_181675_d();
-      tessellator.func_78381_a();
+      Tessellator tessellator = Tessellator.getInstance();
+      BufferBuilder builder = tessellator.getBuffer();
+      builder.begin(7, DefaultVertexFormats.field_181707_g);
+      builder.pos((double)(x + 0), (double)(y + y3), zLevel).func_187315_a((double)((float)(x2 + 0) * 0.00390625F), (double)((float)(y2 + y3) * 0.00390625F)).func_181675_d();
+      builder.pos((double)(x + x3), (double)(y + y3), zLevel).func_187315_a((double)((float)(x2 + x3) * 0.00390625F), (double)((float)(y2 + y3) * 0.00390625F)).func_181675_d();
+      builder.pos((double)(x + x3), (double)(y + 0), zLevel).func_187315_a((double)((float)(x2 + x3) * 0.00390625F), (double)((float)(y2 + 0) * 0.00390625F)).func_181675_d();
+      builder.pos((double)(x + 0), (double)(y + 0), zLevel).func_187315_a((double)((float)(x2 + 0) * 0.00390625F), (double)((float)(y2 + 0) * 0.00390625F)).func_181675_d();
+      tessellator.draw();
    }
 
    public static enum SCREEN_ID {

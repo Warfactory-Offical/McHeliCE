@@ -21,7 +21,7 @@ public class MCH_EntityATMissile extends MCH_EntityBaseBullet {
          this.spawnParticle(this.getInfo().trajectoryParticleName, 3, 5.0F * this.getInfo().smokeSize * 0.5F);
       }
 
-      if (!this.field_70170_p.field_72995_K) {
+      if (!this.world.isRemote) {
          if (this.shootingEntity != null && this.targetEntity != null && !this.targetEntity.field_70128_L) {
             if (this.usingFlareOfTarget(this.targetEntity)) {
                this.func_70106_y();
@@ -41,9 +41,9 @@ public class MCH_EntityATMissile extends MCH_EntityBaseBullet {
    }
 
    public void onUpdateMotion() {
-      double x = this.targetEntity.field_70165_t - this.field_70165_t;
-      double y = this.targetEntity.field_70163_u - this.field_70163_u;
-      double z = this.targetEntity.field_70161_v - this.field_70161_v;
+      double x = this.targetEntity.posX - this.posX;
+      double y = this.targetEntity.posY - this.posY;
+      double z = this.targetEntity.posZ - this.posZ;
       double d = x * x + y * y + z * z;
       if (!(d > 2250000.0D) && !this.targetEntity.field_70128_L) {
          if (this.getInfo().proximityFuseDist >= 0.1F && d < (double)this.getInfo().proximityFuseDist) {
@@ -56,9 +56,9 @@ public class MCH_EntityATMissile extends MCH_EntityBaseBullet {
             if (this.getCountOnUpdate() > rigidityTime) {
                if (this.guidanceType == 1) {
                   if (this.getCountOnUpdate() <= rigidityTime + 20) {
-                     this.guidanceToTarget(this.targetEntity.field_70165_t, this.shootingEntity.field_70163_u + 150.0D, this.targetEntity.field_70161_v, af);
+                     this.guidanceToTarget(this.targetEntity.posX, this.shootingEntity.posY + 150.0D, this.targetEntity.posZ, af);
                   } else if (this.getCountOnUpdate() <= rigidityTime + 30) {
-                     this.guidanceToTarget(this.targetEntity.field_70165_t, this.shootingEntity.field_70163_u, this.targetEntity.field_70161_v, af);
+                     this.guidanceToTarget(this.targetEntity.posX, this.shootingEntity.posY, this.targetEntity.posZ, af);
                   } else {
                      if (this.getCountOnUpdate() == rigidityTime + 35) {
                         this.setPower((int)((float)this.getPower() * 1.2F));
@@ -67,7 +67,7 @@ public class MCH_EntityATMissile extends MCH_EntityBaseBullet {
                         }
                      }
 
-                     this.guidanceToTarget(this.targetEntity.field_70165_t, this.targetEntity.field_70163_u, this.targetEntity.field_70161_v, af);
+                     this.guidanceToTarget(this.targetEntity.posX, this.targetEntity.posY, this.targetEntity.posZ, af);
                   }
                } else {
                   d = (double)MathHelper.func_76133_a(d);

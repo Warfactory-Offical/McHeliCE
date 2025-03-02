@@ -25,7 +25,7 @@ public abstract class W_Entity extends Entity {
       super(par1World);
    }
 
-   protected void func_70088_a() {
+   protected void entityInit() {
    }
 
    public static boolean isEntityFallingBlock(Entity entity) {

@@ -64,7 +64,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
    }
 
    public void changeType(String type) {
-      MCH_Lib.DbgLog(this.field_70170_p, "MCP_EntityPlane.changeType " + type + " : " + this.toString());
+      MCH_Lib.DbgLog(this.world, "MCP_EntityPlane.changeType " + type + " : " + this.toString());
       if (!type.isEmpty()) {
          this.planeInfo = MCP_PlaneInfoManager.get(type);
       }
@@ -92,8 +92,8 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
       return MCH_Config.MountMinecartPlane.prmBool;
    }
 
-   protected void func_70088_a() {
-      super.func_70088_a();
+   protected void entityInit() {
+      super.entityInit();
    }
 
    protected void func_70014_b(NBTTagCompound par1NBTTagCompound) {
@@ -148,13 +148,13 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
    public void onUpdateAircraft() {
       if (this.planeInfo == null) {
          this.changeType(this.getTypeName());
-         this.field_70169_q = this.field_70165_t;
-         this.field_70167_r = this.field_70163_u;
-         this.field_70166_s = this.field_70161_v;
+         this.field_70169_q = this.posX;
+         this.field_70167_r = this.posY;
+         this.field_70166_s = this.posZ;
       } else {
          if (!this.isRequestedSyncStatus) {
             this.isRequestedSyncStatus = true;
-            if (this.field_70170_p.field_72995_K) {
+            if (this.world.isRemote) {
                MCH_PacketStatusRequest.requestStatus(this);
             }
          }
@@ -182,9 +182,9 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
             this.swithVtolMode(true);
          }
 
-         this.field_70169_q = this.field_70165_t;
-         this.field_70167_r = this.field_70163_u;
-         this.field_70166_s = this.field_70161_v;
+         this.field_70169_q = this.posX;
+         this.field_70167_r = this.posY;
+         this.field_70166_s = this.posZ;
          if (!this.isDestroyed() && this.isHovering() && MathHelper.func_76135_e(this.getRotPitch()) < 70.0F) {
             this.setRotPitch(this.getRotPitch() * 0.95F, "isHovering()");
          }
@@ -200,7 +200,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
          }
 
          this.updateCameraViewers();
-         if (this.field_70170_p.field_72995_K) {
+         if (this.world.isRemote) {
             this.onUpdate_Client();
          } else {
             this.onUpdate_Server();
@@ -355,7 +355,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
          this.setCurrentThrottle(0.0D);
       }
 
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          if (!W_Lib.isClientPlayer(this.getRiddenByEntity())) {
             double ct = this.getThrottle();
             if (this.getCurrentThrottle() > ct) {
@@ -423,7 +423,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
    }
 
    protected void onUpdate_Particle() {
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          this.onUpdate_ParticleLandingGear();
          this.onUpdate_ParticleNozzle();
       }
@@ -431,7 +431,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
    }
 
    protected void onUpdate_Particle2() {
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          if (!((double)this.getHP() >= (double)this.getMaxHP() * 0.5D)) {
             if (this.getPlaneInfo() != null) {
                int rotorNum = this.getPlaneInfo().rotorList.size();
@@ -459,9 +459,9 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
 
                   Vec3d rotor_pos = ((MCP_PlaneInfo.Rotor)this.getPlaneInfo().rotorList.get(d)).pos;
                   Vec3d pos = MCH_Lib.RotVec3(rotor_pos, -yaw, -pitch, -roll);
-                  double x = this.field_70165_t + pos.field_72450_a;
-                  double y = this.field_70163_u + pos.field_72448_b;
-                  double z = this.field_70161_v + pos.field_72449_c;
+                  double x = this.posX + pos.x;
+                  double y = this.posY + pos.y;
+                  double z = this.posZ + pos.z;
                   this.onUpdate_Particle2SpawnSmoke(d, x, y, z, 1.0F, spawnSmoke);
                }
 
@@ -473,14 +473,14 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
                   }
                }
 
-               double px = this.field_70165_t;
-               double py = this.field_70163_u;
-               double pz = this.field_70161_v;
+               double px = this.posX;
+               double py = this.posY;
+               double pz = this.posZ;
                if (this.getSeatInfo(0) != null && this.getSeatInfo(0).pos != null) {
-                  Vec3d pos = MCH_Lib.RotVec3(0.0D, this.getSeatInfo(0).pos.field_72448_b, -2.0D, -yaw, -pitch, -roll);
-                  px += pos.field_72450_a;
-                  py += pos.field_72448_b;
-                  pz += pos.field_72449_c;
+                  Vec3d pos = MCH_Lib.RotVec3(0.0D, this.getSeatInfo(0).pos.y, -2.0D, -yaw, -pitch, -roll);
+                  px += pos.x;
+                  py += pos.y;
+                  pz += pos.z;
                }
 
                this.onUpdate_Particle2SpawnSmoke(rotorNum, px, py, pz, rotorNum == 0 ? 2.0F : 1.0F, spawnSmoke);
@@ -496,14 +496,14 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
       }
 
       Vec3d prev = this.prevDamageSmokePos[ri];
-      double dx = x - prev.field_72450_a;
-      double dy = y - prev.field_72448_b;
-      double dz = z - prev.field_72449_c;
+      double dx = x - prev.x;
+      double dy = y - prev.y;
+      double dz = z - prev.z;
       int num = (int)((double)MathHelper.func_76133_a(dx * dx + dy * dy + dz * dz) / 0.3D) + 1;
 
       for(int i = 0; i < num; ++i) {
          float c = 0.2F + this.field_70146_Z.nextFloat() * 0.3F;
-         MCH_ParticleParam prm = new MCH_ParticleParam(this.field_70170_p, "smoke", prev.field_72450_a + (x - prev.field_72450_a) * (double)i / 3.0D, prev.field_72448_b + (y - prev.field_72448_b) * (double)i / 3.0D, prev.field_72449_c + (z - prev.field_72449_c) * (double)i / 3.0D);
+         MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "smoke", prev.x + (x - prev.x) * (double)i / 3.0D, prev.y + (y - prev.y) * (double)i / 3.0D, prev.z + (z - prev.z) * (double)i / 3.0D);
          prm.motionX = (double)size * (this.field_70146_Z.nextDouble() - 0.5D) * 0.3D;
          prm.motionY = (double)size * this.field_70146_Z.nextDouble() * 0.1D;
          prm.motionZ = (double)size * (this.field_70146_Z.nextDouble() - 0.5D) * 0.3D;
@@ -518,19 +518,19 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
    public void onUpdate_ParticleLandingGear() {
       double d = this.field_70159_w * this.field_70159_w + this.field_70179_y * this.field_70179_y;
       if (d > 0.01D) {
-         int x = MathHelper.func_76128_c(this.field_70165_t + 0.5D);
-         int y = MathHelper.func_76128_c(this.field_70163_u - 0.5D);
-         int z = MathHelper.func_76128_c(this.field_70161_v + 0.5D);
-         MCH_ParticlesUtil.spawnParticleTileCrack(this.field_70170_p, x, y, z, this.field_70165_t + ((double)this.field_70146_Z.nextFloat() - 0.5D) * (double)this.field_70130_N, this.func_174813_aQ().field_72338_b + 0.1D, this.field_70161_v + ((double)this.field_70146_Z.nextFloat() - 0.5D) * (double)this.field_70130_N, -this.field_70159_w * 4.0D, 1.5D, -this.field_70179_y * 4.0D);
+         int x = MathHelper.func_76128_c(this.posX + 0.5D);
+         int y = MathHelper.func_76128_c(this.posY - 0.5D);
+         int z = MathHelper.func_76128_c(this.posZ + 0.5D);
+         MCH_ParticlesUtil.spawnParticleTileCrack(this.world, x, y, z, this.posX + ((double)this.field_70146_Z.nextFloat() - 0.5D) * (double)this.field_70130_N, this.func_174813_aQ().field_72338_b + 0.1D, this.posZ + ((double)this.field_70146_Z.nextFloat() - 0.5D) * (double)this.field_70130_N, -this.field_70159_w * 4.0D, 1.5D, -this.field_70179_y * 4.0D);
       }
 
    }
 
    private void onUpdate_ParticleSplash() {
       if (this.getAcInfo() != null) {
-         if (this.field_70170_p.field_72995_K) {
-            double mx = this.field_70165_t - this.field_70169_q;
-            double mz = this.field_70161_v - this.field_70166_s;
+         if (this.world.isRemote) {
+            double mx = this.posX - this.field_70169_q;
+            double mz = this.posZ - this.field_70166_s;
             double dist = mx * mx + mz * mz;
             if (dist > 1.0D) {
                dist = 1.0D;
@@ -555,12 +555,12 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
    private void setParticleSplash(Vec3d pos, double mx, double my, double mz, float gravity, double size, int age) {
       Vec3d v = this.getTransformedPosition(pos);
       v = v.func_72441_c(this.field_70146_Z.nextDouble() - 0.5D, (this.field_70146_Z.nextDouble() - 0.5D) * 0.5D, this.field_70146_Z.nextDouble() - 0.5D);
-      int x = (int)(v.field_72450_a + 0.5D);
-      int y = (int)(v.field_72448_b + 0.0D);
-      int z = (int)(v.field_72449_c + 0.5D);
-      if (W_WorldFunc.isBlockWater(this.field_70170_p, x, y, z)) {
+      int x = (int)(v.x + 0.5D);
+      int y = (int)(v.y + 0.0D);
+      int z = (int)(v.z + 0.5D);
+      if (W_WorldFunc.isBlockWater(this.world, x, y, z)) {
          float c = this.field_70146_Z.nextFloat() * 0.3F + 0.7F;
-         MCH_ParticleParam prm = new MCH_ParticleParam(this.field_70170_p, "smoke", v.field_72450_a, v.field_72448_b, v.field_72449_c);
+         MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "smoke", v.x, v.y, v.z);
          prm.motionX = mx + ((double)this.field_70146_Z.nextFloat() - 0.5D) * 0.7D;
          prm.motionY = my;
          prm.motionZ = mz + ((double)this.field_70146_Z.nextFloat() - 0.5D) * 0.7D;
@@ -586,15 +586,15 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
                MCH_AircraftInfo.DrawnPart nozzle = (MCH_AircraftInfo.DrawnPart)var5.next();
                if ((double)this.field_70146_Z.nextFloat() <= this.getCurrentThrottle() * 1.5D) {
                   Vec3d nozzlePos = MCH_Lib.RotVec3(nozzle.pos, -yaw, -pitch, -roll);
-                  double x = this.field_70165_t + nozzlePos.field_72450_a + nozzleRot.field_72450_a;
-                  double y = this.field_70163_u + nozzlePos.field_72448_b + nozzleRot.field_72448_b;
-                  double z = this.field_70161_v + nozzlePos.field_72449_c + nozzleRot.field_72449_c;
+                  double x = this.posX + nozzlePos.x + nozzleRot.x;
+                  double y = this.posY + nozzlePos.y + nozzleRot.y;
+                  double z = this.posZ + nozzlePos.z + nozzleRot.z;
                   float a = 0.7F;
-                  if (W_WorldFunc.getBlockId(this.field_70170_p, (int)(x + nozzleRot.field_72450_a * 3.0D), (int)(y + nozzleRot.field_72448_b * 3.0D), (int)(z + nozzleRot.field_72449_c * 3.0D)) != 0) {
+                  if (W_WorldFunc.getBlockId(this.world, (int)(x + nozzleRot.x * 3.0D), (int)(y + nozzleRot.y * 3.0D), (int)(z + nozzleRot.z * 3.0D)) != 0) {
                      a = 2.0F;
                   }
 
-                  MCH_ParticleParam prm = new MCH_ParticleParam(this.field_70170_p, "smoke", x, y, z, nozzleRot.field_72450_a + (double)((this.field_70146_Z.nextFloat() - 0.5F) * a), nozzleRot.field_72448_b, nozzleRot.field_72449_c + (double)((this.field_70146_Z.nextFloat() - 0.5F) * a), 5.0F * this.getAcInfo().particlesScale);
+                  MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "smoke", x, y, z, nozzleRot.x + (double)((this.field_70146_Z.nextFloat() - 0.5F) * a), nozzleRot.y, nozzleRot.z + (double)((this.field_70146_Z.nextFloat() - 0.5F) * a), 5.0F * this.getAcInfo().particlesScale);
                   MCH_ParticlesUtil.spawnParticle(prm);
                }
             }
@@ -625,7 +625,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
       if (this.aircraftPosRotInc > 0) {
          this.applyServerPositionAndRotation();
       } else {
-         this.func_70107_b(this.field_70165_t + this.field_70159_w, this.field_70163_u + this.field_70181_x, this.field_70161_v + this.field_70179_y);
+         this.func_70107_b(this.posX + this.field_70159_w, this.posY + this.field_70181_x, this.posZ + this.field_70179_y);
          if (!this.isDestroyed() && (this.field_70122_E || MCH_Lib.getBlockIdY(this, 1, -2) > 0)) {
             this.field_70159_w *= 0.95D;
             this.field_70179_y *= 0.95D;
@@ -661,7 +661,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
       this.onUpdate_Particle2();
       this.onUpdate_ParticleSplash();
       this.onUpdate_ParticleSandCloud(true);
-      this.updateCamera(this.field_70165_t, this.field_70163_u, this.field_70161_v);
+      this.updateCamera(this.posX, this.posY, this.posZ);
    }
 
    private void onUpdate_Server() {
@@ -724,7 +724,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
          this.setRotPitch(this.getRotPitch() * 0.95F);
          v = MCH_Lib.Rot2Vec3(this.getRotYaw(), this.getRotPitch() - this.getNozzleRotation());
          if (this.getNozzleRotation() >= 90.0F) {
-            v = new Vec3d(v.field_72450_a * 0.800000011920929D, v.field_72448_b, v.field_72449_c * 0.800000011920929D);
+            v = new Vec3d(v.x * 0.800000011920929D, v.y, v.z * 0.800000011920929D);
          }
       } else {
          v = MCH_Lib.Rot2Vec3(this.getRotYaw(), this.getRotPitch() - 10.0F);
@@ -732,9 +732,9 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
 
       if (!levelOff) {
          if (this.getNozzleRotation() <= 0.01F) {
-            this.field_70181_x += v.field_72448_b * (double)throttle / 2.0D;
+            this.field_70181_x += v.y * (double)throttle / 2.0D;
          } else {
-            this.field_70181_x += v.field_72448_b * (double)throttle / 8.0D;
+            this.field_70181_x += v.y * (double)throttle / 8.0D;
          }
       }
 
@@ -748,11 +748,11 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
 
       if (canMove) {
          if (this.getAcInfo().enableBack && this.throttleBack > 0.0F) {
-            this.field_70159_w -= v.field_72450_a * (double)this.throttleBack;
-            this.field_70179_y -= v.field_72449_c * (double)this.throttleBack;
+            this.field_70159_w -= v.x * (double)this.throttleBack;
+            this.field_70179_y -= v.z * (double)this.throttleBack;
          } else {
-            this.field_70159_w += v.field_72450_a * (double)throttle;
-            this.field_70179_y += v.field_72449_c * (double)throttle;
+            this.field_70159_w += v.x * (double)throttle;
+            this.field_70179_y += v.z * (double)throttle;
          }
       }
 
@@ -854,7 +854,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
             }
          }
 
-         if (!this.field_70170_p.field_72995_K && this.partWing != null && this.getPlaneInfo().isVariableSweepWing && this.partWing.isON() && this.getCurrentThrottle() >= 0.20000000298023224D && (this.getCurrentThrottle() < 0.5D || MCH_Lib.getBlockIdY(this, 1, -10) != 0)) {
+         if (!this.world.isRemote && this.partWing != null && this.getPlaneInfo().isVariableSweepWing && this.partWing.isON() && this.getCurrentThrottle() >= 0.20000000298023224D && (this.getCurrentThrottle() < 0.5D || MCH_Lib.getBlockIdY(this, 1, -10) != 0)) {
             this.partWing.setStatusServer(false);
          }
 
@@ -914,7 +914,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
             return;
          }
 
-         if (!this.field_70170_p.field_72995_K) {
+         if (!this.world.isRemote) {
             this.partNozzle.setStatusServer(mode);
          }
 

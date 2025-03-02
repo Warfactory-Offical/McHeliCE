@@ -24,7 +24,7 @@ public abstract class W_EntityContainer extends W_Entity implements IInventory {
       Arrays.fill(this.containerItems, ItemStack.field_190927_a);
    }
 
-   protected void func_70088_a() {
+   protected void entityInit() {
    }
 
    public ItemStack func_70301_a(int par1) {
@@ -147,7 +147,7 @@ public abstract class W_EntityContainer extends W_Entity implements IInventory {
    }
 
    public void func_70106_y() {
-      if (this.dropContentsWhenDead && !this.field_70170_p.field_72995_K) {
+      if (this.dropContentsWhenDead && !this.world.isRemote) {
          for(int i = 0; i < this.func_70302_i_(); ++i) {
             ItemStack itemstack = this.func_70301_a(i);
             if (!itemstack.func_190926_b()) {
@@ -162,7 +162,7 @@ public abstract class W_EntityContainer extends W_Entity implements IInventory {
                   }
 
                   itemstack.func_190918_g(j);
-                  EntityItem entityitem = new EntityItem(this.field_70170_p, this.field_70165_t + (double)x, this.field_70163_u + (double)y, this.field_70161_v + (double)z, new ItemStack(itemstack.func_77973_b(), j, itemstack.func_77960_j()));
+                  EntityItem entityitem = new EntityItem(this.world, this.posX + (double)x, this.posY + (double)y, this.posZ + (double)z, new ItemStack(itemstack.func_77973_b(), j, itemstack.func_77960_j()));
                   if (itemstack.func_77942_o()) {
                      entityitem.func_92059_d().func_77982_d(itemstack.func_77978_p().func_74737_b());
                   }
@@ -171,7 +171,7 @@ public abstract class W_EntityContainer extends W_Entity implements IInventory {
                   entityitem.field_70159_w = (double)((float)this.field_70146_Z.nextGaussian() * f3);
                   entityitem.field_70181_x = (double)((float)this.field_70146_Z.nextGaussian() * f3 + 0.2F);
                   entityitem.field_70179_y = (double)((float)this.field_70146_Z.nextGaussian() * f3);
-                  this.field_70170_p.func_72838_d(entityitem);
+                  this.world.func_72838_d(entityitem);
                }
             }
          }
@@ -199,7 +199,7 @@ public abstract class W_EntityContainer extends W_Entity implements IInventory {
       NBTTagList nbttaglist = W_NBTTag.getTagList(par1NBTTagCompound, "Items", 10);
       this.containerItems = new ItemStack[this.func_70302_i_()];
       Arrays.fill(this.containerItems, ItemStack.field_190927_a);
-      MCH_Lib.DbgLog(this.field_70170_p, "W_EntityContainer.readEntityFromNBT.InventorySize = %d", this.func_70302_i_());
+      MCH_Lib.DbgLog(this.world, "W_EntityContainer.readEntityFromNBT.InventorySize = %d", this.func_70302_i_());
 
       for(int i = 0; i < nbttaglist.func_74745_c(); ++i) {
          NBTTagCompound nbttagcompound1 = W_NBTTag.tagAt(nbttaglist, i);
@@ -217,7 +217,7 @@ public abstract class W_EntityContainer extends W_Entity implements IInventory {
    }
 
    public boolean displayInventory(EntityPlayer player) {
-      if (!this.field_70170_p.field_72995_K && this.func_70302_i_() > 0) {
+      if (!this.world.isRemote && this.func_70302_i_() > 0) {
          player.func_71007_a(this);
          return true;
       } else {

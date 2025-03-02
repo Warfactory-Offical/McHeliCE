@@ -157,9 +157,9 @@ public abstract class MCH_WeaponBase {
 
    public boolean use(MCH_WeaponParam prm) {
       Vec3d v = this.getShotPos(prm.entity);
-      prm.posX += v.field_72450_a;
-      prm.posY += v.field_72448_b;
-      prm.posZ += v.field_72449_c;
+      prm.posX += v.x;
+      prm.posY += v.y;
+      prm.posZ += v.z;
       if (this.shot(prm)) {
          this.tick = 0;
          return true;
@@ -172,7 +172,7 @@ public abstract class MCH_WeaponBase {
       if (entity instanceof MCH_EntityAircraft && this.onTurret) {
          return ((MCH_EntityAircraft)entity).calcOnTurretPos(this.position);
       } else {
-         Vec3d v = new Vec3d(this.position.field_72450_a, this.position.field_72448_b, this.position.field_72449_c);
+         Vec3d v = new Vec3d(this.position.x, this.position.y, this.position.z);
          float roll = entity instanceof MCH_EntityAircraft ? ((MCH_EntityAircraft)entity).getRotRoll() : 0.0F;
          return MCH_Lib.RotVec3(v, -entity.field_70177_z, -entity.field_70125_A, -roll);
       }
@@ -183,15 +183,15 @@ public abstract class MCH_WeaponBase {
    }
 
    public void playSound(Entity e, String snd) {
-      if (!e.field_70170_p.field_72995_K && this.canPlaySound && this.getInfo() != null) {
+      if (!e.world.isRemote && this.canPlaySound && this.getInfo() != null) {
          float prnd = this.getInfo().soundPitchRandom;
-         W_WorldFunc.MOD_playSoundEffect(this.worldObj, e.field_70165_t, e.field_70163_u, e.field_70161_v, snd, this.getInfo().soundVolume, this.getInfo().soundPitch * (1.0F - prnd) + rand.nextFloat() * prnd);
+         W_WorldFunc.MOD_playSoundEffect(this.worldObj, e.posX, e.posY, e.posZ, snd, this.getInfo().soundVolume, this.getInfo().soundPitch * (1.0F - prnd) + rand.nextFloat() * prnd);
       }
 
    }
 
    public void playSoundClient(Entity e, float volume, float pitch) {
-      if (e.field_70170_p.field_72995_K && this.getInfo() != null) {
+      if (e.world.isRemote && this.getInfo() != null) {
          W_McClient.MOD_playSoundFX(this.getInfo().soundFileName, volume, pitch);
       }
 
@@ -204,15 +204,15 @@ public abstract class MCH_WeaponBase {
          return -1.0D;
       } else {
          Vec3d v = MCH_Lib.RotVec3(0.0D, 0.0D, 1.0D, -prm.rotYaw, -prm.rotPitch, -prm.rotRoll);
-         double s = Math.sqrt(v.field_72450_a * v.field_72450_a + v.field_72448_b * v.field_72448_b + v.field_72449_c * v.field_72449_c);
+         double s = Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
          double acc = this.acceleration < 4.0F ? (double)this.acceleration : 4.0D;
          double accFac = (double)this.acceleration / acc;
-         double my = v.field_72448_b * (double)this.acceleration / s;
+         double my = v.y * (double)this.acceleration / s;
          if (my <= 0.0D) {
             return -1.0D;
          } else {
-            double mx = v.field_72450_a * (double)this.acceleration / s;
-            double mz = v.field_72449_c * (double)this.acceleration / s;
+            double mx = v.x * (double)this.acceleration / s;
+            double mz = v.z * (double)this.acceleration / s;
             double ls = my / (double)this.weaponInfo.gravity;
             double gravity = (double)this.weaponInfo.gravity * accFac;
             double spx;

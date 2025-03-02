@@ -92,6 +92,6 @@ public class W_WorldFunc {
    }
 
    public static Vec3d getWorldVec3EntityPos(Entity e) {
-      return getWorldVec3(e.field_70170_p, e.field_70165_t, e.field_70163_u, e.field_70161_v);
+      return getWorldVec3(e.world, e.posX, e.posY, e.posZ);
    }
 }

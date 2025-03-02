@@ -22,16 +22,16 @@ public class MCH_EntityHitBox extends W_Entity {
       this.field_70181_x = 0.0D;
       this.field_70179_y = 0.0D;
       this.parent = null;
-      this.field_70158_ak = true;
+      this.noClip = true;
       this.field_70178_ae = true;
    }
 
    public MCH_EntityHitBox(World world, MCH_EntityAircraft ac, float w, float h) {
       this(world);
-      this.func_70107_b(ac.field_70165_t, ac.field_70163_u + 1.0D, ac.field_70161_v);
-      this.field_70169_q = ac.field_70165_t;
-      this.field_70167_r = ac.field_70163_u + 1.0D;
-      this.field_70166_s = ac.field_70161_v;
+      this.func_70107_b(ac.posX, ac.posY + 1.0D, ac.posZ);
+      this.field_70169_q = ac.posX;
+      this.field_70167_r = ac.posY + 1.0D;
+      this.field_70166_s = ac.posZ;
       this.parent = ac;
       this.func_70105_a(w, h);
    }

@@ -31,11 +31,11 @@ public class W_GroupObject {
 
    public void render() {
       if (this.faces.size() > 0) {
-         Tessellator tessellator = Tessellator.func_178181_a();
-         BufferBuilder builder = tessellator.func_178180_c();
-         builder.func_181668_a(this.glDrawingMode, DefaultVertexFormats.field_181710_j);
+         Tessellator tessellator = Tessellator.getInstance();
+         BufferBuilder builder = tessellator.getBuffer();
+         builder.begin(this.glDrawingMode, DefaultVertexFormats.field_181710_j);
          this.render(tessellator);
-         tessellator.func_78381_a();
+         tessellator.draw();
       }
 
    }

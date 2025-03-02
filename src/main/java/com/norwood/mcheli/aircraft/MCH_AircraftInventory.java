@@ -81,7 +81,7 @@ public class MCH_AircraftInventory implements IInventory {
 
    public void setDead() {
       Random rand = new Random();
-      if (this.aircraft.dropContentsWhenDead && !this.aircraft.field_70170_p.field_72995_K) {
+      if (this.aircraft.dropContentsWhenDead && !this.aircraft.world.isRemote) {
          for(int i = 0; i < this.func_70302_i_(); ++i) {
             ItemStack itemstack = this.func_70301_a(i);
             if (!itemstack.func_190926_b()) {
@@ -96,7 +96,7 @@ public class MCH_AircraftInventory implements IInventory {
                   }
 
                   itemstack.func_190918_g(j);
-                  EntityItem entityitem = new EntityItem(this.aircraft.field_70170_p, this.aircraft.field_70165_t + (double)x, this.aircraft.field_70163_u + (double)y, this.aircraft.field_70161_v + (double)z, new ItemStack(itemstack.func_77973_b(), j, itemstack.func_77960_j()));
+                  EntityItem entityitem = new EntityItem(this.aircraft.world, this.aircraft.posX + (double)x, this.aircraft.posY + (double)y, this.aircraft.posZ + (double)z, new ItemStack(itemstack.func_77973_b(), j, itemstack.func_77960_j()));
                   if (itemstack.func_77942_o()) {
                      entityitem.func_92059_d().func_77982_d(itemstack.func_77978_p().func_74737_b());
                   }
@@ -105,7 +105,7 @@ public class MCH_AircraftInventory implements IInventory {
                   entityitem.field_70159_w = (double)((float)rand.nextGaussian() * f3);
                   entityitem.field_70181_x = (double)((float)rand.nextGaussian() * f3 + 0.2F);
                   entityitem.field_70179_y = (double)((float)rand.nextGaussian() * f3);
-                  this.aircraft.field_70170_p.func_72838_d(entityitem);
+                  this.aircraft.world.func_72838_d(entityitem);
                }
             }
          }

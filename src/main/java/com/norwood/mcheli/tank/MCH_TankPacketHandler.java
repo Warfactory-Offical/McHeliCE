@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class MCH_TankPacketHandler {
    @HandleSide({Side.SERVER})
    public static void onPacket_PlayerControl(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-      if (!player.field_70170_p.field_72995_K) {
+      if (!player.world.isRemote) {
          MCH_TankPacketPlayerControl pc = new MCH_TankPacketPlayerControl();
          pc.readData(data);
          scheduler.func_152344_a(() -> {
@@ -79,8 +79,8 @@ public class MCH_TankPacketHandler {
                   if (tank.isPilot(player)) {
                      tank.throttleUp = pc.throttleUp;
                      tank.throttleDown = pc.throttleDown;
-                     double dx = tank.field_70165_t - tank.field_70169_q;
-                     double dz = tank.field_70161_v - tank.field_70166_s;
+                     double dx = tank.posX - tank.field_70169_q;
+                     double dz = tank.posZ - tank.field_70166_s;
                      double dist = dx * dx + dz * dz;
                      if (pc.useBrake && tank.getCurrentThrottle() <= 0.03D && dist < 0.01D) {
                         tank.moveLeft = false;

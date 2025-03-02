@@ -36,7 +36,7 @@ public class MCH_EntitySeat extends W_Entity implements IEntitySinglePassenger {
       this.setParent((MCH_EntityAircraft)null);
       this.parentSearchCount = 0;
       this.lastRiddenByEntity = null;
-      this.field_70158_ak = true;
+      this.noClip = true;
       this.field_70178_ae = true;
    }
 
@@ -94,15 +94,15 @@ public class MCH_EntitySeat extends W_Entity implements IEntitySinglePassenger {
 
       if (this.lastRiddenByEntity == null && riddenByEntity != null) {
          if (this.getParent() != null) {
-            MCH_Lib.DbgLog(this.field_70170_p, "MCH_EntitySeat.onUpdate:SeatID=%d", this.seatID, riddenByEntity.toString());
+            MCH_Lib.DbgLog(this.world, "MCH_EntitySeat.onUpdate:SeatID=%d", this.seatID, riddenByEntity.toString());
             this.getParent().onMountPlayerSeat(this, riddenByEntity);
          }
       } else if (this.lastRiddenByEntity != null && riddenByEntity == null && this.getParent() != null) {
-         MCH_Lib.DbgLog(this.field_70170_p, "MCH_EntitySeat.onUpdate:SeatID=%d", this.seatID, this.lastRiddenByEntity.toString());
+         MCH_Lib.DbgLog(this.world, "MCH_EntitySeat.onUpdate:SeatID=%d", this.seatID, this.lastRiddenByEntity.toString());
          this.getParent().onUnmountPlayerSeat(this, this.lastRiddenByEntity);
       }
 
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          this.onUpdate_Client();
       } else {
          this.onUpdate_Server();
@@ -129,7 +129,7 @@ public class MCH_EntitySeat extends W_Entity implements IEntitySinglePassenger {
 
    public void updatePosition(@Nullable Entity ridEnt) {
       if (ridEnt != null) {
-         ridEnt.func_70107_b(this.field_70165_t, this.field_70163_u, this.field_70161_v);
+         ridEnt.func_70107_b(this.posX, this.posY, this.posZ);
          ridEnt.field_70159_w = ridEnt.field_70181_x = ridEnt.field_70179_y = 0.0D;
       }
 
@@ -153,7 +153,7 @@ public class MCH_EntitySeat extends W_Entity implements IEntitySinglePassenger {
 
          if (this.parentSearchCount >= 1200) {
             this.func_70106_y();
-            if (!this.field_70170_p.field_72995_K) {
+            if (!this.world.isRemote) {
                Entity riddenByEntity = this.getRiddenByEntity();
                if (riddenByEntity != null) {
                   riddenByEntity.func_184210_p();
@@ -161,7 +161,7 @@ public class MCH_EntitySeat extends W_Entity implements IEntitySinglePassenger {
             }
 
             this.setParent((MCH_EntityAircraft)null);
-            MCH_Lib.DbgLog(this.field_70170_p, "[Error]座席エンティティは本体が見つからないため削除 seat=%d, parentUniqueID=%s", this.seatID, this.parentUniqueID);
+            MCH_Lib.DbgLog(this.world, "[Error]座席エンティティは本体が見つからないため削除 seat=%d, parentUniqueID=%s", this.seatID, this.parentUniqueID);
          } else {
             ++this.parentSearchCount;
          }
@@ -170,8 +170,8 @@ public class MCH_EntitySeat extends W_Entity implements IEntitySinglePassenger {
    }
 
    protected void func_70014_b(NBTTagCompound par1NBTTagCompound) {
-      par1NBTTagCompound.func_74768_a("SeatID", this.seatID);
-      par1NBTTagCompound.func_74778_a("ParentUniqueID", this.parentUniqueID);
+      par1NBTTagCompound.setInteger("SeatID", this.seatID);
+      par1NBTTagCompound.setString("ParentUniqueID", this.parentUniqueID);
    }
 
    protected void func_70037_a(NBTTagCompound par1NBTTagCompound) {
@@ -235,7 +235,7 @@ public class MCH_EntitySeat extends W_Entity implements IEntitySinglePassenger {
       this.parent = parent;
       Entity riddenByEntity = this.getRiddenByEntity();
       if (riddenByEntity != null) {
-         MCH_Lib.DbgLog(this.field_70170_p, "MCH_EntitySeat.setParent:SeatID=%d %s : " + this.getParent(), this.seatID, riddenByEntity.toString());
+         MCH_Lib.DbgLog(this.world, "MCH_EntitySeat.setParent:SeatID=%d %s : " + this.getParent(), this.seatID, riddenByEntity.toString());
          if (this.getParent() != null) {
             this.getParent().onMountPlayerSeat(this, riddenByEntity);
          }

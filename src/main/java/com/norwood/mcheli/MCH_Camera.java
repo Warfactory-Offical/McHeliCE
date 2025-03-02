@@ -62,12 +62,12 @@ public class MCH_Camera {
          switch(this.mode[uid]) {
          case 0:
          case 1:
-            if (this.worldObj.field_72995_K) {
+            if (this.worldObj.isRemote) {
                W_EntityRenderer.deactivateShader();
             }
             break;
          case 2:
-            if (this.worldObj.field_72995_K) {
+            if (this.worldObj.isRemote) {
                W_EntityRenderer.activateShader("pencil");
             }
          }
@@ -114,7 +114,7 @@ public class MCH_Camera {
             if (this.getMode(uid) == 0 && this.lastMode[uid] != 0) {
                pe = W_Entity.getActivePotionEffect(viewer, MobEffects.field_76439_r);
                if (pe != null && pe.func_76459_b() > 0 && pe.func_76459_b() < 500) {
-                  if (viewer.field_70170_p.field_72995_K) {
+                  if (viewer.world.isRemote) {
                      W_Entity.removePotionEffectClient(viewer, MobEffects.field_76439_r);
                   } else {
                      W_Entity.removePotionEffect(viewer, MobEffects.field_76439_r);
@@ -124,7 +124,7 @@ public class MCH_Camera {
 
             if (this.getMode(uid) == 1 || this.getMode(uid) == 2) {
                pe = W_Entity.getActivePotionEffect(viewer, MobEffects.field_76439_r);
-               if ((pe == null || pe != null && pe.func_76459_b() < 500) && !viewer.field_70170_p.field_72995_K) {
+               if ((pe == null || pe != null && pe.func_76459_b() < 500) && !viewer.world.isRemote) {
                   W_Entity.addPotionEffect(viewer, new PotionEffect(MobEffects.field_76439_r, 250, 0, true, false));
                }
             }

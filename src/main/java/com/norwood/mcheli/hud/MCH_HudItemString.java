@@ -32,7 +32,7 @@ public class MCH_HudItemString extends MCH_HudItem {
    public void execute() {
       int x = (int)(centerX + calc(this.posX));
       int y = (int)(centerY + calc(this.posY));
-      int worldTime = (int)((ac.field_70170_p.func_72820_D() + 6000L) % 24000L);
+      int worldTime = (int)((ac.world.func_72820_D() + 6000L) % 24000L);
       Date date = new Date();
       Object[] prm = new Object[this.args.length];
       double hp_per = ac.getMaxHP() > 0 ? (double)ac.getHP() / (double)ac.getMaxHP() : 0.0D;
@@ -67,13 +67,13 @@ public class MCH_HudItemString extends MCH_HudItem {
             prm[i] = hp_per * 100.0D;
             break;
          case POS_X:
-            prm[i] = ac.field_70165_t;
+            prm[i] = ac.posX;
             break;
          case POS_Y:
-            prm[i] = ac.field_70163_u;
+            prm[i] = ac.posY;
             break;
          case POS_Z:
-            prm[i] = ac.field_70161_v;
+            prm[i] = ac.posZ;
             break;
          case MOTION_X:
             prm[i] = ac.field_70159_w;

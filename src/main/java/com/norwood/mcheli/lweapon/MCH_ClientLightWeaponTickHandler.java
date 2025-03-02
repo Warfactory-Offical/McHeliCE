@@ -138,7 +138,7 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
          MCH_ItemLightWeaponBase lweapon = (MCH_ItemLightWeaponBase)is.func_77973_b();
          if (this.prevItemStack.func_190926_b() || !this.prevItemStack.func_77969_a(is) && !this.prevItemStack.func_77977_a().equals(is.func_77977_a())) {
             this.initWeaponParam(player);
-            weapon = MCH_WeaponCreator.createWeapon(player.field_70170_p, MCH_ItemLightWeaponBase.getName(is), Vec3d.field_186680_a, 0.0F, 0.0F, (MCH_IEntityLockChecker)null, false);
+            weapon = MCH_WeaponCreator.createWeapon(player.world, MCH_ItemLightWeaponBase.getName(is), Vec3d.ZERO, 0.0F, 0.0F, (MCH_IEntityLockChecker)null, false);
             if (weapon != null && weapon.getInfo() != null && weapon.getGuidanceSystem() != null) {
                gs = weapon.getGuidanceSystem();
             }
@@ -148,7 +148,7 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
             return;
          }
 
-         gs.setWorld(player.field_70170_p);
+         gs.setWorld(player.world);
          gs.lockRange = lockRange;
          if (player.func_184612_cw() > 10) {
             selectedZoom %= weapon.getInfo().zoom.length;
@@ -252,8 +252,8 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
          if (is.func_77960_j() < is.func_77958_k() && gs.isLockComplete()) {
             boolean canFire = true;
             if (weaponMode > 0 && gs.getTargetEntity() != null) {
-               double dx = gs.getTargetEntity().field_70165_t - player.field_70165_t;
-               double dz = gs.getTargetEntity().field_70161_v - player.field_70161_v;
+               double dx = gs.getTargetEntity().posX - player.posX;
+               double dz = gs.getTargetEntity().posZ - player.posZ;
                canFire = Math.sqrt(dx * dx + dz * dz) >= 40.0D;
             }
 
@@ -261,9 +261,9 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
                pc.useWeapon = true;
                pc.useWeaponOption1 = W_Entity.getEntityId(gs.lastLockEntity);
                pc.useWeaponOption2 = weaponMode;
-               pc.useWeaponPosX = player.field_70165_t;
-               pc.useWeaponPosY = player.field_70163_u + (double)player.func_70047_e();
-               pc.useWeaponPosZ = player.field_70161_v;
+               pc.useWeaponPosX = player.posX;
+               pc.useWeaponPosY = player.posY + (double)player.func_70047_e();
+               pc.useWeaponPosZ = player.posZ;
                gs.clearLock();
                send = true;
                result = true;
@@ -312,7 +312,7 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
    }
 
    static {
-      markPos = Vec3d.field_186680_a;
+      markPos = Vec3d.ZERO;
       gs = new MCH_WeaponGuidanceSystem();
       lockRange = 120.0D;
    }

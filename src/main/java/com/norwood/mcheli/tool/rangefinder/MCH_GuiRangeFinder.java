@@ -79,12 +79,12 @@ public class MCH_GuiRangeFinder extends MCH_Gui {
 
       px = (CX - 20.0D * SCALE_FACTOR) / SCALE_FACTOR;
       if (damage > 0) {
-         Vec3d vs = new Vec3d(player.field_70165_t, player.field_70163_u + (double)player.func_70047_e(), player.field_70161_v);
+         Vec3d vs = new Vec3d(player.posX, player.posY + (double)player.func_70047_e(), player.posZ);
          Vec3d ve = MCH_Lib.Rot2Vec3(player.field_70177_z, player.field_70125_A);
-         ve = vs.func_72441_c(ve.field_72450_a * 300.0D, ve.field_72448_b * 300.0D, ve.field_72449_c * 300.0D);
-         RayTraceResult mop = player.field_70170_p.func_72901_a(vs, ve, true);
+         ve = vs.func_72441_c(ve.x * 300.0D, ve.y * 300.0D, ve.z * 300.0D);
+         RayTraceResult mop = player.world.func_72901_a(vs, ve, true);
          if (mop != null && mop.field_72313_a != Type.MISS) {
-            int range = (int)player.func_70011_f(mop.field_72307_f.field_72450_a, mop.field_72307_f.field_72448_b, mop.field_72307_f.field_72449_c);
+            int range = (int)player.func_70011_f(mop.field_72307_f.x, mop.field_72307_f.y, mop.field_72307_f.z);
             this.drawDigit(String.format("%4d", range), (int)px, (int)py, 13, -15663328);
          } else {
             this.drawDigit(String.format("----"), (int)px, (int)py, 13, -61424);

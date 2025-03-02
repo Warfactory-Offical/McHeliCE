@@ -21,7 +21,7 @@ public class MCH_ViewEntityDummy extends EntityPlayerSP {
    }
 
    public static MCH_ViewEntityDummy getInstance(World w) {
-      if ((instance == null || instance.field_70128_L) && w.field_72995_K) {
+      if ((instance == null || instance.field_70128_L) && w.isRemote) {
          instance = new MCH_ViewEntityDummy(w);
          if (Minecraft.func_71410_x().field_71439_g != null) {
             instance.field_71158_b = Minecraft.func_71410_x().field_71439_g.field_71158_b;
@@ -59,9 +59,9 @@ public class MCH_ViewEntityDummy extends EntityPlayerSP {
          this.field_70169_q = camera.posX;
          this.field_70167_r = camera.posY;
          this.field_70166_s = camera.posZ;
-         this.field_70165_t = camera.posX;
-         this.field_70163_u = camera.posY;
-         this.field_70161_v = camera.posZ;
+         this.posX = camera.posX;
+         this.posY = camera.posY;
+         this.posZ = camera.posZ;
          MCH_CameraManager.setCameraZoom(this.zoom);
       }
    }
@@ -74,9 +74,9 @@ public class MCH_ViewEntityDummy extends EntityPlayerSP {
          instance.field_70142_S = x;
          instance.field_70137_T = y;
          instance.field_70136_U = z;
-         instance.field_70165_t = x;
-         instance.field_70163_u = y;
-         instance.field_70161_v = z;
+         instance.posX = x;
+         instance.posY = y;
+         instance.posZ = z;
       }
    }
 

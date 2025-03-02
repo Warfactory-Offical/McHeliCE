@@ -11,14 +11,14 @@ public class MCH_WeaponTargetingPod extends MCH_WeaponBase {
    public MCH_WeaponTargetingPod(World w, Vec3d v, float yaw, float pitch, String nm, MCH_WeaponInfo wi) {
       super(w, v, yaw, pitch, nm, wi);
       this.interval = -90;
-      if (w.field_72995_K) {
+      if (w.isRemote) {
          this.interval -= 10;
       }
 
    }
 
    public boolean shot(MCH_WeaponParam prm) {
-      if (!this.worldObj.field_72995_K) {
+      if (!this.worldObj.isRemote) {
          MCH_WeaponInfo info = this.getInfo();
          if ((info.target & 64) != 0) {
             if (MCH_Multiplay.markPoint((EntityPlayer)prm.user, prm.posX, prm.posY, prm.posZ)) {

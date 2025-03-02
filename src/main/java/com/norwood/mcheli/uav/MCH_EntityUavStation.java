@@ -80,7 +80,7 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
       this.field_70159_w = 0.0D;
       this.field_70181_x = 0.0D;
       this.field_70179_y = 0.0D;
-      this.field_70158_ak = true;
+      this.noClip = true;
       this.lastRiddenByEntity = null;
       this.aircraftPosRotInc = 0;
       this.aircraftX = 0.0D;
@@ -98,22 +98,22 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
       this.loadedLastControlAircraftGuid = "";
    }
 
-   protected void func_70088_a() {
-      super.func_70088_a();
-      this.field_70180_af.func_187214_a(STATUS, (byte)0);
-      this.field_70180_af.func_187214_a(LAST_AC_ID, 0);
-      this.field_70180_af.func_187214_a(UAV_POS, BlockPos.field_177992_a);
+   protected void entityInit() {
+      super.entityInit();
+      this.dataManager.register(STATUS, (byte)0);
+      this.dataManager.register(LAST_AC_ID, 0);
+      this.dataManager.register(UAV_POS, BlockPos.field_177992_a);
       this.setOpen(true);
    }
 
    public int getStatus() {
-      return (Byte)this.field_70180_af.func_187225_a(STATUS);
+      return (Byte)this.dataManager.func_187225_a(STATUS);
    }
 
    public void setStatus(int n) {
-      if (!this.field_70170_p.field_72995_K) {
-         MCH_Lib.DbgLog(this.field_70170_p, "MCH_EntityUavStation.setStatus(%d)", n);
-         this.field_70180_af.func_187227_b(STATUS, (byte)n);
+      if (!this.world.isRemote) {
+         MCH_Lib.DbgLog(this.world, "MCH_EntityUavStation.setStatus(%d)", n);
+         this.dataManager.func_187227_b(STATUS, (byte)n);
       }
 
    }
@@ -148,17 +148,17 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
    }
 
    public void setUavPosition(int x, int y, int z) {
-      if (!this.field_70170_p.field_72995_K) {
+      if (!this.world.isRemote) {
          this.posUavX = x;
          this.posUavY = y;
          this.posUavZ = z;
-         this.field_70180_af.func_187227_b(UAV_POS, new BlockPos(x, y, z));
+         this.dataManager.func_187227_b(UAV_POS, new BlockPos(x, y, z));
       }
 
    }
 
    public void updateUavPosition() {
-      BlockPos uavPos = (BlockPos)this.field_70180_af.func_187225_a(UAV_POS);
+      BlockPos uavPos = (BlockPos)this.dataManager.func_187225_a(UAV_POS);
       this.posUavX = uavPos.func_177958_n();
       this.posUavY = uavPos.func_177956_o();
       this.posUavZ = uavPos.func_177952_p();
@@ -166,10 +166,10 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
 
    protected void func_70014_b(NBTTagCompound nbt) {
       super.func_70014_b(nbt);
-      nbt.func_74768_a("UavStatus", this.getStatus());
-      nbt.func_74768_a("PosUavX", this.posUavX);
-      nbt.func_74768_a("PosUavY", this.posUavY);
-      nbt.func_74768_a("PosUavZ", this.posUavZ);
+      nbt.setInteger("UavStatus", this.getStatus());
+      nbt.setInteger("PosUavX", this.posUavX);
+      nbt.setInteger("PosUavY", this.posUavY);
+      nbt.setInteger("PosUavZ", this.posUavZ);
       String s = "";
       if (this.getLastControlAircraft() != null && !this.getLastControlAircraft().field_70128_L) {
          s = this.getLastControlAircraft().getCommonUniqueId();
@@ -179,13 +179,13 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
          s = this.loadedLastControlAircraftGuid;
       }
 
-      nbt.func_74778_a("LastCtrlAc", s);
+      nbt.setString("LastCtrlAc", s);
    }
 
    protected void func_70037_a(NBTTagCompound nbt) {
       super.func_70037_a(nbt);
       this.setUavPosition(nbt.func_74762_e("PosUavX"), nbt.func_74762_e("PosUavY"), nbt.func_74762_e("PosUavZ"));
-      if (nbt.func_74764_b("UavStatus")) {
+      if (nbt.hasKey("UavStatus")) {
          this.setStatus(nbt.func_74762_e("UavStatus"));
       } else {
          this.setKind(1);
@@ -211,7 +211,7 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
          return false;
       } else if (this.field_70128_L) {
          return true;
-      } else if (this.field_70170_p.field_72995_K) {
+      } else if (this.world.isRemote) {
          return true;
       } else {
          String dmt = damageSource.func_76355_l();
@@ -243,7 +243,7 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
                this.dropContentsWhenDead = true;
                this.func_70106_y();
                if (!isDamegeSourcePlayer) {
-                  MCH_Explosion.newExplosion(this.field_70170_p, (Entity)null, riddenByEntity, this.field_70165_t, this.field_70163_u, this.field_70161_v, 1.0F, 0.0F, true, true, false, false, 0);
+                  MCH_Explosion.newExplosion(this.world, (Entity)null, riddenByEntity, this.posX, this.posY, this.posZ, 1.0F, 0.0F, true, true, false, false, 0);
                }
 
                if (!isCreative) {
@@ -280,11 +280,11 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
       if (this.getKind() == 2 && riddenByEntity != null) {
          double px = -Math.sin((double)this.field_70177_z * 3.141592653589793D / 180.0D) * 0.9D;
          double pz = Math.cos((double)this.field_70177_z * 3.141592653589793D / 180.0D) * 0.9D;
-         int x = (int)(this.field_70165_t + px);
-         int y = (int)(this.field_70163_u - 0.5D);
-         int z = (int)(this.field_70161_v + pz);
+         int x = (int)(this.posX + px);
+         int y = (int)(this.posY - 0.5D);
+         int z = (int)(this.posZ + pz);
          BlockPos blockpos = new BlockPos(x, y, z);
-         IBlockState iblockstate = this.field_70170_p.func_180495_p(blockpos);
+         IBlockState iblockstate = this.world.func_180495_p(blockpos);
          return iblockstate.func_185914_p() ? -0.4D : -0.9D;
       } else {
          return 0.35D;
@@ -338,13 +338,13 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
       }
 
       int uavStationKind = this.getKind();
-      if (this.field_70173_aa >= 30 || uavStationKind <= 0 || uavStationKind == 1 || uavStationKind != 2 || this.field_70170_p.field_72995_K && !this.isRequestedSyncStatus) {
+      if (this.field_70173_aa >= 30 || uavStationKind <= 0 || uavStationKind == 1 || uavStationKind != 2 || this.world.isRemote && !this.isRequestedSyncStatus) {
          this.isRequestedSyncStatus = true;
       }
 
-      this.field_70169_q = this.field_70165_t;
-      this.field_70167_r = this.field_70163_u;
-      this.field_70166_s = this.field_70161_v;
+      this.field_70169_q = this.posX;
+      this.field_70167_r = this.posY;
+      this.field_70166_s = this.posZ;
       if (this.getControlAircract() != null && this.getControlAircract().field_70128_L) {
          this.setControlAircract((MCH_EntityAircraft)null);
       }
@@ -353,7 +353,7 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
          this.setLastControlAircraft((MCH_EntityAircraft)null);
       }
 
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          this.onUpdate_Client();
       } else {
          this.onUpdate_Server();
@@ -371,7 +371,7 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
       if (this.getLastControlAircraft() == null) {
          int id = this.getLastControlAircraftEntityId();
          if (id > 0) {
-            Entity entity = this.field_70170_p.func_73045_a(id);
+            Entity entity = this.world.func_73045_a(id);
             if (entity instanceof MCH_EntityAircraft) {
                MCH_EntityAircraft ac = (MCH_EntityAircraft)entity;
                if (ac.isUAV()) {
@@ -385,30 +385,30 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
    }
 
    public void setLastControlAircraft(MCH_EntityAircraft ac) {
-      MCH_Lib.DbgLog(this.field_70170_p, "MCH_EntityUavStation.setLastControlAircraft:" + ac);
+      MCH_Lib.DbgLog(this.world, "MCH_EntityUavStation.setLastControlAircraft:" + ac);
       this.lastControlAircraft = ac;
    }
 
    public Integer getLastControlAircraftEntityId() {
-      return (Integer)this.field_70180_af.func_187225_a(LAST_AC_ID);
+      return (Integer)this.dataManager.func_187225_a(LAST_AC_ID);
    }
 
    public void setLastControlAircraftEntityId(int s) {
-      if (!this.field_70170_p.field_72995_K) {
-         this.field_70180_af.func_187227_b(LAST_AC_ID, s);
+      if (!this.world.isRemote) {
+         this.dataManager.func_187227_b(LAST_AC_ID, s);
       }
 
    }
 
    public void searchLastControlAircraft() {
       if (!this.loadedLastControlAircraftGuid.isEmpty()) {
-         List<MCH_EntityAircraft> list = this.field_70170_p.func_72872_a(MCH_EntityAircraft.class, this.func_70046_E().func_72314_b(120.0D, 120.0D, 120.0D));
+         List<MCH_EntityAircraft> list = this.world.func_72872_a(MCH_EntityAircraft.class, this.func_70046_E().func_72314_b(120.0D, 120.0D, 120.0D));
          if (list != null) {
             for(int i = 0; i < list.size(); ++i) {
                MCH_EntityAircraft ac = (MCH_EntityAircraft)list.get(i);
                if (ac.getCommonUniqueId().equals(this.loadedLastControlAircraftGuid)) {
                   String n = "no info : " + ac;
-                  MCH_Lib.DbgLog(this.field_70170_p, "MCH_EntityUavStation.searchLastControlAircraft:found" + n);
+                  MCH_Lib.DbgLog(this.world, "MCH_EntityUavStation.searchLastControlAircraft:found" + n);
                   this.setLastControlAircraft(ac);
                   this.setLastControlAircraftEntityId(W_Entity.getEntityId(ac));
                   this.loadedLastControlAircraftGuid = "";
@@ -426,11 +426,11 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
          double yaw = MathHelper.func_76138_g(this.aircraftYaw - (double)this.field_70177_z);
          this.field_70177_z = (float)((double)this.field_70177_z + yaw / rpinc);
          this.field_70125_A = (float)((double)this.field_70125_A + (this.aircraftPitch - (double)this.field_70125_A) / rpinc);
-         this.func_70107_b(this.field_70165_t + (this.aircraftX - this.field_70165_t) / rpinc, this.field_70163_u + (this.aircraftY - this.field_70163_u) / rpinc, this.field_70161_v + (this.aircraftZ - this.field_70161_v) / rpinc);
+         this.func_70107_b(this.posX + (this.aircraftX - this.posX) / rpinc, this.posY + (this.aircraftY - this.posY) / rpinc, this.posZ + (this.aircraftZ - this.posZ) / rpinc);
          this.func_70101_b(this.field_70177_z, this.field_70125_A);
          --this.aircraftPosRotInc;
       } else {
-         this.func_70107_b(this.field_70165_t + this.field_70159_w, this.field_70163_u + this.field_70181_x, this.field_70161_v + this.field_70179_y);
+         this.func_70107_b(this.posX + this.field_70159_w, this.posY + this.field_70181_x, this.posZ + this.field_70179_y);
          this.field_70181_x *= 0.96D;
          this.field_70159_w = 0.0D;
          this.field_70179_y = 0.0D;
@@ -483,7 +483,7 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
       if (this.func_184196_w(passenger)) {
          double x = -Math.sin((double)this.field_70177_z * 3.141592653589793D / 180.0D) * 0.9D;
          double z = Math.cos((double)this.field_70177_z * 3.141592653589793D / 180.0D) * 0.9D;
-         passenger.func_70107_b(this.field_70165_t + x, this.field_70163_u + this.func_70042_X() + passenger.func_70033_W() + 0.3499999940395355D, this.field_70161_v + z);
+         passenger.func_70107_b(this.posX + x, this.posY + this.func_70042_X() + passenger.func_70033_W() + 0.3499999940395355D, this.posZ + z);
       }
 
    }
@@ -499,11 +499,11 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
 
    public void handleItem(@Nullable Entity user, ItemStack itemStack) {
       if (user != null && !user.field_70128_L && !itemStack.func_190926_b() && itemStack.func_190916_E() == 1) {
-         if (!this.field_70170_p.field_72995_K) {
+         if (!this.world.isRemote) {
             MCH_EntityAircraft ac = null;
-            double x = this.field_70165_t + (double)this.posUavX;
-            double y = this.field_70163_u + (double)this.posUavY;
-            double z = this.field_70161_v + (double)this.posUavZ;
+            double x = this.posX + (double)this.posUavX;
+            double y = this.posY + (double)this.posUavY;
+            double z = this.posZ + (double)this.posUavZ;
             if (y <= 1.0D) {
                y = 2.0D;
             }
@@ -515,7 +515,7 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
                   if (!pi.isSmallUAV && this.getKind() == 2) {
                      ac = null;
                   } else {
-                     ac = ((MCP_ItemPlane)item).createAircraft(this.field_70170_p, x, y, z, itemStack);
+                     ac = ((MCP_ItemPlane)item).createAircraft(this.world, x, y, z, itemStack);
                   }
                }
             }
@@ -526,7 +526,7 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
                   if (!hi.isSmallUAV && this.getKind() == 2) {
                      ac = null;
                   } else {
-                     ac = ((MCH_ItemHeli)item).createAircraft(this.field_70170_p, x, y, z, itemStack);
+                     ac = ((MCH_ItemHeli)item).createAircraft(this.world, x, y, z, itemStack);
                   }
                }
             }
@@ -537,7 +537,7 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
                   if (!hi.isSmallUAV && this.getKind() == 2) {
                      ac = null;
                   } else {
-                     ac = ((MCH_ItemTank)item).createAircraft(this.field_70170_p, x, y, z, itemStack);
+                     ac = ((MCH_ItemTank)item).createAircraft(this.world, x, y, z, itemStack);
                   }
                }
             }
@@ -546,16 +546,16 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
                ((MCH_EntityAircraft)ac).field_70177_z = this.field_70177_z - 180.0F;
                ((MCH_EntityAircraft)ac).field_70126_B = ((MCH_EntityAircraft)ac).field_70177_z;
                user.field_70177_z = this.field_70177_z - 180.0F;
-               if (this.field_70170_p.func_184144_a((Entity)ac, ((MCH_EntityAircraft)ac).func_174813_aQ().func_72314_b(-0.1D, -0.1D, -0.1D)).isEmpty()) {
+               if (this.world.func_184144_a((Entity)ac, ((MCH_EntityAircraft)ac).func_174813_aQ().func_72314_b(-0.1D, -0.1D, -0.1D)).isEmpty()) {
                   itemStack.func_190918_g(1);
-                  MCH_Lib.DbgLog(this.field_70170_p, "Create UAV: %s : %s", item.func_77658_a(), item);
+                  MCH_Lib.DbgLog(this.world, "Create UAV: %s : %s", item.func_77658_a(), item);
                   user.field_70177_z = this.field_70177_z - 180.0F;
                   if (!((MCH_EntityAircraft)ac).isTargetDrone()) {
                      ((MCH_EntityAircraft)ac).setUavStation(this);
                      this.setControlAircract((MCH_EntityAircraft)ac);
                   }
 
-                  this.field_70170_p.func_72838_d((Entity)ac);
+                  this.world.func_72838_d((Entity)ac);
                   if (!((MCH_EntityAircraft)ac).isTargetDrone()) {
                      ((MCH_EntityAircraft)ac).setFuel((int)((float)((MCH_EntityAircraft)ac).getMaxFuel() * 0.05F));
                      W_EntityPlayer.closeScreen(user);
@@ -598,9 +598,9 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
 
             this.lastRiddenByEntity = null;
             PooledGuiParameter.setEntity(player, this);
-            if (!this.field_70170_p.field_72995_K) {
+            if (!this.world.isRemote) {
                player.func_184220_m(this);
-               player.openGui(MCH_MOD.instance, 0, player.field_70170_p, (int)this.field_70165_t, (int)this.field_70163_u, (int)this.field_70161_v);
+               player.openGui(MCH_MOD.instance, 0, player.world, (int)this.posX, (int)this.posY, (int)this.posZ);
             }
 
             return true;
@@ -620,7 +620,7 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
       Entity rByEntity = null;
       Entity riddenByEntity = this.getRiddenByEntity();
       if (riddenByEntity != null) {
-         if (!this.field_70170_p.field_72995_K) {
+         if (!this.world.isRemote) {
             rByEntity = riddenByEntity;
             riddenByEntity.func_184210_p();
          }
@@ -633,7 +633,7 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
       }
 
       this.setControlAircract((MCH_EntityAircraft)null);
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          W_EntityPlayer.closeScreen(rByEntity);
       }
 
@@ -652,8 +652,8 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
    }
 
    static {
-      STATUS = EntityDataManager.func_187226_a(MCH_EntityUavStation.class, DataSerializers.field_187191_a);
-      LAST_AC_ID = EntityDataManager.func_187226_a(MCH_EntityUavStation.class, DataSerializers.field_187192_b);
-      UAV_POS = EntityDataManager.func_187226_a(MCH_EntityUavStation.class, DataSerializers.field_187200_j);
+      STATUS = EntityDataManager.createKey(MCH_EntityUavStation.class, DataSerializers.field_187191_a);
+      LAST_AC_ID = EntityDataManager.createKey(MCH_EntityUavStation.class, DataSerializers.VARINT);
+      UAV_POS = EntityDataManager.createKey(MCH_EntityUavStation.class, DataSerializers.field_187200_j);
    }
 }

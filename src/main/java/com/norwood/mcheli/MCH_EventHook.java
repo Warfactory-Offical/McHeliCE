@@ -33,7 +33,7 @@ public class MCH_EventHook extends W_EventHook {
          MCH_MOD.proxy.setRenderEntityDistanceWeight(MCH_Config.MobRenderDistanceWeight.prmDouble);
       } else if (event.getEntity() instanceof MCH_EntityAircraft) {
          MCH_EntityAircraft aircraft = (MCH_EntityAircraft)event.getEntity();
-         if (!aircraft.field_70170_p.field_72995_K && !aircraft.isCreatedSeats()) {
+         if (!aircraft.world.isRemote && !aircraft.isCreatedSeats()) {
             aircraft.createSeats(UUID.randomUUID().toString());
          }
       } else if (W_EntityPlayer.isPlayer(event.getEntity())) {
@@ -58,7 +58,7 @@ public class MCH_EventHook extends W_EventHook {
             e.field_70126_B = 0.0F;
          }
 
-         if (!e.field_70170_p.field_72995_K && event.getEntity() instanceof EntityPlayerMP) {
+         if (!e.world.isRemote && event.getEntity() instanceof EntityPlayerMP) {
             MCH_Lib.DbgLog(false, "EntityJoinWorldEvent:" + event.getEntity());
             MCH_PacketNotifyServerSettings.send((EntityPlayerMP)event.getEntity());
          }
@@ -135,7 +135,7 @@ public class MCH_EventHook extends W_EventHook {
       }
 
       if (ac == null) {
-         List<MCH_EntityAircraft> list = entity.field_70170_p.func_72872_a(MCH_EntityAircraft.class, entity.func_174813_aQ().func_72314_b(50.0D, 50.0D, 50.0D));
+         List<MCH_EntityAircraft> list = entity.world.func_72872_a(MCH_EntityAircraft.class, entity.func_174813_aQ().func_72314_b(50.0D, 50.0D, 50.0D));
          if (list != null) {
             for(int i = 0; i < list.size(); ++i) {
                MCH_EntityAircraft tmp = (MCH_EntityAircraft)list.get(i);
@@ -153,7 +153,7 @@ public class MCH_EventHook extends W_EventHook {
       ItemStack item = event.getEntityPlayer().func_184586_b(event.getHand());
       if (!item.func_190926_b()) {
          if (item.func_77973_b() instanceof MCH_ItemChain) {
-            MCH_ItemChain.interactEntity(item, event.getTarget(), event.getEntityPlayer(), event.getEntityPlayer().field_70170_p);
+            MCH_ItemChain.interactEntity(item, event.getTarget(), event.getEntityPlayer(), event.getEntityPlayer().world);
             event.setCanceled(true);
             event.setCancellationResult(EnumActionResult.SUCCESS);
          } else if (item.func_77973_b() instanceof MCH_ItemAircraft) {

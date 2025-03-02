@@ -67,9 +67,9 @@ public abstract class MCH_ItemAircraft extends W_Item {
       float f = 1.0F;
       float f1 = player.field_70127_C + (player.field_70125_A - player.field_70127_C) * f;
       float f2 = player.field_70126_B + (player.field_70177_z - player.field_70126_B) * f;
-      double d0 = player.field_70169_q + (player.field_70165_t - player.field_70169_q) * (double)f;
-      double d1 = player.field_70167_r + (player.field_70163_u - player.field_70167_r) * (double)f + 1.62D;
-      double d2 = player.field_70166_s + (player.field_70161_v - player.field_70166_s) * (double)f;
+      double d0 = player.field_70169_q + (player.posX - player.field_70169_q) * (double)f;
+      double d1 = player.field_70167_r + (player.posY - player.field_70167_r) * (double)f + 1.62D;
+      double d2 = player.field_70166_s + (player.posZ - player.field_70166_s) * (double)f;
       Vec3d vec3 = W_WorldFunc.getWorldVec3(world, d0, d1, d2);
       float f3 = MathHelper.func_76134_b(-f2 * 0.017453292F - 3.1415927F);
       float f4 = MathHelper.func_76126_a(-f2 * 0.017453292F - 3.1415927F);
@@ -86,7 +86,7 @@ public abstract class MCH_ItemAircraft extends W_Item {
          Vec3d vec32 = player.func_70676_i(f);
          boolean flag = false;
          float f9 = 1.0F;
-         List<Entity> list = world.func_72839_b(player, player.func_174813_aQ().func_72321_a(vec32.field_72450_a * d3, vec32.field_72448_b * d3, vec32.field_72449_c * d3).func_72314_b((double)f9, (double)f9, (double)f9));
+         List<Entity> list = world.func_72839_b(player, player.func_174813_aQ().func_72321_a(vec32.x * d3, vec32.y * d3, vec32.z * d3).func_72314_b((double)f9, (double)f9, (double)f9));
 
          for(int i = 0; i < list.size(); ++i) {
             Entity entity = (Entity)list.get(i);
@@ -141,7 +141,7 @@ public abstract class MCH_ItemAircraft extends W_Item {
          }
 
          if (ac.isUAV()) {
-            if (world.field_72995_K) {
+            if (world.isRemote) {
                if (ac.isSmallUAV()) {
                   W_EntityPlayer.addChatMessage(player, "Please use the UAV station OR Portable Controller");
                } else {
@@ -151,7 +151,7 @@ public abstract class MCH_ItemAircraft extends W_Item {
 
             ac = null;
          } else {
-            if (!world.field_72995_K) {
+            if (!world.isRemote) {
                ac.getAcDataFromItem(itemStack);
                world.func_72838_d(ac);
                MCH_CriteriaTriggers.PUT_AIRCRAFT.trigger((EntityPlayerMP)player);
@@ -168,9 +168,9 @@ public abstract class MCH_ItemAircraft extends W_Item {
 
    public void rideEntity(ItemStack item, Entity target, EntityPlayer player) {
       if (!MCH_Config.PlaceableOnSpongeOnly.prmBool && target instanceof EntityMinecartEmpty && target.func_184188_bt().isEmpty()) {
-         BlockPos blockpos = new BlockPos((int)target.field_70165_t, (int)target.field_70163_u + 2, (int)target.field_70161_v);
-         MCH_EntityAircraft ac = this.spawnAircraft(item, player.field_70170_p, player, blockpos);
-         if (!player.field_70170_p.field_72995_K && ac != null) {
+         BlockPos blockpos = new BlockPos((int)target.posX, (int)target.posY + 2, (int)target.posZ);
+         MCH_EntityAircraft ac = this.spawnAircraft(item, player.world, player, blockpos);
+         if (!player.world.isRemote && ac != null) {
             ac.func_184220_m(target);
          }
       }

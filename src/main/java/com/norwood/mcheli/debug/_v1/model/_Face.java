@@ -29,8 +29,8 @@ class _Face implements DebugInfoObject {
    private static _Vertex calculateFaceNormal(_Vertex[] verts) {
       Vec3d v1 = new Vec3d((double)(verts[1].x - verts[0].x), (double)(verts[1].y - verts[0].y), (double)(verts[1].z - verts[0].z));
       Vec3d v2 = new Vec3d((double)(verts[2].x - verts[0].x), (double)(verts[2].y - verts[0].y), (double)(verts[2].z - verts[0].z));
-      Vec3d normalVector = v1.func_72431_c(v2).func_72432_b();
-      return new _Vertex((float)normalVector.field_72450_a, (float)normalVector.field_72448_b, (float)normalVector.field_72449_c);
+      Vec3d normalVector = v1.crossProduct(v2).normalize();
+      return new _Vertex((float)normalVector.x, (float)normalVector.y, (float)normalVector.z);
    }
 
    _Face calcVerticesNormal(List<_Face> faces, boolean shading, double facet) {

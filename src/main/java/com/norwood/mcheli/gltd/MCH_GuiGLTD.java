@@ -79,9 +79,9 @@ public class MCH_GuiGLTD extends MCH_Gui {
 
    public void drawCommonPosition(MCH_EntityGLTD gltd, int color) {
       Entity riddenByEntity = gltd.getRiddenByEntity();
-      this.drawString(String.format("X: %+.1f", gltd.field_70165_t), this.centerX - 145, this.centerY + 0, color);
-      this.drawString(String.format("Y: %+.1f", gltd.field_70163_u), this.centerX - 145, this.centerY + 10, color);
-      this.drawString(String.format("Z: %+.1f", gltd.field_70161_v), this.centerX - 145, this.centerY + 20, color);
+      this.drawString(String.format("X: %+.1f", gltd.posX), this.centerX - 145, this.centerY + 0, color);
+      this.drawString(String.format("Y: %+.1f", gltd.posY), this.centerX - 145, this.centerY + 10, color);
+      this.drawString(String.format("Z: %+.1f", gltd.posZ), this.centerX - 145, this.centerY + 20, color);
       this.drawString(String.format("AX: %+.1f", riddenByEntity.field_70177_z), this.centerX - 145, this.centerY + 40, color);
       this.drawString(String.format("AY: %+.1f", riddenByEntity.field_70125_A), this.centerX - 145, this.centerY + 50, color);
    }
@@ -89,7 +89,7 @@ public class MCH_GuiGLTD extends MCH_Gui {
    public void drawTargetPosition(MCH_EntityGLTD gltd, int color, int colorDanger) {
       Entity riddenByEntity = gltd.getRiddenByEntity();
       if (riddenByEntity != null) {
-         World w = riddenByEntity.field_70170_p;
+         World w = riddenByEntity.world;
          float yaw = riddenByEntity.field_70177_z;
          float pitch = riddenByEntity.field_70125_A;
          double tX = (double)(-MathHelper.func_76126_a(yaw / 180.0F * 3.1415927F) * MathHelper.func_76134_b(pitch / 180.0F * 3.1415927F));
@@ -104,12 +104,12 @@ public class MCH_GuiGLTD extends MCH_Gui {
          Vec3d dst = W_WorldFunc.getWorldVec3(w, c.posX + tX, c.posY + tY, c.posZ + tZ);
          RayTraceResult m = W_WorldFunc.clip(w, src, dst);
          if (m != null) {
-            this.drawString(String.format("X: %+.2fm", m.field_72307_f.field_72450_a), this.centerX + 50, this.centerY - 5 - 15, color);
-            this.drawString(String.format("Y: %+.2fm", m.field_72307_f.field_72448_b), this.centerX + 50, this.centerY - 5, color);
-            this.drawString(String.format("Z: %+.2fm", m.field_72307_f.field_72449_c), this.centerX + 50, this.centerY - 5 + 15, color);
-            double x = m.field_72307_f.field_72450_a - c.posX;
-            double y = m.field_72307_f.field_72448_b - c.posY;
-            double z = m.field_72307_f.field_72449_c - c.posZ;
+            this.drawString(String.format("X: %+.2fm", m.field_72307_f.x), this.centerX + 50, this.centerY - 5 - 15, color);
+            this.drawString(String.format("Y: %+.2fm", m.field_72307_f.y), this.centerX + 50, this.centerY - 5, color);
+            this.drawString(String.format("Z: %+.2fm", m.field_72307_f.z), this.centerX + 50, this.centerY - 5 + 15, color);
+            double x = m.field_72307_f.x - c.posX;
+            double y = m.field_72307_f.y - c.posY;
+            double z = m.field_72307_f.z - c.posZ;
             double len = Math.sqrt(x * x + y * y + z * z);
             this.drawCenteredString(String.format("[%.2fm]", len), this.centerX, this.centerY + 30, len > 20.0D ? color : colorDanger);
          } else {

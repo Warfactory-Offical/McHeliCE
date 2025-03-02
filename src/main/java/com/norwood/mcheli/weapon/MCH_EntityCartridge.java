@@ -69,9 +69,9 @@ public class MCH_EntityCartridge extends W_Entity {
    }
 
    public void func_70071_h_() {
-      this.field_70169_q = this.field_70165_t;
-      this.field_70167_r = this.field_70163_u;
-      this.field_70166_s = this.field_70161_v;
+      this.field_70169_q = this.posX;
+      this.field_70167_r = this.posY;
+      this.field_70166_s = this.posZ;
       this.field_70126_B = this.field_70177_z;
       this.field_70127_C = this.field_70125_A;
       if (this.countOnUpdate < MCH_Config.AliveTimeOfCartridge.prmInt) {
@@ -114,13 +114,13 @@ public class MCH_EntityCartridge extends W_Entity {
    }
 
    public void move() {
-      Vec3d vec1 = W_WorldFunc.getWorldVec3(this.field_70170_p, this.field_70165_t, this.field_70163_u, this.field_70161_v);
-      Vec3d vec2 = W_WorldFunc.getWorldVec3(this.field_70170_p, this.field_70165_t + this.field_70159_w, this.field_70163_u + this.field_70181_x, this.field_70161_v + this.field_70179_y);
-      RayTraceResult m = W_WorldFunc.clip(this.field_70170_p, vec1, vec2);
+      Vec3d vec1 = W_WorldFunc.getWorldVec3(this.world, this.posX, this.posY, this.posZ);
+      Vec3d vec2 = W_WorldFunc.getWorldVec3(this.world, this.posX + this.field_70159_w, this.posY + this.field_70181_x, this.posZ + this.field_70179_y);
+      RayTraceResult m = W_WorldFunc.clip(this.world, vec1, vec2);
       double d = Math.max(Math.abs(this.field_70159_w), Math.abs(this.field_70181_x));
       d = Math.max(d, Math.abs(this.field_70179_y));
       if (W_MovingObjectPosition.isHitTypeTile(m)) {
-         this.func_70107_b(m.field_72307_f.field_72450_a, m.field_72307_f.field_72448_b, m.field_72307_f.field_72449_c);
+         this.func_70107_b(m.field_72307_f.x, m.field_72307_f.y, m.field_72307_f.z);
          this.field_70159_w += d * (double)(this.field_70146_Z.nextFloat() - 0.5F) * 0.10000000149011612D;
          this.field_70181_x += d * (double)(this.field_70146_Z.nextFloat() - 0.5F) * 0.10000000149011612D;
          this.field_70179_y += d * (double)(this.field_70146_Z.nextFloat() - 0.5F) * 0.10000000149011612D;
@@ -148,34 +148,34 @@ public class MCH_EntityCartridge extends W_Entity {
             if (this.field_70179_y > 0.0D) {
                this.field_70179_y = -this.field_70179_y * (double)this.bound;
             } else {
-               this.field_70161_v += this.field_70179_y;
+               this.posZ += this.field_70179_y;
             }
             break;
          case SOUTH:
             if (this.field_70179_y < 0.0D) {
                this.field_70179_y = -this.field_70179_y * (double)this.bound;
             } else {
-               this.field_70161_v += this.field_70179_y;
+               this.posZ += this.field_70179_y;
             }
             break;
          case WEST:
             if (this.field_70159_w > 0.0D) {
                this.field_70159_w = -this.field_70159_w * (double)this.bound;
             } else {
-               this.field_70165_t += this.field_70159_w;
+               this.posX += this.field_70159_w;
             }
             break;
          case EAST:
             if (this.field_70159_w < 0.0D) {
                this.field_70159_w = -this.field_70159_w * (double)this.bound;
             } else {
-               this.field_70165_t += this.field_70159_w;
+               this.posX += this.field_70159_w;
             }
          }
       } else {
-         this.field_70165_t += this.field_70159_w;
-         this.field_70163_u += this.field_70181_x;
-         this.field_70161_v += this.field_70179_y;
+         this.posX += this.field_70159_w;
+         this.posY += this.field_70181_x;
+         this.posZ += this.field_70179_y;
          if (d > 0.05000000074505806D) {
             this.rotation();
          }

@@ -76,21 +76,21 @@ public class MCH_EntityGunner extends EntityLivingBase {
       this.func_70107_b(x, y, z);
    }
 
-   protected void func_70088_a() {
-      super.func_70088_a();
-      this.field_70180_af.func_187214_a(TEAM_NAME, "");
+   protected void entityInit() {
+      super.entityInit();
+      this.dataManager.register(TEAM_NAME, "");
    }
 
    public String getTeamName() {
-      return (String)this.field_70180_af.func_187225_a(TEAM_NAME);
+      return (String)this.dataManager.func_187225_a(TEAM_NAME);
    }
 
    public void setTeamName(String name) {
-      this.field_70180_af.func_187227_b(TEAM_NAME, name);
+      this.dataManager.func_187227_b(TEAM_NAME, name);
    }
 
    public Team func_96124_cp() {
-      return this.field_70170_p.func_96441_U().func_96508_e(this.getTeamName());
+      return this.world.func_96441_U().func_96508_e(this.getTeamName());
    }
 
    public boolean func_184191_r(Entity entityIn) {
@@ -116,7 +116,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
    }
 
    public boolean func_184230_a(EntityPlayer player, EnumHand hand) {
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          return false;
       } else if (this.func_184187_bx() == null) {
          return false;
@@ -136,7 +136,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
    }
 
    public void removeFromAircraft(EntityPlayer player) {
-      if (!this.field_70170_p.field_72995_K) {
+      if (!this.world.isRemote) {
          W_WorldFunc.MOD_playSoundAtEntity(player, "wrench", 1.0F, 1.0F);
          this.func_70106_y();
          MCH_EntityAircraft ac = null;
@@ -165,7 +165,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
 
    public void func_70071_h_() {
       super.func_70071_h_();
-      if (!this.field_70170_p.field_72995_K && !this.field_70128_L) {
+      if (!this.world.isRemote && !this.field_70128_L) {
          if (this.func_184187_bx() != null && this.func_184187_bx().field_70128_L) {
             this.func_184210_p();
          }
@@ -237,11 +237,11 @@ public class MCH_EntityGunner extends EntityLivingBase {
                   if (this.targetType == 0) {
                      i = MCH_Config.RangeOfGunner_VsMonster_Horizontal.prmInt;
                      rv = MCH_Config.RangeOfGunner_VsMonster_Vertical.prmInt;
-                     list = this.field_70170_p.func_175647_a(EntityLivingBase.class, this.func_174813_aQ().func_72314_b((double)i, (double)rv, (double)i), IMob.field_82192_a);
+                     list = this.world.func_175647_a(EntityLivingBase.class, this.func_174813_aQ().func_72314_b((double)i, (double)rv, (double)i), IMob.field_82192_a);
                   } else {
                      i = MCH_Config.RangeOfGunner_VsPlayer_Horizontal.prmInt;
                      rv = MCH_Config.RangeOfGunner_VsPlayer_Vertical.prmInt;
-                     list = this.field_70170_p.func_72872_a(EntityPlayer.class, this.func_174813_aQ().func_72314_b((double)i, (double)rv, (double)i));
+                     list = this.world.func_72872_a(EntityPlayer.class, this.func_174813_aQ().func_72314_b((double)i, (double)rv, (double)i));
                   }
 
                   for(i = 0; i < list.size(); ++i) {
@@ -253,9 +253,9 @@ public class MCH_EntityGunner extends EntityLivingBase {
                   }
 
                   if (nextTarget != null && this.targetEntity != nextTarget) {
-                     this.targetPrevPosX = nextTarget.field_70165_t;
-                     this.targetPrevPosY = nextTarget.field_70163_u;
-                     this.targetPrevPosZ = nextTarget.field_70161_v;
+                     this.targetPrevPosX = nextTarget.posX;
+                     this.targetPrevPosY = nextTarget.posY;
+                     this.targetPrevPosZ = nextTarget.posZ;
                   }
 
                   this.targetEntity = nextTarget;
@@ -279,12 +279,12 @@ public class MCH_EntityGunner extends EntityLivingBase {
                      tick -= (double)MCH_Config.HitBoxDelayTick.prmInt;
                   }
 
-                  double dx = (this.targetEntity.field_70165_t - this.targetPrevPosX) * tick;
-                  double dy = (this.targetEntity.field_70163_u - this.targetPrevPosY) * tick + (double)this.targetEntity.field_70131_O * this.field_70146_Z.nextDouble();
-                  double dz = (this.targetEntity.field_70161_v - this.targetPrevPosZ) * tick;
-                  double d0 = this.targetEntity.field_70165_t + dx - pos.field_72450_a;
-                  double d1 = this.targetEntity.field_70163_u + dy - pos.field_72448_b;
-                  double d2 = this.targetEntity.field_70161_v + dz - pos.field_72449_c;
+                  double dx = (this.targetEntity.posX - this.targetPrevPosX) * tick;
+                  double dy = (this.targetEntity.posY - this.targetPrevPosY) * tick + (double)this.targetEntity.field_70131_O * this.field_70146_Z.nextDouble();
+                  double dz = (this.targetEntity.posZ - this.targetPrevPosZ) * tick;
+                  double d0 = this.targetEntity.posX + dx - pos.x;
+                  double d1 = this.targetEntity.posY + dy - pos.y;
+                  double d2 = this.targetEntity.posZ + dz - pos.z;
                   double d3 = (double)MathHelper.func_76133_a(d0 * d0 + d2 * d2);
                   float yaw = MathHelper.func_76142_g((float)(Math.atan2(d2, d0) * 180.0D / 3.141592653589793D) - 90.0F);
                   float pitch = (float)(-(Math.atan2(d1, d3) * 180.0D / 3.141592653589793D));
@@ -295,7 +295,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
                      if (!this.waitCooldown || ws.currentHeat <= 0 || ws.getInfo().maxHeatCount <= 0) {
                         this.waitCooldown = false;
                         MCH_WeaponParam prm = new MCH_WeaponParam();
-                        prm.setPosition(ac.field_70165_t, ac.field_70163_u, ac.field_70161_v);
+                        prm.setPosition(ac.posX, ac.posY, ac.posZ);
                         prm.user = this;
                         prm.entity = ac;
                         prm.option1 = cw instanceof MCH_WeaponEntitySeeker ? this.targetEntity.func_145782_y() : 0;
@@ -318,9 +318,9 @@ public class MCH_EntityGunner extends EntityLivingBase {
                   }
 
                   this.field_70759_as = this.field_70177_z;
-                  this.targetPrevPosX = this.targetEntity.field_70165_t;
-                  this.targetPrevPosY = this.targetEntity.field_70163_u;
-                  this.targetPrevPosZ = this.targetEntity.field_70161_v;
+                  this.targetPrevPosX = this.targetEntity.posX;
+                  this.targetPrevPosY = this.targetEntity.posY;
+                  this.targetPrevPosZ = this.targetEntity.posZ;
                } else {
                   this.field_70125_A *= 0.95F;
                }
@@ -332,9 +332,9 @@ public class MCH_EntityGunner extends EntityLivingBase {
 
    private boolean checkPitch(EntityLivingBase entity, MCH_EntityAircraft ac, Vec3d pos) {
       try {
-         double d0 = entity.field_70165_t - pos.field_72450_a;
-         double d1 = entity.field_70163_u - pos.field_72448_b;
-         double d2 = entity.field_70161_v - pos.field_72449_c;
+         double d0 = entity.posX - pos.x;
+         double d1 = entity.posY - pos.y;
+         double d2 = entity.posZ - pos.z;
          double d3 = (double)MathHelper.func_76133_a(d0 * d0 + d2 * d2);
          float pitch = (float)(-(Math.atan2(d1, d3) * 180.0D / 3.141592653589793D));
          MCH_AircraftInfo ai = ac.getAcInfo();
@@ -369,7 +369,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
 
    public Vec3d getGunnerWeaponPos(MCH_EntityAircraft ac, MCH_WeaponSet ws) {
       MCH_SeatInfo seatInfo = ac.getSeatInfo(this);
-      return (seatInfo == null || !seatInfo.rotSeat) && !(ac instanceof MCH_EntityVehicle) ? ac.getTransformedPosition(ws.getCurrentWeapon().position) : ac.calcOnTurretPos(ws.getCurrentWeapon().position).func_72441_c(ac.field_70165_t, ac.field_70163_u, ac.field_70161_v);
+      return (seatInfo == null || !seatInfo.rotSeat) && !(ac instanceof MCH_EntityVehicle) ? ac.getTransformedPosition(ws.getCurrentWeapon().position) : ac.calcOnTurretPos(ws.getCurrentWeapon().position).func_72441_c(ac.posX, ac.posY, ac.posZ);
    }
 
    private boolean isInAttackable(EntityLivingBase entity, MCH_EntityAircraft ac, MCH_WeaponSet ws, Vec3d pos) {
@@ -384,7 +384,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
                Vec3d v1 = new Vec3d(0.0D, 0.0D, 1.0D);
                float yaw = -ac.getRotYaw() + (wi.maxYaw + wi.minYaw) / 2.0F - wi.defaultYaw;
                v1 = v1.func_178785_b(yaw * 3.1415927F / 180.0F);
-               Vec3d v2 = (new Vec3d(entity.field_70165_t - pos.field_72450_a, 0.0D, entity.field_70161_v - pos.field_72449_c)).func_72432_b();
+               Vec3d v2 = (new Vec3d(entity.posX - pos.x, 0.0D, entity.posZ - pos.z)).normalize();
                double dot = v1.func_72430_b(v2);
                double rad = Math.acos(dot);
                double deg = rad * 180.0D / 3.141592653589793D;
@@ -407,15 +407,15 @@ public class MCH_EntityGunner extends EntityLivingBase {
 
    public void func_70014_b(NBTTagCompound nbt) {
       super.func_70014_b(nbt);
-      nbt.func_74757_a("Creative", this.isCreative);
-      nbt.func_74778_a("OwnerUUID", this.ownerUUID);
-      nbt.func_74778_a("TeamName", this.getTeamName());
-      nbt.func_74768_a("TargetType", this.targetType);
+      nbt.setBoolean("Creative", this.isCreative);
+      nbt.setString("OwnerUUID", this.ownerUUID);
+      nbt.setString("TeamName", this.getTeamName());
+      nbt.setInteger("TargetType", this.targetType);
    }
 
    public void func_70037_a(NBTTagCompound nbt) {
       super.func_70037_a(nbt);
-      this.isCreative = nbt.func_74767_n("Creative");
+      this.isCreative = nbt.getBoolean("Creative");
       this.ownerUUID = nbt.func_74779_i("OwnerUUID");
       this.setTeamName(nbt.func_74779_i("TeamName"));
       this.targetType = nbt.func_74762_e("TargetType");
@@ -427,7 +427,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
    }
 
    public void func_70106_y() {
-      if (!this.field_70170_p.field_72995_K && !this.field_70128_L && !this.isCreative) {
+      if (!this.world.isRemote && !this.field_70128_L && !this.isCreative) {
          if (this.targetType == 0) {
             this.func_145779_a(MCH_MOD.itemSpawnGunnerVsMonster, 1);
          } else {
@@ -436,7 +436,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
       }
 
       super.func_70106_y();
-      MCH_Lib.DbgLog(this.field_70170_p, "MCH_EntityGunner.setDead type=%d :" + this.toString(), this.targetType);
+      MCH_Lib.DbgLog(this.world, "MCH_EntityGunner.setDead type=%d :" + this.toString(), this.targetType);
    }
 
    public boolean func_70097_a(DamageSource ds, float amount) {
@@ -463,6 +463,6 @@ public class MCH_EntityGunner extends EntityLivingBase {
    }
 
    static {
-      TEAM_NAME = EntityDataManager.func_187226_a(MCH_EntityGunner.class, DataSerializers.field_187194_d);
+      TEAM_NAME = EntityDataManager.createKey(MCH_EntityGunner.class, DataSerializers.STRING);
    }
 }

@@ -617,7 +617,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
 
                                     Collections.sort(this.wheels, new Comparator<MCH_AircraftInfo.Wheel>() {
                                        public int compare(MCH_AircraftInfo.Wheel arg0, MCH_AircraftInfo.Wheel arg1) {
-                                          return arg0.pos.field_72449_c > arg1.pos.field_72449_c ? -1 : 1;
+                                          return arg0.pos.z > arg1.pos.z ? -1 : 1;
                                        }
                                     });
                                  }

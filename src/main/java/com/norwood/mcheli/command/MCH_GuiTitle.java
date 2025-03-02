@@ -38,7 +38,7 @@ public class MCH_GuiTitle extends MCH_Gui {
    }
 
    public boolean isDrawGui(EntityPlayer player) {
-      if (this.restShowTick > 0 && this.chatLines.size() > 0 && player != null && player.field_70170_p != null) {
+      if (this.restShowTick > 0 && this.chatLines.size() > 0 && player != null && player.world != null) {
          if (this.prevPlayerTick != player.field_70173_aa) {
             ++this.showTick;
             --this.restShowTick;

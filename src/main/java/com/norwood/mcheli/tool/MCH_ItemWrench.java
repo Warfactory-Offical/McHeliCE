@@ -88,10 +88,10 @@ public class MCH_ItemWrench extends W_Item {
          stack.func_77982_d(new NBTTagCompound());
       }
 
-      if (stack.func_77978_p().func_74764_b(name)) {
+      if (stack.func_77978_p().hasKey(name)) {
          return stack.func_77978_p().func_74762_e(name);
       } else {
-         stack.func_77978_p().func_74768_a(name, 0);
+         stack.func_77978_p().setInteger(name, 0);
          return 0;
       }
    }
@@ -101,11 +101,11 @@ public class MCH_ItemWrench extends W_Item {
          stack.func_77982_d(new NBTTagCompound());
       }
 
-      stack.func_77978_p().func_74768_a(name, n);
+      stack.func_77978_p().setInteger(name, n);
    }
 
    public boolean func_77644_a(ItemStack itemStack, EntityLivingBase entity, EntityLivingBase player) {
-      if (!player.field_70170_p.field_72995_K) {
+      if (!player.world.isRemote) {
          if (rand.nextInt(40) == 0) {
             entity.func_70099_a(new ItemStack(W_Item.getItemByName("iron_ingot"), 1, 0), 0.0F);
          } else if (rand.nextInt(20) == 0) {
@@ -123,7 +123,7 @@ public class MCH_ItemWrench extends W_Item {
 
    public void onUsingTick(ItemStack stack, EntityLivingBase player, int count) {
       MCH_EntityAircraft ac;
-      if (player.field_70170_p.field_72995_K) {
+      if (player.world.isRemote) {
          ac = this.getMouseOverAircraft(player);
          if (ac != null) {
             int cnt = getUseAnimCount(stack);
@@ -138,11 +138,11 @@ public class MCH_ItemWrench extends W_Item {
          }
       }
 
-      if (!player.field_70170_p.field_72995_K && count < this.func_77626_a(stack) && count % 20 == 0) {
+      if (!player.world.isRemote && count < this.func_77626_a(stack) && count % 20 == 0) {
          ac = this.getMouseOverAircraft(player);
          if (ac != null && ac.getHP() > 0 && ac.repair(10)) {
             stack.func_77972_a(1, player);
-            W_WorldFunc.MOD_playSoundEffect(player.field_70170_p, (double)((int)ac.field_70165_t), (double)((int)ac.field_70163_u), (double)((int)ac.field_70161_v), "wrench", 1.0F, 0.9F + rand.nextFloat() * 0.2F);
+            W_WorldFunc.MOD_playSoundEffect(player.world, (double)((int)ac.posX), (double)((int)ac.posY), (double)((int)ac.posZ), "wrench", 1.0F, 0.9F + rand.nextFloat() * 0.2F);
          }
       }
 
@@ -177,10 +177,10 @@ public class MCH_ItemWrench extends W_Item {
    }
 
    private static RayTraceResult rayTrace(EntityLivingBase entity, double dist, float tick) {
-      Vec3d vec3 = new Vec3d(entity.field_70165_t, entity.field_70163_u + (double)entity.func_70047_e(), entity.field_70161_v);
+      Vec3d vec3 = new Vec3d(entity.posX, entity.posY + (double)entity.func_70047_e(), entity.posZ);
       Vec3d vec31 = entity.func_70676_i(tick);
-      Vec3d vec32 = vec3.func_72441_c(vec31.field_72450_a * dist, vec31.field_72448_b * dist, vec31.field_72449_c * dist);
-      return entity.field_70170_p.func_147447_a(vec3, vec32, false, false, true);
+      Vec3d vec32 = vec3.func_72441_c(vec31.x * dist, vec31.y * dist, vec31.z * dist);
+      return entity.world.func_147447_a(vec3, vec32, false, false, true);
    }
 
    private RayTraceResult getMouseOver(EntityLivingBase user, float tick) {
@@ -188,17 +188,17 @@ public class MCH_ItemWrench extends W_Item {
       double d0 = 4.0D;
       RayTraceResult objectMouseOver = rayTrace(user, d0, tick);
       double d1 = d0;
-      Vec3d vec3 = new Vec3d(user.field_70165_t, user.field_70163_u + (double)user.func_70047_e(), user.field_70161_v);
+      Vec3d vec3 = new Vec3d(user.posX, user.posY + (double)user.func_70047_e(), user.posZ);
       if (objectMouseOver != null) {
          d1 = objectMouseOver.field_72307_f.func_72438_d(vec3);
       }
 
       Vec3d vec31 = user.func_70676_i(tick);
-      Vec3d vec32 = vec3.func_72441_c(vec31.field_72450_a * d0, vec31.field_72448_b * d0, vec31.field_72449_c * d0);
+      Vec3d vec32 = vec3.func_72441_c(vec31.x * d0, vec31.y * d0, vec31.z * d0);
       pointedEntity = null;
       Vec3d vec33 = null;
       float f1 = 1.0F;
-      List<Entity> list = user.field_70170_p.func_72839_b(user, user.func_174813_aQ().func_72321_a(vec31.field_72450_a * d0, vec31.field_72448_b * d0, vec31.field_72449_c * d0).func_72314_b((double)f1, (double)f1, (double)f1));
+      List<Entity> list = user.world.func_72839_b(user, user.func_174813_aQ().func_72321_a(vec31.x * d0, vec31.y * d0, vec31.z * d0).func_72314_b((double)f1, (double)f1, (double)f1));
       double d2 = d1;
 
       for(int i = 0; i < list.size(); ++i) {

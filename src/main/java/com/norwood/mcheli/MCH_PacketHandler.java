@@ -26,7 +26,7 @@ public class MCH_PacketHandler extends W_PacketHandler {
       switch(msgid) {
       case 0:
       default:
-         MCH_Lib.DbgLog(entityPlayer.field_70170_p, "MCH_PacketHandler.onPacket invalid MSGID=0x%X(%d)", msgid, msgid);
+         MCH_Lib.DbgLog(entityPlayer.world, "MCH_PacketHandler.onPacket invalid MSGID=0x%X(%d)", msgid, msgid);
          break;
       case 268437520:
          MCH_CommonPacketHandler.onPacketEffectExplosion(entityPlayer, data, handler);

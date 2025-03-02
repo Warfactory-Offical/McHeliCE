@@ -179,8 +179,8 @@ public abstract class MCH_AircraftClientTickHandler extends MCH_ClientTickHandle
             send |= this.KeyBrake.isKeyDown();
             pc.throttleDown = ac.throttleDown = false;
             pc.throttleUp = ac.throttleUp = false;
-            double dx = ac.field_70165_t - ac.field_70169_q;
-            double dz = ac.field_70161_v - ac.field_70166_s;
+            double dx = ac.posX - ac.field_70169_q;
+            double dz = ac.posZ - ac.field_70166_s;
             double dist = dx * dx + dz * dz;
             if (ac.getCurrentThrottle() <= 0.03D && dist < 0.01D) {
                pc.moveRight = ac.moveRight = false;

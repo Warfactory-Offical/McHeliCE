@@ -63,9 +63,9 @@ public class MCH_EntityParticleSplash extends MCH_EntityParticleBase {
       int i = this.func_189214_a(par2);
       int j = i >> 16 & '\uffff';
       int k = i & '\uffff';
-      buffer.func_181662_b((double)(f11 - par3 * f10 - par6 * f10), (double)(f12 - par4 * f10), (double)(f13 - par5 * f10 - par7 * f10)).func_187315_a((double)f7, (double)f9).func_181666_a(this.field_70552_h * f14, this.field_70553_i * f14, this.field_70551_j * f14, this.field_82339_as).func_187314_a(j, k).func_181675_d();
-      buffer.func_181662_b((double)(f11 - par3 * f10 + par6 * f10), (double)(f12 + par4 * f10), (double)(f13 - par5 * f10 + par7 * f10)).func_187315_a((double)f7, (double)f8).func_181666_a(this.field_70552_h * f14, this.field_70553_i * f14, this.field_70551_j * f14, this.field_82339_as).func_187314_a(j, k).func_181675_d();
-      buffer.func_181662_b((double)(f11 + par3 * f10 + par6 * f10), (double)(f12 + par4 * f10), (double)(f13 + par5 * f10 + par7 * f10)).func_187315_a((double)f6, (double)f8).func_181666_a(this.field_70552_h * f14, this.field_70553_i * f14, this.field_70551_j * f14, this.field_82339_as).func_187314_a(j, k).func_181675_d();
-      buffer.func_181662_b((double)(f11 + par3 * f10 - par6 * f10), (double)(f12 - par4 * f10), (double)(f13 + par5 * f10 - par7 * f10)).func_187315_a((double)f6, (double)f9).func_181666_a(this.field_70552_h * f14, this.field_70553_i * f14, this.field_70551_j * f14, this.field_82339_as).func_187314_a(j, k).func_181675_d();
+      buffer.pos((double)(f11 - par3 * f10 - par6 * f10), (double)(f12 - par4 * f10), (double)(f13 - par5 * f10 - par7 * f10)).func_187315_a((double)f7, (double)f9).func_181666_a(this.field_70552_h * f14, this.field_70553_i * f14, this.field_70551_j * f14, this.field_82339_as).func_187314_a(j, k).func_181675_d();
+      buffer.pos((double)(f11 - par3 * f10 + par6 * f10), (double)(f12 + par4 * f10), (double)(f13 - par5 * f10 + par7 * f10)).func_187315_a((double)f7, (double)f8).func_181666_a(this.field_70552_h * f14, this.field_70553_i * f14, this.field_70551_j * f14, this.field_82339_as).func_187314_a(j, k).func_181675_d();
+      buffer.pos((double)(f11 + par3 * f10 + par6 * f10), (double)(f12 + par4 * f10), (double)(f13 + par5 * f10 + par7 * f10)).func_187315_a((double)f6, (double)f8).func_181666_a(this.field_70552_h * f14, this.field_70553_i * f14, this.field_70551_j * f14, this.field_82339_as).func_187314_a(j, k).func_181675_d();
+      buffer.pos((double)(f11 + par3 * f10 - par6 * f10), (double)(f12 - par4 * f10), (double)(f13 + par5 * f10 - par7 * f10)).func_187315_a((double)f6, (double)f9).func_181666_a(this.field_70552_h * f14, this.field_70553_i * f14, this.field_70551_j * f14, this.field_82339_as).func_187314_a(j, k).func_181675_d();
    }
 }

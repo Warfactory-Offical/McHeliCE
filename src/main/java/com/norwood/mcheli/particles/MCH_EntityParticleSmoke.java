@@ -95,8 +95,8 @@ public class MCH_EntityParticleSmoke extends MCH_EntityParticleBase {
             if (ac.getThrottle() > 0.10000000149011612D) {
                float dist = this.getDistance(ac);
                double vel = (23.0D - (double)dist) * 0.009999999776482582D * ac.getThrottle();
-               double mx = ac.field_70165_t - this.field_187126_f;
-               double mz = ac.field_70161_v - this.field_187128_h;
+               double mx = ac.posX - this.field_187126_f;
+               double mz = ac.posZ - this.field_187128_h;
                this.field_187129_i -= mx * vel;
                this.field_187131_k -= mz * vel;
             }
@@ -138,12 +138,12 @@ public class MCH_EntityParticleSmoke extends MCH_EntityParticleBase {
       int i = this.func_189214_a(par2);
       int j = i >> 16 & '\uffff';
       int k = i & '\uffff';
-      buffer.func_181668_a(7, VERTEX_FORMAT);
-      buffer.func_181662_b((double)(f11 - par3 * f10 - par6 * f10), (double)(f12 - par4 * f10), (double)(f13 - par5 * f10 - par7 * f10)).func_187315_a((double)f7, (double)f9).func_181666_a(this.field_70552_h, this.field_70553_i, this.field_70551_j, this.field_82339_as).func_187314_a(j, k).func_181663_c(0.0F, 1.0F, 0.0F).func_181675_d();
-      buffer.func_181662_b((double)(f11 - par3 * f10 + par6 * f10), (double)(f12 + par4 * f10), (double)(f13 - par5 * f10 + par7 * f10)).func_187315_a((double)f7, (double)f8).func_181666_a(this.field_70552_h, this.field_70553_i, this.field_70551_j, this.field_82339_as).func_187314_a(j, k).func_181663_c(0.0F, 1.0F, 0.0F).func_181675_d();
-      buffer.func_181662_b((double)(f11 + par3 * f10 + par6 * f10), (double)(f12 + par4 * f10), (double)(f13 + par5 * f10 + par7 * f10)).func_187315_a((double)f6, (double)f8).func_181666_a(this.field_70552_h, this.field_70553_i, this.field_70551_j, this.field_82339_as).func_187314_a(j, k).func_181663_c(0.0F, 1.0F, 0.0F).func_181675_d();
-      buffer.func_181662_b((double)(f11 + par3 * f10 - par6 * f10), (double)(f12 - par4 * f10), (double)(f13 + par5 * f10 - par7 * f10)).func_187315_a((double)f6, (double)f9).func_181666_a(this.field_70552_h, this.field_70553_i, this.field_70551_j, this.field_82339_as).func_187314_a(j, k).func_181663_c(0.0F, 1.0F, 0.0F).func_181675_d();
-      Tessellator.func_178181_a().func_78381_a();
+      buffer.begin(7, VERTEX_FORMAT);
+      buffer.pos((double)(f11 - par3 * f10 - par6 * f10), (double)(f12 - par4 * f10), (double)(f13 - par5 * f10 - par7 * f10)).func_187315_a((double)f7, (double)f9).func_181666_a(this.field_70552_h, this.field_70553_i, this.field_70551_j, this.field_82339_as).func_187314_a(j, k).func_181663_c(0.0F, 1.0F, 0.0F).func_181675_d();
+      buffer.pos((double)(f11 - par3 * f10 + par6 * f10), (double)(f12 + par4 * f10), (double)(f13 - par5 * f10 + par7 * f10)).func_187315_a((double)f7, (double)f8).func_181666_a(this.field_70552_h, this.field_70553_i, this.field_70551_j, this.field_82339_as).func_187314_a(j, k).func_181663_c(0.0F, 1.0F, 0.0F).func_181675_d();
+      buffer.pos((double)(f11 + par3 * f10 + par6 * f10), (double)(f12 + par4 * f10), (double)(f13 + par5 * f10 + par7 * f10)).func_187315_a((double)f6, (double)f8).func_181666_a(this.field_70552_h, this.field_70553_i, this.field_70551_j, this.field_82339_as).func_187314_a(j, k).func_181663_c(0.0F, 1.0F, 0.0F).func_181675_d();
+      buffer.pos((double)(f11 + par3 * f10 - par6 * f10), (double)(f12 - par4 * f10), (double)(f13 + par5 * f10 - par7 * f10)).func_187315_a((double)f6, (double)f9).func_181666_a(this.field_70552_h, this.field_70553_i, this.field_70551_j, this.field_82339_as).func_187314_a(j, k).func_181663_c(0.0F, 1.0F, 0.0F).func_181675_d();
+      Tessellator.getInstance().draw();
       GlStateManager.func_179089_o();
       GlStateManager.func_179145_e();
       GlStateManager.func_179112_b(srcBlend, dstBlend);
@@ -151,9 +151,9 @@ public class MCH_EntityParticleSmoke extends MCH_EntityParticleBase {
    }
 
    private float getDistance(MCH_EntityAircraft entity) {
-      float f = (float)(this.field_187126_f - entity.field_70165_t);
-      float f1 = (float)(this.field_187127_g - entity.field_70163_u);
-      float f2 = (float)(this.field_187128_h - entity.field_70161_v);
+      float f = (float)(this.field_187126_f - entity.posX);
+      float f1 = (float)(this.field_187127_g - entity.posY);
+      float f2 = (float)(this.field_187128_h - entity.posZ);
       return MathHelper.func_76129_c(f * f + f1 * f1 + f2 * f2);
    }
 

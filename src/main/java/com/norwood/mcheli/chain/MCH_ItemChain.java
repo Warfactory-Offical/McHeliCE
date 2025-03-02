@@ -26,7 +26,7 @@ public class MCH_ItemChain extends W_Item {
    }
 
    public static void interactEntity(ItemStack item, @Nullable Entity entity, EntityPlayer player, World world) {
-      if (!world.field_72995_K && entity != null && !entity.field_70128_L) {
+      if (!world.isRemote && entity != null && !entity.field_70128_L) {
          if (entity instanceof EntityItem) {
             return;
          }
@@ -79,12 +79,12 @@ public class MCH_ItemChain extends W_Item {
                return;
             }
 
-            MCH_EntityChain chain = new MCH_EntityChain(world, (entityTowed.field_70165_t + entity.field_70165_t) / 2.0D, (entityTowed.field_70163_u + entity.field_70163_u) / 2.0D, (entityTowed.field_70161_v + entity.field_70161_v) / 2.0D);
+            MCH_EntityChain chain = new MCH_EntityChain(world, (entityTowed.posX + entity.posX) / 2.0D, (entityTowed.posY + entity.posY) / 2.0D, (entityTowed.posZ + entity.posZ) / 2.0D);
             chain.setChainLength((int)diff);
             chain.setTowEntity(entityTowed, entity);
-            chain.field_70169_q = chain.field_70165_t;
-            chain.field_70167_r = chain.field_70163_u;
-            chain.field_70166_s = chain.field_70161_v;
+            chain.field_70169_q = chain.posX;
+            chain.field_70167_r = chain.posY;
+            chain.field_70166_s = chain.posZ;
             world.func_72838_d(chain);
             playConnectTowingEntity(entity);
             setTowedEntity(item, (Entity)null);
@@ -94,11 +94,11 @@ public class MCH_ItemChain extends W_Item {
    }
 
    public static void playConnectTowingEntity(Entity e) {
-      W_WorldFunc.MOD_playSoundEffect(e.field_70170_p, e.field_70165_t, e.field_70163_u, e.field_70161_v, "chain_ct", 1.0F, 1.0F);
+      W_WorldFunc.MOD_playSoundEffect(e.world, e.posX, e.posY, e.posZ, "chain_ct", 1.0F, 1.0F);
    }
 
    public static void playConnectTowedEntity(Entity e) {
-      W_WorldFunc.MOD_playSoundEffect(e.field_70170_p, e.field_70165_t, e.field_70163_u, e.field_70161_v, "chain", 1.0F, 1.0F);
+      W_WorldFunc.MOD_playSoundEffect(e.world, e.posX, e.posY, e.posZ, "chain", 1.0F, 1.0F);
    }
 
    public void func_77622_d(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
@@ -106,7 +106,7 @@ public class MCH_ItemChain extends W_Item {
 
    @Nullable
    public static MCH_EntityChain getTowedEntityChain(Entity entity) {
-      List<MCH_EntityChain> list = entity.field_70170_p.func_72872_a(MCH_EntityChain.class, entity.func_174813_aQ().func_72314_b(25.0D, 25.0D, 25.0D));
+      List<MCH_EntityChain> list = entity.world.func_72872_a(MCH_EntityChain.class, entity.func_174813_aQ().func_72314_b(25.0D, 25.0D, 25.0D));
       if (list == null) {
          return null;
       } else {
@@ -135,11 +135,11 @@ public class MCH_ItemChain extends W_Item {
       }
 
       if (entity != null && !entity.field_70128_L) {
-         nbt.func_74768_a("TowedEntityId", W_Entity.getEntityId(entity));
-         nbt.func_74778_a("TowedEntityUUID", entity.getPersistentID().toString());
+         nbt.setInteger("TowedEntityId", W_Entity.getEntityId(entity));
+         nbt.setString("TowedEntityUUID", entity.getPersistentID().toString());
       } else {
-         nbt.func_74768_a("TowedEntityId", 0);
-         nbt.func_74778_a("TowedEntityUUID", "");
+         nbt.setInteger("TowedEntityId", 0);
+         nbt.setString("TowedEntityUUID", "");
       }
 
    }
@@ -150,7 +150,7 @@ public class MCH_ItemChain extends W_Item {
       if (nbt == null) {
          nbt = new NBTTagCompound();
          item.func_77982_d(nbt);
-      } else if (nbt.func_74764_b("TowedEntityId") && nbt.func_74764_b("TowedEntityUUID")) {
+      } else if (nbt.hasKey("TowedEntityId") && nbt.hasKey("TowedEntityUUID")) {
          int id = nbt.func_74762_e("TowedEntityId");
          String uuid = nbt.func_74779_i("TowedEntityUUID");
          Entity entity = world.func_73045_a(id);

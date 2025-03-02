@@ -20,7 +20,7 @@ public class MCH_EntityBomb extends MCH_EntityBaseBullet {
 
    public void func_70071_h_() {
       super.func_70071_h_();
-      if (!this.field_70170_p.field_72995_K && this.getInfo() != null) {
+      if (!this.world.isRemote && this.getInfo() != null) {
          this.field_70159_w *= 0.999D;
          this.field_70179_y *= 0.999D;
          if (this.func_70090_H()) {
@@ -31,12 +31,12 @@ public class MCH_EntityBomb extends MCH_EntityBaseBullet {
 
          float dist = this.getInfo().proximityFuseDist;
          if (dist > 0.1F && this.getCountOnUpdate() % 10 == 0) {
-            List<Entity> list = this.field_70170_p.func_72839_b(this, this.func_174813_aQ().func_72314_b((double)dist, (double)dist, (double)dist));
+            List<Entity> list = this.world.func_72839_b(this, this.func_174813_aQ().func_72314_b((double)dist, (double)dist, (double)dist));
             if (list != null) {
                for(int i = 0; i < list.size(); ++i) {
                   Entity entity = (Entity)list.get(i);
                   if (W_Lib.isEntityLivingBase(entity) && this.canBeCollidedEntity(entity)) {
-                     RayTraceResult m = new RayTraceResult(new Vec3d(this.field_70165_t, this.field_70163_u, this.field_70161_v), EnumFacing.DOWN, new BlockPos(this.field_70165_t + 0.5D, this.field_70163_u + 0.5D, this.field_70161_v + 0.5D));
+                     RayTraceResult m = new RayTraceResult(new Vec3d(this.posX, this.posY, this.posZ), EnumFacing.DOWN, new BlockPos(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D));
                      this.onImpact(m, 1.0F);
                      break;
                   }
@@ -49,8 +49,8 @@ public class MCH_EntityBomb extends MCH_EntityBaseBullet {
    }
 
    public void sprinkleBomblet() {
-      if (!this.field_70170_p.field_72995_K) {
-         MCH_EntityBomb e = new MCH_EntityBomb(this.field_70170_p, this.field_70165_t, this.field_70163_u, this.field_70161_v, this.field_70159_w, this.field_70181_x, this.field_70179_y, (float)this.field_70146_Z.nextInt(360), 0.0F, this.acceleration);
+      if (!this.world.isRemote) {
+         MCH_EntityBomb e = new MCH_EntityBomb(this.world, this.posX, this.posY, this.posZ, this.field_70159_w, this.field_70181_x, this.field_70179_y, (float)this.field_70146_Z.nextInt(360), 0.0F, this.acceleration);
          e.setParameterFromWeapon(this, this.shootingAircraft, this.shootingEntity);
          e.setName(this.func_70005_c_());
          float RANDOM = this.getInfo().bombletDiff;
@@ -58,7 +58,7 @@ public class MCH_EntityBomb extends MCH_EntityBaseBullet {
          e.field_70181_x = this.field_70181_x * 1.0D / 2.0D + (double)((this.field_70146_Z.nextFloat() - 0.5F) * RANDOM / 2.0F);
          e.field_70179_y = this.field_70179_y * 1.0D + (double)((this.field_70146_Z.nextFloat() - 0.5F) * RANDOM);
          e.setBomblet();
-         this.field_70170_p.func_72838_d(e);
+         this.world.func_72838_d(e);
       }
 
    }

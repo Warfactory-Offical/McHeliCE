@@ -44,8 +44,8 @@ public class MCH_ItemThrowable extends W_Item {
                   }
                }
 
-               world.func_184148_a((EntityPlayer)null, player.field_70165_t, player.field_70163_u, player.field_70161_v, SoundEvents.field_187737_v, SoundCategory.PLAYERS, 0.5F, 0.4F / (field_77697_d.nextFloat() * 0.4F + 0.8F));
-               if (!world.field_72995_K) {
+               world.func_184148_a((EntityPlayer)null, player.posX, player.posY, player.posZ, SoundEvents.field_187737_v, SoundCategory.PLAYERS, 0.5F, 0.4F / (field_77697_d.nextFloat() * 0.4F + 0.8F));
+               if (!world.isRemote) {
                   float acceleration = 1.0F;
                   par4 = itemStack.func_77988_m() - par4;
                   if (par4 <= 35) {

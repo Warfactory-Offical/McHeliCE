@@ -38,9 +38,9 @@ public class MCH_ItemSpawnGunner extends W_Item {
       float f = 1.0F;
       float pitch = player.field_70127_C + (player.field_70125_A - player.field_70127_C) * f;
       float yaw = player.field_70126_B + (player.field_70177_z - player.field_70126_B) * f;
-      double dx = player.field_70169_q + (player.field_70165_t - player.field_70169_q) * (double)f;
-      double dy = player.field_70167_r + (player.field_70163_u - player.field_70167_r) * (double)f + (double)player.func_70047_e();
-      double dz = player.field_70166_s + (player.field_70161_v - player.field_70166_s) * (double)f;
+      double dx = player.field_70169_q + (player.posX - player.field_70169_q) * (double)f;
+      double dy = player.field_70167_r + (player.posY - player.field_70167_r) * (double)f + (double)player.func_70047_e();
+      double dz = player.field_70166_s + (player.posZ - player.field_70166_s) * (double)f;
       Vec3d vec3 = new Vec3d(dx, dy, dz);
       float f3 = MathHelper.func_76134_b(-yaw * 0.017453292F - 3.1415927F);
       float f4 = MathHelper.func_76126_a(-yaw * 0.017453292F - 3.1415927F);
@@ -96,18 +96,18 @@ public class MCH_ItemSpawnGunner extends W_Item {
       if (target instanceof MCH_EntityGunner) {
          ((Entity)target).func_184230_a(player, handIn);
          return ActionResult.newResult(EnumActionResult.SUCCESS, itemstack);
-      } else if (this.targetType == 1 && !world.field_72995_K && player.func_96124_cp() == null) {
+      } else if (this.targetType == 1 && !world.isRemote && player.func_96124_cp() == null) {
          player.func_145747_a(new TextComponentString("You are not on team."));
          return ActionResult.newResult(EnumActionResult.FAIL, itemstack);
       } else if (target == null) {
-         if (!world.field_72995_K) {
+         if (!world.isRemote) {
             player.func_145747_a(new TextComponentString("Right click to seat."));
          }
 
          return ActionResult.newResult(EnumActionResult.FAIL, itemstack);
       } else {
-         if (!world.field_72995_K) {
-            MCH_EntityGunner gunner = new MCH_EntityGunner(world, ((Entity)target).field_70165_t, ((Entity)target).field_70163_u, ((Entity)target).field_70161_v);
+         if (!world.isRemote) {
+            MCH_EntityGunner gunner = new MCH_EntityGunner(world, ((Entity)target).posX, ((Entity)target).posY, ((Entity)target).posZ);
             gunner.field_70177_z = (float)(((MathHelper.func_76128_c((double)(player.field_70177_z * 4.0F / 360.0F) + 0.5D) & 3) - 1) * 90);
             gunner.isCreative = player.field_71075_bZ.field_75098_d;
             gunner.targetType = this.targetType;

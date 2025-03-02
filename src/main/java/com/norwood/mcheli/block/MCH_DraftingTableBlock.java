@@ -44,9 +44,9 @@ public class MCH_DraftingTableBlock extends W_BlockContainer implements ITileEnt
    }
 
    public boolean func_180639_a(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float par7, float par8, float par9) {
-      if (!world.field_72995_K) {
+      if (!world.isRemote) {
          if (!player.func_70093_af()) {
-            MCH_Lib.DbgLog(player.field_70170_p, "MCH_DraftingTableGui.MCH_DraftingTableGui OPEN GUI (%d, %d, %d)", pos.func_177958_n(), pos.func_177956_o(), pos.func_177952_p());
+            MCH_Lib.DbgLog(player.world, "MCH_DraftingTableGui.MCH_DraftingTableGui OPEN GUI (%d, %d, %d)", pos.func_177958_n(), pos.func_177956_o(), pos.func_177952_p());
             player.openGui(MCH_MOD.instance, 4, world, pos.func_177958_n(), pos.func_177956_o(), pos.func_177952_p());
          } else {
             EnumDirection8 dir = (EnumDirection8)state.func_177229_b(DIRECTION8);

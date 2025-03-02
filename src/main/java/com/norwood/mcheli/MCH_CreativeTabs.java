@@ -37,12 +37,12 @@ public class MCH_CreativeTabs extends CreativeTabs {
 
    }
 
-   public ItemStack func_78016_d() {
+   public ItemStack createIcon() {
       if (this.iconItems.size() <= 0) {
          return ItemStack.field_190927_a;
       } else {
          this.currentIconIndex = (this.currentIconIndex + 1) % this.iconItems.size();
-         return (ItemStack)this.iconItems.get(this.currentIconIndex);
+         return this.iconItems.get(this.currentIconIndex);
       }
    }
 

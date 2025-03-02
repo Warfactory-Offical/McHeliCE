@@ -35,7 +35,7 @@ public class MCH_FileSearch {
             }
          }
 
-         return (File[])this.set.toArray(new File[this.set.size()]);
+         return this.set.toArray(new File[this.set.size()]);
       }
    }
 

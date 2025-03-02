@@ -37,7 +37,7 @@ public class MCH_EntityA10 extends W_Entity {
       this.despawnCount = 0;
       this.shotCount = 0;
       this.direction = 0;
-      this.field_70158_ak = true;
+      this.noClip = true;
       this.field_70156_m = false;
       this.func_70105_a(5.0F, 3.0F);
       this.field_70159_w = 0.0D;
@@ -55,31 +55,31 @@ public class MCH_EntityA10 extends W_Entity {
 
    public MCH_EntityA10(World world, double x, double y, double z) {
       this(world);
-      this.field_70142_S = this.field_70169_q = this.field_70165_t = x;
-      this.field_70137_T = this.field_70167_r = this.field_70163_u = y;
-      this.field_70136_U = this.field_70166_s = this.field_70161_v = z;
+      this.field_70142_S = this.field_70169_q = this.posX = x;
+      this.field_70137_T = this.field_70167_r = this.posY = y;
+      this.field_70136_U = this.field_70166_s = this.posZ = z;
    }
 
    protected boolean func_70041_e_() {
       return false;
    }
 
-   protected void func_70088_a() {
-      this.field_70180_af.func_187214_a(WEAPON_NAME, "");
+   protected void entityInit() {
+      this.dataManager.register(WEAPON_NAME, "");
    }
 
    public void setWeaponName(String s) {
       if (s != null && !s.isEmpty()) {
          this.weaponInfo = MCH_WeaponInfoManager.get(s);
-         if (this.weaponInfo != null && !this.field_70170_p.field_72995_K) {
-            this.field_70180_af.func_187227_b(WEAPON_NAME, s);
+         if (this.weaponInfo != null && !this.world.isRemote) {
+            this.dataManager.func_187227_b(WEAPON_NAME, s);
          }
       }
 
    }
 
    public String getWeaponName() {
-      return (String)this.field_70180_af.func_187225_a(WEAPON_NAME);
+      return (String)this.dataManager.func_187225_a(WEAPON_NAME);
    }
 
    @Nullable
@@ -125,7 +125,7 @@ public class MCH_EntityA10 extends W_Entity {
          }
       }
 
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          this.onUpdate_Client();
       } else {
          this.onUpdate_Server();
@@ -135,7 +135,7 @@ public class MCH_EntityA10 extends W_Entity {
          if (this.despawnCount <= 20) {
             this.field_70181_x = -0.3D;
          } else {
-            this.func_70107_b(this.field_70165_t + this.field_70159_w, this.field_70163_u + this.field_70181_x, this.field_70161_v + this.field_70179_y);
+            this.func_70107_b(this.posX + this.field_70159_w, this.posY + this.field_70181_x, this.posZ + this.field_70179_y);
             this.field_70181_x += 0.02D;
          }
       }
@@ -161,7 +161,7 @@ public class MCH_EntityA10 extends W_Entity {
             }
 
             if (this.shotCount == 38) {
-               W_WorldFunc.MOD_playSoundEffect(this.field_70170_p, this.field_70165_t, this.field_70163_u, this.field_70161_v, "gau-8_snd", 150.0F, 1.0F);
+               W_WorldFunc.MOD_playSoundEffect(this.world, this.posX, this.posY, this.posZ, "gau-8_snd", 150.0F, 1.0F);
             }
          }
       }
@@ -171,9 +171,9 @@ public class MCH_EntityA10 extends W_Entity {
    protected void shotGAU8(boolean playSound, int cnt) {
       float yaw = (float)(90 * this.direction);
       float pitch = 30.0F;
-      double x = this.field_70165_t;
-      double y = this.field_70163_u;
-      double z = this.field_70161_v;
+      double x = this.posX;
+      double y = this.posY;
+      double z = this.posZ;
       double tX = this.field_70146_Z.nextDouble() - 0.5D;
       double tY = -2.6D;
       double tZ = this.field_70146_Z.nextDouble() - 0.5D;
@@ -201,22 +201,22 @@ public class MCH_EntityA10 extends W_Entity {
       tX = tX * 4.0D / dist;
       tY = tY * 4.0D / dist;
       tZ = tZ * 4.0D / dist;
-      MCH_EntityBullet e = new MCH_EntityBullet(this.field_70170_p, x, y, z, tX, tY, tZ, yaw, pitch, (double)this.acceleration);
+      MCH_EntityBullet e = new MCH_EntityBullet(this.world, x, y, z, tX, tY, tZ, yaw, pitch, (double)this.acceleration);
       e.setName(this.getWeaponName());
       e.explosionPower = this.shotCount % 4 == 0 ? this.explosionPower : 0;
       e.setPower(this.power);
       e.shootingEntity = this.shootingEntity;
       e.shootingAircraft = this.shootingAircraft;
-      this.field_70170_p.func_72838_d(e);
+      this.world.func_72838_d(e);
    }
 
    protected void func_70014_b(NBTTagCompound par1NBTTagCompound) {
-      par1NBTTagCompound.func_74778_a("WeaponName", this.getWeaponName());
+      par1NBTTagCompound.setString("WeaponName", this.getWeaponName());
    }
 
    protected void func_70037_a(NBTTagCompound par1NBTTagCompound) {
       this.despawnCount = 200;
-      if (par1NBTTagCompound.func_74764_b("WeaponName")) {
+      if (par1NBTTagCompound.hasKey("WeaponName")) {
          this.setWeaponName(par1NBTTagCompound.func_74779_i("WeaponName"));
       }
 
@@ -228,7 +228,7 @@ public class MCH_EntityA10 extends W_Entity {
    }
 
    static {
-      WEAPON_NAME = EntityDataManager.func_187226_a(MCH_EntityA10.class, DataSerializers.field_187194_d);
+      WEAPON_NAME = EntityDataManager.createKey(MCH_EntityA10.class, DataSerializers.STRING);
       snd_num = 0;
    }
 }

@@ -54,9 +54,9 @@ public class WeaponPointRenderer {
             ws = ac.getWeaponByName(wsInfo.type);
          } while(ws == null);
 
-         Tessellator tessellator = Tessellator.func_178181_a();
-         BufferBuilder builder = tessellator.func_178180_c();
-         builder.func_181668_a(0, DefaultVertexFormats.field_181706_f);
+         Tessellator tessellator = Tessellator.getInstance();
+         BufferBuilder builder = tessellator.getBuffer();
+         builder.begin(0, DefaultVertexFormats.field_181706_f);
 
          for(int i = 0; i < ws.getWeaponNum(); ++i) {
             MCH_WeaponBase weapon = ws.getWeapon(i);
@@ -72,11 +72,11 @@ public class WeaponPointRenderer {
                Color4f c = C[id % C.length];
                float f = (float)i * 0.1F;
                double d = (double)j * 0.04D;
-               builder.func_181662_b(vec3d.field_72450_a, vec3d.field_72448_b + d, vec3d.field_72449_c).func_181666_a(in(c.x + f), in(c.y + f), in(c.z + f), c.w).func_181675_d();
+               builder.pos(vec3d.x, vec3d.y + d, vec3d.z).func_181666_a(in(c.x + f), in(c.y + f), in(c.z + f), c.w).func_181675_d();
             }
          }
 
-         tessellator.func_78381_a();
+         tessellator.draw();
          ++id;
       }
    }

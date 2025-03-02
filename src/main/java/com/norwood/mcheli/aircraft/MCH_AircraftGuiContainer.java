@@ -53,9 +53,9 @@ public class MCH_AircraftGuiContainer extends Container {
          if (this.aircraft.isUAV()) {
             MCH_EntityUavStation us = this.aircraft.getUavStation();
             if (us != null) {
-               double x = us.field_70165_t + (double)us.posUavX;
-               double z = us.field_70161_v + (double)us.posUavZ;
-               if (this.aircraft.field_70165_t < x + 10.0D && this.aircraft.field_70165_t > x - 10.0D && this.aircraft.field_70161_v < z + 10.0D && this.aircraft.field_70161_v > z - 10.0D) {
+               double x = us.posX + (double)us.posUavX;
+               double z = us.posZ + (double)us.posUavZ;
+               if (this.aircraft.posX < x + 10.0D && this.aircraft.posX > x - 10.0D && this.aircraft.posZ < z + 10.0D && this.aircraft.posZ > z - 10.0D) {
                   return true;
                }
             }
@@ -72,7 +72,7 @@ public class MCH_AircraftGuiContainer extends Container {
          return null;
       } else {
          ItemStack itemStack = slot.func_75211_c();
-         MCH_Lib.DbgLog(player.field_70170_p, "transferStackInSlot : %d :" + itemStack, slotIndex);
+         MCH_Lib.DbgLog(player.world, "transferStackInSlot : %d :" + itemStack, slotIndex);
          if (itemStack.func_190926_b()) {
             return ItemStack.field_190927_a;
          } else {
@@ -113,7 +113,7 @@ public class MCH_AircraftGuiContainer extends Container {
 
    public void func_75134_a(EntityPlayer player) {
       super.func_75134_a(player);
-      if (!player.field_70170_p.field_72995_K) {
+      if (!player.world.isRemote) {
          MCH_AircraftInventory iv = this.aircraft.getGuiInventory();
 
          int i;
@@ -136,7 +136,7 @@ public class MCH_AircraftGuiContainer extends Container {
    }
 
    public void dropPlayerItem(EntityPlayer player, int slotID) {
-      if (!player.field_70170_p.field_72995_K) {
+      if (!player.world.isRemote) {
          ItemStack itemstack = this.aircraft.getGuiInventory().func_70304_b(slotID);
          if (!itemstack.func_190926_b()) {
             player.func_71019_a(itemstack, false);

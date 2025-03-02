@@ -32,7 +32,7 @@ public class MCH_ItemHeli extends MCH_ItemAircraft {
          heli.field_70166_s = z;
          heli.camera.setPosition(x, y, z);
          heli.setTypeName(info.name);
-         if (!world.field_72995_K) {
+         if (!world.isRemote) {
             heli.setTextureName(info.getTextureName());
          }
 

@@ -591,11 +591,11 @@ public class MCH_ConfigGui extends W_GuiContainer {
          GL11.glDisable(3553);
          GL11.glBlendFunc(770, 771);
          GL11.glColor4ub((byte)(color >> 16 & 255), (byte)(color >> 8 & 255), (byte)(color >> 0 & 255), (byte)(color >> 24 & 255));
-         Tessellator tessellator = Tessellator.func_178181_a();
-         BufferBuilder builder = tessellator.func_178180_c();
-         builder.func_181668_a(1, DefaultVertexFormats.field_181706_f);
+         Tessellator tessellator = Tessellator.getInstance();
+         BufferBuilder builder = tessellator.getBuffer();
+         builder.begin(1, DefaultVertexFormats.field_181706_f);
          MCH_GuiTargetMarker.drawRhombus(builder, 15, x, y, (double)this.field_73735_i, size, color);
-         tessellator.func_78381_a();
+         tessellator.draw();
          GL11.glEnable(3553);
          GL11.glDisable(3042);
          GL11.glColor4b((byte)-1, (byte)-1, (byte)-1, (byte)-1);
@@ -654,15 +654,15 @@ public class MCH_ConfigGui extends W_GuiContainer {
       GL11.glDisable(3553);
       GL11.glBlendFunc(770, 771);
       GL11.glColor4ub((byte)(color >> 16 & 255), (byte)(color >> 8 & 255), (byte)(color >> 0 & 255), (byte)(color >> 24 & 255));
-      Tessellator tessellator = Tessellator.func_178181_a();
-      BufferBuilder buffer = tessellator.func_178180_c();
-      buffer.func_181668_a(mode, DefaultVertexFormats.field_181705_e);
+      Tessellator tessellator = Tessellator.getInstance();
+      BufferBuilder buffer = tessellator.getBuffer();
+      buffer.begin(mode, DefaultVertexFormats.field_181705_e);
 
       for(int i = 0; i < line.length; i += 2) {
-         buffer.func_181662_b(line[i + 0], line[i + 1], (double)this.field_73735_i).func_181675_d();
+         buffer.pos(line[i + 0], line[i + 1], (double)this.field_73735_i).func_181675_d();
       }
 
-      tessellator.func_78381_a();
+      tessellator.draw();
       GL11.glEnable(3553);
       GL11.glDisable(3042);
       GL11.glColor4b((byte)-1, (byte)-1, (byte)-1, (byte)-1);
@@ -675,14 +675,14 @@ public class MCH_ConfigGui extends W_GuiContainer {
       GL11.glRotatef(rot, 0.0F, 0.0F, 1.0F);
       float fw = (float)(1.0D / texWidth);
       float fh = (float)(1.0D / texHeight);
-      Tessellator tessellator = Tessellator.func_178181_a();
-      BufferBuilder buffer = tessellator.func_178180_c();
-      buffer.func_181668_a(7, DefaultVertexFormats.field_181707_g);
-      buffer.func_181662_b(-width / 2.0D, height / 2.0D, (double)this.field_73735_i).func_187315_a(uLeft * (double)fw, (vTop + vHeight) * (double)fh).func_181675_d();
-      buffer.func_181662_b(width / 2.0D, height / 2.0D, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)fw, (vTop + vHeight) * (double)fh).func_181675_d();
-      buffer.func_181662_b(width / 2.0D, -height / 2.0D, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)fw, vTop * (double)fh).func_181675_d();
-      buffer.func_181662_b(-width / 2.0D, -height / 2.0D, (double)this.field_73735_i).func_187315_a(uLeft * (double)fw, vTop * (double)fh).func_181675_d();
-      tessellator.func_78381_a();
+      Tessellator tessellator = Tessellator.getInstance();
+      BufferBuilder buffer = tessellator.getBuffer();
+      buffer.begin(7, DefaultVertexFormats.field_181707_g);
+      buffer.pos(-width / 2.0D, height / 2.0D, (double)this.field_73735_i).func_187315_a(uLeft * (double)fw, (vTop + vHeight) * (double)fh).func_181675_d();
+      buffer.pos(width / 2.0D, height / 2.0D, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)fw, (vTop + vHeight) * (double)fh).func_181675_d();
+      buffer.pos(width / 2.0D, -height / 2.0D, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)fw, vTop * (double)fh).func_181675_d();
+      buffer.pos(-width / 2.0D, -height / 2.0D, (double)this.field_73735_i).func_187315_a(uLeft * (double)fw, vTop * (double)fh).func_181675_d();
+      tessellator.draw();
       GL11.glPopMatrix();
    }
 }

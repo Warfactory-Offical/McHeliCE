@@ -132,11 +132,11 @@ public class MCH_WeaponSet {
       MCH_WeaponBase crtWpn = this.getCurrentWeapon();
       if (this.getAmmoNumMax() > 0 && this.getAmmoNum() < this.getAmmoNumMax() && crtWpn.getReloadCount() > 0) {
          this.countReloadWait = crtWpn.getReloadCount();
-         if (crtWpn.worldObj.field_72995_K) {
+         if (crtWpn.worldObj.isRemote) {
             this.setAmmoNum(0);
          }
 
-         if (!crtWpn.worldObj.field_72995_K) {
+         if (!crtWpn.worldObj.isRemote) {
             this.countReloadWait -= 20;
             if (this.countReloadWait <= 0) {
                this.countReloadWait = 1;
@@ -182,7 +182,7 @@ public class MCH_WeaponSet {
             }
          }
 
-         if (this.getCurrentWeapon().worldObj.field_72995_K) {
+         if (this.getCurrentWeapon().worldObj.isRemote) {
             W_McClient.playSoundClick(1.0F, 1.0F);
          }
       }
@@ -306,14 +306,14 @@ public class MCH_WeaponSet {
    public void updateWeapon(Entity shooter, boolean isUsed, int index) {
       MCH_WeaponBase crtWpn = this.getWeapon(index);
       float rb;
-      if (isUsed && shooter.field_70170_p.field_72995_K && crtWpn != null && crtWpn.cartridge != null) {
+      if (isUsed && shooter.world.isRemote && crtWpn != null && crtWpn.cartridge != null) {
          Vec3d v = crtWpn.getShotPos(shooter);
          rb = shooter.field_70177_z;
          float pitch = shooter.field_70125_A;
          if (shooter instanceof MCH_EntityVehicle && shooter.func_184207_aI()) {
          }
 
-         MCH_EntityCartridge.spawnCartridge(shooter.field_70170_p, crtWpn.cartridge, shooter.field_70165_t + v.field_72450_a, shooter.field_70163_u + v.field_72448_b, shooter.field_70161_v + v.field_72449_c, shooter.field_70159_w, shooter.field_70181_x, shooter.field_70179_y, rb + this.rotationYaw, pitch + this.rotationPitch);
+         MCH_EntityCartridge.spawnCartridge(shooter.world, crtWpn.cartridge, shooter.posX + v.x, shooter.posY + v.y, shooter.posZ + v.z, shooter.field_70159_w, shooter.field_70181_x, shooter.field_70179_y, rb + this.rotationYaw, pitch + this.rotationPitch);
       }
 
       if (index < this.recoilBuf.length) {
@@ -416,7 +416,7 @@ public class MCH_WeaponSet {
          this.countReloadWait = 0;
          if (reload && this.getAmmoNumMax() > 0 && crtWpn.getReloadCount() > 0) {
             this.countReloadWait = crtWpn.getReloadCount();
-            if (!crtWpn.worldObj.field_72995_K) {
+            if (!crtWpn.worldObj.isRemote) {
                this.countReloadWait -= 20;
                if (this.countReloadWait <= 0) {
                   this.countReloadWait = 1;

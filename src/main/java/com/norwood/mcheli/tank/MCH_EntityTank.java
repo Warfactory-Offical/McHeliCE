@@ -91,7 +91,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
    }
 
    public void changeType(String type) {
-      MCH_Lib.DbgLog(this.field_70170_p, "MCH_EntityTank.changeType " + type + " : " + this.toString());
+      MCH_Lib.DbgLog(this.world, "MCH_EntityTank.changeType " + type + " : " + this.toString());
       if (!type.isEmpty()) {
          this.tankInfo = MCH_TankInfoManager.get(type);
       }
@@ -105,7 +105,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
          this.switchFreeLookModeClient(this.getAcInfo().defaultFreelook);
          this.weapons = this.createWeapon(1 + this.getSeatNum());
          this.initPartRotation(this.getRotYaw(), this.getRotPitch());
-         this.WheelMng.createWheels(this.field_70170_p, this.getAcInfo().wheels, new Vec3d(0.0D, -0.35D, (double)this.getTankInfo().weightedCenterZ));
+         this.WheelMng.createWheels(this.world, this.getAcInfo().wheels, new Vec3d(0.0D, -0.35D, (double)this.getTankInfo().weightedCenterZ));
       }
 
    }
@@ -119,8 +119,8 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
       return MCH_Config.MountMinecartTank.prmBool;
    }
 
-   protected void func_70088_a() {
-      super.func_70088_a();
+   protected void entityInit() {
+      super.entityInit();
    }
 
    public float getGiveDamageRot() {
@@ -163,13 +163,13 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
    public void onUpdateAircraft() {
       if (this.tankInfo == null) {
          this.changeType(this.getTypeName());
-         this.field_70169_q = this.field_70165_t;
-         this.field_70167_r = this.field_70163_u;
-         this.field_70166_s = this.field_70161_v;
+         this.field_70169_q = this.posX;
+         this.field_70167_r = this.posY;
+         this.field_70166_s = this.posZ;
       } else {
          if (!this.isRequestedSyncStatus) {
             this.isRequestedSyncStatus = true;
-            if (this.field_70170_p.field_72995_K) {
+            if (this.world.isRemote) {
                MCH_PacketStatusRequest.requestStatus(this);
             }
          }
@@ -193,9 +193,9 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             this.prevRotationRotor += 360.0F;
          }
 
-         this.field_70169_q = this.field_70165_t;
-         this.field_70167_r = this.field_70163_u;
-         this.field_70166_s = this.field_70161_v;
+         this.field_70169_q = this.posX;
+         this.field_70167_r = this.posY;
+         this.field_70166_s = this.posZ;
          if (this.isDestroyed() && this.getCurrentThrottle() > 0.0D) {
             if (MCH_Lib.getBlockIdY(this, 3, -2) > 0) {
                this.setCurrentThrottle(this.getCurrentThrottle() * 0.8D);
@@ -207,7 +207,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
          }
 
          this.updateCameraViewers();
-         if (this.field_70170_p.field_72995_K) {
+         if (this.world.isRemote) {
             this.onUpdate_Client();
          } else {
             this.onUpdate_Server();
@@ -222,7 +222,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
    }
 
    public void updateExtraBoundingBox() {
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          super.updateExtraBoundingBox();
       } else if (this.getCountOnUpdate() <= 1) {
          super.updateExtraBoundingBox();
@@ -260,7 +260,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
    }
 
    public void func_70091_d(MoverType type, double x, double y, double z) {
-      this.field_70170_p.field_72984_F.func_76320_a("move");
+      this.world.field_72984_F.func_76320_a("move");
       double d2 = x;
       double d3 = y;
       double d4 = z;
@@ -280,7 +280,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
       int k6;
       for(k6 = 0; k6 < i1; ++k6) {
          MCH_BoundingBox ebb = var18[k6];
-         ebb.updatePosition(this.field_70165_t, this.field_70163_u, this.field_70161_v, this.getRotYaw(), this.getRotPitch(), this.getRotRoll());
+         ebb.updatePosition(this.posX, this.posY, this.posZ, this.getRotYaw(), this.getRotPitch(), this.getRotRoll());
       }
 
       if (x != 0.0D) {
@@ -353,21 +353,21 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
          }
       }
 
-      this.field_70170_p.field_72984_F.func_76319_b();
-      this.field_70170_p.field_72984_F.func_76320_a("rest");
+      this.world.field_72984_F.func_76319_b();
+      this.world.field_72984_F.func_76320_a("rest");
       this.func_174829_m();
       this.field_70123_F = x != x || z != z;
       this.field_70124_G = y != y;
       this.field_70122_E = this.field_70124_G && d3 < 0.0D;
       this.field_70132_H = this.field_70123_F || this.field_70124_G;
-      int j6 = MathHelper.func_76128_c(this.field_70165_t);
-      i1 = MathHelper.func_76128_c(this.field_70163_u - 0.20000000298023224D);
-      k6 = MathHelper.func_76128_c(this.field_70161_v);
+      int j6 = MathHelper.func_76128_c(this.posX);
+      i1 = MathHelper.func_76128_c(this.posY - 0.20000000298023224D);
+      k6 = MathHelper.func_76128_c(this.posZ);
       BlockPos blockpos = new BlockPos(j6, i1, k6);
-      IBlockState iblockstate = this.field_70170_p.func_180495_p(blockpos);
+      IBlockState iblockstate = this.world.func_180495_p(blockpos);
       if (iblockstate.func_185904_a() == Material.field_151579_a) {
          BlockPos blockpos1 = blockpos.func_177977_b();
-         IBlockState iblockstate1 = this.field_70170_p.func_180495_p(blockpos1);
+         IBlockState iblockstate1 = this.world.func_180495_p(blockpos1);
          Block block1 = iblockstate1.func_177230_c();
          if (block1 instanceof BlockFence || block1 instanceof BlockWall || block1 instanceof BlockFenceGate) {
             iblockstate = iblockstate1;
@@ -386,7 +386,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
 
       Block block = iblockstate.func_177230_c();
       if (d3 != y) {
-         block.func_176216_a(this.field_70170_p, this);
+         block.func_176216_a(this.world, this);
       }
 
       try {
@@ -398,7 +398,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
          throw new ReportedException(crashreport);
       }
 
-      this.field_70170_p.field_72984_F.func_76319_b();
+      this.world.field_72984_F.func_76319_b();
    }
 
    private void rotationByKey(float partialTicks) {
@@ -440,8 +440,8 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             }
 
             float pivotTurnThrottle = this.getAcInfo().pivotTurnThrottle;
-            double dx = this.field_70165_t - this.field_70169_q;
-            double dz = this.field_70161_v - this.field_70166_s;
+            double dx = this.posX - this.field_70169_q;
+            double dz = this.posZ - this.field_70166_s;
             double dist = dx * dx + dz * dz;
             if (pivotTurnThrottle <= 0.0F || this.getCurrentThrottle() >= (double)pivotTurnThrottle || this.throttleBack >= pivotTurnThrottle / 10.0F || dist > (double)this.throttleBack * 0.01D) {
                float sf = (float)Math.sqrt(dist <= 1.0D ? dist : 1.0D);
@@ -494,7 +494,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
          this.setCurrentThrottle(0.0D);
       }
 
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          if (!W_Lib.isClientPlayer(this.getRiddenByEntity()) || this.getCountOnUpdate() % 200 == 0) {
             double ct = this.getThrottle();
             if (this.getCurrentThrottle() > ct) {
@@ -555,7 +555,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
    }
 
    protected void onUpdate_Particle2() {
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          if (!((double)this.getHP() >= (double)this.getMaxHP() * 0.5D)) {
             if (this.getTankInfo() != null) {
                int bbNum = this.getTankInfo().extraBoundingBox.size();
@@ -582,9 +582,9 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
                   } else {
                      MCH_BoundingBox bb = (MCH_BoundingBox)this.getTankInfo().extraBoundingBox.get(ri);
                      Vec3d pos = this.getTransformedPosition(bb.offsetX, bb.offsetY, bb.offsetZ);
-                     py = pos.field_72450_a;
-                     pz = pos.field_72448_b;
-                     double z = pos.field_72449_c;
+                     py = pos.x;
+                     pz = pos.y;
+                     double z = pos.z;
                      this.onUpdate_Particle2SpawnSmoke(ri, py, pz, z, 1.0F);
                   }
                }
@@ -598,14 +598,14 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
                }
 
                if (b) {
-                  double px = this.field_70165_t;
-                  py = this.field_70163_u;
-                  pz = this.field_70161_v;
+                  double px = this.posX;
+                  py = this.posY;
+                  pz = this.posZ;
                   if (this.getSeatInfo(0) != null && this.getSeatInfo(0).pos != null) {
-                     Vec3d pos = MCH_Lib.RotVec3(0.0D, this.getSeatInfo(0).pos.field_72448_b, -2.0D, -yaw, -pitch, -roll);
-                     px += pos.field_72450_a;
-                     py += pos.field_72448_b;
-                     pz += pos.field_72449_c;
+                     Vec3d pos = MCH_Lib.RotVec3(0.0D, this.getSeatInfo(0).pos.y, -2.0D, -yaw, -pitch, -roll);
+                     px += pos.x;
+                     py += pos.y;
+                     pz += pos.z;
                   }
 
                   this.onUpdate_Particle2SpawnSmoke(bbNum, px, py, pz, bbNum == 0 ? 2.0F : 1.0F);
@@ -626,7 +626,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
 
       for(int i = 0; i < num; ++i) {
          float c = 0.2F + this.field_70146_Z.nextFloat() * 0.3F;
-         MCH_ParticleParam prm = new MCH_ParticleParam(this.field_70170_p, "smoke", x, y, z);
+         MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "smoke", x, y, z);
          prm.motionX = (double)size * (this.field_70146_Z.nextDouble() - 0.5D) * 0.3D;
          prm.motionY = (double)size * this.field_70146_Z.nextDouble() * 0.1D;
          prm.motionZ = (double)size * (this.field_70146_Z.nextDouble() - 0.5D) * 0.3D;
@@ -644,14 +644,14 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
       }
 
       Vec3d prev = this.prevDamageSmokePos[ri];
-      double dx = x - prev.field_72450_a;
-      double dy = y - prev.field_72448_b;
-      double dz = z - prev.field_72449_c;
+      double dx = x - prev.x;
+      double dy = y - prev.y;
+      double dz = z - prev.z;
       int num = (int)((double)MathHelper.func_76133_a(dx * dx + dy * dy + dz * dz) / 0.3D) + 1;
 
       for(int i = 0; i < num; ++i) {
          float c = 0.2F + this.field_70146_Z.nextFloat() * 0.3F;
-         MCH_ParticleParam prm = new MCH_ParticleParam(this.field_70170_p, "smoke", x, y, z);
+         MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "smoke", x, y, z);
          prm.motionX = (double)size * (this.field_70146_Z.nextDouble() - 0.5D) * 0.3D;
          prm.motionY = (double)size * this.field_70146_Z.nextDouble() * 0.1D;
          prm.motionZ = (double)size * (this.field_70146_Z.nextDouble() - 0.5D) * 0.3D;
@@ -669,9 +669,9 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
 
    private void onUpdate_ParticleSplash() {
       if (this.getAcInfo() != null) {
-         if (this.field_70170_p.field_72995_K) {
-            double mx = this.field_70165_t - this.field_70169_q;
-            double mz = this.field_70161_v - this.field_70166_s;
+         if (this.world.isRemote) {
+            double mx = this.posX - this.field_70169_q;
+            double mz = this.posZ - this.field_70166_s;
             double dist = mx * mx + mz * mz;
             if (dist > 1.0D) {
                dist = 1.0D;
@@ -696,12 +696,12 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
    private void setParticleSplash(Vec3d pos, double mx, double my, double mz, float gravity, double size, int age) {
       Vec3d v = this.getTransformedPosition(pos);
       v = v.func_72441_c(this.field_70146_Z.nextDouble() - 0.5D, (this.field_70146_Z.nextDouble() - 0.5D) * 0.5D, this.field_70146_Z.nextDouble() - 0.5D);
-      int x = (int)(v.field_72450_a + 0.5D);
-      int y = (int)(v.field_72448_b + 0.0D);
-      int z = (int)(v.field_72449_c + 0.5D);
-      if (W_WorldFunc.isBlockWater(this.field_70170_p, x, y, z)) {
+      int x = (int)(v.x + 0.5D);
+      int y = (int)(v.y + 0.0D);
+      int z = (int)(v.z + 0.5D);
+      if (W_WorldFunc.isBlockWater(this.world, x, y, z)) {
          float c = this.field_70146_Z.nextFloat() * 0.3F + 0.7F;
-         MCH_ParticleParam prm = new MCH_ParticleParam(this.field_70170_p, "smoke", v.field_72450_a, v.field_72448_b, v.field_72449_c);
+         MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "smoke", v.x, v.y, v.z);
          prm.motionX = mx + ((double)this.field_70146_Z.nextFloat() - 0.5D) * 0.7D;
          prm.motionY = my;
          prm.motionZ = mz + ((double)this.field_70146_Z.nextFloat() - 0.5D) * 0.7D;
@@ -733,7 +733,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
       if (this.aircraftPosRotInc > 0) {
          this.applyServerPositionAndRotation();
       } else {
-         this.func_70107_b(this.field_70165_t + this.field_70159_w, this.field_70163_u + this.field_70181_x, this.field_70161_v + this.field_70179_y);
+         this.func_70107_b(this.posX + this.field_70159_w, this.posY + this.field_70181_x, this.posZ + this.field_70179_y);
          if (!this.isDestroyed() && (this.field_70122_E || MCH_Lib.getBlockIdY(this, 1, -2) > 0)) {
             this.field_70159_w *= 0.95D;
             this.field_70179_y *= 0.95D;
@@ -749,13 +749,13 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
       this.updateWheels();
       this.onUpdate_Particle2();
       this.updateSound();
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          this.onUpdate_ParticleLandingGear();
          this.onUpdate_ParticleSplash();
          this.onUpdate_ParticleSandCloud(true);
       }
 
-      this.updateCamera(this.field_70165_t, this.field_70163_u, this.field_70161_v);
+      this.updateCamera(this.posX, this.posY, this.posZ);
    }
 
    public void applyOnGroundPitch(float factor) {
@@ -790,7 +790,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
       float throttle = (float)(this.getCurrentThrottle() / 10.0D);
       Vec3d v = MCH_Lib.Rot2Vec3(this.getRotYaw(), this.getRotPitch() - 10.0F);
       if (!levelOff) {
-         this.field_70181_x += v.field_72448_b * (double)throttle / 8.0D;
+         this.field_70181_x += v.y * (double)throttle / 8.0D;
       }
 
       boolean canMove = true;
@@ -803,11 +803,11 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
 
       if (canMove) {
          if (this.getAcInfo().enableBack && this.throttleBack > 0.0F) {
-            this.field_70159_w -= v.field_72450_a * (double)this.throttleBack;
-            this.field_70179_y -= v.field_72449_c * (double)this.throttleBack;
+            this.field_70159_w -= v.x * (double)this.throttleBack;
+            this.field_70179_y -= v.z * (double)this.throttleBack;
          } else {
-            this.field_70159_w += v.field_72450_a * (double)throttle;
-            this.field_70179_y += v.field_72449_c * (double)throttle;
+            this.field_70159_w += v.x * (double)throttle;
+            this.field_70179_y += v.z * (double)throttle;
          }
       }
 
@@ -860,7 +860,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             Entity rider = this.getRiddenByEntity();
             float damage = (float)(speed * 15.0D);
             MCH_EntityAircraft rideAc = this.func_184187_bx() instanceof MCH_EntitySeat ? ((MCH_EntitySeat)this.func_184187_bx()).getParent() : (this.func_184187_bx() instanceof MCH_EntityAircraft ? (MCH_EntityAircraft)this.func_184187_bx() : null);
-            List<Entity> list = this.field_70170_p.func_175674_a(this, bb.func_72314_b(0.3D, 0.3D, 0.3D), (ex) -> {
+            List<Entity> list = this.world.func_175674_a(this, bb.func_72314_b(0.3D, 0.3D, 0.3D), (ex) -> {
                if (ex != rideAc && !(ex instanceof EntityItem) && !(ex instanceof EntityXPOrb) && !(ex instanceof MCH_EntityBaseBullet) && !(ex instanceof MCH_EntityChain) && !(ex instanceof MCH_EntitySeat)) {
                   if (ex instanceof MCH_EntityTank) {
                      MCH_EntityTank tank = (MCH_EntityTank)ex;
@@ -878,8 +878,8 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             for(int i = 0; i < list.size(); ++i) {
                Entity e = (Entity)list.get(i);
                if (this.shouldCollisionDamage(e)) {
-                  double dx = e.field_70165_t - this.field_70165_t;
-                  double dz = e.field_70161_v - this.field_70161_v;
+                  double dx = e.posX - this.posX;
+                  double dz = e.posZ - this.posZ;
                   double dist = Math.sqrt(dx * dx + dz * dz);
                   if (dist > 5.0D) {
                      dist = 5.0D;
@@ -915,7 +915,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
                      this.func_70097_a(ds, damage / 3.0F);
                   }
 
-                  MCH_Lib.DbgLog(this.field_70170_p, "MCH_EntityTank.collisionEntity damage=%.1f %s", damage, e.toString());
+                  MCH_Lib.DbgLog(this.world, "MCH_EntityTank.collisionEntity damage=%.1f %s", damage, e.toString());
                }
             }
 
@@ -981,11 +981,11 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
          for(int x = -ws; x <= ws; ++x) {
             for(int z = -ws; z <= ws; ++z) {
                for(int y = -hs; y <= hs + 1; ++y) {
-                  int bx = (int)(v.field_72450_a + (double)x - 0.5D);
-                  int by = (int)(v.field_72448_b + (double)y - 1.0D);
-                  int bz = (int)(v.field_72449_c + (double)z - 0.5D);
+                  int bx = (int)(v.x + (double)x - 0.5D);
+                  int by = (int)(v.y + (double)y - 1.0D);
+                  int bz = (int)(v.z + (double)z - 0.5D);
                   BlockPos blockpos = new BlockPos(bx, by, bz);
-                  IBlockState iblockstate = this.field_70170_p.func_180495_p(blockpos);
+                  IBlockState iblockstate = this.world.func_180495_p(blockpos);
                   Block block = by >= 0 && by < 256 ? iblockstate.func_177230_c() : Blocks.field_150350_a;
                   Material mat = iblockstate.func_185904_a();
                   if (!Block.func_149680_a(block, Blocks.field_150350_a)) {
@@ -1038,9 +1038,9 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
 
    public void destroyBlock(BlockPos blockpos) {
       if (this.field_70146_Z.nextInt(8) == 0) {
-         W_WorldFunc.destroyBlock(this.field_70170_p, blockpos, true);
+         W_WorldFunc.destroyBlock(this.world, blockpos, true);
       } else {
-         this.field_70170_p.func_175698_g(blockpos);
+         this.world.func_175698_g(blockpos);
       }
 
    }

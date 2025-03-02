@@ -92,9 +92,9 @@ public class MCH_ClientGLTDTickHandler extends MCH_ClientTickHandlerBase {
       if (this.isBeforeRiding != this.isRiding) {
          if (this.isRiding) {
             if (viewEntityDummy != null) {
-               viewEntityDummy.field_70169_q = viewEntityDummy.field_70165_t;
-               viewEntityDummy.field_70167_r = viewEntityDummy.field_70163_u;
-               viewEntityDummy.field_70166_s = viewEntityDummy.field_70161_v;
+               viewEntityDummy.field_70169_q = viewEntityDummy.posX;
+               viewEntityDummy.field_70167_r = viewEntityDummy.posY;
+               viewEntityDummy.field_70166_s = viewEntityDummy.posZ;
             }
          } else {
             MCH_Lib.enableFirstPersonItemRender();

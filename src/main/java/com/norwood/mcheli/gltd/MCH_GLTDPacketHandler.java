@@ -11,7 +11,7 @@ public class MCH_GLTDPacketHandler {
    @HandleSide({Side.SERVER})
    public static void onPacket_GLTDPlayerControl(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
       if (player.func_184187_bx() instanceof MCH_EntityGLTD) {
-         if (!player.field_70170_p.field_72995_K) {
+         if (!player.world.isRemote) {
             MCH_PacketGLTDPlayerControl pc = new MCH_PacketGLTDPlayerControl();
             pc.readData(data);
             scheduler.func_152344_a(() -> {

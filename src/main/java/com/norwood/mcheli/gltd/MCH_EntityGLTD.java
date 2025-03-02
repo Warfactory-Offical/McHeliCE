@@ -70,11 +70,11 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
       this.func_70105_a(0.5F, 0.5F);
       this.camera = new MCH_Camera(world, this);
       MCH_WeaponInfo wi = MCH_WeaponInfoManager.get("a10gau8");
-      this.weaponCAS = new MCH_WeaponCAS(world, Vec3d.field_186680_a, 0.0F, 0.0F, "a10gau8", wi);
+      this.weaponCAS = new MCH_WeaponCAS(world, Vec3d.ZERO, 0.0F, 0.0F, "a10gau8", wi);
       MCH_WeaponCAS var10000 = this.weaponCAS;
       var10000.interval += this.weaponCAS.interval > 0 ? 150 : 'ｪ';
       this.weaponCAS.displayName = "A-10 GAU-8 Avenger";
-      this.field_70158_ak = true;
+      this.noClip = true;
       this.countWait = 0;
       this.retryRiddenByEntityCheck = 0;
       this.lastRiddenByEntity = null;
@@ -102,10 +102,10 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
       return false;
    }
 
-   protected void func_70088_a() {
-      this.field_70180_af.func_187214_a(TIME_SINCE_HIT, 0);
-      this.field_70180_af.func_187214_a(FORWARD_DIR, 1);
-      this.field_70180_af.func_187214_a(DAMAGE_TAKEN, 0);
+   protected void entityInit() {
+      this.dataManager.register(TIME_SINCE_HIT, 0);
+      this.dataManager.register(FORWARD_DIR, 1);
+      this.dataManager.register(DAMAGE_TAKEN, 0);
    }
 
    public AxisAlignedBB func_70114_g(Entity par1Entity) {
@@ -127,7 +127,7 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
    public boolean func_70097_a(DamageSource ds, float damage) {
       if (this.func_180431_b(ds)) {
          return false;
-      } else if (!this.field_70170_p.field_72995_K && !this.field_70128_L) {
+      } else if (!this.world.isRemote && !this.field_70128_L) {
          damage = MCH_Config.applyDamageByExternal(this, ds, damage);
          if (!MCH_Multiplay.canAttackEntity((DamageSource)ds, this)) {
             return false;
@@ -148,7 +148,7 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
                   this.func_145778_a(MCH_MOD.itemGLTD, 1, 0.0F);
                }
 
-               W_WorldFunc.MOD_playSoundEffect(this.field_70170_p, this.field_70165_t, this.field_70163_u, this.field_70161_v, "hit", 1.0F, 1.0F);
+               W_WorldFunc.MOD_playSoundEffect(this.world, this.posX, this.posY, this.posZ, "hit", 1.0F, 1.0F);
                this.func_70106_y();
             }
 
@@ -172,9 +172,9 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
       if (this.isBoatEmpty) {
          this.gltdPosRotInc = par9 + 5;
       } else {
-         double x = par1 - this.field_70165_t;
-         double y = par3 - this.field_70163_u;
-         double z = par5 - this.field_70161_v;
+         double x = par1 - this.posX;
+         double y = par3 - this.posY;
+         double z = par5 - this.posZ;
          if (x * x + y * y + z * z <= 1.0D) {
             return;
          }
@@ -209,9 +209,9 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
          this.setDamageTaken(this.getDamageTaken() - 1);
       }
 
-      this.field_70169_q = this.field_70165_t;
-      this.field_70167_r = this.field_70163_u;
-      this.field_70166_s = this.field_70161_v;
+      this.field_70169_q = this.posX;
+      this.field_70167_r = this.posY;
+      this.field_70166_s = this.posZ;
       double d3 = Math.sqrt(this.field_70159_w * this.field_70159_w + this.field_70179_y * this.field_70179_y);
       Entity riddenByEntity = this.getRiddenByEntity();
       if (riddenByEntity != null) {
@@ -222,11 +222,11 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
       double d5;
       double d11;
       double d10;
-      if (this.field_70170_p.field_72995_K && this.isBoatEmpty) {
+      if (this.world.isRemote && this.isBoatEmpty) {
          if (this.gltdPosRotInc > 0) {
-            d4 = this.field_70165_t + (this.gltdX - this.field_70165_t) / (double)this.gltdPosRotInc;
-            d5 = this.field_70163_u + (this.gltdY - this.field_70163_u) / (double)this.gltdPosRotInc;
-            d11 = this.field_70161_v + (this.gltdZ - this.field_70161_v) / (double)this.gltdPosRotInc;
+            d4 = this.posX + (this.gltdX - this.posX) / (double)this.gltdPosRotInc;
+            d5 = this.posY + (this.gltdY - this.posY) / (double)this.gltdPosRotInc;
+            d11 = this.posZ + (this.gltdZ - this.posZ) / (double)this.gltdPosRotInc;
             d10 = MathHelper.func_76138_g(this.gltdYaw - (double)this.field_70177_z);
             this.field_70177_z = (float)((double)this.field_70177_z + d10 / (double)this.gltdPosRotInc);
             this.field_70125_A = (float)((double)this.field_70125_A + (this.gltdPitch - (double)this.field_70125_A) / (double)this.gltdPosRotInc);
@@ -234,9 +234,9 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
             this.func_70107_b(d4, d5, d11);
             this.func_70101_b(this.field_70177_z, this.field_70125_A);
          } else {
-            d4 = this.field_70165_t + this.field_70159_w;
-            d5 = this.field_70163_u + this.field_70181_x;
-            d11 = this.field_70161_v + this.field_70179_y;
+            d4 = this.posX + this.field_70159_w;
+            d5 = this.posY + this.field_70181_x;
+            d11 = this.posZ + this.field_70179_y;
             this.func_70107_b(d4, d5, d11);
             if (this.field_70122_E) {
                this.field_70159_w *= 0.5D;
@@ -282,8 +282,8 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
          this.field_70179_y *= 0.99D;
          this.field_70125_A = 0.0F;
          d5 = (double)this.field_70177_z;
-         d11 = this.field_70169_q - this.field_70165_t;
-         d10 = this.field_70166_s - this.field_70161_v;
+         d11 = this.field_70169_q - this.posX;
+         d10 = this.field_70166_s - this.posZ;
          if (d11 * d11 + d10 * d10 > 0.001D) {
             d5 = (double)((float)(Math.atan2(d10, d11) * 180.0D / 3.141592653589793D));
          }
@@ -299,16 +299,16 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
 
          this.field_70177_z = (float)((double)this.field_70177_z + d12);
          this.func_70101_b(this.field_70177_z, this.field_70125_A);
-         if (!this.field_70170_p.field_72995_K) {
+         if (!this.world.isRemote) {
             if (MCH_Config.Collision_DestroyBlock.prmBool) {
                for(int l = 0; l < 4; ++l) {
-                  int i1 = MathHelper.func_76128_c(this.field_70165_t + ((double)(l % 2) - 0.5D) * 0.8D);
-                  int j1 = MathHelper.func_76128_c(this.field_70161_v + ((double)(l / 2) - 0.5D) * 0.8D);
+                  int i1 = MathHelper.func_76128_c(this.posX + ((double)(l % 2) - 0.5D) * 0.8D);
+                  int j1 = MathHelper.func_76128_c(this.posZ + ((double)(l / 2) - 0.5D) * 0.8D);
 
                   for(int k1 = 0; k1 < 2; ++k1) {
-                     int l1 = MathHelper.func_76128_c(this.field_70163_u) + k1;
-                     if (W_WorldFunc.isEqualBlock(this.field_70170_p, i1, l1, j1, W_Block.getSnowLayer())) {
-                        this.field_70170_p.func_175698_g(new BlockPos(i1, l1, j1));
+                     int l1 = MathHelper.func_76128_c(this.posY) + k1;
+                     if (W_WorldFunc.isEqualBlock(this.world, i1, l1, j1, W_Block.getSnowLayer())) {
+                        this.world.func_175698_g(new BlockPos(i1, l1, j1));
                      }
                   }
                }
@@ -355,17 +355,17 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
          float yaw = this.field_70177_z;
          double d0 = Math.sin((double)yaw * 3.141592653589793D / 180.0D) * 1.2D;
          double d1 = -Math.cos((double)yaw * 3.141592653589793D / 180.0D) * 1.2D;
-         e.func_70107_b(this.field_70165_t + d0, this.field_70163_u + this.func_70042_X() + e.func_70033_W() + 1.0D, this.field_70161_v + d1);
-         e.field_70142_S = e.field_70169_q = e.field_70165_t;
-         e.field_70137_T = e.field_70167_r = e.field_70163_u;
-         e.field_70136_U = e.field_70166_s = e.field_70161_v;
+         e.func_70107_b(this.posX + d0, this.posY + this.func_70042_X() + e.func_70033_W() + 1.0D, this.posZ + d1);
+         e.field_70142_S = e.field_70169_q = e.posX;
+         e.field_70137_T = e.field_70167_r = e.posY;
+         e.field_70136_U = e.field_70166_s = e.posZ;
       }
    }
 
    public void unmountEntity() {
       this.camera.setMode(0, 0);
       this.camera.setCameraZoom(1.0F);
-      if (!this.field_70170_p.field_72995_K) {
+      if (!this.world.isRemote) {
          Entity riddenByEntity = this.getRiddenByEntity();
          if (riddenByEntity != null) {
             if (!riddenByEntity.field_70128_L) {
@@ -385,7 +385,7 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
       if (foreceUpdate || riddenByEntity != null && this.camera != null) {
          double x = -Math.sin((double)this.field_70177_z * 3.141592653589793D / 180.0D) * 0.6D;
          double z = Math.cos((double)this.field_70177_z * 3.141592653589793D / 180.0D) * 0.6D;
-         this.camera.setPosition(this.field_70165_t + x, this.field_70163_u + 0.7D, this.field_70161_v + z);
+         this.camera.setPosition(this.posX + x, this.posY + 0.7D, this.posZ + z);
       }
 
    }
@@ -409,7 +409,7 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
       if (this.func_184196_w(passenger)) {
          double x = Math.sin((double)this.field_70177_z * 3.141592653589793D / 180.0D) * 0.5D;
          double z = -Math.cos((double)this.field_70177_z * 3.141592653589793D / 180.0D) * 0.5D;
-         passenger.func_70107_b(this.field_70165_t + x, this.field_70163_u + this.func_70042_X() + passenger.func_70033_W(), this.field_70161_v + z);
+         passenger.func_70107_b(this.posX + x, this.posY + this.func_70042_X() + passenger.func_70033_W(), this.posZ + z);
       }
 
    }
@@ -421,10 +421,10 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
       Entity riddenByEntity = this.getRiddenByEntity();
       if (this.countWait == 0 && riddenByEntity != null && this.weaponCAS.shot(riddenByEntity, this.camera.posX, this.camera.posY, this.camera.posZ, option1, option2)) {
          this.countWait = this.weaponCAS.interval;
-         if (this.field_70170_p.field_72995_K) {
+         if (this.world.isRemote) {
             this.countWait += this.countWait > 0 ? 10 : -10;
          } else {
-            W_WorldFunc.MOD_playSoundEffect(this.field_70170_p, this.field_70165_t, this.field_70163_u, this.field_70161_v, "gltd", 0.5F, 1.0F);
+            W_WorldFunc.MOD_playSoundEffect(this.world, this.posX, this.posY, this.posZ, "gltd", 0.5F, 1.0F);
          }
 
          return true;
@@ -451,7 +451,7 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
       } else {
          player.field_70177_z = MathHelper.func_76142_g(this.field_70177_z);
          player.field_70125_A = MathHelper.func_76142_g(this.field_70125_A);
-         if (!this.field_70170_p.field_72995_K) {
+         if (!this.world.isRemote) {
             player.func_184220_m(this);
          } else {
             this.zoomDir = true;
@@ -471,23 +471,23 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
    }
 
    public void setDamageTaken(int par1) {
-      this.field_70180_af.func_187227_b(DAMAGE_TAKEN, par1);
+      this.dataManager.func_187227_b(DAMAGE_TAKEN, par1);
    }
 
    public int getDamageTaken() {
-      return (Integer)this.field_70180_af.func_187225_a(DAMAGE_TAKEN);
+      return (Integer)this.dataManager.func_187225_a(DAMAGE_TAKEN);
    }
 
    public void setTimeSinceHit(int par1) {
-      this.field_70180_af.func_187227_b(TIME_SINCE_HIT, par1);
+      this.dataManager.func_187227_b(TIME_SINCE_HIT, par1);
    }
 
    public int getTimeSinceHit() {
-      return (Integer)this.field_70180_af.func_187225_a(TIME_SINCE_HIT);
+      return (Integer)this.dataManager.func_187225_a(TIME_SINCE_HIT);
    }
 
    public void setForwardDirection(int par1) {
-      this.field_70180_af.func_187227_b(FORWARD_DIR, par1);
+      this.dataManager.func_187227_b(FORWARD_DIR, par1);
    }
 
    public int getForwardDirection() {
@@ -510,8 +510,8 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
    }
 
    static {
-      TIME_SINCE_HIT = EntityDataManager.func_187226_a(MCH_EntityGLTD.class, DataSerializers.field_187192_b);
-      FORWARD_DIR = EntityDataManager.func_187226_a(MCH_EntityGLTD.class, DataSerializers.field_187192_b);
-      DAMAGE_TAKEN = EntityDataManager.func_187226_a(MCH_EntityGLTD.class, DataSerializers.field_187192_b);
+      TIME_SINCE_HIT = EntityDataManager.createKey(MCH_EntityGLTD.class, DataSerializers.VARINT);
+      FORWARD_DIR = EntityDataManager.createKey(MCH_EntityGLTD.class, DataSerializers.VARINT);
+      DAMAGE_TAKEN = EntityDataManager.createKey(MCH_EntityGLTD.class, DataSerializers.VARINT);
    }
 }

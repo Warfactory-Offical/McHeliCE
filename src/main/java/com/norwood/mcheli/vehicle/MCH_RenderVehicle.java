@@ -72,7 +72,7 @@ public class MCH_RenderVehicle extends MCH_RenderAircraft<MCH_EntityVehicle> {
       }
 
       if (vp.rotPitch || vp.rotYaw || vp.type == 1) {
-         GL11.glTranslated(vp.pos.field_72450_a, vp.pos.field_72448_b, vp.pos.field_72449_c);
+         GL11.glTranslated(vp.pos.x, vp.pos.y, vp.pos.z);
          if (vp.rotYaw) {
             GL11.glRotatef(-vehicle.lastRiderYaw + yaw, 0.0F, 1.0F, 0.0F);
          }
@@ -86,7 +86,7 @@ public class MCH_RenderVehicle extends MCH_RenderAircraft<MCH_EntityVehicle> {
             GL11.glRotatef(rotBrl, 0.0F, 0.0F, -1.0F);
          }
 
-         GL11.glTranslated(-vp.pos.field_72450_a, -vp.pos.field_72448_b, -vp.pos.field_72449_c);
+         GL11.glTranslated(-vp.pos.x, -vp.pos.y, -vp.pos.z);
       }
 
       if (vp.type == 2) {

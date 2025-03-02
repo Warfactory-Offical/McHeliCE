@@ -28,7 +28,7 @@ public class W_Lib {
    }
 
    public static boolean isClientPlayer(@Nullable Entity entity) {
-      return entity instanceof EntityPlayer && entity.field_70170_p.field_72995_K ? W_Entity.isEqual(MCH_MOD.proxy.getClientPlayer(), entity) : false;
+      return entity instanceof EntityPlayer && entity.world.isRemote ? W_Entity.isEqual(MCH_MOD.proxy.getClientPlayer(), entity) : false;
    }
 
    public static boolean isFirstPerson() {

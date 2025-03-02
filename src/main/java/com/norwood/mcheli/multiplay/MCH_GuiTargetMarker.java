@@ -1,4 +1,4 @@
-package com.norwood.com.norwood.mcheli.multiplay;
+package com.norwood.mcheli.multiplay;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -50,7 +50,7 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
    }
 
    public boolean isDrawGui(EntityPlayer player) {
-      return player != null && player.field_70170_p != null;
+      return player != null && player.world != null;
    }
 
    public static void onClientTick() {
@@ -142,7 +142,7 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
          }
 
          if (spotType == MCH_TargetType.NONE && isSpotedEntity(entity)) {
-            spotType = MCH_Multiplay.canSpotEntity(clientPlayer, clientPlayer.field_70165_t, clientPlayer.field_70163_u + (double)clientPlayer.func_70047_e(), clientPlayer.field_70161_v, entity, false);
+            spotType = MCH_Multiplay.canSpotEntity(clientPlayer, clientPlayer.posX, clientPlayer.posY + (double)clientPlayer.func_70047_e(), clientPlayer.posZ, entity, false);
          }
 
          if (reserve == 100) {
@@ -202,12 +202,12 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
       double x = 9999.0D;
       double z = 9999.0D;
       double y = 9999.0D;
-      Tessellator tessellator = Tessellator.func_178181_a();
-      BufferBuilder builder = tessellator.func_178180_c();
+      Tessellator tessellator = Tessellator.getInstance();
+      BufferBuilder builder = tessellator.getBuffer();
 
       for(int i = 0; i < 2; ++i) {
          if (i == 0) {
-            builder.func_181668_a(i == 0 ? 4 : 1, DefaultVertexFormats.field_181706_f);
+            builder.begin(i == 0 ? 4 : 1, DefaultVertexFormats.field_181706_f);
          }
 
          Iterator var15 = entityPos.iterator();
@@ -247,10 +247,10 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
                      }
 
                      GL11.glDisable(3553);
-                     builder.func_181668_a(1, DefaultVertexFormats.field_181706_f);
+                     builder.begin(1, DefaultVertexFormats.field_181706_f);
                      drawRhombus(builder, 15, x, y, (double)this.field_73735_i, MARK_SIZE, color);
                   } else {
-                     builder.func_181668_a(1, DefaultVertexFormats.field_181706_f);
+                     builder.begin(1, DefaultVertexFormats.field_181706_f);
                      S = 30.0D;
                      if (x < S) {
                         drawRhombus(builder, 1, S, (double)(DSH / 2), (double)this.field_73735_i, MARK_SIZE, color);
@@ -265,12 +265,12 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
                      }
                   }
 
-                  tessellator.func_78381_a();
+                  tessellator.draw();
                }
             }
 
             if (i == 0) {
-               tessellator.func_78381_a();
+               tessellator.draw();
             }
             break;
          }
@@ -289,31 +289,31 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
       int alpha = color >> 24 & 255;
       double M = size / 3.0D;
       if ((dir & 1) != 0) {
-         builder.func_181662_b(x - size, y, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.func_181662_b(x - size + M, y - M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.func_181662_b(x - size, y, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.func_181662_b(x - size + M, y + M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x - size, y, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x - size + M, y - M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x - size, y, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x - size + M, y + M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
       }
 
       if ((dir & 4) != 0) {
-         builder.func_181662_b(x + size, y, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.func_181662_b(x + size - M, y - M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.func_181662_b(x + size, y, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.func_181662_b(x + size - M, y + M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x + size, y, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x + size - M, y - M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x + size, y, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x + size - M, y + M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
       }
 
       if ((dir & 8) != 0) {
-         builder.func_181662_b(x, y - size, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.func_181662_b(x + M, y - size + M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.func_181662_b(x, y - size, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.func_181662_b(x - M, y - size + M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x, y - size, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x + M, y - size + M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x, y - size, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x - M, y - size + M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
       }
 
       if ((dir & 2) != 0) {
-         builder.func_181662_b(x, y + size, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.func_181662_b(x + M, y + size - M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.func_181662_b(x, y + size, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.func_181662_b(x - M, y + size - M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x, y + size, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x + M, y + size - M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x, y + size, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x - M, y + size - M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
       }
 
    }
@@ -323,14 +323,14 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
       int green = color >> 8 & 255;
       int blue = color >> 0 & 255;
       int alpha = color >> 24 & 255;
-      builder.func_181662_b(x + size / 2.0D, y - 10.0D - size, (double)this.field_73735_i).func_181669_b(red, green, blue, alpha).func_181675_d();
-      builder.func_181662_b(x - size / 2.0D, y - 10.0D - size, (double)this.field_73735_i).func_181669_b(red, green, blue, alpha).func_181675_d();
-      builder.func_181662_b(x + 0.0D, y - 10.0D, (double)this.field_73735_i).func_181669_b(red, green, blue, alpha).func_181675_d();
+      builder.pos(x + size / 2.0D, y - 10.0D - size, (double)this.field_73735_i).func_181669_b(red, green, blue, alpha).func_181675_d();
+      builder.pos(x - size / 2.0D, y - 10.0D - size, (double)this.field_73735_i).func_181669_b(red, green, blue, alpha).func_181675_d();
+      builder.pos(x + 0.0D, y - 10.0D, (double)this.field_73735_i).func_181669_b(red, green, blue, alpha).func_181675_d();
    }
 
    public static void markPoint(int px, int py, int pz) {
       EntityPlayer player = Minecraft.func_71410_x().field_71439_g;
-      if (player != null && player.field_70170_p != null) {
+      if (player != null && player.world != null) {
          if (py < 1000) {
             MCH_ParticlesUtil.spawnMarkPoint(player, 0.5D + (double)px, 1.0D + (double)py, 0.5D + (double)pz);
          } else {

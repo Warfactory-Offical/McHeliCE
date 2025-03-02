@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class MCH_LightWeaponPacketHandler {
    @HandleSide({Side.SERVER})
    public static void onPacket_PlayerControl(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-      if (!player.field_70170_p.field_72995_K) {
+      if (!player.world.isRemote) {
          MCH_PacketLightWeaponPlayerControl pc = new MCH_PacketLightWeaponPlayerControl();
          pc.readData(data);
          scheduler.func_152344_a(() -> {
@@ -41,7 +41,7 @@ public class MCH_LightWeaponPacketHandler {
 
                   if (pc.useWeapon && is.func_77960_j() < is.func_77958_k()) {
                      String name = MCH_ItemLightWeaponBase.getName(player.func_184614_ca());
-                     MCH_WeaponBase w = MCH_WeaponCreator.createWeapon(player.field_70170_p, name, Vec3d.field_186680_a, 0.0F, 0.0F, (MCH_IEntityLockChecker)null, false);
+                     MCH_WeaponBase w = MCH_WeaponCreator.createWeapon(player.world, name, Vec3d.ZERO, 0.0F, 0.0F, (MCH_IEntityLockChecker)null, false);
                      MCH_WeaponParam prm = new MCH_WeaponParam();
                      prm.entity = player;
                      prm.user = player;

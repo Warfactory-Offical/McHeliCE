@@ -24,7 +24,7 @@ public class W_Face {
    }
 
    public void addFaceForRender(Tessellator tessellator, float textureOffset) {
-      BufferBuilder builder = tessellator.func_178180_c();
+      BufferBuilder builder = tessellator.getBuffer();
       if (this.faceNormal == null) {
          this.faceNormal = this.calculateFaceNormal();
       }
@@ -54,9 +54,9 @@ public class W_Face {
                offsetV = -textureOffset;
             }
 
-            builder.func_181662_b((double)this.vertices[i].x, (double)this.vertices[i].y, (double)this.vertices[i].z).func_187315_a((double)(this.textureCoordinates[i].u + offsetU), (double)(this.textureCoordinates[i].v + offsetV));
+            builder.pos((double)this.vertices[i].x, (double)this.vertices[i].y, (double)this.vertices[i].z).func_187315_a((double)(this.textureCoordinates[i].u + offsetU), (double)(this.textureCoordinates[i].v + offsetV));
          } else {
-            builder.func_181662_b((double)this.vertices[i].x, (double)this.vertices[i].y, (double)this.vertices[i].z).func_187315_a(0.0D, 0.0D);
+            builder.pos((double)this.vertices[i].x, (double)this.vertices[i].y, (double)this.vertices[i].z).func_187315_a(0.0D, 0.0D);
          }
 
          if (this.vertexNormals != null && i < this.vertexNormals.length) {
@@ -71,8 +71,8 @@ public class W_Face {
    public W_Vertex calculateFaceNormal() {
       Vec3d v1 = new Vec3d((double)(this.vertices[1].x - this.vertices[0].x), (double)(this.vertices[1].y - this.vertices[0].y), (double)(this.vertices[1].z - this.vertices[0].z));
       Vec3d v2 = new Vec3d((double)(this.vertices[2].x - this.vertices[0].x), (double)(this.vertices[2].y - this.vertices[0].y), (double)(this.vertices[2].z - this.vertices[0].z));
-      Vec3d normalVector = v1.func_72431_c(v2).func_72432_b();
-      return new W_Vertex((float)normalVector.field_72450_a, (float)normalVector.field_72448_b, (float)normalVector.field_72449_c);
+      Vec3d normalVector = v1.crossProduct(v2).normalize();
+      return new W_Vertex((float)normalVector.x, (float)normalVector.y, (float)normalVector.z);
    }
 
    public String toString() {

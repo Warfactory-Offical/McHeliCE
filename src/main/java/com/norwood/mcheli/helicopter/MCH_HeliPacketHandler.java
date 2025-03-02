@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class MCH_HeliPacketHandler {
    @HandleSide({Side.SERVER})
    public static void onPacket_PlayerControl(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-      if (!player.field_70170_p.field_72995_K) {
+      if (!player.world.isRemote) {
          MCH_HeliPacketPlayerControl pc = new MCH_HeliPacketPlayerControl();
          pc.readData(data);
          scheduler.func_152344_a(() -> {
@@ -100,7 +100,7 @@ public class MCH_HeliPacketHandler {
                   }
 
                   if (pc.unhitchChainId >= 0) {
-                     Entity e = player.field_70170_p.func_73045_a(pc.unhitchChainId);
+                     Entity e = player.world.func_73045_a(pc.unhitchChainId);
                      if (e instanceof MCH_EntityChain) {
                         if (((MCH_EntityChain)e).towedEntity instanceof MCH_EntityContainer && MCH_Lib.getBlockIdY(heli, 3, -20) == 0 && player instanceof EntityPlayerMP) {
                            MCH_CriteriaTriggers.RELIEF_SUPPLIES.trigger((EntityPlayerMP)player);

@@ -32,7 +32,7 @@ public class MCH_ItemRangeFinder extends W_Item {
    public static boolean canUse(EntityPlayer player) {
       if (player == null) {
          return false;
-      } else if (player.field_70170_p == null) {
+      } else if (player.world == null) {
          return false;
       } else if (player.func_184614_ca().func_190926_b()) {
          return false;
@@ -69,7 +69,7 @@ public class MCH_ItemRangeFinder extends W_Item {
 
    @SideOnly(Side.CLIENT)
    public void spotEntity(EntityPlayer player, ItemStack itemStack) {
-      if (player != null && player.field_70170_p.field_72995_K && rangeFinderUseCooldown == 0 && player.func_184612_cw() > 8) {
+      if (player != null && player.world.isRemote && rangeFinderUseCooldown == 0 && player.func_184612_cw() > 8) {
          if (mode == 2) {
             rangeFinderUseCooldown = 60;
             MCH_PacketIndSpotEntity.send(player, 0);
@@ -84,7 +84,7 @@ public class MCH_ItemRangeFinder extends W_Item {
    }
 
    public void func_77615_a(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {
-      if (worldIn.field_72995_K) {
+      if (worldIn.isRemote) {
          onStopUseItem();
       }
 

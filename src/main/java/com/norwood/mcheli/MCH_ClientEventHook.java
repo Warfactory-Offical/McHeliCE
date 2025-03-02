@@ -75,15 +75,15 @@ public class MCH_ClientEventHook extends W_ClientEventHook {
                   GL11.glEnable(3553);
                   rm.field_78724_e.func_110577_a(ir_strobe);
                   GL11.glAlphaFunc(516, 0.003921569F);
-                  Tessellator tessellator = Tessellator.func_178181_a();
-                  BufferBuilder builder = tessellator.func_178180_c();
-                  builder.func_181668_a(7, DefaultVertexFormats.field_181709_i);
+                  Tessellator tessellator = Tessellator.getInstance();
+                  BufferBuilder builder = tessellator.getBuffer();
+                  builder.begin(7, DefaultVertexFormats.field_181709_i);
                   int i = (int)Math.max(entity.field_70130_N, entity.field_70131_O) * 20;
-                  builder.func_181662_b((double)(-i), (double)(-i), 0.1D).func_187315_a(0.0D, 0.0D).func_181666_a(1.0F, 1.0F, 1.0F, alpha * (cm == 1 ? 0.9F : 0.5F)).func_181675_d();
-                  builder.func_181662_b((double)(-i), (double)i, 0.1D).func_187315_a(0.0D, 1.0D).func_181666_a(1.0F, 1.0F, 1.0F, alpha * (cm == 1 ? 0.9F : 0.5F)).func_181675_d();
-                  builder.func_181662_b((double)i, (double)i, 0.1D).func_187315_a(1.0D, 1.0D).func_181666_a(1.0F, 1.0F, 1.0F, alpha * (cm == 1 ? 0.9F : 0.5F)).func_181675_d();
-                  builder.func_181662_b((double)i, (double)(-i), 0.1D).func_187315_a(1.0D, 0.0D).func_181666_a(1.0F, 1.0F, 1.0F, alpha * (cm == 1 ? 0.9F : 0.5F)).func_181675_d();
-                  tessellator.func_78381_a();
+                  builder.pos((double)(-i), (double)(-i), 0.1D).func_187315_a(0.0D, 0.0D).func_181666_a(1.0F, 1.0F, 1.0F, alpha * (cm == 1 ? 0.9F : 0.5F)).func_181675_d();
+                  builder.pos((double)(-i), (double)i, 0.1D).func_187315_a(0.0D, 1.0D).func_181666_a(1.0F, 1.0F, 1.0F, alpha * (cm == 1 ? 0.9F : 0.5F)).func_181675_d();
+                  builder.pos((double)i, (double)i, 0.1D).func_187315_a(1.0D, 1.0D).func_181666_a(1.0F, 1.0F, 1.0F, alpha * (cm == 1 ? 0.9F : 0.5F)).func_181675_d();
+                  builder.pos((double)i, (double)(-i), 0.1D).func_187315_a(1.0D, 0.0D).func_181666_a(1.0F, 1.0F, 1.0F, alpha * (cm == 1 ? 0.9F : 0.5F)).func_181675_d();
+                  tessellator.draw();
                   GL11.glEnable(2896);
                   GL11.glPopMatrix();
                }

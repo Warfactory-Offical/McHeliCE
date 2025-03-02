@@ -36,7 +36,7 @@ public class MCH_EntityTorpedo extends MCH_EntityBaseBullet {
 
    private void onUpdateNoGuided() {
       double x;
-      if (!this.field_70170_p.field_72995_K && this.func_70090_H()) {
+      if (!this.world.isRemote && this.func_70090_H()) {
          this.field_70181_x *= 0.800000011920929D;
          if (this.acceleration < this.accelerationInWater) {
             this.acceleration += 0.1D;
@@ -63,16 +63,16 @@ public class MCH_EntityTorpedo extends MCH_EntityBaseBullet {
    private void onUpdateGuided() {
       double x;
       double y;
-      if (!this.field_70170_p.field_72995_K && this.func_70090_H()) {
+      if (!this.world.isRemote && this.func_70090_H()) {
          if (this.acceleration < this.accelerationInWater) {
             this.acceleration += 0.1D;
          } else if (this.acceleration > this.accelerationInWater + 0.20000000298023224D) {
             this.acceleration -= 0.1D;
          }
 
-         x = this.targetPosX - this.field_70165_t;
-         y = this.targetPosY - this.field_70163_u;
-         double z = this.targetPosZ - this.field_70161_v;
+         x = this.targetPosX - this.posX;
+         y = this.targetPosY - this.posY;
+         double z = this.targetPosZ - this.posZ;
          double d = (double)MathHelper.func_76133_a(x * x + y * y + z * z);
          this.field_70159_w = x * this.acceleration / d;
          this.field_70181_x = y * this.acceleration / d;

@@ -29,7 +29,7 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
    }
 
    public boolean isDrawGui(EntityPlayer player) {
-      return player != null && player.field_70170_p != null && !player.func_184614_ca().func_190926_b() && player.func_184614_ca().func_77973_b() instanceof MCH_ItemSpawnGunner;
+      return player != null && player.world != null && !player.func_184614_ca().func_190926_b() && player.func_184614_ca().func_77973_b() instanceof MCH_ItemSpawnGunner;
    }
 
    public void drawGui(EntityPlayer player, boolean isThirdPersonView) {
@@ -46,9 +46,9 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
       float f = 1.0F;
       float pitch = player.field_70127_C + (player.field_70125_A - player.field_70127_C) * f;
       float yaw = player.field_70126_B + (player.field_70177_z - player.field_70126_B) * f;
-      double dx = player.field_70169_q + (player.field_70165_t - player.field_70169_q) * (double)f;
-      double dy = player.field_70167_r + (player.field_70163_u - player.field_70167_r) * (double)f + (double)player.func_70047_e();
-      double dz = player.field_70166_s + (player.field_70161_v - player.field_70166_s) * (double)f;
+      double dx = player.field_70169_q + (player.posX - player.field_70169_q) * (double)f;
+      double dy = player.field_70167_r + (player.posY - player.field_70167_r) * (double)f + (double)player.func_70047_e();
+      double dz = player.field_70166_s + (player.posZ - player.field_70166_s) * (double)f;
       Vec3d vec3 = new Vec3d(dx, dy, dz);
       float f3 = MathHelper.func_76134_b(-yaw * 0.017453292F - 3.1415927F);
       float f4 = MathHelper.func_76126_a(-yaw * 0.017453292F - 3.1415927F);
@@ -59,7 +59,7 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
       double d3 = 5.0D;
       Vec3d vec31 = vec3.func_72441_c((double)f7 * d3, (double)f6 * d3, (double)f8 * d3);
       Entity target = null;
-      List<MCH_EntityGunner> list = player.field_70170_p.func_72872_a(MCH_EntityGunner.class, player.func_174813_aQ().func_72314_b(5.0D, 5.0D, 5.0D));
+      List<MCH_EntityGunner> list = player.world.func_72872_a(MCH_EntityGunner.class, player.func_174813_aQ().func_72314_b(5.0D, 5.0D, 5.0D));
 
       for(int i = 0; i < list.size(); ++i) {
          MCH_EntityGunner gunner = (MCH_EntityGunner)list.get(i);
@@ -72,10 +72,10 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
          return (Entity)target;
       } else {
          MCH_ItemSpawnGunner item = (MCH_ItemSpawnGunner)player.func_184614_ca().func_77973_b();
-         if (item.targetType == 1 && !player.field_70170_p.field_72995_K && player.func_96124_cp() == null) {
+         if (item.targetType == 1 && !player.world.isRemote && player.func_96124_cp() == null) {
             return null;
          } else {
-            List<MCH_EntitySeat> list1 = player.field_70170_p.func_72872_a(MCH_EntitySeat.class, player.func_174813_aQ().func_72314_b(5.0D, 5.0D, 5.0D));
+            List<MCH_EntitySeat> list1 = player.world.func_72872_a(MCH_EntitySeat.class, player.func_174813_aQ().func_72314_b(5.0D, 5.0D, 5.0D));
 
             for(int i = 0; i < list1.size(); ++i) {
                MCH_EntitySeat seat = (MCH_EntitySeat)list1.get(i);
@@ -89,7 +89,7 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
             }
 
             if (target == null) {
-               List<MCH_EntityAircraft> list2 = player.field_70170_p.func_72872_a(MCH_EntityAircraft.class, player.func_174813_aQ().func_72314_b(5.0D, 5.0D, 5.0D));
+               List<MCH_EntityAircraft> list2 = player.world.func_72872_a(MCH_EntityAircraft.class, player.func_174813_aQ().func_72314_b(5.0D, 5.0D, 5.0D));
 
                for(int i = 0; i < list2.size(); ++i) {
                   MCH_EntityAircraft ac = (MCH_EntityAircraft)list2.get(i);

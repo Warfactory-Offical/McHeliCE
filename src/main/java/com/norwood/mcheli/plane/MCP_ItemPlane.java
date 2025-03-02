@@ -31,7 +31,7 @@ public class MCP_ItemPlane extends MCH_ItemAircraft {
          plane.field_70166_s = z;
          plane.camera.setPosition(x, y, z);
          plane.setTypeName(info.name);
-         if (!world.field_72995_K) {
+         if (!world.isRemote) {
             plane.setTextureName(info.getTextureName());
          }
 

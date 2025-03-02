@@ -77,9 +77,9 @@ public class MCH_ParticlesUtil {
             i = 2;
          }
 
-         double d6 = mc.func_175606_aa().field_70165_t - x;
-         double d7 = mc.func_175606_aa().field_70163_u - y;
-         double d8 = mc.func_175606_aa().field_70161_v - z;
+         double d6 = mc.func_175606_aa().posX - x;
+         double d7 = mc.func_175606_aa().posY - y;
+         double d8 = mc.func_175606_aa().posZ - z;
          Particle entityfx = null;
          if (type.equalsIgnoreCase("hugeexplosion")) {
             entityfx = create(Factory::new, mc.field_71441_e, x, y, z, mx, my, mz);
@@ -186,7 +186,7 @@ public class MCH_ParticlesUtil {
    }
 
    public static void spawnParticle(MCH_ParticleParam p) {
-      if (p.world.field_72995_K) {
+      if (p.world.isRemote) {
          MCH_EntityParticleBase entityFX = null;
          if (p.name.equalsIgnoreCase("Splash")) {
             entityFX = new MCH_EntityParticleSplash(p.world, p.posX, p.posY, p.posZ, p.motionX, p.motionY, p.motionZ);
@@ -219,7 +219,7 @@ public class MCH_ParticlesUtil {
 
    public static void spawnMarkPoint(EntityPlayer player, double x, double y, double z) {
       clearMarkPoint();
-      markPoint = new MCH_EntityParticleMarkPoint(player.field_70170_p, x, y, z, player.func_96124_cp());
+      markPoint = new MCH_EntityParticleMarkPoint(player.world, x, y, z, player.func_96124_cp());
       FMLClientHandler.instance().getClient().field_71452_i.func_78873_a(markPoint);
    }
 

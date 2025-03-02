@@ -105,7 +105,7 @@ public class MCH_ClientTankTickHandler extends MCH_AircraftClientTickHandler {
 
       if (!this.isBeforeRiding && this.isRiding && tank != null) {
          W_Reflection.setThirdPersonDistance(tank.thirdPersonDist);
-         MCH_ViewEntityDummy.getInstance(this.mc.field_71441_e).func_70107_b(tank.field_70165_t, tank.field_70163_u + 0.5D, tank.field_70161_v);
+         MCH_ViewEntityDummy.getInstance(this.mc.field_71441_e).func_70107_b(tank.posX, tank.posY + 0.5D, tank.posZ);
       } else if (this.isBeforeRiding && !this.isRiding) {
          W_Reflection.restoreDefaultThirdPersonDistance();
          MCH_Lib.enableFirstPersonItemRender();

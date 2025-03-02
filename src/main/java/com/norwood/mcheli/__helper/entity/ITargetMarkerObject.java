@@ -30,15 +30,15 @@ public interface ITargetMarkerObject {
       }
 
       public double getX() {
-         return this.target.field_70165_t;
+         return this.target.posX;
       }
 
       public double getY() {
-         return this.target.field_70163_u;
+         return this.target.posY;
       }
 
       public double getZ() {
-         return this.target.field_70161_v;
+         return this.target.posZ;
       }
 
       public Entity getEntity() {

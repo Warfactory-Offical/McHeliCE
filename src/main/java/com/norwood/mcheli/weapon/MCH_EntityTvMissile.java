@@ -23,17 +23,17 @@ public class MCH_EntityTvMissile extends MCH_EntityBaseBullet {
       }
 
       if (this.shootingEntity != null) {
-         double x = this.field_70165_t - this.shootingEntity.field_70165_t;
-         double y = this.field_70163_u - this.shootingEntity.field_70163_u;
-         double z = this.field_70161_v - this.shootingEntity.field_70161_v;
+         double x = this.posX - this.shootingEntity.posX;
+         double y = this.posY - this.shootingEntity.posY;
+         double z = this.posZ - this.shootingEntity.posZ;
          if (x * x + y * y + z * z > 1440000.0D) {
             this.func_70106_y();
          }
 
-         if (!this.field_70170_p.field_72995_K && !this.field_70128_L) {
+         if (!this.world.isRemote && !this.field_70128_L) {
             this.onUpdateMotion();
          }
-      } else if (!this.field_70170_p.field_72995_K) {
+      } else if (!this.world.isRemote) {
          this.func_70106_y();
       }
 

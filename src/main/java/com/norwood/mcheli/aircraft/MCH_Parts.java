@@ -41,7 +41,7 @@ public class MCH_Parts {
    }
 
    public void setStatusServer(boolean stat, boolean playSound) {
-      if (!this.parent.field_70170_p.field_72995_K && this.getStatus() != stat) {
+      if (!this.parent.world.isRemote && this.getStatus() != stat) {
          MCH_Lib.DbgLog(false, "setStatusServer(ID=%d %s :%s -> %s)", this.shift, this.partName, this.getStatus() ? "ON" : "OFF", stat ? "ON" : "OFF");
          this.updateDataWatcher(stat);
          this.playSound(this.soundSwitching);
@@ -81,7 +81,7 @@ public class MCH_Parts {
    }
 
    public void updateStatusClient(int statFromDataWatcher) {
-      if (this.parent.field_70170_p.field_72995_K) {
+      if (this.parent.world.isRemote) {
          this.status = (statFromDataWatcher & 1 << this.shift) != 0;
       }
 
@@ -115,7 +115,7 @@ public class MCH_Parts {
    }
 
    public void playSound(MCH_Parts.Sound snd) {
-      if (!snd.name.isEmpty() && !this.parent.field_70170_p.field_72995_K) {
+      if (!snd.name.isEmpty() && !this.parent.world.isRemote) {
          W_WorldFunc.MOD_playSoundAtEntity(this.parent, snd.name, snd.volume, snd.pitch);
       }
 

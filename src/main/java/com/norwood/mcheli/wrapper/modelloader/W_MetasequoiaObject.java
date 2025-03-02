@@ -255,16 +255,16 @@ public class W_MetasequoiaObject extends W_ModelCustom {
    }
 
    public void renderAll() {
-      Tessellator tessellator = Tessellator.func_178181_a();
-      BufferBuilder builder = tessellator.func_178180_c();
+      Tessellator tessellator = Tessellator.getInstance();
+      BufferBuilder builder = tessellator.getBuffer();
       if (this.currentGroupObject != null) {
-         builder.func_181668_a(this.currentGroupObject.glDrawingMode, DefaultVertexFormats.field_181710_j);
+         builder.begin(this.currentGroupObject.glDrawingMode, DefaultVertexFormats.field_181710_j);
       } else {
-         builder.func_181668_a(4, DefaultVertexFormats.field_181710_j);
+         builder.begin(4, DefaultVertexFormats.field_181710_j);
       }
 
       this.tessellateAll(tessellator);
-      tessellator.func_78381_a();
+      tessellator.draw();
    }
 
    public void tessellateAll(Tessellator tessellator) {
@@ -488,16 +488,16 @@ public class W_MetasequoiaObject extends W_ModelCustom {
    }
 
    public void renderAllLine(int startLine, int maxLine) {
-      Tessellator tessellator = Tessellator.func_178181_a();
-      BufferBuilder builder = tessellator.func_178180_c();
-      builder.func_181668_a(1, DefaultVertexFormats.field_181705_e);
+      Tessellator tessellator = Tessellator.getInstance();
+      BufferBuilder builder = tessellator.getBuffer();
+      builder.begin(1, DefaultVertexFormats.field_181705_e);
       this.renderAllLine(tessellator, startLine, maxLine);
-      tessellator.func_78381_a();
+      tessellator.draw();
    }
 
    public void renderAllLine(Tessellator tessellator, int startLine, int maxLine) {
       int lineCnt = 0;
-      BufferBuilder builder = tessellator.func_178180_c();
+      BufferBuilder builder = tessellator.getBuffer();
       Iterator var6 = this.groupObjects.iterator();
 
       while(true) {
@@ -524,22 +524,22 @@ public class W_MetasequoiaObject extends W_ModelCustom {
                   return;
                }
 
-               builder.func_181662_b((double)v1.x, (double)v1.y, (double)v1.z).func_181675_d();
-               builder.func_181662_b((double)v2.x, (double)v2.y, (double)v2.z).func_181675_d();
+               builder.pos((double)v1.x, (double)v1.y, (double)v1.z).func_181675_d();
+               builder.pos((double)v2.x, (double)v2.y, (double)v2.z).func_181675_d();
                ++lineCnt;
                if (lineCnt > maxLine) {
                   return;
                }
 
-               builder.func_181662_b((double)v2.x, (double)v2.y, (double)v2.z).func_181675_d();
-               builder.func_181662_b((double)v3.x, (double)v3.y, (double)v3.z).func_181675_d();
+               builder.pos((double)v2.x, (double)v2.y, (double)v2.z).func_181675_d();
+               builder.pos((double)v3.x, (double)v3.y, (double)v3.z).func_181675_d();
                ++lineCnt;
                if (lineCnt > maxLine) {
                   return;
                }
 
-               builder.func_181662_b((double)v3.x, (double)v3.y, (double)v3.z).func_181675_d();
-               builder.func_181662_b((double)v1.x, (double)v1.y, (double)v1.z).func_181675_d();
+               builder.pos((double)v3.x, (double)v3.y, (double)v3.z).func_181675_d();
+               builder.pos((double)v1.x, (double)v1.y, (double)v1.z).func_181675_d();
             }
          }
       }
@@ -558,11 +558,11 @@ public class W_MetasequoiaObject extends W_ModelCustom {
          startFace = 0;
       }
 
-      Tessellator tessellator = Tessellator.func_178181_a();
-      BufferBuilder builder = tessellator.func_178180_c();
-      builder.func_181668_a(4, DefaultVertexFormats.field_181710_j);
+      Tessellator tessellator = Tessellator.getInstance();
+      BufferBuilder builder = tessellator.getBuffer();
+      builder.begin(4, DefaultVertexFormats.field_181710_j);
       this.renderAll(tessellator, startFace, maxFace);
-      tessellator.func_78381_a();
+      tessellator.draw();
    }
 
    public void renderAll(Tessellator tessellator, int startFace, int maxLine) {

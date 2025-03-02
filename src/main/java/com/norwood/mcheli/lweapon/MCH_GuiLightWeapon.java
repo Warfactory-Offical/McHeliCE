@@ -62,8 +62,8 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
                GL11.glBlendFunc(770, 771);
                double dist = 0.0D;
                if (gs.getTargetEntity() != null) {
-                  double dx = gs.getTargetEntity().field_70165_t - player.field_70165_t;
-                  double dz = gs.getTargetEntity().field_70161_v - player.field_70161_v;
+                  double dx = gs.getTargetEntity().posX - player.posX;
+                  double dz = gs.getTargetEntity().posZ - player.posZ;
                   dist = Math.sqrt(dx * dx + dz * dz);
                }
 
@@ -123,8 +123,8 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
       if (gs.getLockCount() > 0) {
          Entity target = gs.getLockingEntity();
          if (target != null) {
-            double dx = target.field_70165_t - player.field_70165_t;
-            double dz = target.field_70161_v - player.field_70161_v;
+            double dx = target.posX - player.posX;
+            double dz = target.posZ - player.posZ;
             msgLockDist = String.format("[%.2f]", Math.sqrt(dx * dx + dz * dz));
             color = canFire ? color1 : color2;
             if (!MCH_Config.HideKeybind.prmBool && gs.isLockComplete()) {
@@ -160,8 +160,8 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
 
          x = 280.0D * fac;
          y = 370.0D * fac;
-         w = pos.field_72450_a / (double)scale;
-         h = (double)this.field_146295_m - pos.field_72448_b / (double)scale;
+         w = pos.x / (double)scale;
+         h = (double)this.field_146295_m - pos.y / (double)scale;
          double sx = MCH_Lib.RNG(w, left + x, right - x);
          double sy = MCH_Lib.RNG(h, top + y, bottom - y);
          if (gs.getLockCount() >= gs.getLockCountMax() / 2) {
@@ -174,8 +174,8 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
                pos = new Vec3d((double)((this.field_146294_l / 2 - 65) * scale), (double)((this.field_146295_m / 2 + 50) * scale), 0.0D);
             }
 
-            double bx = pos.field_72450_a / (double)scale;
-            double by = (double)this.field_146295_m - pos.field_72448_b / (double)scale;
+            double bx = pos.x / (double)scale;
+            double by = (double)this.field_146295_m - pos.y / (double)scale;
             double dx = Math.abs(w - bx);
             double dy = Math.abs(h - by);
             double p = 1.0D - (double)gs.getLockCount() / (double)gs.getLockCountMax();

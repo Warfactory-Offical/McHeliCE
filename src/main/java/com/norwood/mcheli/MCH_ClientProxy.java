@@ -412,7 +412,7 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
    }
 
    public MCH_SoundUpdater CreateSoundUpdater(MCH_EntityAircraft aircraft) {
-      return aircraft != null && aircraft.field_70170_p.field_72995_K ? new MCH_SoundUpdater(Minecraft.func_71410_x(), aircraft, Minecraft.func_71410_x().field_71439_g) : null;
+      return aircraft != null && aircraft.world.isRemote ? new MCH_SoundUpdater(Minecraft.func_71410_x(), aircraft, Minecraft.func_71410_x().field_71439_g) : null;
    }
 
    public void registerSounds() {

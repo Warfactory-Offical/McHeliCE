@@ -87,7 +87,7 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
       this.screenButtonList = new ArrayList();
       this.drawFace = 0;
       this.buttonClickWait = 0;
-      MCH_Lib.DbgLog(player.field_70170_p, "MCH_DraftingTableGui.MCH_DraftingTableGui");
+      MCH_Lib.DbgLog(player.world, "MCH_DraftingTableGui.MCH_DraftingTableGui");
    }
 
    public void func_73866_w_() {
@@ -261,7 +261,7 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
 
    public void func_146281_b() {
       super.func_146281_b();
-      MCH_Lib.DbgLog(this.thePlayer.field_70170_p, "MCH_DraftingTableGui.onGuiClosed");
+      MCH_Lib.DbgLog(this.thePlayer.world, "MCH_DraftingTableGui.onGuiClosed");
    }
 
    protected void func_146284_a(GuiButton button) throws IOException {
@@ -720,27 +720,27 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
    public void func_73729_b(int par1, int par2, int par3, int par4, int par5, int par6) {
       float w = 0.001953125F;
       float h = 0.001953125F;
-      Tessellator tessellator = Tessellator.func_178181_a();
-      BufferBuilder buffer = tessellator.func_178180_c();
-      buffer.func_181668_a(7, DefaultVertexFormats.field_181707_g);
-      buffer.func_181662_b((double)(par1 + 0), (double)(par2 + par6), (double)this.field_73735_i).func_187315_a((double)((float)(par3 + 0) * w), (double)((float)(par4 + par6) * h)).func_181675_d();
-      buffer.func_181662_b((double)(par1 + par5), (double)(par2 + par6), (double)this.field_73735_i).func_187315_a((double)((float)(par3 + par5) * w), (double)((float)(par4 + par6) * h)).func_181675_d();
-      buffer.func_181662_b((double)(par1 + par5), (double)(par2 + 0), (double)this.field_73735_i).func_187315_a((double)((float)(par3 + par5) * w), (double)((float)(par4 + 0) * h)).func_181675_d();
-      buffer.func_181662_b((double)(par1 + 0), (double)(par2 + 0), (double)this.field_73735_i).func_187315_a((double)((float)(par3 + 0) * w), (double)((float)(par4 + 0) * h)).func_181675_d();
-      tessellator.func_78381_a();
+      Tessellator tessellator = Tessellator.getInstance();
+      BufferBuilder buffer = tessellator.getBuffer();
+      buffer.begin(7, DefaultVertexFormats.field_181707_g);
+      buffer.pos((double)(par1 + 0), (double)(par2 + par6), (double)this.field_73735_i).func_187315_a((double)((float)(par3 + 0) * w), (double)((float)(par4 + par6) * h)).func_181675_d();
+      buffer.pos((double)(par1 + par5), (double)(par2 + par6), (double)this.field_73735_i).func_187315_a((double)((float)(par3 + par5) * w), (double)((float)(par4 + par6) * h)).func_181675_d();
+      buffer.pos((double)(par1 + par5), (double)(par2 + 0), (double)this.field_73735_i).func_187315_a((double)((float)(par3 + par5) * w), (double)((float)(par4 + 0) * h)).func_181675_d();
+      buffer.pos((double)(par1 + 0), (double)(par2 + 0), (double)this.field_73735_i).func_187315_a((double)((float)(par3 + 0) * w), (double)((float)(par4 + 0) * h)).func_181675_d();
+      tessellator.draw();
    }
 
    public void drawTexturedModalRect(int dx, int dy, int dw, int dh, int u, int v, int tw, int th) {
       float w = 0.001953125F;
       float h = 0.001953125F;
-      Tessellator tessellator = Tessellator.func_178181_a();
-      BufferBuilder buffer = tessellator.func_178180_c();
-      buffer.func_181668_a(7, DefaultVertexFormats.field_181707_g);
-      buffer.func_181662_b((double)(dx + 0), (double)(dy + dh), (double)this.field_73735_i).func_187315_a((double)((float)(u + 0) * w), (double)((float)(v + th) * h)).func_181675_d();
-      buffer.func_181662_b((double)(dx + dw), (double)(dy + dh), (double)this.field_73735_i).func_187315_a((double)((float)(u + tw) * w), (double)((float)(v + th) * h)).func_181675_d();
-      buffer.func_181662_b((double)(dx + dw), (double)(dy + 0), (double)this.field_73735_i).func_187315_a((double)((float)(u + tw) * w), (double)((float)(v + 0) * h)).func_181675_d();
-      buffer.func_181662_b((double)(dx + 0), (double)(dy + 0), (double)this.field_73735_i).func_187315_a((double)((float)(u + 0) * w), (double)((float)(v + 0) * h)).func_181675_d();
-      tessellator.func_78381_a();
+      Tessellator tessellator = Tessellator.getInstance();
+      BufferBuilder buffer = tessellator.getBuffer();
+      buffer.begin(7, DefaultVertexFormats.field_181707_g);
+      buffer.pos((double)(dx + 0), (double)(dy + dh), (double)this.field_73735_i).func_187315_a((double)((float)(u + 0) * w), (double)((float)(v + th) * h)).func_181675_d();
+      buffer.pos((double)(dx + dw), (double)(dy + dh), (double)this.field_73735_i).func_187315_a((double)((float)(u + tw) * w), (double)((float)(v + th) * h)).func_181675_d();
+      buffer.pos((double)(dx + dw), (double)(dy + 0), (double)this.field_73735_i).func_187315_a((double)((float)(u + tw) * w), (double)((float)(v + 0) * h)).func_181675_d();
+      buffer.pos((double)(dx + 0), (double)(dy + 0), (double)this.field_73735_i).func_187315_a((double)((float)(u + 0) * w), (double)((float)(v + 0) * h)).func_181675_d();
+      tessellator.draw();
    }
 
    public void drawTexturedModalRectWithColor(int x, int y, int width, int height, int u, int v, int uWidth, int vHeight, int color) {
@@ -750,13 +750,13 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
       float f1 = (float)(color >> 8 & 255) / 255.0F;
       float f2 = (float)(color & 255) / 255.0F;
       float f3 = (float)(color >> 24 & 255) / 255.0F;
-      Tessellator tessellator = Tessellator.func_178181_a();
-      BufferBuilder buf = tessellator.func_178180_c();
-      buf.func_181668_a(7, DefaultVertexFormats.field_181709_i);
-      buf.func_181662_b((double)x, (double)(y + height), (double)this.field_73735_i).func_187315_a((double)((float)u * w), (double)((float)(v + vHeight) * h)).func_181666_a(f, f1, f2, f3).func_181675_d();
-      buf.func_181662_b((double)(x + width), (double)(y + height), (double)this.field_73735_i).func_187315_a((double)((float)(u + uWidth) * w), (double)((float)(v + vHeight) * h)).func_181666_a(f, f1, f2, f3).func_181675_d();
-      buf.func_181662_b((double)(x + width), (double)y, (double)this.field_73735_i).func_187315_a((double)((float)(u + uWidth) * w), (double)((float)v * h)).func_181666_a(f, f1, f2, f3).func_181675_d();
-      buf.func_181662_b((double)x, (double)y, (double)this.field_73735_i).func_187315_a((double)((float)u * w), (double)((float)v * h)).func_181666_a(f, f1, f2, f3).func_181675_d();
-      tessellator.func_78381_a();
+      Tessellator tessellator = Tessellator.getInstance();
+      BufferBuilder buf = tessellator.getBuffer();
+      buf.begin(7, DefaultVertexFormats.field_181709_i);
+      buf.pos((double)x, (double)(y + height), (double)this.field_73735_i).func_187315_a((double)((float)u * w), (double)((float)(v + vHeight) * h)).func_181666_a(f, f1, f2, f3).func_181675_d();
+      buf.pos((double)(x + width), (double)(y + height), (double)this.field_73735_i).func_187315_a((double)((float)(u + uWidth) * w), (double)((float)(v + vHeight) * h)).func_181666_a(f, f1, f2, f3).func_181675_d();
+      buf.pos((double)(x + width), (double)y, (double)this.field_73735_i).func_187315_a((double)((float)(u + uWidth) * w), (double)((float)v * h)).func_181666_a(f, f1, f2, f3).func_181675_d();
+      buf.pos((double)x, (double)y, (double)this.field_73735_i).func_187315_a((double)((float)u * w), (double)((float)v * h)).func_181666_a(f, f1, f2, f3).func_181675_d();
+      tessellator.draw();
    }
 }

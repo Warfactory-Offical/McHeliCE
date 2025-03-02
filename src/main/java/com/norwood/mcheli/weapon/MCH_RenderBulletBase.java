@@ -20,7 +20,7 @@ public abstract class MCH_RenderBulletBase<T extends W_Entity> extends W_Render<
          MCH_Color c = ((MCH_EntityBaseBullet)e).getInfo().color;
 
          for(y = 0; y < 3; ++y) {
-            Block b = W_WorldFunc.getBlock(e.field_70170_p, (int)(e.field_70165_t + 0.5D), (int)(e.field_70163_u + 1.5D - (double)y), (int)(e.field_70161_v + 0.5D));
+            Block b = W_WorldFunc.getBlock(e.world, (int)(e.posX + 0.5D), (int)(e.posY + 1.5D - (double)y), (int)(e.posZ + 0.5D));
             if (b != null && b == W_Block.getWater()) {
                c = ((MCH_EntityBaseBullet)e).getInfo().colorInWater;
                break;

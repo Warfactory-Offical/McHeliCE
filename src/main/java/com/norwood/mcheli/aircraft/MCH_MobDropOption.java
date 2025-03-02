@@ -7,7 +7,7 @@ public class MCH_MobDropOption {
    public int interval;
 
    public MCH_MobDropOption() {
-      this.pos = Vec3d.field_186680_a;
+      this.pos = Vec3d.ZERO;
       this.interval = 1;
    }
 }

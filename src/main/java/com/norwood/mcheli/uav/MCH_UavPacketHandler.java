@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class MCH_UavPacketHandler {
    @HandleSide({Side.SERVER})
    public static void onPacketUavStatus(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-      if (!player.field_70170_p.field_72995_K) {
+      if (!player.world.isRemote) {
          MCH_UavPacketStatus status = new MCH_UavPacketStatus();
          status.readData(data);
          scheduler.func_152344_a(() -> {

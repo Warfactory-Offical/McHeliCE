@@ -162,7 +162,7 @@ public class MCH_Command extends CommandBase {
                   }
 
                   MCH_MOD.proxy.reconfig();
-                  if (sender.func_130014_f_() != null && !sender.func_130014_f_().field_72995_K) {
+                  if (sender.func_130014_f_() != null && !sender.func_130014_f_().isRemote) {
                      MCH_PacketNotifyServerSettings.sendAll();
                   }
 
@@ -519,9 +519,9 @@ public class MCH_Command extends CommandBase {
                               if (flag) {
                                  TileEntity tileentity = world.func_175625_s(blockpos);
                                  if (tileentity != null) {
-                                    nbttagcompound.func_74768_a("x", x);
-                                    nbttagcompound.func_74768_a("y", y);
-                                    nbttagcompound.func_74768_a("z", z);
+                                    nbttagcompound.setInteger("x", x);
+                                    nbttagcompound.setInteger("y", y);
+                                    nbttagcompound.setInteger("z", z);
                                     tileentity.func_145839_a(nbttagcompound);
                                  }
                               }
@@ -564,9 +564,9 @@ public class MCH_Command extends CommandBase {
                if ((prm.length == 2 || prm.length == 5) && sender instanceof Entity) {
                   Entity entity = (Entity)sender;
                   List<String> a = new ArrayList();
-                  int x = entity.field_70165_t < 0.0D ? (int)(entity.field_70165_t - 1.0D) : (int)entity.field_70165_t;
-                  int z = entity.field_70161_v < 0.0D ? (int)(entity.field_70161_v - 1.0D) : (int)entity.field_70161_v;
-                  a.add("" + x + " " + (int)(entity.field_70163_u + 0.5D) + " " + z);
+                  int x = entity.posX < 0.0D ? (int)(entity.posX - 1.0D) : (int)entity.posX;
+                  int z = entity.posZ < 0.0D ? (int)(entity.posZ - 1.0D) : (int)entity.posZ;
+                  a.add("" + x + " " + (int)(entity.posY + 0.5D) + " " + z);
                   return a;
                }
 

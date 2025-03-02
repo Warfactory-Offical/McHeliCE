@@ -97,7 +97,7 @@ public class MCH_GuiHeli extends MCH_AircraftCommonGui {
                if (heli.getTowChainEntity() != null && !heli.getTowChainEntity().field_70128_L) {
                   msg = "Drop  : " + MCH_KeyName.getDescOrName(MCH_Config.KeyExtra.prmInt);
                   this.drawString(msg, RX, this.centerY - 30, colorActive);
-               } else if (info.isEnableFoldBlade && MCH_Lib.getBlockIdY(heli.field_70170_p, heli.field_70165_t, heli.field_70163_u, heli.field_70161_v, 1, -2, true) > 0 && heli.getCurrentThrottle() <= 0.01D) {
+               } else if (info.isEnableFoldBlade && MCH_Lib.getBlockIdY(heli.world, heli.posX, heli.posY, heli.posZ, 1, -2, true) > 0 && heli.getCurrentThrottle() <= 0.01D) {
                   msg = "FoldBlade  : " + MCH_KeyName.getDescOrName(MCH_Config.KeyExtra.prmInt);
                   this.drawString(msg, RX, this.centerY - 30, colorActive);
                }

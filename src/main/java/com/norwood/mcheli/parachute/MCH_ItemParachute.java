@@ -16,10 +16,10 @@ public class MCH_ItemParachute extends W_Item {
 
    public ActionResult<ItemStack> func_77659_a(World world, EntityPlayer player, EnumHand handIn) {
       ItemStack itemstack = player.func_184586_b(handIn);
-      if (!world.field_72995_K && player.func_184187_bx() == null && !player.field_70122_E) {
-         double x = player.field_70165_t + 0.5D;
-         double y = player.field_70163_u + 3.5D;
-         double z = player.field_70161_v + 0.5D;
+      if (!world.isRemote && player.func_184187_bx() == null && !player.field_70122_E) {
+         double x = player.posX + 0.5D;
+         double y = player.posY + 3.5D;
+         double z = player.posZ + 0.5D;
          MCH_EntityParachute entity = new MCH_EntityParachute(world, x, y, z);
          entity.field_70177_z = player.field_70177_z;
          entity.field_70159_w = player.field_70159_w;

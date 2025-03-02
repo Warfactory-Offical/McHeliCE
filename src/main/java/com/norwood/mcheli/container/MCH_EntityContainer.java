@@ -78,10 +78,10 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
       return false;
    }
 
-   protected void func_70088_a() {
-      this.field_70180_af.func_187214_a(TIME_SINCE_HIT, 0);
-      this.field_70180_af.func_187214_a(FORWARD_DIR, 1);
-      this.field_70180_af.func_187214_a(DAMAGE_TAKEN, 0);
+   protected void entityInit() {
+      this.dataManager.register(TIME_SINCE_HIT, 0);
+      this.dataManager.register(FORWARD_DIR, 1);
+      this.dataManager.register(DAMAGE_TAKEN, 0);
    }
 
    public AxisAlignedBB func_70114_g(Entity par1Entity) {
@@ -111,12 +111,12 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
    public boolean func_70097_a(DamageSource ds, float damage) {
       if (this.func_180431_b(ds)) {
          return false;
-      } else if (!this.field_70170_p.field_72995_K && !this.field_70128_L) {
+      } else if (!this.world.isRemote && !this.field_70128_L) {
          damage = MCH_Config.applyDamageByExternal(this, ds, damage);
          if (!MCH_Multiplay.canAttackEntity((DamageSource)ds, this)) {
             return false;
          } else if (ds.func_76346_g() instanceof EntityPlayer && ds.func_76355_l().equalsIgnoreCase("player")) {
-            MCH_Lib.DbgLog(this.field_70170_p, "MCH_EntityContainer.attackEntityFrom:damage=%.1f:%s", damage, ds.func_76355_l());
+            MCH_Lib.DbgLog(this.world, "MCH_EntityContainer.attackEntityFrom:damage=%.1f:%s", damage, ds.func_76355_l());
             W_WorldFunc.MOD_playSoundAtEntity(this, "hit", 1.0F, 1.3F);
             this.setDamageTaken(this.getDamageTaken() + (int)(damage * 20.0F));
             this.setForwardDirection(-this.getForwardDirection());
@@ -181,9 +181,9 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
          this.setDamageTaken(this.getDamageTaken() - 1);
       }
 
-      this.field_70169_q = this.field_70165_t;
-      this.field_70167_r = this.field_70163_u;
-      this.field_70166_s = this.field_70161_v;
+      this.field_70169_q = this.posX;
+      this.field_70167_r = this.posY;
+      this.field_70166_s = this.posZ;
       byte b0 = 5;
       double d0 = 0.0D;
 
@@ -194,9 +194,9 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
          d4 = boundingBox.field_72338_b + (boundingBox.field_72337_e - boundingBox.field_72338_b) * (double)(i + 0) / (double)b0 - 0.125D;
          d5 = boundingBox.field_72338_b + (boundingBox.field_72337_e - boundingBox.field_72338_b) * (double)(i + 1) / (double)b0 - 0.125D;
          AxisAlignedBB axisalignedbb = W_AxisAlignedBB.getAABB(boundingBox.field_72340_a, d4, boundingBox.field_72339_c, boundingBox.field_72336_d, d5, boundingBox.field_72334_f);
-         if (this.field_70170_p.func_72875_a(axisalignedbb, Material.field_151586_h)) {
+         if (this.world.func_72875_a(axisalignedbb, Material.field_151586_h)) {
             d0 += 1.0D / (double)b0;
-         } else if (this.field_70170_p.func_72875_a(axisalignedbb, Material.field_151587_i)) {
+         } else if (this.world.func_72875_a(axisalignedbb, Material.field_151587_i)) {
             d0 += 1.0D / (double)b0;
          }
       }
@@ -207,11 +207,11 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
 
       double d10;
       double d11;
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          if (this.boatPosRotationIncrements > 0) {
-            d4 = this.field_70165_t + (this.boatX - this.field_70165_t) / (double)this.boatPosRotationIncrements;
-            d5 = this.field_70163_u + (this.boatY - this.field_70163_u) / (double)this.boatPosRotationIncrements;
-            d11 = this.field_70161_v + (this.boatZ - this.field_70161_v) / (double)this.boatPosRotationIncrements;
+            d4 = this.posX + (this.boatX - this.posX) / (double)this.boatPosRotationIncrements;
+            d5 = this.posY + (this.boatY - this.posY) / (double)this.boatPosRotationIncrements;
+            d11 = this.posZ + (this.boatZ - this.posZ) / (double)this.boatPosRotationIncrements;
             d10 = MathHelper.func_76138_g(this.boatYaw - (double)this.field_70177_z);
             this.field_70177_z = (float)((double)this.field_70177_z + d10 / (double)this.boatPosRotationIncrements);
             this.field_70125_A = (float)((double)this.field_70125_A + (this.boatPitch - (double)this.field_70125_A) / (double)this.boatPosRotationIncrements);
@@ -219,9 +219,9 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
             this.func_70107_b(d4, d5, d11);
             this.func_70101_b(this.field_70177_z, this.field_70125_A);
          } else {
-            d4 = this.field_70165_t + this.field_70159_w;
-            d5 = this.field_70163_u + this.field_70181_x;
-            d11 = this.field_70161_v + this.field_70179_y;
+            d4 = this.posX + this.field_70159_w;
+            d5 = this.posY + this.field_70181_x;
+            d11 = this.posZ + this.field_70179_y;
             this.func_70107_b(d4, d5, d11);
             if (this.field_70122_E) {
                this.field_70159_w *= 0.8999999761581421D;
@@ -275,8 +275,8 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
          this.field_70179_y *= 0.99D;
          this.field_70125_A = 0.0F;
          d5 = (double)this.field_70177_z;
-         d11 = this.field_70169_q - this.field_70165_t;
-         d10 = this.field_70166_s - this.field_70161_v;
+         d11 = this.field_70169_q - this.posX;
+         d10 = this.field_70166_s - this.posZ;
          if (d11 * d11 + d10 * d10 > 0.001D) {
             d5 = (double)((float)(Math.atan2(d10, d11) * 180.0D / 3.141592653589793D));
          }
@@ -292,8 +292,8 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
 
          this.field_70177_z = (float)((double)this.field_70177_z + d12);
          this.func_70101_b(this.field_70177_z, this.field_70125_A);
-         if (!this.field_70170_p.field_72995_K) {
-            List<Entity> list = this.field_70170_p.func_72839_b(this, this.func_174813_aQ().func_72314_b(0.2D, 0.0D, 0.2D));
+         if (!this.world.isRemote) {
+            List<Entity> list = this.world.func_72839_b(this, this.func_174813_aQ().func_72314_b(0.2D, 0.0D, 0.2D));
             int l;
             if (list != null && !list.isEmpty()) {
                for(l = 0; l < list.size(); ++l) {
@@ -306,15 +306,15 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
 
             if (MCH_Config.Collision_DestroyBlock.prmBool) {
                for(l = 0; l < 4; ++l) {
-                  int i1 = MathHelper.func_76128_c(this.field_70165_t + ((double)(l % 2) - 0.5D) * 0.8D);
-                  int j1 = MathHelper.func_76128_c(this.field_70161_v + ((double)(l / 2) - 0.5D) * 0.8D);
+                  int i1 = MathHelper.func_76128_c(this.posX + ((double)(l % 2) - 0.5D) * 0.8D);
+                  int j1 = MathHelper.func_76128_c(this.posZ + ((double)(l / 2) - 0.5D) * 0.8D);
 
                   for(int k1 = 0; k1 < 2; ++k1) {
-                     int l1 = MathHelper.func_76128_c(this.field_70163_u) + k1;
-                     if (W_WorldFunc.isEqualBlock(this.field_70170_p, i1, l1, j1, W_Block.getSnowLayer())) {
-                        this.field_70170_p.func_175698_g(new BlockPos(i1, l1, j1));
-                     } else if (W_WorldFunc.isEqualBlock(this.field_70170_p, i1, l1, j1, W_Blocks.field_150392_bi)) {
-                        W_WorldFunc.destroyBlock(this.field_70170_p, i1, l1, j1, true);
+                     int l1 = MathHelper.func_76128_c(this.posY) + k1;
+                     if (W_WorldFunc.isEqualBlock(this.world, i1, l1, j1, W_Block.getSnowLayer())) {
+                        this.world.func_175698_g(new BlockPos(i1, l1, j1));
+                     } else if (W_WorldFunc.isEqualBlock(this.world, i1, l1, j1, W_Blocks.field_150392_bi)) {
+                        W_WorldFunc.destroyBlock(this.world, i1, l1, j1, true);
                      }
                   }
                }
@@ -346,27 +346,27 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
    }
 
    public void setDamageTaken(int par1) {
-      this.field_70180_af.func_187227_b(DAMAGE_TAKEN, par1);
+      this.dataManager.func_187227_b(DAMAGE_TAKEN, par1);
    }
 
    public int getDamageTaken() {
-      return (Integer)this.field_70180_af.func_187225_a(DAMAGE_TAKEN);
+      return (Integer)this.dataManager.func_187225_a(DAMAGE_TAKEN);
    }
 
    public void setTimeSinceHit(int par1) {
-      this.field_70180_af.func_187227_b(TIME_SINCE_HIT, par1);
+      this.dataManager.func_187227_b(TIME_SINCE_HIT, par1);
    }
 
    public int getTimeSinceHit() {
-      return (Integer)this.field_70180_af.func_187225_a(TIME_SINCE_HIT);
+      return (Integer)this.dataManager.func_187225_a(TIME_SINCE_HIT);
    }
 
    public void setForwardDirection(int par1) {
-      this.field_70180_af.func_187227_b(FORWARD_DIR, par1);
+      this.dataManager.func_187227_b(FORWARD_DIR, par1);
    }
 
    public int getForwardDirection() {
-      return (Integer)this.field_70180_af.func_187225_a(FORWARD_DIR);
+      return (Integer)this.dataManager.func_187225_a(FORWARD_DIR);
    }
 
    public boolean canRideAircraft(MCH_EntityAircraft ac, int seatID, MCH_SeatRackInfo info) {
@@ -392,8 +392,8 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
    }
 
    static {
-      TIME_SINCE_HIT = EntityDataManager.func_187226_a(MCH_EntityContainer.class, DataSerializers.field_187192_b);
-      FORWARD_DIR = EntityDataManager.func_187226_a(MCH_EntityContainer.class, DataSerializers.field_187192_b);
-      DAMAGE_TAKEN = EntityDataManager.func_187226_a(MCH_EntityContainer.class, DataSerializers.field_187192_b);
+      TIME_SINCE_HIT = EntityDataManager.createKey(MCH_EntityContainer.class, DataSerializers.VARINT);
+      FORWARD_DIR = EntityDataManager.createKey(MCH_EntityContainer.class, DataSerializers.VARINT);
+      DAMAGE_TAKEN = EntityDataManager.createKey(MCH_EntityContainer.class, DataSerializers.VARINT);
    }
 }

@@ -46,7 +46,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
       this.weapons = this.createWeapon(0);
       this.rotors = new MCH_Rotor[0];
       this.lastFoldBladeStat = -1;
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          this.foldBladesCooldown = 40;
       }
 
@@ -65,7 +65,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
    }
 
    public void changeType(String type) {
-      MCH_Lib.DbgLog(this.field_70170_p, "MCH_EntityHeli.changeType " + type + " : " + this.toString());
+      MCH_Lib.DbgLog(this.world, "MCH_EntityHeli.changeType " + type + " : " + this.toString());
       if (!type.isEmpty()) {
          this.heliInfo = MCH_HeliInfoManager.get(type);
       }
@@ -92,16 +92,16 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
       return MCH_Config.MountMinecartHeli.prmBool;
    }
 
-   protected void func_70088_a() {
-      super.func_70088_a();
-      this.field_70180_af.func_187214_a(FOLD_STAT, (byte)2);
+   protected void entityInit() {
+      super.entityInit();
+      this.dataManager.register(FOLD_STAT, (byte)2);
    }
 
    protected void func_70014_b(NBTTagCompound par1NBTTagCompound) {
       super.func_70014_b(par1NBTTagCompound);
       par1NBTTagCompound.func_74780_a("RotorSpeed", this.getCurrentThrottle());
       par1NBTTagCompound.func_74780_a("rotetionRotor", this.rotationRotor);
-      par1NBTTagCompound.func_74757_a("FoldBlade", this.getFoldBladeStat() == 0);
+      par1NBTTagCompound.setBoolean("FoldBlade", this.getFoldBladeStat() == 0);
    }
 
    protected void func_70037_a(NBTTagCompound par1NBTTagCompound) {
@@ -119,7 +119,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
 
       this.setCurrentThrottle(par1NBTTagCompound.func_74769_h("RotorSpeed"));
       this.rotationRotor = par1NBTTagCompound.func_74769_h("rotetionRotor");
-      this.setFoldBladeStat((byte)(par1NBTTagCompound.func_74767_n("FoldBlade") ? 0 : 2));
+      this.setFoldBladeStat((byte)(par1NBTTagCompound.getBoolean("FoldBlade") ? 0 : 2));
       if (this.heliInfo == null) {
          this.heliInfo = MCH_HeliInfoManager.get(this.getTypeName());
          if (this.heliInfo == null) {
@@ -150,9 +150,9 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
    }
 
    public float getUnfoldLandingGearThrottle() {
-      double x = this.field_70165_t - this.field_70169_q;
-      double y = this.field_70163_u - this.field_70167_r;
-      double z = this.field_70161_v - this.field_70166_s;
+      double x = this.posX - this.field_70169_q;
+      double y = this.posY - this.field_70167_r;
+      double z = this.posZ - this.field_70166_s;
       float s = this.getAcInfo().speed / 3.5F;
       return x * x + y * y + z * z <= (double)s ? 0.8F : 0.3F;
    }
@@ -164,7 +164,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
 
          for(Iterator var2 = this.heliInfo.rotorList.iterator(); var2.hasNext(); ++i) {
             MCH_HeliInfo.Rotor r = (MCH_HeliInfo.Rotor)var2.next();
-            this.rotors[i] = new MCH_Rotor(r.bladeNum, r.bladeRot, this.field_70170_p.field_72995_K ? 2 : 2, (float)r.pos.field_72450_a, (float)r.pos.field_72448_b, (float)r.pos.field_72449_c, (float)r.rot.field_72450_a, (float)r.rot.field_72448_b, (float)r.rot.field_72449_c, r.haveFoldFunc);
+            this.rotors[i] = new MCH_Rotor(r.bladeNum, r.bladeRot, this.world.isRemote ? 2 : 2, (float)r.pos.x, (float)r.pos.y, (float)r.pos.z, (float)r.rot.x, (float)r.rot.y, (float)r.rot.z, r.haveFoldFunc);
          }
 
       }
@@ -265,12 +265,12 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
    }
 
    protected byte getFoldBladeStat() {
-      return (Byte)this.field_70180_af.func_187225_a(FOLD_STAT);
+      return (Byte)this.dataManager.func_187225_a(FOLD_STAT);
    }
 
    public void setFoldBladeStat(byte b) {
-      if (!this.field_70170_p.field_72995_K && b >= 0 && b <= 3) {
-         this.field_70180_af.func_187227_b(FOLD_STAT, b);
+      if (!this.world.isRemote && b >= 0 && b <= 3) {
+         this.dataManager.func_187227_b(FOLD_STAT, b);
       }
 
    }
@@ -302,13 +302,13 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
    public void onUpdateAircraft() {
       if (this.heliInfo == null) {
          this.changeType(this.getTypeName());
-         this.field_70169_q = this.field_70165_t;
-         this.field_70167_r = this.field_70163_u;
-         this.field_70166_s = this.field_70161_v;
+         this.field_70169_q = this.posX;
+         this.field_70167_r = this.posY;
+         this.field_70166_s = this.posZ;
       } else {
          if (!this.isRequestedSyncStatus) {
             this.isRequestedSyncStatus = true;
-            if (this.field_70170_p.field_72995_K) {
+            if (this.world.isRemote) {
                int stat = this.getFoldBladeStat();
                if (stat == 1 || stat == 0) {
                   this.forceFoldBlade();
@@ -326,9 +326,9 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
          this.onUpdate_Seats();
          this.onUpdate_Control();
          this.onUpdate_Rotor();
-         this.field_70169_q = this.field_70165_t;
-         this.field_70167_r = this.field_70163_u;
-         this.field_70166_s = this.field_70161_v;
+         this.field_70169_q = this.posX;
+         this.field_70167_r = this.posY;
+         this.field_70166_s = this.posZ;
          if (!this.isDestroyed() && this.isHovering() && MathHelper.func_76135_e(this.getRotPitch()) < 70.0F) {
             this.setRotPitch(this.getRotPitch() * 0.95F);
          }
@@ -344,7 +344,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
          }
 
          this.updateCameraViewers();
-         if (this.field_70170_p.field_72995_K) {
+         if (this.world.isRemote) {
             this.onUpdate_Client();
          } else {
             this.onUpdate_Server();
@@ -371,7 +371,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
 
    public float getRollFactor() {
       float roll = super.getRollFactor();
-      double d = this.func_70092_e(this.field_70169_q, this.field_70163_u, this.field_70166_s);
+      double d = this.func_70092_e(this.field_70169_q, this.posY, this.field_70166_s);
       double s = (double)this.getAcInfo().speed;
       double var10000;
       if (s > 0.1D) {
@@ -464,7 +464,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
             this.unfoldBlades();
          }
 
-         if (this.field_70170_p.field_72995_K) {
+         if (this.world.isRemote) {
             this.foldBladesCooldown = 40;
          }
 
@@ -521,7 +521,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
          }
       }
 
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          if (!W_Lib.isClientPlayer(this.getRiddenByEntity())) {
             double ct = this.getThrottle();
             if (this.getCurrentThrottle() >= ct - 0.02D) {
@@ -557,7 +557,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
          } else {
             this.setCurrentThrottle(0.0D);
          }
-      } else if ((!this.field_70170_p.field_72995_K || W_Lib.isClientPlayer(this.getRiddenByEntity())) && this.cs_heliAutoThrottleDown) {
+      } else if ((!this.world.isRemote || W_Lib.isClientPlayer(this.getRiddenByEntity())) && this.cs_heliAutoThrottleDown) {
          if (this.getCurrentThrottle() > 0.52D) {
             this.addCurrentThrottle(-0.01D * (double)throttleUpDown);
          } else if (this.getCurrentThrottle() < 0.48D) {
@@ -565,7 +565,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
          }
       }
 
-      if (!this.field_70170_p.field_72995_K) {
+      if (!this.world.isRemote) {
          boolean move = false;
          float yaw = this.getRotYaw();
          double x = 0.0D;
@@ -601,7 +601,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
          this.setCurrentThrottle(1.0D);
       }
 
-      if (!this.field_70170_p.field_72995_K) {
+      if (!this.world.isRemote) {
          boolean move = false;
          float yaw = this.getRotYaw();
          double x = 0.0D;
@@ -644,7 +644,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
    }
 
    protected void onUpdate_ControlFoldBladeAndOnGround() {
-      if (!this.field_70170_p.field_72995_K) {
+      if (!this.world.isRemote) {
          boolean move = false;
          float yaw = this.getRotYaw();
          double x = 0.0D;
@@ -673,7 +673,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
    }
 
    protected void onUpdate_Particle2() {
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          if (!((double)this.getHP() > (double)this.getMaxHP() * 0.5D)) {
             if (this.getHeliInfo() != null) {
                int rotorNum = this.getHeliInfo().rotorList.size();
@@ -687,24 +687,24 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
                      float yaw = this.getRotYaw();
                      float pitch = this.getRotPitch();
                      Vec3d pos = MCH_Lib.RotVec3(rotor_pos, -yaw, -pitch, -this.getRotRoll());
-                     double x = this.field_70165_t + pos.field_72450_a;
-                     double y = this.field_70163_u + pos.field_72448_b;
-                     double z = this.field_70161_v + pos.field_72449_c;
+                     double x = this.posX + pos.x;
+                     double y = this.posY + pos.y;
+                     double z = this.posZ + pos.z;
                      if (this.isFirstDamageSmoke) {
                         this.prevDamageSmokePos[ri] = new Vec3d(x, y, z);
                      }
 
                      Vec3d prev = this.prevDamageSmokePos[ri];
-                     double dx = x - prev.field_72450_a;
-                     double dy = y - prev.field_72448_b;
-                     double dz = z - prev.field_72449_c;
+                     double dx = x - prev.x;
+                     double dy = y - prev.y;
+                     double dz = z - prev.z;
                      int num = (int)(MathHelper.func_76133_a(dx * dx + dy * dy + dz * dz) * 2.0F) + 1;
 
                      for(double i = 0.0D; i < (double)num; ++i) {
                         double p = (double)(this.getHP() / this.getMaxHP());
                         if (p < (double)(this.field_70146_Z.nextFloat() / 2.0F)) {
                            float c = 0.2F + this.field_70146_Z.nextFloat() * 0.3F;
-                           MCH_ParticleParam prm = new MCH_ParticleParam(this.field_70170_p, "smoke", prev.field_72450_a + (x - prev.field_72450_a) * (i / (double)num), prev.field_72448_b + (y - prev.field_72448_b) * (i / (double)num), prev.field_72449_c + (z - prev.field_72449_c) * (i / (double)num));
+                           MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "smoke", prev.x + (x - prev.x) * (i / (double)num), prev.y + (y - prev.y) * (i / (double)num), prev.z + (z - prev.z) * (i / (double)num));
                            prm.motionX = (this.field_70146_Z.nextDouble() - 0.5D) * 0.3D;
                            prm.motionY = this.field_70146_Z.nextDouble() * 0.1D;
                            prm.motionZ = (this.field_70146_Z.nextDouble() - 0.5D) * 0.3D;
@@ -743,7 +743,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
       if (this.aircraftPosRotInc > 0) {
          this.applyServerPositionAndRotation();
       } else {
-         this.func_70107_b(this.field_70165_t + this.field_70159_w, this.field_70163_u + this.field_70181_x, this.field_70161_v + this.field_70179_y);
+         this.func_70107_b(this.posX + this.field_70159_w, this.posY + this.field_70181_x, this.posZ + this.field_70179_y);
          if (!this.isDestroyed() && (this.field_70122_E || MCH_Lib.getBlockIdY(this, 1, -2) > 0)) {
             this.field_70159_w *= 0.95D;
             this.field_70179_y *= 0.95D;
@@ -776,7 +776,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
 
       this.onUpdate_ParticleSandCloud(false);
       this.onUpdate_Particle2();
-      this.updateCamera(this.field_70165_t, this.field_70163_u, this.field_70161_v);
+      this.updateCamera(this.posX, this.posY, this.posZ);
    }
 
    private void onUpdate_Server() {
@@ -905,6 +905,6 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
    }
 
    static {
-      FOLD_STAT = EntityDataManager.func_187226_a(MCH_EntityHeli.class, DataSerializers.field_187191_a);
+      FOLD_STAT = EntityDataManager.createKey(MCH_EntityHeli.class, DataSerializers.field_187191_a);
    }
 }

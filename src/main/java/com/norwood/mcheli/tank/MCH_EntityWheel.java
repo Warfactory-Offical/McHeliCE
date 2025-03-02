@@ -43,7 +43,7 @@ public class MCH_EntityWheel extends W_Entity {
 
    public void setWheelPos(Vec3d pos, Vec3d weightedCenter) {
       this.pos = pos;
-      this.isPlus = pos.field_72449_c >= weightedCenter.field_72449_c;
+      this.isPlus = pos.z >= weightedCenter.z;
    }
 
    public void travelToDimension(int dimensionId) {
@@ -65,7 +65,7 @@ public class MCH_EntityWheel extends W_Entity {
    }
 
    public void func_70091_d(MoverType type, double x, double y, double z) {
-      this.field_70170_p.field_72984_F.func_76320_a("move");
+      this.world.field_72984_F.func_76320_a("move");
       double d2 = x;
       double d3 = y;
       double d4 = z;
@@ -181,21 +181,21 @@ public class MCH_EntityWheel extends W_Entity {
          }
       }
 
-      this.field_70170_p.field_72984_F.func_76319_b();
-      this.field_70170_p.field_72984_F.func_76320_a("rest");
+      this.world.field_72984_F.func_76319_b();
+      this.world.field_72984_F.func_76320_a("rest");
       this.func_174829_m();
       this.field_70123_F = x != x || z != z;
       this.field_70124_G = y != y;
       this.field_70122_E = this.field_70124_G && d3 < 0.0D;
       this.field_70132_H = this.field_70123_F || this.field_70124_G;
-      j6 = MathHelper.func_76128_c(this.field_70165_t);
-      int i1 = MathHelper.func_76128_c(this.field_70163_u - 0.20000000298023224D);
-      int k6 = MathHelper.func_76128_c(this.field_70161_v);
+      j6 = MathHelper.func_76128_c(this.posX);
+      int i1 = MathHelper.func_76128_c(this.posY - 0.20000000298023224D);
+      int k6 = MathHelper.func_76128_c(this.posZ);
       BlockPos blockpos = new BlockPos(j6, i1, k6);
-      IBlockState iblockstate = this.field_70170_p.func_180495_p(blockpos);
+      IBlockState iblockstate = this.world.func_180495_p(blockpos);
       if (iblockstate.func_185904_a() == Material.field_151579_a) {
          BlockPos blockpos1 = blockpos.func_177977_b();
-         IBlockState iblockstate1 = this.field_70170_p.func_180495_p(blockpos1);
+         IBlockState iblockstate1 = this.world.func_180495_p(blockpos1);
          Block block1 = iblockstate1.func_177230_c();
          if (block1 instanceof BlockFence || block1 instanceof BlockWall || block1 instanceof BlockFenceGate) {
             iblockstate = iblockstate1;
@@ -214,7 +214,7 @@ public class MCH_EntityWheel extends W_Entity {
 
       Block block = iblockstate.func_177230_c();
       if (d3 != y) {
-         block.func_176216_a(this.field_70170_p, this);
+         block.func_176216_a(this.world, this);
       }
 
       try {
@@ -226,14 +226,14 @@ public class MCH_EntityWheel extends W_Entity {
          throw new ReportedException(crashreport);
       }
 
-      this.field_70170_p.field_72984_F.func_76319_b();
+      this.world.field_72984_F.func_76319_b();
    }
 
    public List<AxisAlignedBB> getCollisionBoxes(Entity entityIn, AxisAlignedBB aabb) {
       ArrayList<AxisAlignedBB> collidingBoundingBoxes = new ArrayList();
       this.getCollisionBoxes(entityIn, aabb, collidingBoundingBoxes);
       double d0 = 0.25D;
-      List<Entity> list = entityIn.field_70170_p.func_72839_b(entityIn, aabb.func_72314_b(d0, d0, d0));
+      List<Entity> list = entityIn.world.func_72839_b(entityIn, aabb.func_72314_b(d0, d0, d0));
 
       for(int j2 = 0; j2 < list.size(); ++j2) {
          Entity entity = (Entity)list.get(j2);
@@ -260,9 +260,9 @@ public class MCH_EntityWheel extends W_Entity {
       int l = MathHelper.func_76143_f(aabb.field_72337_e) + 1;
       int i1 = MathHelper.func_76128_c(aabb.field_72339_c) - 1;
       int j1 = MathHelper.func_76143_f(aabb.field_72334_f) + 1;
-      WorldBorder worldborder = entityIn.field_70170_p.func_175723_af();
+      WorldBorder worldborder = entityIn.world.func_175723_af();
       boolean flag = entityIn != null && entityIn.func_174832_aS();
-      boolean flag1 = entityIn != null && entityIn.field_70170_p.func_191503_g(entityIn);
+      boolean flag1 = entityIn != null && entityIn.world.func_191503_g(entityIn);
       IBlockState iblockstate = Blocks.field_150348_b.func_176223_P();
       PooledMutableBlockPos blockpos = PooledMutableBlockPos.func_185346_s();
 
@@ -271,7 +271,7 @@ public class MCH_EntityWheel extends W_Entity {
             for(int l1 = i1; l1 < j1; ++l1) {
                boolean flag2 = k1 == i || k1 == j - 1;
                boolean flag3 = l1 == i1 || l1 == j1 - 1;
-               if ((!flag2 || !flag3) && entityIn.field_70170_p.func_175667_e(blockpos.func_181079_c(k1, 64, l1))) {
+               if ((!flag2 || !flag3) && entityIn.world.func_175667_e(blockpos.func_181079_c(k1, 64, l1))) {
                   for(int i2 = k; i2 < l; ++i2) {
                      if (!flag2 && !flag3 || i2 != l - 1) {
                         if (entityIn != null && flag == flag1) {
@@ -283,10 +283,10 @@ public class MCH_EntityWheel extends W_Entity {
                         if (!worldborder.func_177746_a(blockpos) && flag1) {
                            iblockstate1 = iblockstate;
                         } else {
-                           iblockstate1 = entityIn.field_70170_p.func_180495_p(blockpos);
+                           iblockstate1 = entityIn.world.func_180495_p(blockpos);
                         }
 
-                        iblockstate1.func_185908_a(entityIn.field_70170_p, blockpos, aabb, outList, entityIn, false);
+                        iblockstate1.func_185908_a(entityIn.world, blockpos, aabb, outList, entityIn, false);
                      }
                   }
                }

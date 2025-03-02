@@ -9,7 +9,7 @@ public class PooledGuiParameter {
    private static Entity serverEntity;
 
    public static void setEntity(EntityPlayer player, @Nullable Entity target) {
-      if (player.field_70170_p.field_72995_K) {
+      if (player.world.isRemote) {
          clientEntity = target;
       } else {
          serverEntity = target;
@@ -19,7 +19,7 @@ public class PooledGuiParameter {
 
    @Nullable
    public static Entity getEntity(EntityPlayer player) {
-      return player.field_70170_p.field_72995_K ? clientEntity : serverEntity;
+      return player.world.isRemote ? clientEntity : serverEntity;
    }
 
    public static void resetEntity(EntityPlayer player) {

@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class MCH_CommandPacketHandler {
    @HandleSide({Side.CLIENT})
    public static void onPacketTitle(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-      if (player != null && player.field_70170_p.field_72995_K) {
+      if (player != null && player.world.isRemote) {
          MCH_PacketTitle req = new MCH_PacketTitle();
          req.readData(data);
          scheduler.func_152344_a(() -> {
@@ -22,7 +22,7 @@ public class MCH_CommandPacketHandler {
 
    @HandleSide({Side.SERVER})
    public static void onPacketSave(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-      if (player != null && !player.field_70170_p.field_72995_K) {
+      if (player != null && !player.world.isRemote) {
          MCH_PacketCommandSave req = new MCH_PacketCommandSave();
          req.readData(data);
          scheduler.func_152344_a(() -> {

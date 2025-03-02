@@ -496,7 +496,7 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
                ac.updateWeaponsRotation();
             }
 
-            Entity de = MCH_ViewEntityDummy.getInstance(player.field_70170_p);
+            Entity de = MCH_ViewEntityDummy.getInstance(player.world);
             if (de != null) {
                de.field_70177_z = player.field_70177_z;
                de.field_70126_B = player.field_70126_B;
@@ -514,7 +514,7 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
    }
 
    public void correctViewEntityDummy(Entity entity) {
-      Entity de = MCH_ViewEntityDummy.getInstance(entity.field_70170_p);
+      Entity de = MCH_ViewEntityDummy.getInstance(entity.world);
       if (de != null) {
          if (de.field_70177_z - de.field_70126_B > 180.0F) {
             de.field_70126_B += 360.0F;
@@ -526,7 +526,7 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
    }
 
    public void onPlayerTickPre(EntityPlayer player) {
-      if (player.field_70170_p.field_72995_K) {
+      if (player.world.isRemote) {
          ItemStack currentItemstack = player.func_184586_b(EnumHand.MAIN_HAND);
          if (!currentItemstack.func_190926_b() && currentItemstack.func_77973_b() instanceof MCH_ItemWrench && player.func_184605_cv() > 0 && player.func_184607_cu() != currentItemstack) {
             int maxdm = currentItemstack.func_77958_k();
@@ -545,7 +545,7 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
    public void onRenderTickPost(float partialTicks) {
       if (this.mc.field_71439_g != null) {
          MCH_ClientTickHandlerBase.applyRotLimit(this.mc.field_71439_g);
-         Entity e = MCH_ViewEntityDummy.getInstance(this.mc.field_71439_g.field_70170_p);
+         Entity e = MCH_ViewEntityDummy.getInstance(this.mc.field_71439_g.world);
          if (e != null) {
             e.field_70125_A = this.mc.field_71439_g.field_70125_A;
             e.field_70177_z = this.mc.field_71439_g.field_70177_z;

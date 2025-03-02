@@ -14,7 +14,7 @@ public class MCH_WeaponBomb extends MCH_WeaponBase {
       this.explosionPower = 9;
       this.power = 35;
       this.interval = -90;
-      if (w.field_72995_K) {
+      if (w.isRemote) {
          this.interval -= 10;
       }
 
@@ -25,15 +25,15 @@ public class MCH_WeaponBomb extends MCH_WeaponBase {
          if (prm.entity instanceof MCH_EntityHeli) {
             MCH_EntityAircraft ac = (MCH_EntityAircraft)prm.entity;
             if (ac.isUAV() && ac.getSeatNum() == 0) {
-               if (!this.worldObj.field_72995_K) {
-                  MCH_Explosion.newExplosion(this.worldObj, (Entity)null, prm.user, ac.field_70165_t, ac.field_70163_u, ac.field_70161_v, (float)this.getInfo().explosion, (float)this.getInfo().explosionBlock, true, true, this.getInfo().flaming, true, 0);
+               if (!this.worldObj.isRemote) {
+                  MCH_Explosion.newExplosion(this.worldObj, (Entity)null, prm.user, ac.posX, ac.posY, ac.posZ, (float)this.getInfo().explosion, (float)this.getInfo().explosionBlock, true, true, this.getInfo().flaming, true, 0);
                   this.playSound(prm.entity);
                }
 
                ac.destruct();
             }
          }
-      } else if (!this.worldObj.field_72995_K) {
+      } else if (!this.worldObj.isRemote) {
          this.playSound(prm.entity);
          MCH_EntityBomb e = new MCH_EntityBomb(this.worldObj, prm.posX, prm.posY, prm.posZ, prm.entity.field_70159_w, prm.entity.field_70181_x, prm.entity.field_70179_y, prm.entity.field_70177_z, 0.0F, (double)this.acceleration);
          e.setName(this.name);

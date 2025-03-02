@@ -71,16 +71,16 @@ public class MCH_EntityParachute extends W_Entity implements IEntitySinglePassen
       return false;
    }
 
-   protected void func_70088_a() {
-      this.field_70180_af.func_187214_a(TYPE, (byte)0);
+   protected void entityInit() {
+      this.dataManager.register(TYPE, (byte)0);
    }
 
    public void setType(int n) {
-      this.field_70180_af.func_187227_b(TYPE, (byte)n);
+      this.dataManager.func_187227_b(TYPE, (byte)n);
    }
 
    public int getType() {
-      return (Byte)this.field_70180_af.func_187225_a(TYPE);
+      return (Byte)this.dataManager.func_187225_a(TYPE);
    }
 
    public AxisAlignedBB func_70114_g(Entity par1Entity) {
@@ -133,32 +133,32 @@ public class MCH_EntityParachute extends W_Entity implements IEntitySinglePassen
 
    public void func_70071_h_() {
       super.func_70071_h_();
-      if (!this.field_70170_p.field_72995_K && this.field_70173_aa % 10 == 0) {
-         MCH_Lib.DbgLog(this.field_70170_p, "MCH_EntityParachute.onUpdate %d, %.3f", this.field_70173_aa, this.field_70181_x);
+      if (!this.world.isRemote && this.field_70173_aa % 10 == 0) {
+         MCH_Lib.DbgLog(this.world, "MCH_EntityParachute.onUpdate %d, %.3f", this.field_70173_aa, this.field_70181_x);
       }
 
       if (this.isOpenParachute() && this.field_70181_x > -0.3D && this.field_70173_aa > 20) {
          this.field_70143_R = (float)((double)this.field_70143_R * 0.85D);
       }
 
-      if (!this.field_70170_p.field_72995_K && this.user != null && this.user.func_184187_bx() == null) {
+      if (!this.world.isRemote && this.user != null && this.user.func_184187_bx() == null) {
          this.user.func_184220_m(this);
          this.field_70177_z = this.field_70126_B = this.user.field_70177_z;
          this.user = null;
       }
 
-      this.field_70169_q = this.field_70165_t;
-      this.field_70167_r = this.field_70163_u;
-      this.field_70166_s = this.field_70161_v;
+      this.field_70169_q = this.posX;
+      this.field_70167_r = this.posY;
+      this.field_70166_s = this.posZ;
       double d1 = this.func_174813_aQ().field_72338_b + (this.func_174813_aQ().field_72337_e - this.func_174813_aQ().field_72338_b) * 0.0D / 5.0D - 0.125D;
       double d2 = this.func_174813_aQ().field_72338_b + (this.func_174813_aQ().field_72337_e - this.func_174813_aQ().field_72338_b) * 1.0D / 5.0D - 0.125D;
       AxisAlignedBB axisalignedbb = W_AxisAlignedBB.getAABB(this.func_174813_aQ().field_72340_a, d1, this.func_174813_aQ().field_72339_c, this.func_174813_aQ().field_72336_d, d2, this.func_174813_aQ().field_72334_f);
-      if (this.field_70170_p.func_72875_a(axisalignedbb, Material.field_151586_h)) {
+      if (this.world.func_72875_a(axisalignedbb, Material.field_151586_h)) {
          this.onWaterSetBoat();
          this.func_70106_y();
       }
 
-      if (this.field_70170_p.field_72995_K) {
+      if (this.world.isRemote) {
          this.onUpdateClient();
       } else {
          this.onUpdateServer();
@@ -168,9 +168,9 @@ public class MCH_EntityParachute extends W_Entity implements IEntitySinglePassen
 
    public void onUpdateClient() {
       if (this.paraPosRotInc > 0) {
-         double x = this.field_70165_t + (this.paraX - this.field_70165_t) / (double)this.paraPosRotInc;
-         double y = this.field_70163_u + (this.paraY - this.field_70163_u) / (double)this.paraPosRotInc;
-         double z = this.field_70161_v + (this.paraZ - this.field_70161_v) / (double)this.paraPosRotInc;
+         double x = this.posX + (this.paraX - this.posX) / (double)this.paraPosRotInc;
+         double y = this.posY + (this.paraY - this.posY) / (double)this.paraPosRotInc;
+         double z = this.posZ + (this.paraZ - this.posZ) / (double)this.paraPosRotInc;
          double yaw = MathHelper.func_76138_g(this.paraYaw - (double)this.field_70177_z);
          this.field_70177_z = (float)((double)this.field_70177_z + yaw / (double)this.paraPosRotInc);
          this.field_70125_A = (float)((double)this.field_70125_A + (this.paraPitch - (double)this.field_70125_A) / (double)this.paraPosRotInc);
@@ -181,7 +181,7 @@ public class MCH_EntityParachute extends W_Entity implements IEntitySinglePassen
             this.func_70101_b(this.getRiddenByEntity().field_70126_B, this.field_70125_A);
          }
       } else {
-         this.func_70107_b(this.field_70165_t + this.field_70159_w, this.field_70163_u + this.field_70181_x, this.field_70161_v + this.field_70179_y);
+         this.func_70107_b(this.posX + this.field_70159_w, this.posY + this.field_70181_x, this.posZ + this.field_70179_y);
          if (this.field_70122_E) {
          }
 
@@ -192,13 +192,13 @@ public class MCH_EntityParachute extends W_Entity implements IEntitySinglePassen
 
       if (!this.isOpenParachute() && this.field_70181_x > 0.01D) {
          float color = 0.6F + this.field_70146_Z.nextFloat() * 0.2F;
-         double dx = this.field_70169_q - this.field_70165_t;
-         double dy = this.field_70167_r - this.field_70163_u;
-         double dz = this.field_70166_s - this.field_70161_v;
+         double dx = this.field_70169_q - this.posX;
+         double dy = this.field_70167_r - this.posY;
+         double dz = this.field_70166_s - this.posZ;
          int num = 1 + (int)((double)MathHelper.func_76133_a(dx * dx + dy * dy + dz * dz) * 2.0D);
 
          for(double i = 0.0D; i < (double)num; ++i) {
-            MCH_ParticleParam prm = new MCH_ParticleParam(this.field_70170_p, "smoke", this.field_70169_q + (this.field_70165_t - this.field_70169_q) * (i / (double)num) * 0.8D, this.field_70167_r + (this.field_70163_u - this.field_70167_r) * (i / (double)num) * 0.8D, this.field_70166_s + (this.field_70161_v - this.field_70166_s) * (i / (double)num) * 0.8D);
+            MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "smoke", this.field_70169_q + (this.posX - this.field_70169_q) * (i / (double)num) * 0.8D, this.field_70167_r + (this.posY - this.field_70167_r) * (i / (double)num) * 0.8D, this.field_70166_s + (this.posZ - this.field_70166_s) * (i / (double)num) * 0.8D);
             prm.motionX = this.field_70159_w * 0.5D + (this.field_70146_Z.nextDouble() - 0.5D) * 0.5D;
             prm.motionX = this.field_70181_x * -0.5D + (this.field_70146_Z.nextDouble() - 0.5D) * 0.5D;
             prm.motionX = this.field_70179_y * 0.5D + (this.field_70146_Z.nextDouble() - 0.5D) * 0.5D;
@@ -281,8 +281,8 @@ public class MCH_EntityParachute extends W_Entity implements IEntitySinglePassen
 
       this.field_70125_A = 0.0F;
       yaw = (double)this.field_70177_z;
-      dx = this.field_70169_q - this.field_70165_t;
-      dz = this.field_70166_s - this.field_70161_v;
+      dx = this.field_70169_q - this.posX;
+      dz = this.field_70166_s - this.posZ;
       if (dx * dx + dz * dz > 0.001D) {
          yaw = (double)((float)(Math.atan2(dx, dz) * 180.0D / 3.141592653589793D));
       }
@@ -303,7 +303,7 @@ public class MCH_EntityParachute extends W_Entity implements IEntitySinglePassen
          this.func_70101_b(this.field_70177_z, this.field_70125_A);
       }
 
-      List<Entity> list = this.field_70170_p.func_72839_b(this, this.func_174813_aQ().func_72314_b(0.2D, 0.0D, 0.2D));
+      List<Entity> list = this.world.func_72839_b(this, this.func_174813_aQ().func_72314_b(0.2D, 0.0D, 0.2D));
       if (list != null && !list.isEmpty()) {
          for(int l = 0; l < list.size(); ++l) {
             Entity entity = (Entity)list.get(l);
@@ -320,23 +320,23 @@ public class MCH_EntityParachute extends W_Entity implements IEntitySinglePassen
    }
 
    public void onGroundAndDead() {
-      ++this.field_70163_u;
+      ++this.posY;
       this.func_184232_k(this.getRiddenByEntity());
       this.func_70106_y();
    }
 
    public void onWaterSetBoat() {
-      if (!this.field_70170_p.field_72995_K) {
+      if (!this.world.isRemote) {
          if (this.getType() == 2) {
             if (this.getRiddenByEntity() != null) {
-               int px = (int)(this.field_70165_t + 0.5D);
-               int py = (int)(this.field_70163_u + 0.5D);
-               int pz = (int)(this.field_70161_v + 0.5D);
+               int px = (int)(this.posX + 0.5D);
+               int py = (int)(this.posY + 0.5D);
+               int pz = (int)(this.posZ + 0.5D);
                boolean foundBlock = false;
 
                int countWater;
                for(countWater = 0; countWater < 5 && py + countWater >= 0 && py + countWater <= 255; ++countWater) {
-                  Block block = W_WorldFunc.getBlock(this.field_70170_p, px, py - countWater, pz);
+                  Block block = W_WorldFunc.getBlock(this.world, px, py - countWater, pz);
                   if (block == W_Block.getWater()) {
                      py -= countWater;
                      foundBlock = true;
@@ -350,7 +350,7 @@ public class MCH_EntityParachute extends W_Entity implements IEntitySinglePassen
                   for(int y = 0; y < 3 && py + y >= 0 && py + y <= 255; ++y) {
                      for(int x = -2; x <= 2; ++x) {
                         for(int z = -2; z <= 2; ++z) {
-                           Block block = W_WorldFunc.getBlock(this.field_70170_p, px + x, py - y, pz + z);
+                           Block block = W_WorldFunc.getBlock(this.world, px + x, py - y, pz + z);
                            if (block == W_Block.getWater()) {
                               ++countWater;
                               if (countWater > 37) {
@@ -362,9 +362,9 @@ public class MCH_EntityParachute extends W_Entity implements IEntitySinglePassen
                   }
 
                   if (countWater > 37) {
-                     EntityBoat entityboat = new EntityBoat(this.field_70170_p, (double)px, (double)((float)py + 1.0F), (double)pz);
+                     EntityBoat entityboat = new EntityBoat(this.world, (double)px, (double)((float)py + 1.0F), (double)pz);
                      entityboat.field_70177_z = this.field_70177_z - 90.0F;
-                     this.field_70170_p.func_72838_d(entityboat);
+                     this.world.func_72838_d(entityboat);
                      this.getRiddenByEntity().func_184220_m(entityboat);
                   }
 
@@ -382,7 +382,7 @@ public class MCH_EntityParachute extends W_Entity implements IEntitySinglePassen
       if (this.func_184196_w(passenger)) {
          double x = -Math.sin((double)this.field_70177_z * 3.141592653589793D / 180.0D) * 0.1D;
          double z = Math.cos((double)this.field_70177_z * 3.141592653589793D / 180.0D) * 0.1D;
-         passenger.func_70107_b(this.field_70165_t + x, this.field_70163_u + this.func_70042_X() + passenger.func_70033_W(), this.field_70161_v + z);
+         passenger.func_70107_b(this.posX + x, this.posY + this.func_70042_X() + passenger.func_70033_W(), this.posZ + z);
       }
 
    }
@@ -411,6 +411,6 @@ public class MCH_EntityParachute extends W_Entity implements IEntitySinglePassen
    }
 
    static {
-      TYPE = EntityDataManager.func_187226_a(MCH_EntityParachute.class, DataSerializers.field_187191_a);
+      TYPE = EntityDataManager.createKey(MCH_EntityParachute.class, DataSerializers.field_187191_a);
    }
 }
