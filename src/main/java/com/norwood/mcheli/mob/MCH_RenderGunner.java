@@ -11,15 +11,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class MCH_RenderGunner extends RenderLivingBase<MCH_EntityGunner> {
     public static final IRenderFactory<MCH_EntityGunner> FACTORY = MCH_RenderGunner::new;
     private static final ResourceLocation steveTextures = new ResourceLocation("mcheli", "textures/mob/heligunner.png");
-    public ModelBiped modelBipedMain = (ModelBiped) this.mainModel;
-    public ModelBiped modelArmorChestplate = new ModelBiped(1.0F);
-    public ModelBiped modelArmor = new ModelBiped(0.5F);
+    public final ModelBiped modelBipedMain = (ModelBiped) this.mainModel;
+    public final ModelBiped modelArmorChestplate = new ModelBiped(1.0F);
+    public final ModelBiped modelArmor = new ModelBiped(0.5F);
 
     public MCH_RenderGunner(RenderManager renderManager) {
         super(renderManager, new ModelBiped(0.0F), 0.5F);
@@ -50,7 +51,7 @@ public class MCH_RenderGunner extends RenderLivingBase<MCH_EntityGunner> {
         this.modelArmorChestplate.rightArmPose = this.modelArmor.rightArmPose = this.modelBipedMain.rightArmPose = ArmPose.EMPTY;
     }
 
-    protected void preRenderCallback(MCH_EntityGunner entitylivingbaseIn, float partialTickTime) {
+    protected void preRenderCallback(@NotNull MCH_EntityGunner entitylivingbaseIn, float partialTickTime) {
         float f1 = 0.9375F;
         GL11.glScalef(f1, f1, f1);
     }
@@ -91,7 +92,7 @@ public class MCH_RenderGunner extends RenderLivingBase<MCH_EntityGunner> {
         this.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
 
-    protected ResourceLocation getEntityTexture(MCH_EntityGunner entity) {
+    protected ResourceLocation getEntityTexture(@NotNull MCH_EntityGunner entity) {
         return steveTextures;
     }
 

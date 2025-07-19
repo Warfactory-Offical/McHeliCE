@@ -6,9 +6,10 @@ import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import org.jetbrains.annotations.NotNull;
 
 public class MCH_ItemAircraftDispenseBehavior extends BehaviorDefaultDispenseItem {
-    public ItemStack dispenseStack(IBlockSource bs, ItemStack itemStack) {
+    public @NotNull ItemStack dispenseStack(IBlockSource bs, ItemStack itemStack) {
         EnumFacing enumfacing = bs.getBlockState().getValue(BlockDispenser.FACING);
         double x = bs.getX() + enumfacing.getXOffset() * 2.0;
         double y = bs.getY() + enumfacing.getYOffset() * 2.0;

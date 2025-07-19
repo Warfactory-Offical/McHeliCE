@@ -12,7 +12,7 @@ public class MCH_VehicleInfo extends MCH_AircraftInfo {
     public MCH_ItemVehicle item = null;
     public boolean isEnableMove = false;
     public boolean isEnableRot = false;
-    public List<MCH_VehicleInfo.VPart> partList = new ArrayList<>();
+    public final List<MCH_VehicleInfo.VPart> partList = new ArrayList<>();
 
     public MCH_VehicleInfo(AddonResourceLocation location, String path) {
         super(location, path);
@@ -58,7 +58,7 @@ public class MCH_VehicleInfo extends MCH_AircraftInfo {
             String[] s = data.split("\\s*,\\s*");
             if (s.length >= 7) {
                 float rb = s.length >= 8 ? this.toFloat(s[7]) : 0.0F;
-                MCH_VehicleInfo.VPart n = new MCH_VehicleInfo.VPart(
+                MCH_VehicleInfo.VPart n = new VPart(
                         this,
                         this.toFloat(s[4]),
                         this.toFloat(s[5]),
@@ -72,7 +72,7 @@ public class MCH_VehicleInfo extends MCH_AircraftInfo {
                 );
                 this.partList.add(n);
             }
-        } else if (item.compareTo("addchildpart") == 0 && this.partList.size() > 0) {
+        } else if (item.compareTo("addchildpart") == 0 && !this.partList.isEmpty()) {
             String[] s = data.split("\\s*,\\s*");
             if (s.length >= 7) {
                 float rb = s.length >= 8 ? this.toFloat(s[7]) : 0.0F;
@@ -81,7 +81,7 @@ public class MCH_VehicleInfo extends MCH_AircraftInfo {
                     p.child = new ArrayList<>();
                 }
 
-                MCH_VehicleInfo.VPart n = new MCH_VehicleInfo.VPart(
+                MCH_VehicleInfo.VPart n = new VPart(
                         this,
                         this.toFloat(s[4]),
                         this.toFloat(s[5]),
@@ -113,7 +113,7 @@ public class MCH_VehicleInfo extends MCH_AircraftInfo {
         MCH_MOD.proxy.registerModelsVehicle(this, true);
     }
 
-    public class VPart extends MCH_AircraftInfo.DrawnPart {
+    public static class VPart extends MCH_AircraftInfo.DrawnPart {
         public final boolean rotPitch;
         public final boolean rotYaw;
         public final int type;

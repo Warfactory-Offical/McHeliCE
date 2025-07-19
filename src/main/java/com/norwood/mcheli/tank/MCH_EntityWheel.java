@@ -25,6 +25,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,14 +59,14 @@ public class MCH_EntityWheel extends W_Entity {
         this.parents = parents;
     }
 
-    protected void readEntityFromNBT(NBTTagCompound compound) {
+    protected void readEntityFromNBT(@NotNull NBTTagCompound compound) {
         this.setDead();
     }
 
-    protected void writeEntityToNBT(NBTTagCompound compound) {
+    protected void writeEntityToNBT(@NotNull NBTTagCompound compound) {
     }
 
-    public void move(MoverType type, double x, double y, double z) {
+    public void move(@NotNull MoverType type, double x, double y, double z) {
         this.world.profiler.startSection("move");
         double d2 = x;
         double d3 = y;
@@ -73,8 +74,8 @@ public class MCH_EntityWheel extends W_Entity {
         List<AxisAlignedBB> list1 = this.getCollisionBoxes(this, this.getEntityBoundingBox().expand(x, y, z));
         AxisAlignedBB axisalignedbb = this.getEntityBoundingBox();
         if (y != 0.0) {
-            for (int k = 0; k < list1.size(); k++) {
-                y = list1.get(k).calculateYOffset(this.getEntityBoundingBox(), y);
+            for (AxisAlignedBB axisAlignedBB : list1) {
+                y = axisAlignedBB.calculateYOffset(this.getEntityBoundingBox(), y);
             }
 
             this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0, y, 0.0));
@@ -82,8 +83,8 @@ public class MCH_EntityWheel extends W_Entity {
 
         boolean flag = this.onGround || d3 != y && d3 < 0.0;
         if (x != 0.0) {
-            for (int j5 = 0; j5 < list1.size(); j5++) {
-                x = list1.get(j5).calculateXOffset(this.getEntityBoundingBox(), x);
+            for (AxisAlignedBB axisAlignedBB : list1) {
+                x = axisAlignedBB.calculateXOffset(this.getEntityBoundingBox(), x);
             }
 
             if (x != 0.0) {
@@ -92,8 +93,8 @@ public class MCH_EntityWheel extends W_Entity {
         }
 
         if (z != 0.0) {
-            for (int k5 = 0; k5 < list1.size(); k5++) {
-                z = list1.get(k5).calculateZOffset(this.getEntityBoundingBox(), z);
+            for (AxisAlignedBB axisAlignedBB : list1) {
+                z = axisAlignedBB.calculateZOffset(this.getEntityBoundingBox(), z);
             }
 
             if (z != 0.0) {
@@ -113,44 +114,44 @@ public class MCH_EntityWheel extends W_Entity {
             AxisAlignedBB axisalignedbb3 = axisalignedbb2.expand(d2, 0.0, d4);
             double d8 = y;
 
-            for (int j1 = 0; j1 < list.size(); j1++) {
-                d8 = list.get(j1).calculateYOffset(axisalignedbb3, d8);
+            for (AxisAlignedBB axisAlignedBB1 : list) {
+                d8 = axisAlignedBB1.calculateYOffset(axisalignedbb3, d8);
             }
 
             axisalignedbb2 = axisalignedbb2.offset(0.0, d8, 0.0);
             double d18 = d2;
 
-            for (int l1 = 0; l1 < list.size(); l1++) {
-                d18 = list.get(l1).calculateXOffset(axisalignedbb2, d18);
+            for (AxisAlignedBB element : list) {
+                d18 = element.calculateXOffset(axisalignedbb2, d18);
             }
 
             axisalignedbb2 = axisalignedbb2.offset(d18, 0.0, 0.0);
             double d19 = d4;
 
-            for (int j2 = 0; j2 < list.size(); j2++) {
-                d19 = list.get(j2).calculateZOffset(axisalignedbb2, d19);
+            for (AxisAlignedBB item : list) {
+                d19 = item.calculateZOffset(axisalignedbb2, d19);
             }
 
             axisalignedbb2 = axisalignedbb2.offset(0.0, 0.0, d19);
             AxisAlignedBB axisalignedbb4 = this.getEntityBoundingBox();
             double d20 = y;
 
-            for (int l2 = 0; l2 < list.size(); l2++) {
-                d20 = list.get(l2).calculateYOffset(axisalignedbb4, d20);
+            for (AxisAlignedBB value : list) {
+                d20 = value.calculateYOffset(axisalignedbb4, d20);
             }
 
             axisalignedbb4 = axisalignedbb4.offset(0.0, d20, 0.0);
             double d21 = d2;
 
-            for (int j3 = 0; j3 < list.size(); j3++) {
-                d21 = list.get(j3).calculateXOffset(axisalignedbb4, d21);
+            for (AxisAlignedBB bb : list) {
+                d21 = bb.calculateXOffset(axisalignedbb4, d21);
             }
 
             axisalignedbb4 = axisalignedbb4.offset(d21, 0.0, 0.0);
             double d22 = d4;
 
-            for (int l3 = 0; l3 < list.size(); l3++) {
-                d22 = list.get(l3).calculateZOffset(axisalignedbb4, d22);
+            for (AxisAlignedBB alignedBB : list) {
+                d22 = alignedBB.calculateZOffset(axisalignedbb4, d22);
             }
 
             axisalignedbb4 = axisalignedbb4.offset(0.0, 0.0, d22);
@@ -168,8 +169,8 @@ public class MCH_EntityWheel extends W_Entity {
                 this.setEntityBoundingBox(axisalignedbb4);
             }
 
-            for (int j4 = 0; j4 < list.size(); j4++) {
-                y = list.get(j4).calculateYOffset(this.getEntityBoundingBox(), y);
+            for (AxisAlignedBB axisAlignedBB : list) {
+                y = axisAlignedBB.calculateYOffset(this.getEntityBoundingBox(), y);
             }
 
             this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0, y, 0.0));
@@ -235,8 +236,7 @@ public class MCH_EntityWheel extends W_Entity {
         double d0 = 0.25;
         List<Entity> list = entityIn.world.getEntitiesWithinAABBExcludingEntity(entityIn, aabb.grow(d0, d0, d0));
 
-        for (int j2 = 0; j2 < list.size(); j2++) {
-            Entity entity = list.get(j2);
+        for (Entity entity : list) {
             if (!W_Lib.isEntityLivingBase(entity) && !(entity instanceof MCH_EntitySeat) && !(entity instanceof MCH_EntityHitBox) && entity != this.parents) {
                 AxisAlignedBB axisalignedbb1 = entity.getCollisionBoundingBox();
                 if (axisalignedbb1 != null && axisalignedbb1.intersects(aabb)) {
@@ -261,8 +261,8 @@ public class MCH_EntityWheel extends W_Entity {
         int i1 = MathHelper.floor(aabb.minZ) - 1;
         int j1 = MathHelper.ceil(aabb.maxZ) + 1;
         WorldBorder worldborder = entityIn.world.getWorldBorder();
-        boolean flag = entityIn != null && entityIn.isOutsideBorder();
-        boolean flag1 = entityIn != null && entityIn.world.isInsideWorldBorder(entityIn);
+        boolean flag = entityIn.isOutsideBorder();
+        boolean flag1 = entityIn.world.isInsideWorldBorder(entityIn);
         IBlockState iblockstate = Blocks.STONE.getDefaultState();
         PooledMutableBlockPos blockpos = PooledMutableBlockPos.retain();
 
@@ -274,7 +274,7 @@ public class MCH_EntityWheel extends W_Entity {
                     if ((!flag2 || !flag3) && entityIn.world.isBlockLoaded(blockpos.setPos(k1, 64, l1))) {
                         for (int i2 = k; i2 < l; i2++) {
                             if (!flag2 && !flag3 || i2 != l - 1) {
-                                if (entityIn != null && flag == flag1) {
+                                if (flag == flag1) {
                                     entityIn.setOutsideBorder(!flag1);
                                 }
 

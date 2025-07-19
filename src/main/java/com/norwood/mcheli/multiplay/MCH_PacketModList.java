@@ -13,7 +13,7 @@ public class MCH_PacketModList extends MCH_Packet {
     public boolean firstData = false;
     public int id = 0;
     public int num = 0;
-    public List<String> list = new ArrayList<>();
+    public final List<String> list = new ArrayList<>();
 
     public static void send(EntityPlayer player, MCH_PacketModList p) {
         W_Network.sendToPlayer(p, player);

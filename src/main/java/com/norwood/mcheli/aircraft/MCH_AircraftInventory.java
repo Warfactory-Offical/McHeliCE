@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -71,7 +72,7 @@ public class MCH_AircraftInventory implements IInventory {
         return true;
     }
 
-    public ItemStack getStackInSlot(int var1) {
+    public @NotNull ItemStack getStackInSlot(int var1) {
         return this.containerItems[var1];
     }
 
@@ -114,26 +115,26 @@ public class MCH_AircraftInventory implements IInventory {
         }
     }
 
-    public ItemStack decrStackSize(int par1, int par2) {
+    public @NotNull ItemStack decrStackSize(int par1, int par2) {
         if (!this.containerItems[par1].isEmpty()) {
+            ItemStack itemstack;
             if (this.containerItems[par1].getCount() <= par2) {
-                ItemStack itemstack = this.containerItems[par1];
+                itemstack = this.containerItems[par1];
                 this.containerItems[par1] = ItemStack.EMPTY;
-                return itemstack;
             } else {
-                ItemStack itemstack = this.containerItems[par1].splitStack(par2);
+                itemstack = this.containerItems[par1].splitStack(par2);
                 if (this.containerItems[par1].getCount() == 0) {
                     this.containerItems[par1] = ItemStack.EMPTY;
                 }
 
-                return itemstack;
             }
+            return itemstack;
         } else {
             return ItemStack.EMPTY;
         }
     }
 
-    public ItemStack removeStackFromSlot(int par1) {
+    public @NotNull ItemStack removeStackFromSlot(int par1) {
         if (!this.containerItems[par1].isEmpty()) {
             ItemStack itemstack = this.containerItems[par1];
             this.containerItems[par1] = ItemStack.EMPTY;
@@ -154,7 +155,7 @@ public class MCH_AircraftInventory implements IInventory {
         return this.getInvName();
     }
 
-    public String getName() {
+    public @NotNull String getName() {
         return this.getInvName();
     }
 
@@ -171,7 +172,7 @@ public class MCH_AircraftInventory implements IInventory {
         return this.aircraft.getAcInfo() != null;
     }
 
-    public ITextComponent getDisplayName() {
+    public @NotNull ITextComponent getDisplayName() {
         return new TextComponentString(this.getInvName());
     }
 
@@ -190,7 +191,7 @@ public class MCH_AircraftInventory implements IInventory {
         return player.getDistanceSq(this.aircraft) <= 144.0;
     }
 
-    public boolean isItemValidForSlot(int par1, ItemStack par2ItemStack) {
+    public boolean isItemValidForSlot(int par1, @NotNull ItemStack par2ItemStack) {
         return true;
     }
 
@@ -198,10 +199,10 @@ public class MCH_AircraftInventory implements IInventory {
         return true;
     }
 
-    public void openInventory(EntityPlayer player) {
+    public void openInventory(@NotNull EntityPlayer player) {
     }
 
-    public void closeInventory(EntityPlayer player) {
+    public void closeInventory(@NotNull EntityPlayer player) {
     }
 
     protected void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
@@ -227,7 +228,7 @@ public class MCH_AircraftInventory implements IInventory {
         for (int i = 0; i < nbttaglist.tagCount(); i++) {
             NBTTagCompound nbttagcompound1 = W_NBTTag.tagAt(nbttaglist, i);
             int j = nbttagcompound1.getByte("SlotAC") & 255;
-            if (j >= 0 && j < this.containerItems.length) {
+            if (j < this.containerItems.length) {
                 this.containerItems[j] = new ItemStack(nbttagcompound1);
             }
         }

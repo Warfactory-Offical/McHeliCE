@@ -31,6 +31,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -135,7 +136,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
         this.dataManager.register(BOMBLET_FLAG, (byte) 0);
     }
 
-    public String getName() {
+    public @NotNull String getName() {
         return this.dataManager.get(INFO_NAME);
     }
 
@@ -355,8 +356,8 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
         if (this.getCountOnUpdate() % 3 == 0) {
             List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, entity.getEntityBoundingBox().grow(15.0, 15.0, 15.0));
 
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getEntityData().getBoolean("FlareUsing")) {
+            for (Entity value : list) {
+                if (value.getEntityData().getBoolean("FlareUsing")) {
                     return true;
                 }
             }
@@ -708,8 +709,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
             List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(mx, my, mz).grow(21.0, 21.0, 21.0));
             double d0 = 0.0;
 
-            for (int j = 0; j < list.size(); j++) {
-                Entity entity1 = list.get(j);
+            for (Entity entity1 : list) {
                 if (this.canBeCollidedEntity(entity1)) {
                     float f = 0.3F;
                     AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().grow(f, f, f);
@@ -773,7 +773,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
                 }
 
                 for (String s : MCH_Config.IgnoreBulletHitList) {
-                    if (entity.getClass().getName().toLowerCase().indexOf(s.toLowerCase()) >= 0) {
+                    if (entity.getClass().getName().toLowerCase().contains(s.toLowerCase())) {
                         return false;
                     }
                 }
@@ -942,7 +942,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
         par1NBTTagCompound.setString("WeaponName", this.getName());
     }
 
-    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
+    public void readEntityFromNBT(@NotNull NBTTagCompound par1NBTTagCompound) {
         this.setDead();
     }
 

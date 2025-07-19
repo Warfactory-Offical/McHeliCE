@@ -18,7 +18,7 @@ public class MqoParser {
         int vertexNum = 0;
         int faceNum = 0;
         BufferedReader reader = null;
-        String currentLine = null;
+        String currentLine;
         int lineCount = 0;
 
         MqoModel var44;
@@ -55,7 +55,7 @@ public class MqoParser {
                             }
 
                             if (isValidVertexLine(currentLine)) {
-                                vertexNum2 = Integer.valueOf(currentLine.split(" ")[1]);
+                                vertexNum2 = Integer.parseInt(currentLine.split(" ")[1]);
                                 break;
                             }
                         }
@@ -66,7 +66,7 @@ public class MqoParser {
                                 currentLine = currentLine.replaceAll("\\s+", " ").trim();
                                 String[] sx = currentLine.split(" ");
                                 if (sx.length == 3) {
-                                    _Vertex v = new _Vertex(Float.valueOf(sx[0]) / 100.0F, Float.valueOf(sx[1]) / 100.0F, Float.valueOf(sx[2]) / 100.0F);
+                                    _Vertex v = new _Vertex(Float.parseFloat(sx[0]) / 100.0F, Float.parseFloat(sx[1]) / 100.0F, Float.parseFloat(sx[2]) / 100.0F);
                                     vertices.add(v);
                                     if (--vertexNum2 <= 0) {
                                         break;
@@ -82,7 +82,7 @@ public class MqoParser {
                                 lineCount++;
                                 currentLine = currentLine.replaceAll("\\s+", " ").trim();
                                 if (isValidFaceLine(currentLine)) {
-                                    faceNum2 = Integer.valueOf(currentLine.split(" ")[1]);
+                                    faceNum2 = Integer.parseInt(currentLine.split(" ")[1]);
                                     break;
                                 }
                             }
@@ -93,11 +93,8 @@ public class MqoParser {
                                     currentLine = currentLine.replaceAll("\\s+", " ").trim();
                                     String[] sx = currentLine.split(" ");
                                     if (sx.length <= 2) {
-                                        if (sx.length > 2 && Integer.valueOf(sx[0]) != 3) {
-                                            throw new DebugException("found face is not triangle : line=" + lineCount);
-                                        }
                                     } else {
-                                        if (Integer.valueOf(sx[0]) >= 3) {
+                                        if (Integer.parseInt(sx[0]) >= 3) {
                                             _Face[] faces = parseFace(currentLine, lineCount, mirror, vertices);
 
                                             Collections.addAll(faceList, faces);
@@ -147,7 +144,7 @@ public class MqoParser {
         if (isValidGroupObjectLine(line)) {
             String[] s = line.split(" ");
             String trimmedLine = s[1].substring(1, s[1].length() - 1);
-            if (trimmedLine.length() > 0) {
+            if (!trimmedLine.isEmpty()) {
                 group = _GroupObject.builder().name(trimmedLine);
             }
 
@@ -159,18 +156,18 @@ public class MqoParser {
 
     private static _Face[] parseFace(String line, int lineCount, boolean mirror, List<_Vertex> vertices) {
         String[] s = line.split("[ VU)(M]+");
-        int vnum = Integer.valueOf(s[0]);
+        int vnum = Integer.parseInt(s[0]);
         if (vnum != 3 && vnum != 4) {
             return new _Face[0];
         } else if (vnum == 3) {
-            int[] verticesID = new int[]{Integer.valueOf(s[3]), Integer.valueOf(s[2]), Integer.valueOf(s[1])};
+            int[] verticesID = new int[]{Integer.parseInt(s[3]), Integer.parseInt(s[2]), Integer.parseInt(s[1])};
             _Vertex[] verts = new _Vertex[]{vertices.get(verticesID[0]), vertices.get(verticesID[1]), vertices.get(verticesID[2])};
             _TextureCoord[] texCoords;
             if (s.length >= 11) {
                 texCoords = new _TextureCoord[]{
-                        new _TextureCoord(Float.valueOf(s[9]), Float.valueOf(s[10])),
-                        new _TextureCoord(Float.valueOf(s[7]), Float.valueOf(s[8])),
-                        new _TextureCoord(Float.valueOf(s[5]), Float.valueOf(s[6]))
+                        new _TextureCoord(Float.parseFloat(s[9]), Float.parseFloat(s[10])),
+                        new _TextureCoord(Float.parseFloat(s[7]), Float.parseFloat(s[8])),
+                        new _TextureCoord(Float.parseFloat(s[5]), Float.parseFloat(s[6]))
                 };
             } else {
                 texCoords = new _TextureCoord[]{new _TextureCoord(0.0F, 0.0F), new _TextureCoord(0.0F, 0.0F), new _TextureCoord(0.0F, 0.0F)};
@@ -178,27 +175,27 @@ public class MqoParser {
 
             return new _Face[]{new _Face(verticesID, verts, texCoords)};
         } else {
-            int[] verticesID1 = new int[]{Integer.valueOf(s[3]), Integer.valueOf(s[2]), Integer.valueOf(s[1])};
+            int[] verticesID1 = new int[]{Integer.parseInt(s[3]), Integer.parseInt(s[2]), Integer.parseInt(s[1])};
             _Vertex[] verts1 = new _Vertex[]{vertices.get(verticesID1[0]), vertices.get(verticesID1[1]), vertices.get(verticesID1[2])};
             _TextureCoord[] texCoords1;
             if (s.length >= 12) {
                 texCoords1 = new _TextureCoord[]{
-                        new _TextureCoord(Float.valueOf(s[10]), Float.valueOf(s[11])),
-                        new _TextureCoord(Float.valueOf(s[8]), Float.valueOf(s[9])),
-                        new _TextureCoord(Float.valueOf(s[6]), Float.valueOf(s[7]))
+                        new _TextureCoord(Float.parseFloat(s[10]), Float.parseFloat(s[11])),
+                        new _TextureCoord(Float.parseFloat(s[8]), Float.parseFloat(s[9])),
+                        new _TextureCoord(Float.parseFloat(s[6]), Float.parseFloat(s[7]))
                 };
             } else {
                 texCoords1 = new _TextureCoord[]{new _TextureCoord(0.0F, 0.0F), new _TextureCoord(0.0F, 0.0F), new _TextureCoord(0.0F, 0.0F)};
             }
 
-            int[] verticesID2 = new int[]{Integer.valueOf(s[4]), Integer.valueOf(s[3]), Integer.valueOf(s[1])};
+            int[] verticesID2 = new int[]{Integer.parseInt(s[4]), Integer.parseInt(s[3]), Integer.parseInt(s[1])};
             _Vertex[] verts2 = new _Vertex[]{vertices.get(verticesID2[0]), vertices.get(verticesID2[1]), vertices.get(verticesID2[2])};
             _TextureCoord[] texCoords2;
             if (s.length >= 14) {
                 texCoords2 = new _TextureCoord[]{
-                        new _TextureCoord(Float.valueOf(s[12]), Float.valueOf(s[13])),
-                        new _TextureCoord(Float.valueOf(s[10]), Float.valueOf(s[11])),
-                        new _TextureCoord(Float.valueOf(s[6]), Float.valueOf(s[7]))
+                        new _TextureCoord(Float.parseFloat(s[12]), Float.parseFloat(s[13])),
+                        new _TextureCoord(Float.parseFloat(s[10]), Float.parseFloat(s[11])),
+                        new _TextureCoord(Float.parseFloat(s[6]), Float.parseFloat(s[7]))
                 };
             } else {
                 texCoords2 = new _TextureCoord[]{new _TextureCoord(0.0F, 0.0F), new _TextureCoord(0.0F, 0.0F), new _TextureCoord(0.0F, 0.0F)};

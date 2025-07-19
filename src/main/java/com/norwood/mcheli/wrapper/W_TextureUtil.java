@@ -19,10 +19,10 @@ public class W_TextureUtil {
     }
 
     private W_TextureUtil.TextureParam newParam() {
-        return new W_TextureUtil.TextureParam(this);
+        return new TextureParam(this);
     }
 
-    public class TextureParam {
+    public static class TextureParam {
         public int width;
         public int height;
 

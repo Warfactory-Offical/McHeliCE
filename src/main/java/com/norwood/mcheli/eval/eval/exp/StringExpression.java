@@ -86,15 +86,9 @@ public class StringExpression extends WordExpression {
     }
 
     @Override
-    public int hashCode() {
-        return this.word.hashCode();
-    }
-
-    @Override
     public String toString() {
-        String sb = this.getOperator() +
+        return this.getOperator() +
                 this.word +
                 this.getEndOperator();
-        return sb;
     }
 }

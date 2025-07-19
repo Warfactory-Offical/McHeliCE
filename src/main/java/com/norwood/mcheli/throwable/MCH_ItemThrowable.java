@@ -14,6 +14,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 public class MCH_ItemThrowable extends W_Item {
     public MCH_ItemThrowable(int par1) {
@@ -25,13 +26,13 @@ public class MCH_ItemThrowable extends W_Item {
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(item, new MCH_ItemThrowableDispenseBehavior());
     }
 
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn) {
+    public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World world, EntityPlayer player, @NotNull EnumHand handIn) {
         ItemStack itemstack = player.getHeldItem(handIn);
         player.setActiveHand(handIn);
         return ActionResult.newResult(EnumActionResult.SUCCESS, itemstack);
     }
 
-    public void onPlayerStoppedUsing(ItemStack itemStack, World world, EntityLivingBase entityLiving, int par4) {
+    public void onPlayerStoppedUsing(@NotNull ItemStack itemStack, @NotNull World world, @NotNull EntityLivingBase entityLiving, int par4) {
         if (entityLiving instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entityLiving;
             if (!itemStack.isEmpty() && itemStack.getCount() > 0) {
@@ -76,11 +77,11 @@ public class MCH_ItemThrowable extends W_Item {
         }
     }
 
-    public int getMaxItemUseDuration(ItemStack par1ItemStack) {
+    public int getMaxItemUseDuration(@NotNull ItemStack par1ItemStack) {
         return 72000;
     }
 
-    public EnumAction getItemUseAction(ItemStack par1ItemStack) {
+    public @NotNull EnumAction getItemUseAction(@NotNull ItemStack par1ItemStack) {
         return EnumAction.BOW;
     }
 }

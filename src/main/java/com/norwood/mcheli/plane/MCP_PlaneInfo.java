@@ -11,9 +11,9 @@ import java.util.List;
 
 public class MCP_PlaneInfo extends MCH_AircraftInfo {
     public MCP_ItemPlane item = null;
-    public List<MCH_AircraftInfo.DrawnPart> nozzles = new ArrayList<>();
-    public List<MCP_PlaneInfo.Rotor> rotorList = new ArrayList<>();
-    public List<MCP_PlaneInfo.Wing> wingList = new ArrayList<>();
+    public final List<MCH_AircraftInfo.DrawnPart> nozzles = new ArrayList<>();
+    public final List<MCP_PlaneInfo.Rotor> rotorList = new ArrayList<>();
+    public final List<MCP_PlaneInfo.Wing> wingList = new ArrayList<>();
     public boolean isEnableVtol = false;
     public boolean isDefaultVtol;
     public float vtolYaw = 0.3F;
@@ -37,15 +37,15 @@ public class MCP_PlaneInfo extends MCH_AircraftInfo {
     }
 
     public boolean haveNozzle() {
-        return this.nozzles.size() > 0;
+        return !this.nozzles.isEmpty();
     }
 
     public boolean haveRotor() {
-        return this.rotorList.size() > 0;
+        return !this.rotorList.isEmpty();
     }
 
     public boolean haveWing() {
-        return this.wingList.size() > 0;
+        return !this.wingList.isEmpty();
     }
 
     @Override
@@ -86,7 +86,7 @@ public class MCP_PlaneInfo extends MCH_AircraftInfo {
             String[] s = data.split("\\s*,\\s*");
             if (s.length >= 6) {
                 float m = s.length >= 7 ? this.toFloat(s[6], -180.0F, 180.0F) / 90.0F : 1.0F;
-                MCP_PlaneInfo.Rotor e = new MCP_PlaneInfo.Rotor(
+                MCP_PlaneInfo.Rotor e = new Rotor(
                         this,
                         this.toFloat(s[0]),
                         this.toFloat(s[1]),
@@ -101,11 +101,11 @@ public class MCP_PlaneInfo extends MCH_AircraftInfo {
             }
         } else if (item.compareTo("addblade") == 0) {
             int idx = this.rotorList.size() - 1;
-            MCP_PlaneInfo.Rotor r = this.rotorList.size() > 0 ? this.rotorList.get(idx) : null;
+            MCP_PlaneInfo.Rotor r = !this.rotorList.isEmpty() ? this.rotorList.get(idx) : null;
             if (r != null) {
                 String[] s = data.split("\\s*,\\s*");
                 if (s.length == 8) {
-                    MCP_PlaneInfo.Blade b = new MCP_PlaneInfo.Blade(
+                    MCP_PlaneInfo.Blade b = new Blade(
                             this,
                             this.toInt(s[0]),
                             this.toInt(s[1]),
@@ -123,7 +123,7 @@ public class MCP_PlaneInfo extends MCH_AircraftInfo {
         } else if (item.compareTo("addpartwing") == 0) {
             String[] s = data.split("\\s*,\\s*");
             if (s.length == 7) {
-                MCP_PlaneInfo.Wing n = new MCP_PlaneInfo.Wing(
+                MCP_PlaneInfo.Wing n = new Wing(
                         this,
                         this.toFloat(s[0]),
                         this.toFloat(s[1]),
@@ -138,13 +138,13 @@ public class MCP_PlaneInfo extends MCH_AircraftInfo {
             }
         } else if (item.equalsIgnoreCase("AddPartPylon")) {
             String[] s = data.split("\\s*,\\s*");
-            if (s.length >= 7 && this.wingList.size() > 0) {
+            if (s.length >= 7 && !this.wingList.isEmpty()) {
                 MCP_PlaneInfo.Wing w = this.wingList.get(this.wingList.size() - 1);
                 if (w.pylonList == null) {
                     w.pylonList = new ArrayList<>();
                 }
 
-                MCP_PlaneInfo.Pylon n = new MCP_PlaneInfo.Pylon(
+                MCP_PlaneInfo.Pylon n = new Pylon(
                         this,
                         this.toFloat(s[0]),
                         this.toFloat(s[1]),
@@ -160,7 +160,7 @@ public class MCP_PlaneInfo extends MCH_AircraftInfo {
         } else if (item.compareTo("addpartnozzle") == 0) {
             String[] s = data.split("\\s*,\\s*");
             if (s.length == 6) {
-                MCH_AircraftInfo.DrawnPart n = new MCH_AircraftInfo.DrawnPart(
+                MCH_AircraftInfo.DrawnPart n = new DrawnPart(
                         this,
                         this.toFloat(s[0]),
                         this.toFloat(s[1]),
@@ -204,7 +204,7 @@ public class MCP_PlaneInfo extends MCH_AircraftInfo {
         MCH_MOD.proxy.registerModelsPlane(this, true);
     }
 
-    public class Blade extends MCH_AircraftInfo.DrawnPart {
+    public static class Blade extends MCH_AircraftInfo.DrawnPart {
         public final int numBlade;
         public final int rotBlade;
 
@@ -215,7 +215,7 @@ public class MCP_PlaneInfo extends MCH_AircraftInfo {
         }
     }
 
-    public class Pylon extends MCH_AircraftInfo.DrawnPart {
+    public static class Pylon extends MCH_AircraftInfo.DrawnPart {
         public final float maxRotFactor;
         public final float maxRot;
 
@@ -226,9 +226,9 @@ public class MCP_PlaneInfo extends MCH_AircraftInfo {
         }
     }
 
-    public class Rotor extends MCH_AircraftInfo.DrawnPart {
+    public static class Rotor extends MCH_AircraftInfo.DrawnPart {
         public final float maxRotFactor;
-        public List<MCP_PlaneInfo.Blade> blades = new ArrayList<>();
+        public final List<MCP_PlaneInfo.Blade> blades = new ArrayList<>();
 
         public Rotor(MCP_PlaneInfo paramMCP_PlaneInfo, float x, float y, float z, float rx, float ry, float rz, float mrf, String model) {
             super(paramMCP_PlaneInfo, x, y, z, rx, ry, rz, model);
@@ -236,7 +236,7 @@ public class MCP_PlaneInfo extends MCH_AircraftInfo {
         }
     }
 
-    public class Wing extends MCH_AircraftInfo.DrawnPart {
+    public static class Wing extends MCH_AircraftInfo.DrawnPart {
         public final float maxRotFactor;
         public final float maxRot;
         public List<MCP_PlaneInfo.Pylon> pylonList;

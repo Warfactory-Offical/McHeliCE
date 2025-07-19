@@ -11,7 +11,7 @@ public abstract class AbstractRule {
     private final Map<String, AbstractExpression> opes = new HashMap<>();
     public AbstractRule nextRule;
     public int prio;
-    protected ShareRuleValue share;
+    protected final ShareRuleValue share;
 
     public AbstractRule(ShareRuleValue share) {
         this.share = share;
@@ -34,14 +34,10 @@ public abstract class AbstractRule {
     }
 
     public final String[] getOperators() {
-        List<String> list = new ArrayList<>();
-        Iterator<String> i = this.opes.keySet().iterator();
 
-        while (i.hasNext()) {
-            list.add(i.next());
-        }
+        List<String> list = new ArrayList<>(this.opes.keySet());
 
-        return list.toArray(new String[list.size()]);
+        return list.toArray(new String[0]);
     }
 
     public final void addLexOperator(String ope) {

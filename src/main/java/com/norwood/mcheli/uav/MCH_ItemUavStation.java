@@ -15,11 +15,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class MCH_ItemUavStation extends W_Item {
-    public static int UAV_STATION_KIND_NUM = 2;
+    public static final int UAV_STATION_KIND_NUM = 2;
     public final int UavStationKind;
 
     public MCH_ItemUavStation(int par1, int kind) {
@@ -38,7 +39,7 @@ public class MCH_ItemUavStation extends W_Item {
         return uavst;
     }
 
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+    public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World worldIn, EntityPlayer playerIn, @NotNull EnumHand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
         float f = 1.0F;
         float f1 = playerIn.prevRotationPitch + (playerIn.rotationPitch - playerIn.prevRotationPitch) * f;
@@ -66,8 +67,7 @@ public class MCH_ItemUavStation extends W_Item {
                     playerIn, playerIn.getEntityBoundingBox().expand(vec32.x * d3, vec32.y * d3, vec32.z * d3).grow(f9, f9, f9)
             );
 
-            for (int i = 0; i < list.size(); i++) {
-                Entity entity = list.get(i);
+            for (Entity entity : list) {
                 if (entity.canBeCollidedWith()) {
                     float f10 = entity.getCollisionBorderSize();
                     AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(f10, f10, f10);
@@ -86,7 +86,7 @@ public class MCH_ItemUavStation extends W_Item {
                     int k = movingobjectposition.getBlockPos().getZ();
                     MCH_EntityUavStation entityUavSt = this.createUavStation(worldIn, ix + 0.5F, j + 1.0F, k + 0.5F, this.UavStationKind);
                     int rot = (int) (MCH_Lib.getRotate360(playerIn.rotationYaw) + 45.0);
-                    entityUavSt.rotationYaw = rot / 90 * 90 - 180;
+                    entityUavSt.rotationYaw = (float) rot / 90 * 90 - 180;
                     entityUavSt.initUavPostion();
                     if (!worldIn.getCollisionBoxes(entityUavSt, entityUavSt.getEntityBoundingBox().grow(-0.1, -0.1, -0.1)).isEmpty()) {
                         return ActionResult.newResult(EnumActionResult.FAIL, itemstack);

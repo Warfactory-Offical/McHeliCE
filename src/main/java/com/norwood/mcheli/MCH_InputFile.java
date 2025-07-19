@@ -2,6 +2,7 @@ package com.norwood.mcheli;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 public class MCH_InputFile {
     public File file = null;
@@ -31,7 +32,7 @@ public class MCH_InputFile {
         this.file = new File(path);
 
         try {
-            this.br = new BufferedReader(new InputStreamReader(new FileInputStream(this.file), StandardCharsets.UTF_8));
+            this.br = new BufferedReader(new InputStreamReader(Files.newInputStream(this.file.toPath()), StandardCharsets.UTF_8));
             return true;
         } catch (Exception var3) {
             var3.printStackTrace();

@@ -21,7 +21,7 @@ public abstract class MCH_Gui extends GuiScreen {
     public static int scaleFactor;
     protected int centerX = 0;
     protected int centerY = 0;
-    protected Random rand = new Random();
+    protected final Random rand = new Random();
     protected float smoothCamPartialTicks;
 
     public MCH_Gui(Minecraft minecraft) {

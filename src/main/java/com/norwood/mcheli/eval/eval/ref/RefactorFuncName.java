@@ -1,9 +1,9 @@
 package com.norwood.mcheli.eval.eval.ref;
 
 public class RefactorFuncName extends RefactorAdapter {
-    protected Class<?> targetClass;
-    protected String oldName;
-    protected String newName;
+    protected final Class<?> targetClass;
+    protected final String oldName;
+    protected final String newName;
 
     public RefactorFuncName(Class<?> targetClass, String oldName, String newName) {
         this.targetClass = targetClass;
@@ -16,9 +16,7 @@ public class RefactorFuncName extends RefactorAdapter {
 
     @Override
     public String getNewFuncName(Object target, String name) {
-        if (!name.equals(this.oldName)) {
-            return null;
-        } else {
+        if (name.equals(this.oldName)) {
             if (this.targetClass == null) {
                 if (target == null) {
                     return this.newName;
@@ -27,7 +25,7 @@ public class RefactorFuncName extends RefactorAdapter {
                 return this.newName;
             }
 
-            return null;
         }
+        return null;
     }
 }

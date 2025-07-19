@@ -23,7 +23,7 @@ public class EvalException extends RuntimeException {
     public static final int EXP_NOT_LET_FIELD = 2302;
     public static final int EXP_FUNC_CALL_ERROR = 2401;
     private static final long serialVersionUID = 4174576689426433715L;
-    protected int msg_code;
+    protected final int msg_code;
     protected String[] msg_opt;
     protected String string;
     protected int pos = -1;
@@ -124,10 +124,10 @@ public class EvalException extends RuntimeException {
     }
 
     public String getDefaultFormat(String msgFmt) {
-        StringBuffer fmt = new StringBuffer(128);
+        StringBuilder fmt = new StringBuilder(128);
         fmt.append(msgFmt);
         boolean bWord = false;
-        if (this.word != null && this.word.length() > 0) {
+        if (this.word != null && !this.word.isEmpty()) {
             bWord = !this.word.equals(this.string);
         }
 
@@ -158,7 +158,7 @@ public class EvalException extends RuntimeException {
     }
 
     public String toString(String fmt) {
-        StringBuffer sb = new StringBuffer(256);
+        StringBuilder sb = new StringBuilder(256);
         int len = fmt.length();
 
         for (int i = 0; i < len; i++) {

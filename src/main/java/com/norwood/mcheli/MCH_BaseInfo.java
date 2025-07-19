@@ -34,7 +34,7 @@ public abstract class MCH_BaseInfo implements IContentData {
 
     public float toFloat(String s, float min, float max) {
         float f = Float.parseFloat(s);
-        return f > max ? max : (f < min ? min : f);
+        return f > max ? max : (Math.max(f, min));
     }
 
     public double toDouble(String s) {
@@ -51,7 +51,7 @@ public abstract class MCH_BaseInfo implements IContentData {
 
     public int toInt(String s, int min, int max) {
         int f = Integer.parseInt(s);
-        return f > max ? max : (f < min ? min : f);
+        return f > max ? max : (Math.max(f, min));
     }
 
     public int hex2dec(String s) {
@@ -83,7 +83,7 @@ public abstract class MCH_BaseInfo implements IContentData {
     }
 
     @Override
-    public void parse(List<String> lines, String fileExtension, boolean reload) throws Exception {
+    public void parse(List<String> lines, String fileExtension, boolean reload) {
         if ("txt".equals(fileExtension)) {
             int line = 0;
 

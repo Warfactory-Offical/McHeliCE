@@ -35,6 +35,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -168,7 +169,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
     }
 
     public static void renderLightHatch(MCH_EntityAircraft ac, MCH_AircraftInfo info, float tickTime) {
-        if (info.lightHatchList.size() > 0) {
+        if (!info.lightHatchList.isEmpty()) {
             float rot = ac.prevRotLightHatch + (ac.rotLightHatch - ac.prevRotLightHatch) * tickTime;
 
             for (MCH_AircraftInfo.Hatch t : info.lightHatchList) {
@@ -183,7 +184,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
     }
 
     public static void renderSteeringWheel(MCH_EntityAircraft ac, MCH_AircraftInfo info, float tickTime) {
-        if (info.partSteeringWheel.size() > 0) {
+        if (!info.partSteeringWheel.isEmpty()) {
             float rot = ac.prevRotYawWheel + (ac.rotYawWheel - ac.prevRotYawWheel) * tickTime;
 
             for (MCH_AircraftInfo.PartWheel t : info.partSteeringWheel) {
@@ -198,7 +199,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
     }
 
     public static void renderWheel(MCH_EntityAircraft ac, MCH_AircraftInfo info, float tickTime) {
-        if (info.partWheel.size() > 0) {
+        if (!info.partWheel.isEmpty()) {
             float yaw = ac.prevRotYawWheel + (ac.rotYawWheel - ac.prevRotYawWheel) * tickTime;
 
             for (MCH_AircraftInfo.PartWheel t : info.partWheel) {
@@ -240,7 +241,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
         MCH_WeaponSet beforeWs = null;
         Entity e = ac.getRiddenByEntity();
         int weaponIndex = 0;
-        Iterator var6 = info.partWeapon.iterator();
+        Iterator<MCH_AircraftInfo.PartWeapon> var6 = info.partWeapon.iterator();
 
         while (true) {
             MCH_AircraftInfo.PartWeapon w;
@@ -395,10 +396,10 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
     public static void renderWeaponChild(
             MCH_EntityAircraft ac, MCH_AircraftInfo info, MCH_AircraftInfo.PartWeaponChild w, MCH_WeaponSet ws, Entity e, float tickTime
     ) {
-        float rotYaw = 0.0F;
-        float prevYaw = 0.0F;
-        float rotPitch = 0.0F;
-        float prevPitch = 0.0F;
+        float rotYaw;
+        float prevYaw;
+        float rotPitch;
+        float prevPitch;
         GL11.glTranslated(w.pos.x, w.pos.y, w.pos.z);
         if (w.yaw) {
             if (ws != null) {
@@ -472,7 +473,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
     }
 
     public static void renderTrackRoller(MCH_EntityAircraft ac, MCH_AircraftInfo info, float tickTime) {
-        if (info.partTrackRoller.size() > 0) {
+        if (!info.partTrackRoller.isEmpty()) {
             float[] rot = ac.rotTrackRoller;
             float[] prevRot = ac.prevRotTrackRoller;
 
@@ -488,7 +489,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
     }
 
     public static void renderCrawlerTrack(MCH_EntityAircraft ac, MCH_AircraftInfo info, float tickTime) {
-        if (info.partCrawlerTrack.size() > 0) {
+        if (!info.partCrawlerTrack.isEmpty()) {
             int prevWidth = GL11.glGetInteger(2833);
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder builder = tessellator.getBuffer();
@@ -865,7 +866,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
         }
     }
 
-    public boolean shouldRender(T livingEntity, ICamera camera, double camX, double camY, double camZ) {
+    public boolean shouldRender(@NotNull T livingEntity, @NotNull ICamera camera, double camX, double camY, double camZ) {
         return true;
     }
 
@@ -956,7 +957,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
         if (entity != null) {
             boolean isPilot = ac.isPilot(entity);
             boolean isClientPlayer = W_Lib.isClientPlayer(entity);
-            if (!isClientPlayer || !W_Lib.isFirstPerson() || isClientPlayer && isPilot && ac.getCameraId() > 0) {
+            if (!isClientPlayer || !W_Lib.isFirstPerson() || isPilot && ac.getCameraId() > 0) {
                 GL11.glPushMatrix();
                 if (entity.ticksExisted == 0) {
                     entity.lastTickPosX = entity.posX;

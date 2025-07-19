@@ -12,6 +12,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 public class MCH_EntityCartridge extends W_Entity {
     public final String texture_name;
@@ -184,9 +185,9 @@ public class MCH_EntityCartridge extends W_Entity {
         }
     }
 
-    protected void readEntityFromNBT(NBTTagCompound var1) {
+    protected void readEntityFromNBT(@NotNull NBTTagCompound var1) {
     }
 
-    protected void writeEntityToNBT(NBTTagCompound var1) {
+    protected void writeEntityToNBT(@NotNull NBTTagCompound var1) {
     }
 }

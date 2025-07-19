@@ -27,6 +27,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -110,10 +111,6 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger {
 
     public AxisAlignedBB getCollisionBoundingBox() {
         return this.getEntityBoundingBox();
-    }
-
-    public boolean canBePushed() {
-        return false;
     }
 
     public double getMountedYOffset() {
@@ -270,7 +267,7 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger {
                 if (MCH_Config.Collision_DestroyBlock.prmBool) {
                     for (int l = 0; l < 4; l++) {
                         int i1 = MathHelper.floor(this.posX + (l % 2 - 0.5) * 0.8);
-                        int j1 = MathHelper.floor(this.posZ + (l / 2 - 0.5) * 0.8);
+                        int j1 = MathHelper.floor(this.posZ + ((double) l / 2D - 0.5) * 0.8);
 
                         for (int k1 = 0; k1 < 2; k1++) {
                             int l1 = MathHelper.floor(this.posY) + k1;
@@ -392,7 +389,7 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger {
         this.camera.setCameraZoom(z);
     }
 
-    public void updatePassenger(Entity passenger) {
+    public void updatePassenger(@NotNull Entity passenger) {
         if (this.isPassenger(passenger)) {
             double x = Math.sin(this.rotationYaw * Math.PI / 180.0) * 0.5;
             double z = -Math.cos(this.rotationYaw * Math.PI / 180.0) * 0.5;
@@ -421,10 +418,10 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger {
         }
     }
 
-    protected void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
+    protected void writeEntityToNBT(@NotNull NBTTagCompound par1NBTTagCompound) {
     }
 
-    protected void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
+    protected void readEntityFromNBT(@NotNull NBTTagCompound par1NBTTagCompound) {
     }
 
     @SideOnly(Side.CLIENT)
@@ -432,11 +429,9 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger {
         return 0.0F;
     }
 
-    public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
+    public boolean processInitialInteract(@NotNull EntityPlayer player, @NotNull EnumHand hand) {
         Entity riddenByEntity = this.getRiddenByEntity();
-        if (riddenByEntity != null && riddenByEntity instanceof EntityPlayer && riddenByEntity != player) {
-            return true;
-        } else {
+        if (!(riddenByEntity instanceof EntityPlayer) || riddenByEntity == player) {
             player.rotationYaw = MathHelper.wrapDegrees(this.rotationYaw);
             player.rotationPitch = MathHelper.wrapDegrees(this.rotationPitch);
             if (!this.world.isRemote) {
@@ -454,8 +449,8 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger {
             }
 
             this.updateCameraPosition(true);
-            return true;
         }
+        return true;
     }
 
     public int getDamageTaken() {

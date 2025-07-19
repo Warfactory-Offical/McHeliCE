@@ -14,6 +14,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class MCH_EntityParticleSmoke extends MCH_EntityParticleBase {
             }
 
             this.effectWind();
-            if (this.particleAge / this.particleMaxAge > this.moutionYUpAge) {
+            if ((float) this.particleAge / this.particleMaxAge > this.moutionYUpAge) {
                 this.motionY += 0.02;
             } else {
                 this.motionY = this.motionY + this.gravity;
@@ -85,19 +86,18 @@ public class MCH_EntityParticleSmoke extends MCH_EntityParticleBase {
     }
 
     public float min(float a, float b) {
-        return a < b ? a : b;
+        return Math.min(a, b);
     }
 
     public float max(float a, float b) {
-        return a > b ? a : b;
+        return Math.max(a, b);
     }
 
     public void effectWind() {
         if (this.isEffectedWind) {
             List<MCH_EntityAircraft> list = this.world.getEntitiesWithinAABB(MCH_EntityAircraft.class, this.getCollisionBoundingBox().grow(15.0, 15.0, 15.0));
 
-            for (int i = 0; i < list.size(); i++) {
-                MCH_EntityAircraft ac = list.get(i);
+            for (MCH_EntityAircraft ac : list) {
                 if (ac.getThrottle() > 0.1F) {
                     float dist = this.getDistance(ac);
                     double vel = (23.0 - dist) * 0.01F * ac.getThrottle();
@@ -124,7 +124,7 @@ public class MCH_EntityParticleSmoke extends MCH_EntityParticleBase {
         return i;
     }
 
-    public void renderParticle(BufferBuilder buffer, Entity entityIn, float par2, float par3, float par4, float par5, float par6, float par7) {
+    public void renderParticle(BufferBuilder buffer, @NotNull Entity entityIn, float par2, float par3, float par4, float par5, float par6, float par7) {
         W_McClient.MOD_bindTexture("textures/particles/smoke.png");
         GlStateManager.enableBlend();
         int srcBlend = GlStateManager.glGetInteger(3041);

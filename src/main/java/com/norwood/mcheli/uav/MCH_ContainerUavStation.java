@@ -6,9 +6,10 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class MCH_ContainerUavStation extends Container {
-    protected MCH_EntityUavStation uavStation;
+    protected final MCH_EntityUavStation uavStation;
 
     public MCH_ContainerUavStation(InventoryPlayer inventoryPlayer, MCH_EntityUavStation te) {
         this.uavStation = te;
@@ -16,11 +17,11 @@ public class MCH_ContainerUavStation extends Container {
         this.bindPlayerInventory(inventoryPlayer);
     }
 
-    public boolean canInteractWith(EntityPlayer player) {
+    public boolean canInteractWith(@NotNull EntityPlayer player) {
         return this.uavStation.isUsableByPlayer(player);
     }
 
-    public void onCraftMatrixChanged(IInventory par1IInventory) {
+    public void onCraftMatrixChanged(@NotNull IInventory par1IInventory) {
         super.onCraftMatrixChanged(par1IInventory);
     }
 
@@ -36,7 +37,7 @@ public class MCH_ContainerUavStation extends Container {
         }
     }
 
-    public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
+    public @NotNull ItemStack transferStackInSlot(@NotNull EntityPlayer player, int slot) {
         return ItemStack.EMPTY;
     }
 }

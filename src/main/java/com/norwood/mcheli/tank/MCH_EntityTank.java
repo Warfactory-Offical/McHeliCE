@@ -232,8 +232,8 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
     }
 
     public MCH_EntityTank.ClacAxisBB calculateXOffset(List<AxisAlignedBB> list, AxisAlignedBB bb, double x) {
-        for (int j5 = 0; j5 < list.size(); j5++) {
-            x = list.get(j5).calculateXOffset(bb, x);
+        for (AxisAlignedBB axisAlignedBB : list) {
+            x = axisAlignedBB.calculateXOffset(bb, x);
         }
 
         return new MCH_EntityTank.ClacAxisBB(x, bb.offset(x, 0.0, 0.0));
@@ -244,16 +244,16 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
     }
 
     public MCH_EntityTank.ClacAxisBB calculateYOffset(List<AxisAlignedBB> list, AxisAlignedBB calcBB, AxisAlignedBB offsetBB, double y) {
-        for (int k = 0; k < list.size(); k++) {
-            y = list.get(k).calculateYOffset(calcBB, y);
+        for (AxisAlignedBB axisAlignedBB : list) {
+            y = axisAlignedBB.calculateYOffset(calcBB, y);
         }
 
         return new MCH_EntityTank.ClacAxisBB(y, offsetBB.offset(0.0, y, 0.0));
     }
 
     public MCH_EntityTank.ClacAxisBB calculateZOffset(List<AxisAlignedBB> list, AxisAlignedBB bb, double z) {
-        for (int k5 = 0; k5 < list.size(); k5++) {
-            z = list.get(k5).calculateZOffset(bb, z);
+        for (AxisAlignedBB axisAlignedBB : list) {
+            z = axisAlignedBB.calculateZOffset(bb, z);
         }
 
         return new MCH_EntityTank.ClacAxisBB(z, bb.offset(0.0, 0.0, z));
@@ -443,7 +443,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
                         || this.getCurrentThrottle() >= pivotTurnThrottle
                         || this.throttleBack >= pivotTurnThrottle / 10.0F
                         || dist > this.throttleBack * 0.01) {
-                    float sf = (float) Math.sqrt(dist <= 1.0 ? dist : 1.0);
+                    float sf = (float) Math.sqrt(Math.min(dist, 1.0));
                     if (pivotTurnThrottle <= 0.0F) {
                         sf = 1.0F;
                     }
@@ -556,9 +556,6 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             if (!(this.getHP() >= this.getMaxHP() * 0.5)) {
                 if (this.getTankInfo() != null) {
                     int bbNum = this.getTankInfo().extraBoundingBox.size();
-                    if (bbNum < 0) {
-                        bbNum = 0;
-                    }
 
                     if (this.isFirstDamageSmoke || this.prevDamageSmokePos.length != bbNum + 1) {
                         this.prevDamageSmokePos = new Vec3d[bbNum + 1];
@@ -570,7 +567,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
 
                     for (int ri = 0; ri < bbNum; ri++) {
                         if (this.getHP() >= this.getMaxHP() * 0.2 && this.getMaxHP() > 0) {
-                            int d = (int) ((this.getHP() / this.getMaxHP() - 0.2) / 0.3 * 15.0);
+                            int d = (int) (((double) this.getHP() / this.getMaxHP() - 0.2) / 0.3 * 15.0);
                             if (d > 0 && this.rand.nextInt(d) > 0) {
                             }
                         } else {
@@ -585,7 +582,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
 
                     boolean b = true;
                     if (this.getHP() >= this.getMaxHP() * 0.2 && this.getMaxHP() > 0) {
-                        int d = (int) ((this.getHP() / this.getMaxHP() - 0.2) / 0.3 * 15.0);
+                        int d = (int) (((double) this.getHP() / this.getMaxHP() - 0.2) / 0.3 * 15.0);
                         if (d > 0 && this.rand.nextInt(d) > 0) {
                             b = false;
                         }
@@ -877,8 +874,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
                                 }
                         );
 
-                for (int i = 0; i < list.size(); i++) {
-                    Entity e = list.get(i);
+                for (Entity e : list) {
                     if (this.shouldCollisionDamage(e)) {
                         double dx = e.posX - this.posX;
                         double dz = e.posZ - this.posZ;
@@ -1209,7 +1205,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
     public float getSoundPitch() {
         float target1 = (float) (0.5 + this.getCurrentThrottle() * 0.5);
         float target2 = (float) (0.5 + this.soundVolumeTarget * 0.5);
-        return target1 > target2 ? target1 : target2;
+        return Math.max(target1, target2);
     }
 
     @Override
@@ -1242,7 +1238,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
         return 0.7F;
     }
 
-    private static class ClacAxisBB {
+    public static class ClacAxisBB {
         public final double value;
         public final AxisAlignedBB bb;
 

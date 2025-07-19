@@ -5,9 +5,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class W_TextureCoordinate {
-    public float u;
-    public float v;
-    public float w;
+    public final float u;
+    public final float v;
+    public final float w;
 
     public W_TextureCoordinate(float u, float v) {
         this(u, v, 0.0F);

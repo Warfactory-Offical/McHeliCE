@@ -34,7 +34,7 @@ public class MCH_SimpleListeners {
         }
     }
 
-    static class SimpleInstance extends AbstractCriterionInstance {
+    public static class SimpleInstance extends AbstractCriterionInstance {
         public SimpleInstance(ResourceLocation criterionIn) {
             super(criterionIn);
         }

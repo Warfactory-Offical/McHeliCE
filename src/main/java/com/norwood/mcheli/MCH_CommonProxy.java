@@ -22,7 +22,7 @@ import java.io.File;
 import java.util.List;
 
 public class MCH_CommonProxy {
-    protected static String[] CONTENT_DIRS = new String[]{"helicopters", "planes", "tanks", "vehicles", "weapons", "throwable"};
+    protected static final String[] CONTENT_DIRS = new String[]{"helicopters", "planes", "tanks", "vehicles", "weapons", "throwable"};
     public MCH_Config config = null;
     public String lastConfigFileName;
 
@@ -181,21 +181,21 @@ public class MCH_CommonProxy {
     }
 
     public void onLoadStepAddon(String addonDomain) {
-        MCH_Utils.logger().debug("addon(" + addonDomain + ") loading start.");
+        MCH_Utils.logger().debug("addon({}) loading start.", addonDomain);
     }
 
     public void onLoadFinishAddons() {
     }
 
     public void onLoadStartContents(String typeName, int fileSize) {
-        MCH_Utils.logger().debug("content type(" + typeName + ") loading start. steps:" + fileSize);
+        MCH_Utils.logger().debug("content type({}) loading start. steps:{}", typeName, fileSize);
     }
 
     public void onLoadFinishContents(String typeName) {
     }
 
     public void onParseStartFile(AddonResourceLocation location) {
-        MCH_Utils.logger().debug("content file(" + location + ") loading start.");
+        MCH_Utils.logger().debug("content file({}) loading start.", location);
     }
 
     public void onParseFinishFile(AddonResourceLocation location) {

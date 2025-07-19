@@ -2,13 +2,14 @@ package com.norwood.mcheli.wrapper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class W_Block extends Block {
     protected W_Block(Material materialIn) {
         super(materialIn);
     }
 
-    public static Block getBlockFromName(String name) {
+    public static Block getBlockFromName(@NotNull String name) {
         return Block.getBlockFromName(name);
     }
 
@@ -32,7 +33,7 @@ public abstract class W_Block extends Block {
         return W_Blocks.WATER;
     }
 
-    public static Block getBlockById(int i) {
+    public static @NotNull Block getBlockById(int i) {
         return Block.getBlockById(i);
     }
 }

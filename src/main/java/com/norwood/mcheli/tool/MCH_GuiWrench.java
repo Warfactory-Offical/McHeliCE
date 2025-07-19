@@ -20,11 +20,6 @@ public class MCH_GuiWrench extends MCH_Gui {
     }
 
     @Override
-    public boolean doesGuiPauseGame() {
-        return false;
-    }
-
-    @Override
     public boolean isDrawGui(EntityPlayer player) {
         return player != null
                 && player.world != null

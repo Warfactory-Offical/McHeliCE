@@ -29,6 +29,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Random;
@@ -98,7 +99,7 @@ public class MCH_ItemWrench extends W_Item {
         return material == Material.IRON || material instanceof MaterialLogic;
     }
 
-    public float getDestroySpeed(ItemStack stack, IBlockState state) {
+    public float getDestroySpeed(@NotNull ItemStack stack, IBlockState state) {
         Material material = state.getMaterial();
         if (material == Material.IRON) {
             return 20.5F;
@@ -107,7 +108,7 @@ public class MCH_ItemWrench extends W_Item {
         }
     }
 
-    public boolean hitEntity(ItemStack itemStack, EntityLivingBase entity, EntityLivingBase player) {
+    public boolean hitEntity(@NotNull ItemStack itemStack, @NotNull EntityLivingBase entity, EntityLivingBase player) {
         if (!player.world.isRemote) {
             if (rand.nextInt(40) == 0) {
                 entity.entityDropItem(new ItemStack(W_Item.getItemByName("iron_ingot"), 1, 0), 0.0F);
@@ -120,11 +121,11 @@ public class MCH_ItemWrench extends W_Item {
         return true;
     }
 
-    public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {
+    public void onPlayerStoppedUsing(@NotNull ItemStack stack, @NotNull World worldIn, @NotNull EntityLivingBase entityLiving, int timeLeft) {
         setUseAnimCount(stack, 0, 0);
     }
 
-    public void onUsingTick(ItemStack stack, EntityLivingBase player, int count) {
+    public void onUsingTick(@NotNull ItemStack stack, EntityLivingBase player, int count) {
         if (player.world.isRemote) {
             MCH_EntityAircraft ac = this.getMouseOverAircraft(player);
             if (ac != null) {
@@ -149,7 +150,7 @@ public class MCH_ItemWrench extends W_Item {
         }
     }
 
-    public void onUpdate(ItemStack item, World world, Entity entity, int n, boolean b) {
+    public void onUpdate(@NotNull ItemStack item, @NotNull World world, @NotNull Entity entity, int n, boolean b) {
         if (entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
             ItemStack itemStack = player.getHeldItemMainhand();
@@ -177,7 +178,7 @@ public class MCH_ItemWrench extends W_Item {
     }
 
     private RayTraceResult getMouseOver(EntityLivingBase user, float tick) {
-        Entity pointedEntity = null;
+        Entity pointedEntity;
         double d0 = 4.0;
         RayTraceResult objectMouseOver = rayTrace(user, d0, tick);
         double d1 = d0;
@@ -195,8 +196,7 @@ public class MCH_ItemWrench extends W_Item {
                 .getEntitiesWithinAABBExcludingEntity(user, user.getEntityBoundingBox().expand(vec31.x * d0, vec31.y * d0, vec31.z * d0).grow(f1, f1, f1));
         double d2 = d1;
 
-        for (int i = 0; i < list.size(); i++) {
-            Entity entity = list.get(i);
+        for (Entity entity : list) {
             if (entity.canBeCollidedWith()) {
                 float f2 = entity.getCollisionBorderSize();
                 AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(f2, f2, f2);
@@ -230,7 +230,7 @@ public class MCH_ItemWrench extends W_Item {
         return objectMouseOver;
     }
 
-    public boolean onBlockDestroyed(ItemStack itemStack, World world, IBlockState state, BlockPos pos, EntityLivingBase entity) {
+    public boolean onBlockDestroyed(@NotNull ItemStack itemStack, @NotNull World world, IBlockState state, @NotNull BlockPos pos, @NotNull EntityLivingBase entity) {
         if (state.getBlockHardness(world, pos) != 0.0) {
             itemStack.damageItem(2, entity);
         }
@@ -243,15 +243,15 @@ public class MCH_ItemWrench extends W_Item {
         return true;
     }
 
-    public EnumAction getItemUseAction(ItemStack itemStack) {
+    public @NotNull EnumAction getItemUseAction(@NotNull ItemStack itemStack) {
         return EnumAction.BLOCK;
     }
 
-    public int getMaxItemUseDuration(ItemStack itemStack) {
+    public int getMaxItemUseDuration(@NotNull ItemStack itemStack) {
         return 72000;
     }
 
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn) {
+    public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World world, EntityPlayer player, @NotNull EnumHand handIn) {
         player.setActiveHand(handIn);
         return ActionResult.newResult(EnumActionResult.SUCCESS, player.getHeldItem(handIn));
     }
@@ -264,12 +264,12 @@ public class MCH_ItemWrench extends W_Item {
         return this.toolMaterial.toString();
     }
 
-    public boolean getIsRepairable(ItemStack item1, ItemStack item2) {
+    public boolean getIsRepairable(@NotNull ItemStack item1, @NotNull ItemStack item2) {
         ItemStack mat = this.toolMaterial.getRepairItemStack();
         return !mat.isEmpty() && OreDictionary.itemMatches(mat, item2, false) || super.getIsRepairable(item1, item2);
     }
 
-    public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot) {
+    public @NotNull Multimap<String, AttributeModifier> getItemAttributeModifiers(@NotNull EntityEquipmentSlot equipmentSlot) {
         Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers(equipmentSlot);
         if (equipmentSlot == EntityEquipmentSlot.MAINHAND) {
             multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", this.damageVsEntity, 0));

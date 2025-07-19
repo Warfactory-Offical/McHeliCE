@@ -18,7 +18,6 @@ import org.lwjgl.opengl.GL11;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.Buffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -63,7 +62,7 @@ public class MCH_MultiplayClient {
 
             pixelBuffer.get(pixelValues);
             TextureUtil.processPixelValues(pixelValues, displayWidth, displayHeight);
-            BufferedImage bufferedimage = null;
+            BufferedImage bufferedimage;
             if (!OpenGlHelper.isFramebufferEnabled()) {
                 bufferedimage = new BufferedImage(displayWidth, displayHeight, 1);
                 bufferedimage.setRGB(0, 0, displayWidth, displayHeight, pixelValues, 0, displayWidth);
@@ -84,7 +83,7 @@ public class MCH_MultiplayClient {
         }
     }
 
-    public static void readImageData(DataOutputStream dos) throws IOException {
+    public static void readImageData(DataOutputStream dos) {
         dataOutputStream.write(dos);
     }
 
@@ -98,7 +97,7 @@ public class MCH_MultiplayClient {
     }
 
     public static double getPerData() {
-        return dataOutputStream == null ? -1.0 : dataOutputStream.index / dataOutputStream.size();
+        return dataOutputStream == null ? -1.0 : (double) dataOutputStream.index / dataOutputStream.size();
     }
 
     public static void readModList(String playerName, String commandSenderName) {
@@ -111,7 +110,7 @@ public class MCH_MultiplayClient {
             MCH_Lib.DbgLog(true, "java.class.path=" + classFileName);
             if (classFileName.length() > 1) {
                 File javaClassFile = new File(classFileName);
-                if (javaClassFile.getAbsolutePath().toLowerCase().indexOf("versions") >= 0) {
+                if (javaClassFile.getAbsolutePath().toLowerCase().contains("versions")) {
                     modList.add(TextFormatting.AQUA + "# Client class=" + javaClassFile.getName() + " : file size= " + javaClassFile.length());
                 }
             }
@@ -123,28 +122,22 @@ public class MCH_MultiplayClient {
             modList.add(mod + "  [" + mod.getModId() + "]  " + mod.getName() + "[" + mod.getDisplayVersion() + "]  " + mod.getSource().getName());
         }
 
-        if (CoreModManager.getAccessTransformers().size() > 0) {
+        if (!CoreModManager.getAccessTransformers().isEmpty()) {
             modList.add(TextFormatting.YELLOW + "=== AccessTransformers ===");
 
-            for (String s : CoreModManager.getAccessTransformers()) {
-                modList.add(s);
-            }
+            modList.addAll(CoreModManager.getAccessTransformers());
         }
 
-        if (CoreModManager.getIgnoredMods().size() > 0) {
+        if (!CoreModManager.getIgnoredMods().isEmpty()) {
             modList.add(TextFormatting.YELLOW + "=== LoadedCoremods ===");
 
-            for (String s : CoreModManager.getIgnoredMods()) {
-                modList.add(s);
-            }
+            modList.addAll(CoreModManager.getIgnoredMods());
         }
 
-        if (CoreModManager.getReparseableCoremods().size() > 0) {
+        if (!CoreModManager.getReparseableCoremods().isEmpty()) {
             modList.add(TextFormatting.YELLOW + "=== ReparseableCoremods ===");
 
-            for (String s : CoreModManager.getReparseableCoremods()) {
-                modList.add(s);
-            }
+            modList.addAll(CoreModManager.getReparseableCoremods());
         }
 
         Minecraft mc = Minecraft.getMinecraft();
@@ -157,7 +150,7 @@ public class MCH_MultiplayClient {
                 String jarPath = file.getCanonicalPath();
                 JarFile jarFile = new JarFile(jarPath);
                 Enumeration<JarEntry> jarEntries = jarFile.entries();
-                String manifest = "";
+                StringBuilder manifest = new StringBuilder();
 
                 while (jarEntries.hasMoreElements()) {
                     ZipEntry zipEntry = jarEntries.nextElement();
@@ -168,7 +161,7 @@ public class MCH_MultiplayClient {
                         for (String line = br.readLine(); line != null; line = br.readLine()) {
                             line = line.replace(" ", "").trim();
                             if (!line.isEmpty()) {
-                                manifest = manifest + " [" + line + "]";
+                                manifest.append(" [").append(line).append("]");
                             }
                         }
 
@@ -178,7 +171,7 @@ public class MCH_MultiplayClient {
                 }
 
                 jarFile.close();
-                if (!manifest.isEmpty()) {
+                if (manifest.length() > 0) {
                     modList.add(file.getName() + manifest);
                 }
             } catch (Exception var20) {
@@ -195,7 +188,7 @@ public class MCH_MultiplayClient {
                 String jarPath = file.getCanonicalPath();
                 JarFile jarFile = new JarFile(jarPath);
                 Enumeration<JarEntry> jarEntries = jarFile.entries();
-                String litemod_json = "";
+                StringBuilder litemod_json = new StringBuilder();
 
                 while (jarEntries.hasMoreElements()) {
                     ZipEntry zipEntry = jarEntries.nextElement();
@@ -207,8 +200,8 @@ public class MCH_MultiplayClient {
 
                             for (String linex = br.readLine(); linex != null; linex = br.readLine()) {
                                 linex = linex.replace(" ", "").trim();
-                                if (linex.toLowerCase().indexOf("name") >= 0) {
-                                    litemod_json = litemod_json + " [" + linex + "]";
+                                if (linex.toLowerCase().contains("name")) {
+                                    litemod_json.append(" [").append(linex).append("]");
                                     break;
                                 }
                             }
@@ -220,20 +213,20 @@ public class MCH_MultiplayClient {
                                 fname = fname.substring(index + 1);
                             }
 
-                            if (fname.indexOf("litemod") >= 0 && fname.endsWith("class")) {
+                            if (fname.contains("litemod") && fname.endsWith("class")) {
                                 fname = zipEntry.getName();
                                 if (index >= 0) {
                                     fname = fname.substring(index + 1);
                                 }
 
-                                litemod_json = litemod_json + " [" + fname + "]";
+                                litemod_json.append(" [").append(fname).append("]");
                             }
                         }
                     }
                 }
 
                 jarFile.close();
-                if (!litemod_json.isEmpty()) {
+                if (litemod_json.length() > 0) {
                     modList.add(file.getName() + litemod_json);
                 }
             } catch (Exception var19) {

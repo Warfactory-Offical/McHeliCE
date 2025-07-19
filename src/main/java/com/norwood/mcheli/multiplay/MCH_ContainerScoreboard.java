@@ -2,6 +2,7 @@ package com.norwood.mcheli.multiplay;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import org.jetbrains.annotations.NotNull;
 
 public class MCH_ContainerScoreboard extends Container {
     public final EntityPlayer thePlayer;
@@ -10,7 +11,7 @@ public class MCH_ContainerScoreboard extends Container {
         this.thePlayer = player;
     }
 
-    public boolean canInteractWith(EntityPlayer player) {
+    public boolean canInteractWith(@NotNull EntityPlayer player) {
         return true;
     }
 }

@@ -127,7 +127,7 @@ public class MCH_MultiplayPacketHandler {
                                 lastDataPercent = 0.0;
                             }
 
-                            double dataPercent = (pc.imageDataIndex + pc.imageDataSize) / pc.imageDataTotalSize * 100.0;
+                            double dataPercent = (double) (pc.imageDataIndex + pc.imageDataSize) / pc.imageDataTotalSize * 100.0;
                             if (dataPercent - lastDataPercent >= 10.0 || lastDataPercent == 0.0) {
                                 LogInfo(
                                         "[mcheli]Saving the %s screen shot to server. %.0f%% : %dbyte / %dbyte",
@@ -140,9 +140,6 @@ public class MCH_MultiplayPacketHandler {
                             }
 
                             if (imageData == null) {
-                                if (imageData != null && lastPlayerName.isEmpty()) {
-                                    LogError("[mcheli]Err2:Saving the %s screen shot to server FAILED!!!", player.getDisplayName());
-                                }
 
                                 imageData = null;
                                 lastPlayerName = "";
@@ -151,10 +148,10 @@ public class MCH_MultiplayPacketHandler {
                             }
 
                             if (pc.imageDataSize >= 0)
-                                System.arraycopy(pc.buf, 0, imageData, pc.imageDataIndex + 0, pc.imageDataSize);
+                                System.arraycopy(pc.buf, 0, imageData, pc.imageDataIndex, pc.imageDataSize);
 
                             if (pc.imageDataIndex + pc.imageDataSize >= pc.imageDataTotalSize) {
-                                DataOutputStream dos = null;
+                                DataOutputStream dos;
                                 String dt = dateFormat.format(new Date());
                                 File file = new File("screenshots_op");
                                 file.mkdir();

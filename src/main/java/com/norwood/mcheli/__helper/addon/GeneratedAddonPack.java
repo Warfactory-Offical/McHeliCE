@@ -59,7 +59,7 @@ public class GeneratedAddonPack extends AddonPack {
             }
 
             file.close();
-            MCH_Utils.logger().info("Update file:" + file.file.getAbsolutePath());
+            MCH_Utils.logger().info("Update file:{}", file.file.getAbsolutePath());
             return true;
         }
     }

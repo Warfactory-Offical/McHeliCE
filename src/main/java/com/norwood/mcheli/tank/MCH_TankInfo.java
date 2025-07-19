@@ -27,8 +27,8 @@ public class MCH_TankInfo extends MCH_AircraftInfo {
     @Override
     public List<MCH_AircraftInfo.Wheel> getDefaultWheelList() {
         List<MCH_AircraftInfo.Wheel> list = new ArrayList<>();
-        list.add(new MCH_AircraftInfo.Wheel(this, new Vec3d(1.5, -0.24, 2.0)));
-        list.add(new MCH_AircraftInfo.Wheel(this, new Vec3d(1.5, -0.24, -2.0)));
+        list.add(new Wheel(this, new Vec3d(1.5, -0.24, 2.0)));
+        list.add(new Wheel(this, new Vec3d(1.5, -0.24, -2.0)));
         return list;
     }
 

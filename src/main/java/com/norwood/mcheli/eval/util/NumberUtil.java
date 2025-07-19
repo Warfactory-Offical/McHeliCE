@@ -7,7 +7,7 @@ public class NumberUtil {
         } else {
             str = str.trim();
             int len = str.length();
-            if (len <= 0) {
+            if (len == 0) {
                 return 0L;
             } else {
                 switch (str.charAt(len - 1)) {

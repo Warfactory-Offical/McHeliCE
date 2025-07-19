@@ -108,8 +108,8 @@ public abstract class MCH_AircraftCommonGui extends MCH_Gui {
     }
 
     public void drawKeyBind(MCH_EntityAircraft ac, MCH_AircraftInfo info, EntityPlayer player, int seatID, int RX, int LX, int colorActive, int colorInactive) {
-        String msg = "";
-        int c = 0;
+        String msg;
+        int c;
         if (seatID == 0 && ac.canPutToRack()) {
             msg = "PutRack : " + MCH_KeyName.getDescOrName(MCH_Config.KeyPutToRack.prmInt);
             this.drawString(msg, LX, this.centerY - 10, colorActive);

@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 public class MCH_DraftingTableRenderer extends TileEntitySpecialRenderer<MCH_DraftingTableTileEntity> {
@@ -25,7 +26,7 @@ public class MCH_DraftingTableRenderer extends TileEntitySpecialRenderer<MCH_Dra
         return stackRenderer;
     }
 
-    public void render(MCH_DraftingTableTileEntity tile, double posX, double posY, double posZ, float partialTicks, int destroyStage, float alpha) {
+    public void render(@NotNull MCH_DraftingTableTileEntity tile, double posX, double posY, double posZ, float partialTicks, int destroyStage, float alpha) {
         GL11.glPushMatrix();
         GL11.glEnable(2884);
         GL11.glTranslated(posX + 0.5, posY, posZ + 0.5);
@@ -54,13 +55,13 @@ public class MCH_DraftingTableRenderer extends TileEntitySpecialRenderer<MCH_Dra
     }
 
     @SideOnly(Side.CLIENT)
-    private static class DraftingTableStackRenderer extends TileEntityItemStackRenderer {
+    public static class DraftingTableStackRenderer extends TileEntityItemStackRenderer {
         private final MCH_DraftingTableTileEntity draftingTable = new MCH_DraftingTableTileEntity();
 
         private DraftingTableStackRenderer() {
         }
 
-        public void renderByItem(ItemStack p_192838_1_, float partialTicks) {
+        public void renderByItem(@NotNull ItemStack p_192838_1_, float partialTicks) {
             TileEntityRendererDispatcher.instance.render(this.draftingTable, 0.0, 0.0, 0.0, partialTicks, 0.0F);
         }
     }

@@ -333,7 +333,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
                 if (this.moveRight && !this.moveLeft) {
                     this.setRotYaw(this.getRotYaw() + 0.6F * gmy * partialTicks);
                 }
-            } else if (isFly && !MCH_Config.MouseControlFlightSimMode.prmBool) {
+            } else if (!MCH_Config.MouseControlFlightSimMode.prmBool) {
                 this.rotationByKey(partialTicks);
                 this.setRotRoll(this.getRotRoll() + this.addkeyRotValue * 0.5F * this.getAcInfo().mobilityRoll);
             }
@@ -455,9 +455,6 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
             if (!(this.getHP() >= this.getMaxHP() * 0.5)) {
                 if (this.getPlaneInfo() != null) {
                     int rotorNum = this.getPlaneInfo().rotorList.size();
-                    if (rotorNum < 0) {
-                        rotorNum = 0;
-                    }
 
                     if (this.isFirstDamageSmoke) {
                         this.prevDamageSmokePos = new Vec3d[rotorNum + 1];
@@ -470,7 +467,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
 
                     for (int ri = 0; ri < rotorNum; ri++) {
                         if (this.getHP() >= this.getMaxHP() * 0.2 && this.getMaxHP() > 0) {
-                            int d = (int) ((this.getHP() / this.getMaxHP() - 0.2) / 0.3 * 15.0);
+                            int d = (int) (((double) this.getHP() / this.getMaxHP() - 0.2) / 0.3 * 15.0);
                             if (d > 0 && this.rand.nextInt(d) > 0) {
                                 spawnSmoke = false;
                             }
@@ -486,7 +483,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
 
                     spawnSmoke = true;
                     if (this.getHP() >= this.getMaxHP() * 0.2 && this.getMaxHP() > 0) {
-                        int d = (int) ((this.getHP() / this.getMaxHP() - 0.2) / 0.3 * 15.0);
+                        int d = (int) (((double) this.getHP() / this.getMaxHP() - 0.2) / 0.3 * 15.0);
                         if (d > 0 && this.rand.nextInt(d) > 0) {
                             spawnSmoke = false;
                         }

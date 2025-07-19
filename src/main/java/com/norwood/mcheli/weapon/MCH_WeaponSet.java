@@ -22,7 +22,7 @@ public class MCH_WeaponSet {
     public float rotationTurretYaw;
     public float rotBay;
     public float prevRotBay;
-    public MCH_WeaponSet.Recoil[] recoilBuf;
+    public final MCH_WeaponSet.Recoil[] recoilBuf;
     public int currentHeat;
     public int cooldownSpeed;
     public int countWait;
@@ -31,10 +31,10 @@ public class MCH_WeaponSet {
     public float rotBarrelSpd;
     public float rotBarrel;
     public float prevRotBarrel;
-    protected MCH_WeaponBase[] weapons;
+    protected final MCH_WeaponBase[] weapons;
     protected int numAmmo;
     protected int numRestAllAmmo;
-    protected int[] lastUsedCount;
+    protected final int[] lastUsedCount;
     private int currentWeaponIndex;
     private int lastUsedOptionParameter1 = 0;
     private int lastUsedOptionParameter2 = 0;
@@ -61,7 +61,7 @@ public class MCH_WeaponSet {
         this.recoilBuf = new MCH_WeaponSet.Recoil[weapon.length];
 
         for (int i = 0; i < this.recoilBuf.length; i++) {
-            this.recoilBuf[i] = new MCH_WeaponSet.Recoil(this, weapon[i].getInfo().recoilBufCount, weapon[i].getInfo().recoilBufCountSpeed);
+            this.recoilBuf[i] = new Recoil(this, weapon[i].getInfo().recoilBufCount, weapon[i].getInfo().recoilBufCountSpeed);
         }
 
         this.defaultRotationYaw = 0.0F;
@@ -94,7 +94,7 @@ public class MCH_WeaponSet {
     public void setRestAllAmmoNum(int n) {
         int debugBefore = this.numRestAllAmmo;
         int m = this.getInfo().maxAmmo - this.getAmmoNum();
-        this.numRestAllAmmo = n <= m ? n : m;
+        this.numRestAllAmmo = Math.min(n, m);
         MCH_Lib.DbgLog(this.getFirstWeapon().worldObj, "MCH_WeaponSet.setRestAllAmmoNum:%s %d->%d (%d)", this.getName(), debugBefore, this.numRestAllAmmo, n);
     }
 
@@ -328,7 +328,7 @@ public class MCH_WeaponSet {
                         r.recoilBufCount = r.recoilBufCount - r.recoilBufCountSpeed;
                     }
 
-                    float rb = r.recoilBufCount / r.recoilBufCountMax;
+                    float rb = (float) r.recoilBufCount / r.recoilBufCountMax;
                     r.recoilBuf = MathHelper.sin(rb * (float) Math.PI);
                 }
 
@@ -468,7 +468,7 @@ public class MCH_WeaponSet {
         }
     }
 
-    public class Recoil {
+    public static class Recoil {
         public final int recoilBufCountMax;
         public final int recoilBufCountSpeed;
         public int recoilBufCount;

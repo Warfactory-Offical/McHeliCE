@@ -6,7 +6,7 @@ import com.norwood.mcheli.eval.eval.repl.ReplaceAdapter;
 
 @Deprecated
 public class Replace4RefactorName extends ReplaceAdapter {
-    protected Refactor ref;
+    protected final Refactor ref;
 
     Replace4RefactorName(Refactor ref) {
         this.ref = ref;

@@ -13,7 +13,7 @@ public class MCH_SeatInfo {
     public final float maxPitch;
     public final boolean rotSeat;
     private final MCH_AircraftInfo.CameraPosition camPos;
-    public boolean invCamPos;
+    public final boolean invCamPos;
 
     public MCH_SeatInfo(
             Vec3d p,

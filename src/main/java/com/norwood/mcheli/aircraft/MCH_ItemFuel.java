@@ -8,6 +8,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -20,14 +21,14 @@ public class MCH_ItemFuel extends W_Item {
         this.setFull3D();
     }
 
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn) {
+    public @NotNull ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @NotNull EnumHand handIn) {
         ItemStack stack = player.getHeldItem(handIn);
         if (!world.isRemote && stack.isItemDamaged() && !player.capabilities.isCreativeMode) {
             this.refuel(stack, player, 1);
             this.refuel(stack, player, 0);
-            return new ActionResult(EnumActionResult.SUCCESS, stack);
+            return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         } else {
-            return new ActionResult(EnumActionResult.PASS, stack);
+            return new ActionResult<>(EnumActionResult.PASS, stack);
         }
     }
 

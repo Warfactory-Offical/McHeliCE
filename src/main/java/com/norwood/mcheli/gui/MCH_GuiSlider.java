@@ -4,13 +4,14 @@ import com.norwood.mcheli.MCH_Key;
 import com.norwood.mcheli.wrapper.W_GuiButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 public class MCH_GuiSlider extends W_GuiButton {
-    public String stringFormat;
-    public float valueMin = 0.0F;
-    public float valueMax = 1.0F;
-    public float valueStep = 0.1F;
+    public final String stringFormat;
+    public final float valueMin;
+    public final float valueMax;
+    public final float valueStep;
     private float currentSlider;
     private boolean isMousePress;
 
@@ -29,10 +30,10 @@ public class MCH_GuiSlider extends W_GuiButton {
         return 0;
     }
 
-    protected void mouseDragged(Minecraft mc, int x, int y) {
+    protected void mouseDragged(@NotNull Minecraft mc, int x, int y) {
         if (this.isVisible()) {
             if (this.isMousePress) {
-                this.currentSlider = (x - (this.x + 4)) / (this.width - 8);
+                this.currentSlider = (float) (x - (this.x + 4)) / (this.width - 8);
                 if (this.currentSlider < 0.0F) {
                     this.currentSlider = 0.0F;
                 }
@@ -76,7 +77,7 @@ public class MCH_GuiSlider extends W_GuiButton {
         }
 
         int n = (int) (this.denormalizeValue(this.currentSlider) * d);
-        return n / d;
+        return (float) n / d;
     }
 
     public float normalizeValue(float f) {
@@ -100,9 +101,9 @@ public class MCH_GuiSlider extends W_GuiButton {
         return f;
     }
 
-    public boolean mousePressed(Minecraft mc, int x, int y) {
+    public boolean mousePressed(@NotNull Minecraft mc, int x, int y) {
         if (super.mousePressed(mc, x, y)) {
-            this.currentSlider = (x - (this.x + 4)) / (this.width - 8);
+            this.currentSlider = (float) (x - (this.x + 4)) / (this.width - 8);
             if (this.currentSlider < 0.0F) {
                 this.currentSlider = 0.0F;
             }

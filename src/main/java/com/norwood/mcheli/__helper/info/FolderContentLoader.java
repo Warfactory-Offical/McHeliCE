@@ -6,6 +6,7 @@ import org.jline.utils.OSUtils;
 
 import javax.annotation.Nullable;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -86,7 +87,7 @@ public class FolderContentLoader extends ContentLoader {
         if (file1 == null) {
             throw new FileNotFoundException(String.format("'%s' in AddonPack '%s'", this.dir, name));
         } else {
-            return new BufferedInputStream(new FileInputStream(file1));
+            return new BufferedInputStream(Files.newInputStream(file1.toPath()));
         }
     }
 

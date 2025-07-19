@@ -37,7 +37,7 @@ public class V3Debugger {
     }
 
     static class KeyStater {
-        static boolean[] tickChunk = new boolean[256];
+        static final boolean[] tickChunk = new boolean[256];
         final int key;
         private boolean down;
         private boolean chunk;
@@ -72,7 +72,7 @@ public class V3Debugger {
         final V3Debugger.KeyStater incKey;
         final V3Debugger.KeyStater decKey;
         final double dif;
-        String name;
+        final String name;
         double num;
 
         public Numeric(String name, int decKey, int incKey, double dif) {

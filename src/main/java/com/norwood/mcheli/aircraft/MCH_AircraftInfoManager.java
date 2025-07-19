@@ -22,7 +22,7 @@ public abstract class MCH_AircraftInfoManager<T extends MCH_AircraftInfo> extend
     }
 
     public void addRecipe(IRecipe recipe, int count, String name, String recipeString) {
-        if (recipe != null && recipe.getRecipeOutput() != null && recipe.getRecipeOutput().getItem() != null) {
+        if (recipe != null) {
             this.listItemRecipe.add(recipe);
         } else {
             throw new RuntimeException("[mcheli]Recipe Parameter Error! recipe" + count + " : " + name + ".txt : " + recipe + " : " + recipeString);

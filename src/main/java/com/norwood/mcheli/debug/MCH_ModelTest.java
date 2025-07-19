@@ -7,7 +7,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class MCH_ModelTest extends W_ModelBase {
-    public ModelRenderer test = new ModelRenderer(this, 0, 0);
+    public final ModelRenderer test = new ModelRenderer(this, 0, 0);
 
     public MCH_ModelTest() {
         this.test.addBox(-5.0F, -5.0F, -5.0F, 10, 10, 10, 0.0F);

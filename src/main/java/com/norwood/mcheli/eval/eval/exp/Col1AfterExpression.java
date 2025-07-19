@@ -24,7 +24,7 @@ public abstract class Col1AfterExpression extends Col1Expression {
         if (this.exp == null) {
             return this.getOperator();
         } else {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             if (this.exp.getPriority() > this.prio) {
                 sb.append(this.exp);
                 sb.append(this.getOperator());

@@ -11,8 +11,8 @@ import java.util.ArrayList;
 
 @SideOnly(Side.CLIENT)
 public class W_GroupObject {
-    public String name;
-    public ArrayList<W_Face> faces = new ArrayList<>();
+    public final String name;
+    public final ArrayList<W_Face> faces = new ArrayList<>();
     public int glDrawingMode;
 
     public W_GroupObject() {
@@ -29,7 +29,7 @@ public class W_GroupObject {
     }
 
     public void render() {
-        if (this.faces.size() > 0) {
+        if (!this.faces.isEmpty()) {
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder builder = tessellator.getBuffer();
             builder.begin(this.glDrawingMode, DefaultVertexFormats.POSITION_TEX_NORMAL);
@@ -39,7 +39,7 @@ public class W_GroupObject {
     }
 
     public void render(Tessellator tessellator) {
-        if (this.faces.size() > 0) {
+        if (!this.faces.isEmpty()) {
             for (W_Face face : this.faces) {
                 face.addFaceForRender(tessellator);
             }

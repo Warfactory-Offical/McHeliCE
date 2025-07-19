@@ -22,6 +22,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -305,9 +306,8 @@ public class MCH_EntityParachute extends W_Entity implements IEntitySinglePassen
         }
 
         List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().grow(0.2, 0.0, 0.2));
-        if (list != null && !list.isEmpty()) {
-            for (int l = 0; l < list.size(); l++) {
-                Entity entity = list.get(l);
+        if (!list.isEmpty()) {
+            for (Entity entity : list) {
                 if (entity != this.getRiddenByEntity() && entity.canBePushed() && entity instanceof MCH_EntityParachute) {
                     entity.applyEntityCollision(this);
                 }
@@ -375,7 +375,7 @@ public class MCH_EntityParachute extends W_Entity implements IEntitySinglePassen
         return this.getType() != 2 || this.motionY < -0.1;
     }
 
-    public void updatePassenger(Entity passenger) {
+    public void updatePassenger(@NotNull Entity passenger) {
         if (this.isPassenger(passenger)) {
             double x = -Math.sin(this.rotationYaw * Math.PI / 180.0) * 0.1;
             double z = Math.cos(this.rotationYaw * Math.PI / 180.0) * 0.1;
@@ -396,7 +396,7 @@ public class MCH_EntityParachute extends W_Entity implements IEntitySinglePassen
         return 4.0F;
     }
 
-    public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
+    public boolean processInitialInteract(@NotNull EntityPlayer player, @NotNull EnumHand hand) {
         return false;
     }
 

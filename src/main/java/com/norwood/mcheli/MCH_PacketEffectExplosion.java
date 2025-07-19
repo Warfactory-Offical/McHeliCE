@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class MCH_PacketEffectExplosion extends MCH_Packet {
-    MCH_PacketEffectExplosion.ExplosionParam prm = new MCH_PacketEffectExplosion.ExplosionParam(this);
+    MCH_PacketEffectExplosion.ExplosionParam prm = new ExplosionParam(this);
 
     public static MCH_PacketEffectExplosion.ExplosionParam create() {
         return new MCH_PacketEffectExplosion().aaa();
@@ -60,10 +60,10 @@ public class MCH_PacketEffectExplosion extends MCH_Packet {
     }
 
     private MCH_PacketEffectExplosion.ExplosionParam aaa() {
-        return new MCH_PacketEffectExplosion.ExplosionParam(this);
+        return new ExplosionParam(this);
     }
 
-    public class ExplosionParam {
+    public static class ExplosionParam {
         public double posX;
         public double posY;
         public double posZ;

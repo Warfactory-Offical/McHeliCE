@@ -17,19 +17,18 @@ public abstract class W_GuiContainer extends GuiContainer {
 
     public void drawItemStack(ItemStack item, int x, int y) {
         if (!item.isEmpty()) {
-            if (item.getItem() != null) {
-                FontRenderer font = item.getItem().getFontRenderer(item);
-                if (font == null) {
-                    font = this.fontRenderer;
-                }
-
-                GL11.glEnable(2929);
-                GL11.glEnable(2896);
-                this.itemRender.renderItemAndEffectIntoGUI(item, x, y);
-                this.itemRender.renderItemOverlayIntoGUI(font, item, x, y, null);
-                this.zLevel = 0.0F;
-                this.itemRender.zLevel = 0.0F;
+            item.getItem();
+            FontRenderer font = item.getItem().getFontRenderer(item);
+            if (font == null) {
+                font = this.fontRenderer;
             }
+
+            GL11.glEnable(2929);
+            GL11.glEnable(2896);
+            this.itemRender.renderItemAndEffectIntoGUI(item, x, y);
+            this.itemRender.renderItemOverlayIntoGUI(font, item, x, y, null);
+            this.zLevel = 0.0F;
+            this.itemRender.zLevel = 0.0F;
         }
     }
 

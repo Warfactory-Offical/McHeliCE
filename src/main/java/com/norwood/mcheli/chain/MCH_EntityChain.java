@@ -17,6 +17,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -111,10 +112,6 @@ public class MCH_EntityChain extends W_Entity {
         return this.isTowing && !this.isDead && this.towedEntity != null && this.towEntity != null;
     }
 
-    public boolean canBeCollidedWith() {
-        return false;
-    }
-
     public void setTowEntity(Entity towedEntity, Entity towEntity) {
         if (towedEntity != null && towEntity != null && !towedEntity.isDead && !towEntity.isDead && !W_Entity.isEqual(towedEntity, towEntity)) {
             this.isTowing = true;
@@ -141,23 +138,17 @@ public class MCH_EntityChain extends W_Entity {
     }
 
     public void searchTowingEntity() {
-        if ((this.towedEntity == null || this.towEntity == null)
-                && !this.towedEntityUUID.isEmpty()
-                && !this.towEntityUUID.isEmpty()
-                && this.getEntityBoundingBox() != null) {
+        if ((this.towedEntity == null || this.towEntity == null) && !this.towedEntityUUID.isEmpty() && !this.towEntityUUID.isEmpty()) {
             List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().grow(32.0, 32.0, 32.0));
-            if (list != null) {
-                for (int i = 0; i < list.size(); i++) {
-                    Entity entity = list.get(i);
-                    String uuid = entity.getPersistentID().toString();
-                    if (this.towedEntity == null && uuid.compareTo(this.towedEntityUUID) == 0) {
-                        this.towedEntity = entity;
-                    } else if (this.towEntity == null && uuid.compareTo(this.towEntityUUID) == 0) {
-                        this.towEntity = entity;
-                    } else if (this.towEntity != null && this.towedEntity != null) {
-                        this.setTowEntity(this.towedEntity, this.towEntity);
-                        break;
-                    }
+            for (Entity entity : list) {
+                String uuid = entity.getPersistentID().toString();
+                if (this.towedEntity == null && uuid.compareTo(this.towedEntityUUID) == 0) {
+                    this.towedEntity = entity;
+                } else if (this.towEntity == null && uuid.compareTo(this.towEntityUUID) == 0) {
+                    this.towEntity = entity;
+                } else if (this.towEntity != null && this.towedEntity != null) {
+                    this.setTowEntity(this.towedEntity, this.towEntity);
+                    break;
                 }
             }
         }
@@ -261,7 +252,7 @@ public class MCH_EntityChain extends W_Entity {
         W_WorldFunc.MOD_playSoundEffect(this.world, this.posX, this.posY, this.posZ, "chain_ct", 1.0F, 1.0F);
     }
 
-    protected void writeEntityToNBT(NBTTagCompound nbt) {
+    protected void writeEntityToNBT(@NotNull NBTTagCompound nbt) {
         if (this.isTowing && this.towEntity != null && !this.towEntity.isDead && this.towedEntity != null && !this.towedEntity.isDead) {
             nbt.setString("TowEntityUUID", this.towEntity.getPersistentID().toString());
             nbt.setString("TowedEntityUUID", this.towedEntity.getPersistentID().toString());
@@ -280,7 +271,7 @@ public class MCH_EntityChain extends W_Entity {
         return 0.0F;
     }
 
-    public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
+    public boolean processInitialInteract(@NotNull EntityPlayer player, @NotNull EnumHand hand) {
         return false;
     }
 }

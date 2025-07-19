@@ -5,7 +5,7 @@ import net.minecraft.world.World;
 
 public abstract class MCH_WeaponEntitySeeker extends MCH_WeaponBase {
     public MCH_IEntityLockChecker entityLockChecker;
-    public MCH_WeaponGuidanceSystem guidanceSystem;
+    public final MCH_WeaponGuidanceSystem guidanceSystem;
 
     public MCH_WeaponEntitySeeker(World w, Vec3d v, float yaw, float pitch, String nm, MCH_WeaponInfo wi) {
         super(w, v, yaw, pitch, nm, wi);

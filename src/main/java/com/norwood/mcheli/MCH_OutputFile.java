@@ -2,6 +2,7 @@ package com.norwood.mcheli;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 public class MCH_OutputFile {
     public File file = null;
@@ -24,7 +25,7 @@ public class MCH_OutputFile {
         this.file = new File(path);
 
         try {
-            this.pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(this.file), StandardCharsets.UTF_8));
+            this.pw = new PrintWriter(new OutputStreamWriter(Files.newOutputStream(this.file.toPath()), StandardCharsets.UTF_8));
             return true;
         } catch (Exception var3) {
             var3.printStackTrace();

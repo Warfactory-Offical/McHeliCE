@@ -231,7 +231,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
     protected boolean canUseBlades() {
         if (this.heliInfo == null) {
             return false;
-        } else if (this.rotors.length <= 0) {
+        } else if (this.rotors.length == 0) {
             return true;
         } else if (this.getFoldBladeStat() == 2) {
             for (MCH_Rotor r : this.rotors) {
@@ -267,7 +267,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
     @Override
     public void onRideEntity(Entity ridingEntity) {
         if (ridingEntity instanceof MCH_EntitySeat) {
-            if (this.heliInfo == null || this.rotors.length <= 0) {
+            if (this.heliInfo == null || this.rotors.length == 0) {
                 return;
             }
 
@@ -584,7 +584,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
 
         if (!this.world.isRemote) {
             boolean move = false;
-            float yaw = this.getRotYaw();
+            float yaw;
             double x = 0.0;
             double z = 0.0;
             if (this.moveLeft && !this.moveRight) {
@@ -619,7 +619,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
 
         if (!this.world.isRemote) {
             boolean move = false;
-            float yaw = this.getRotYaw();
+            float yaw;
             double x = 0.0;
             double z = 0.0;
             if (this.throttleUp) {
@@ -661,7 +661,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
     protected void onUpdate_ControlFoldBladeAndOnGround() {
         if (!this.world.isRemote) {
             boolean move = false;
-            float yaw = this.getRotYaw();
+            float yaw;
             double x = 0.0;
             double z = 0.0;
             if (this.throttleUp) {
@@ -715,7 +715,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
                             int num = (int) (MathHelper.sqrt(dx * dx + dy * dy + dz * dz) * 2.0F) + 1;
 
                             for (double i = 0.0; i < num; i++) {
-                                double p = this.getHP() / this.getMaxHP();
+                                double p = (double) (double) this.getHP() / this.getMaxHP();
                                 if (p < this.rand.nextFloat() / 2.0F) {
                                     float c = 0.2F + this.rand.nextFloat() * 0.3F;
                                     MCH_ParticleParam prm = new MCH_ParticleParam(

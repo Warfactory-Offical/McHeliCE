@@ -10,6 +10,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 public class MCH_EntityHitBox extends W_Entity {
     public MCH_EntityAircraft parent;
@@ -48,10 +49,6 @@ public class MCH_EntityHitBox extends W_Entity {
         return this.getEntityBoundingBox();
     }
 
-    public boolean canBePushed() {
-        return false;
-    }
-
     public double getMountedYOffset() {
         return -0.3;
     }
@@ -73,10 +70,10 @@ public class MCH_EntityHitBox extends W_Entity {
         super.onUpdate();
     }
 
-    protected void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
+    protected void writeEntityToNBT(@NotNull NBTTagCompound par1NBTTagCompound) {
     }
 
-    protected void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
+    protected void readEntityFromNBT(@NotNull NBTTagCompound par1NBTTagCompound) {
     }
 
     @SideOnly(Side.CLIENT)
@@ -84,7 +81,7 @@ public class MCH_EntityHitBox extends W_Entity {
         return 0.0F;
     }
 
-    public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
+    public boolean processInitialInteract(@NotNull EntityPlayer player, @NotNull EnumHand hand) {
         return this.parent != null && this.parent.processInitialInteract(player, hand);
     }
 }

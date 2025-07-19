@@ -45,14 +45,11 @@ public enum MCH_HudItemStringArgs {
         MCH_HudItemStringArgs a = NONE;
 
         try {
-            try {
-                a = valueOf(name.toUpperCase());
-            } catch (Exception var6) {
-                var6.printStackTrace();
-            }
-
-            return a;
-        } finally {
+            a = valueOf(name.toUpperCase());
+        } catch (Exception var6) {
+            var6.printStackTrace();
         }
+
+        return a;
     }
 }

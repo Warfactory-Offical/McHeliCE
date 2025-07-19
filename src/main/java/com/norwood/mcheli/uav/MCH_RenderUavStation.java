@@ -8,6 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
@@ -22,42 +23,40 @@ public class MCH_RenderUavStation extends W_Render<MCH_EntityUavStation> {
         this.shadowSize = 1.0F;
     }
 
-    public void doRender(MCH_EntityUavStation entity, double posX, double posY, double posZ, float par8, float tickTime) {
-        if (entity instanceof MCH_EntityUavStation) {
-            if (entity.getKind() > 0) {
-                int kind = entity.getKind() - 1;
-                GL11.glPushMatrix();
-                GL11.glTranslated(posX, posY + 0.35F, posZ);
-                GL11.glEnable(2884);
-                GL11.glRotatef(entity.rotationYaw, 0.0F, -1.0F, 0.0F);
-                GL11.glRotatef(entity.rotationPitch, 1.0F, 0.0F, 0.0F);
-                GL11.glColor4f(0.75F, 0.75F, 0.75F, 1.0F);
-                GL11.glEnable(3042);
-                int srcBlend = GL11.glGetInteger(3041);
-                int dstBlend = GL11.glGetInteger(3040);
-                GL11.glBlendFunc(770, 771);
-                if (kind == 0) {
-                    if (entity.getControlAircract() != null && entity.getRiddenByEntity() != null) {
-                        this.bindTexture("textures/" + TEX_NAME_ON[kind] + ".png");
-                    } else {
-                        this.bindTexture("textures/" + TEX_NAME_OFF[kind] + ".png");
-                    }
-
-                    MCH_ModelManager.render(MODEL_NAME[kind]);
+    public void doRender(@NotNull MCH_EntityUavStation entity, double posX, double posY, double posZ, float par8, float tickTime) {
+        if (entity.getKind() > 0) {
+            int kind = entity.getKind() - 1;
+            GL11.glPushMatrix();
+            GL11.glTranslated(posX, posY + 0.35F, posZ);
+            GL11.glEnable(2884);
+            GL11.glRotatef(entity.rotationYaw, 0.0F, -1.0F, 0.0F);
+            GL11.glRotatef(entity.rotationPitch, 1.0F, 0.0F, 0.0F);
+            GL11.glColor4f(0.75F, 0.75F, 0.75F, 1.0F);
+            GL11.glEnable(3042);
+            int srcBlend = GL11.glGetInteger(3041);
+            int dstBlend = GL11.glGetInteger(3040);
+            GL11.glBlendFunc(770, 771);
+            if (kind == 0) {
+                if (entity.getControlAircract() != null && entity.getRiddenByEntity() != null) {
+                    this.bindTexture("textures/" + TEX_NAME_ON[kind] + ".png");
                 } else {
-                    if (entity.rotCover > 0.95F) {
-                        this.bindTexture("textures/" + TEX_NAME_ON[kind] + ".png");
-                    } else {
-                        this.bindTexture("textures/" + TEX_NAME_OFF[kind] + ".png");
-                    }
-
-                    this.renderPortableController(entity, MODEL_NAME[kind], tickTime);
+                    this.bindTexture("textures/" + TEX_NAME_OFF[kind] + ".png");
                 }
 
-                GL11.glBlendFunc(srcBlend, dstBlend);
-                GL11.glDisable(3042);
-                GL11.glPopMatrix();
+                MCH_ModelManager.render(MODEL_NAME[kind]);
+            } else {
+                if (entity.rotCover > 0.95F) {
+                    this.bindTexture("textures/" + TEX_NAME_ON[kind] + ".png");
+                } else {
+                    this.bindTexture("textures/" + TEX_NAME_OFF[kind] + ".png");
+                }
+
+                this.renderPortableController(entity, MODEL_NAME[kind], tickTime);
             }
+
+            GL11.glBlendFunc(srcBlend, dstBlend);
+            GL11.glDisable(3042);
+            GL11.glPopMatrix();
         }
     }
 
@@ -78,7 +77,7 @@ public class MCH_RenderUavStation extends W_Render<MCH_EntityUavStation> {
         GL11.glPopMatrix();
     }
 
-    protected ResourceLocation getEntityTexture(MCH_EntityUavStation entity) {
+    protected ResourceLocation getEntityTexture(@NotNull MCH_EntityUavStation entity) {
         return TEX_DEFAULT;
     }
 }

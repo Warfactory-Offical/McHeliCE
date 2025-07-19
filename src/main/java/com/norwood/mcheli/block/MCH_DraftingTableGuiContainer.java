@@ -15,6 +15,7 @@ import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -44,7 +45,7 @@ public class MCH_DraftingTableGuiContainer extends Container {
 
         this.outputSlotIndex = this.inventoryItemStacks.size();
         Slot a = new Slot(this.outputSlot, this.outputSlotIndex, 178, 90) {
-            public boolean isItemValid(ItemStack stack) {
+            public boolean isItemValid(@NotNull ItemStack stack) {
                 return false;
             }
         };
@@ -61,7 +62,7 @@ public class MCH_DraftingTableGuiContainer extends Container {
         return (W_Block.isEqual(block, MCH_MOD.blockDraftingTable) || W_Block.isEqual(block, MCH_MOD.blockDraftingTableLit)) && player.getDistanceSq(this.posX, this.posY, this.posZ) <= 144.0;
     }
 
-    public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
+    public @NotNull ItemStack transferStackInSlot(@NotNull EntityPlayer player, int slotIndex) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(slotIndex);
         if (slot != null && slot.getHasStack()) {
@@ -92,7 +93,7 @@ public class MCH_DraftingTableGuiContainer extends Container {
         return itemstack;
     }
 
-    public void onContainerClosed(EntityPlayer player) {
+    public void onContainerClosed(@NotNull EntityPlayer player) {
         super.onContainerClosed(player);
         if (!player.world.isRemote) {
             ItemStack itemstack = this.getSlot(this.outputSlotIndex).getStack();
@@ -112,7 +113,7 @@ public class MCH_DraftingTableGuiContainer extends Container {
             MCH_Lib.DbgLog(this.player.world, "Error:MCH_DraftingTableGuiContainer.createRecipeItem:recipe is null : ");
         } else {
             boolean result = false;
-            if (recipe != null && (isCreativeMode || MCH_Recipes.canCraft(this.player, recipe))) {
+            if (isCreativeMode || MCH_Recipes.canCraft(this.player, recipe)) {
                 if (!isCreativeMode) {
                     MCH_Recipes.consumeInventory(this.player, recipe);
                 }

@@ -35,7 +35,7 @@ public class MCH_Hud extends MCH_BaseInfo {
     }
 
     @Override
-    public boolean validate() throws Exception {
+    public boolean validate() {
         for (MCH_HudItem hud : this.list) {
             hud.parent = this;
         }
@@ -49,7 +49,7 @@ public class MCH_Hud extends MCH_BaseInfo {
 
     public void loadItemData(int fileLine, String item, String data) {
         String[] prm = data.split("\\s*,\\s*");
-        if (prm != null && prm.length != 0) {
+        if (prm.length != 0) {
             if (item.equalsIgnoreCase("If")) {
                 if (this.isWaitEndif) {
                     throw new RuntimeException("Endif not found!");
@@ -159,8 +159,8 @@ public class MCH_Hud extends MCH_BaseInfo {
             MCH_HudItem.scaleFactor = 1;
         }
 
-        MCH_HudItem.width = MCH_HudItem.mc.displayWidth / MCH_HudItem.scaleFactor;
-        MCH_HudItem.height = MCH_HudItem.mc.displayHeight / MCH_HudItem.scaleFactor;
+        MCH_HudItem.width = (double) MCH_HudItem.mc.displayWidth / MCH_HudItem.scaleFactor;
+        MCH_HudItem.height = (double) MCH_HudItem.mc.displayHeight / MCH_HudItem.scaleFactor;
         MCH_HudItem.centerX = MCH_HudItem.width / 2.0;
         MCH_HudItem.centerY = MCH_HudItem.height / 2.0;
         this.isIfFalse = false;
@@ -202,7 +202,7 @@ public class MCH_Hud extends MCH_BaseInfo {
     }
 
     @Override
-    public void parse(List<String> lines, String fileExtension, boolean reload) throws Exception {
+    public void parse(List<String> lines, String fileExtension, boolean reload) {
         if ("txt".equals(fileExtension)) {
             int line = 0;
 

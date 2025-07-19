@@ -3,6 +3,7 @@ package com.norwood.mcheli.aircraft;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.NotNull;
 
 public class MCH_AircraftBoundingBox extends AxisAlignedBB {
     private final MCH_EntityAircraft ac;
@@ -33,7 +34,7 @@ public class MCH_AircraftBoundingBox extends AxisAlignedBB {
         return dx * dx + dy * dy + dz * dz;
     }
 
-    public boolean intersects(AxisAlignedBB aabb) {
+    public boolean intersects(@NotNull AxisAlignedBB aabb) {
         boolean ret = false;
         double dist = 1.0E7;
         this.ac.lastBBDamageFactor = 1.0F;
@@ -57,7 +58,7 @@ public class MCH_AircraftBoundingBox extends AxisAlignedBB {
         return ret;
     }
 
-    public AxisAlignedBB grow(double x, double y, double z) {
+    public @NotNull AxisAlignedBB grow(double x, double y, double z) {
         double d3 = this.minX - x;
         double d4 = this.minY - y;
         double d5 = this.minZ - z;
@@ -67,7 +68,7 @@ public class MCH_AircraftBoundingBox extends AxisAlignedBB {
         return this.NewAABB(d3, d4, d5, d6, d7, d8);
     }
 
-    public AxisAlignedBB union(AxisAlignedBB other) {
+    public @NotNull AxisAlignedBB union(AxisAlignedBB other) {
         double d0 = Math.min(this.minX, other.minX);
         double d1 = Math.min(this.minY, other.minY);
         double d2 = Math.min(this.minZ, other.minZ);
@@ -77,7 +78,7 @@ public class MCH_AircraftBoundingBox extends AxisAlignedBB {
         return this.NewAABB(d0, d1, d2, d3, d4, d5);
     }
 
-    public AxisAlignedBB expand(double x, double y, double z) {
+    public @NotNull AxisAlignedBB expand(double x, double y, double z) {
         double d3 = this.minX;
         double d4 = this.minY;
         double d5 = this.minZ;
@@ -111,7 +112,7 @@ public class MCH_AircraftBoundingBox extends AxisAlignedBB {
         return this.NewAABB(d3, d4, d5, d6, d7, d8);
     }
 
-    public AxisAlignedBB contract(double x, double y, double z) {
+    public @NotNull AxisAlignedBB contract(double x, double y, double z) {
         double d3 = this.minX + x;
         double d4 = this.minY + y;
         double d5 = this.minZ + z;
@@ -129,7 +130,7 @@ public class MCH_AircraftBoundingBox extends AxisAlignedBB {
         return this.NewAABB(this.minX + x, this.minY + y, this.minZ + z, this.maxX + x, this.maxY + y, this.maxZ + z);
     }
 
-    public RayTraceResult calculateIntercept(Vec3d v1, Vec3d v2) {
+    public RayTraceResult calculateIntercept(@NotNull Vec3d v1, @NotNull Vec3d v2) {
         this.ac.lastBBDamageFactor = 1.0F;
         RayTraceResult mop = super.calculateIntercept(v1, v2);
         double dist = 1.0E7;

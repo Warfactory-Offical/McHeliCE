@@ -16,11 +16,11 @@ import java.util.List;
 public class MCH_ThrowableInfo extends MCH_BaseInfo implements IItemContent {
     public final String name;
     public String displayName;
-    public HashMap<String, String> displayNameLang;
+    public final HashMap<String, String> displayNameLang;
     public int itemID;
     public W_Item item;
     public List<String> recipeString;
-    public List<IRecipe> recipe;
+    public final List<IRecipe> recipe;
     public boolean isShapedRecipe;
     public int power;
     public float acceleration;
@@ -108,7 +108,7 @@ public class MCH_ThrowableInfo extends MCH_BaseInfo implements IItemContent {
             this.displayName = data;
         } else if (item.compareTo("adddisplayname") == 0) {
             String[] s = data.split("\\s*,\\s*");
-            if (s != null && s.length == 2) {
+            if (s.length == 2) {
                 this.displayNameLang.put(s[0].trim(), s[1].trim());
             }
         } else if (item.compareTo("itemid") == 0) {
@@ -179,7 +179,7 @@ public class MCH_ThrowableInfo extends MCH_BaseInfo implements IItemContent {
         }
     }
 
-    public class RoundItem {
+    public static class RoundItem {
         public final int num;
         public final Item item;
 

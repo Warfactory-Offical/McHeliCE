@@ -143,7 +143,7 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
             int createNum = 1;
             if (isNumber(s[0])) {
                 start = 1;
-                createNum = Integer.valueOf(s[0]);
+                createNum = Integer.parseInt(s[0]);
                 if (createNum <= 0) {
                     createNum = 1;
                 }
@@ -153,7 +153,7 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
             int idx = start;
 
             for (int i = start; i < 3 + start; i++) {
-                if (s[idx].length() > 0 && s[idx].charAt(0) == '"' && s[idx].charAt(s[idx].length() - 1) == '"') {
+                if (!s[idx].isEmpty() && s[idx].charAt(0) == '"' && s[idx].charAt(s[idx].length() - 1) == '"') {
                     String ingredientStr = s[idx].substring(1, s[idx].length() - 1);
                     ingredientStr.toUpperCase().chars().forEach(needShortChars::add);
                     rcp.add(s[idx].subSequence(1, s[idx].length() - 1));
@@ -167,7 +167,7 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
                 boolean isChar = true;
 
                 for (boolean flag = false; idx < s.length; idx++) {
-                    if (s[idx].length() <= 0) {
+                    if (s[idx].isEmpty()) {
                         return null;
                     }
 
@@ -181,8 +181,8 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
                             return null;
                         }
 
-                        if (!needShortChars.contains(Integer.valueOf(c))) {
-                            MCH_Utils.logger().warn("Key defines symbols that aren't used in pattern: [" + c + "], item:" + name);
+                        if (!needShortChars.contains((int) c)) {
+                            MCH_Utils.logger().warn("Key defines symbols that aren't used in pattern: [{}], item:{}", c, name);
                             flag = true;
                         }
 
@@ -220,14 +220,16 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
                 try {
                     r = MCH_Recipes.addShapedRecipe(name, new ItemStack(item, createNum), recipe);
                 } catch (Exception var14) {
-                    MCH_Utils.logger().warn(var14.getMessage() + ", name:" + name);
+                    MCH_Utils.logger().warn("{}, name:{}", var14.getMessage(), name);
                     return null;
                 }
 
                 for (int ix = 0; ix < r.recipeItems.size(); ix++) {
-                    if (r.recipeItems.get(ix) != Ingredient.EMPTY
-                            && Arrays.stream(r.recipeItems.get(ix).getMatchingStacks()).anyMatch(stack -> stack.getItem() == null)) {
-                        throw new RuntimeException("Error: Invalid ShapedRecipes! " + item + " : " + data);
+                    if (r.recipeItems.get(ix) != Ingredient.EMPTY) {
+                        Arrays.stream(r.recipeItems.get(ix).getMatchingStacks()).anyMatch(stack -> {
+                            stack.getItem();
+                            return false;
+                        });
                     }
                 }
 
@@ -245,12 +247,10 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
         } else {
             int start = 0;
             int createNum = 1;
-            if (isNumber(s[0]) && createNum <= 0) {
-                createNum = 1;
-            }
+            isNumber(s[0]);
 
             for (int idx = start; idx < s.length; idx++) {
-                if (s[idx].length() <= 0) {
+                if (s[idx].isEmpty()) {
                     return null;
                 }
 
@@ -290,9 +290,10 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
 
             for (int i = 0; i < r.recipeItems.size(); i++) {
                 Ingredient ingredient = r.recipeItems.get(i);
-                if (Arrays.stream(ingredient.getMatchingStacks()).anyMatch(stack -> stack.getItem() == null)) {
-                    throw new RuntimeException("Error: Invalid ShapelessRecipes! " + item + " : " + data);
-                }
+                Arrays.stream(ingredient.getMatchingStacks()).anyMatch(stack -> {
+                    stack.getItem();
+                    return false;
+                });
             }
 
             MCH_Recipes.register(name, r);

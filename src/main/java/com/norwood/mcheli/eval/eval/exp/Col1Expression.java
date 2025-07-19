@@ -120,7 +120,7 @@ public abstract class Col1Expression extends AbstractExpression {
         if (this.exp == null) {
             return this.getOperator();
         } else {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             if (this.exp.getPriority() > this.prio) {
                 sb.append(this.getOperator());
                 sb.append(this.exp);

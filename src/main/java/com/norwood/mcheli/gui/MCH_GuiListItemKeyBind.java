@@ -7,11 +7,11 @@ import net.minecraft.client.gui.GuiButton;
 
 public class MCH_GuiListItemKeyBind extends MCH_GuiListItem {
     public final int defaultKeycode;
-    public String displayString;
-    public GuiButton button;
-    public GuiButton buttonReset;
+    public final String displayString;
+    public final GuiButton button;
+    public final GuiButton buttonReset;
     public int keycode;
-    public MCH_ConfigPrm config;
+    public final MCH_ConfigPrm config;
     public GuiButton lastPushButton;
 
     public MCH_GuiListItemKeyBind(int id, int idReset, int posX, String dispStr, MCH_ConfigPrm prm) {

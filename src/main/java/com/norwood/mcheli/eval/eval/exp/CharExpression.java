@@ -59,14 +59,13 @@ public class CharExpression extends WordExpression {
 
     @Override
     public Object evalObject() {
-        return new Character(this.word.charAt(0));
+        return this.word.charAt(0);
     }
 
     @Override
     public String toString() {
-        String sb = this.getOperator() +
+        return this.getOperator() +
                 this.word +
                 this.getEndOperator();
-        return sb;
     }
 }

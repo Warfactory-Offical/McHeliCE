@@ -83,7 +83,7 @@ public class MCH_MOD {
             serverSide = "com.norwood.mcheli.MCH_CommonProxy"
     )
     public static MCH_CommonProxy proxy;
-    public static MCH_PacketHandler packetHandler = new MCH_PacketHandler();
+    public static final MCH_PacketHandler packetHandler = new MCH_PacketHandler();
     public static MCH_Config config;
     public static String sourcePath;
     public static MCH_InvisibleItem invisibleItem;

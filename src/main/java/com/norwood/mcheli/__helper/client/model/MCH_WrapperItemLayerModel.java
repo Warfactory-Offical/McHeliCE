@@ -15,6 +15,7 @@ import net.minecraftforge.client.model.PerspectiveMapWrapper;
 import net.minecraftforge.client.model.SimpleModelState;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Map;
@@ -30,15 +31,15 @@ public class MCH_WrapperItemLayerModel implements IModel {
         this.model = new ItemLayerModel(modelBlock);
     }
 
-    public Collection<ResourceLocation> getTextures() {
+    public @NotNull Collection<ResourceLocation> getTextures() {
         return this.model.getTextures();
     }
 
-    public IModel retexture(ImmutableMap<String, String> textures) {
+    public @NotNull IModel retexture(@NotNull ImmutableMap<String, String> textures) {
         return this.model.retexture(textures);
     }
 
-    public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
+    public @NotNull IBakedModel bake(@NotNull IModelState state, @NotNull VertexFormat format, @NotNull Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
         ItemCameraTransforms transforms = this.raw.getAllTransforms();
         Map<TransformType, TRSRTransformation> tMap = Maps.newEnumMap(TransformType.class);
         tMap.putAll(PerspectiveMapWrapper.getTransforms(transforms));

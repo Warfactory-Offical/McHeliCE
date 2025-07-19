@@ -21,27 +21,25 @@ public class Col1AfterRule extends AbstractRule {
         AbstractExpression x = this.nextRule.parse(lex);
 
         while (true) {
-            switch (lex.getType()) {
-                case 2147483634:
-                    String ope = lex.getOperator();
-                    int pos = lex.getPos();
-                    if (!this.isMyOperator(ope)) {
-                        return x;
-                    }
-
-                    if (lex.isOperator(this.func.getOperator())) {
-                        x = this.parseFunc(lex, x);
-                    } else if (lex.isOperator(this.array.getOperator())) {
-                        x = this.parseArray(lex, x, ope, pos);
-                    } else if (lex.isOperator(this.field.getOperator())) {
-                        x = this.parseField(lex, x, ope, pos);
-                    } else {
-                        x = Col1Expression.create(this.newExpression(ope, lex.getShare()), lex.getString(), pos, x);
-                        lex.next();
-                    }
-                    break;
-                default:
+            if (lex.getType() == 2147483634) {
+                String ope = lex.getOperator();
+                int pos = lex.getPos();
+                if (!this.isMyOperator(ope)) {
                     return x;
+                }
+
+                if (lex.isOperator(this.func.getOperator())) {
+                    x = this.parseFunc(lex, x);
+                } else if (lex.isOperator(this.array.getOperator())) {
+                    x = this.parseArray(lex, x, ope, pos);
+                } else if (lex.isOperator(this.field.getOperator())) {
+                    x = this.parseField(lex, x, ope, pos);
+                } else {
+                    x = Col1Expression.create(this.newExpression(ope, lex.getShare()), lex.getString(), pos, x);
+                    lex.next();
+                }
+            } else {
+                return x;
             }
         }
     }

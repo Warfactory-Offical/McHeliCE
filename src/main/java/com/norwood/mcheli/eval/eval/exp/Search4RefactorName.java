@@ -5,7 +5,7 @@ import com.norwood.mcheli.eval.eval.ref.Refactor;
 import com.norwood.mcheli.eval.eval.srch.SearchAdapter;
 
 public class Search4RefactorName extends SearchAdapter {
-    protected Refactor ref;
+    protected final Refactor ref;
 
     Search4RefactorName(Refactor ref) {
         this.ref = ref;

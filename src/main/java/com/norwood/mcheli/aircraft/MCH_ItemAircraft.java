@@ -21,6 +21,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -59,7 +60,7 @@ public abstract class MCH_ItemAircraft extends W_Item {
         return info != null ? super.toString() + "(" + info.getDirectoryName() + ":" + info.name + ")" : super.toString() + "(null)";
     }
 
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn) {
+    public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World world, EntityPlayer player, @NotNull EnumHand handIn) {
         ItemStack itemstack = player.getHeldItem(handIn);
         float f = 1.0F;
         float f1 = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * f;
@@ -87,8 +88,7 @@ public abstract class MCH_ItemAircraft extends W_Item {
                     player, player.getEntityBoundingBox().expand(playerLook.x * d3, playerLook.y * d3, playerLook.z * d3).grow(f9, f9, f9)
             );
 
-            for (int i = 0; i < list.size(); i++) {
-                Entity entity = list.get(i);
+            for (Entity entity : list) {
                 if (entity.canBeCollidedWith()) {
                     float f10 = entity.getCollisionBorderSize();
                     AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(f10, f10, f10);

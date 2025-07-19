@@ -32,17 +32,17 @@ public class JavaExOperator implements Operator {
 
     Object n(long n, Object x) {
         if (x instanceof Long) {
-            return new Long(n);
+            return n;
         } else if (x instanceof Double) {
-            return new Double(n);
+            return (double) n;
         } else if (x instanceof Integer) {
-            return new Integer((int) n);
+            return (int) n;
         } else if (x instanceof Short) {
-            return new Short((short) n);
+            return (short) n;
         } else if (x instanceof Byte) {
-            return new Byte((byte) n);
+            return (byte) n;
         } else if (x instanceof Float) {
-            return new Float((float) n);
+            return (float) n;
         } else if (x instanceof BigInteger) {
             return BigInteger.valueOf(n);
         } else if (x instanceof BigDecimal) {
@@ -54,21 +54,21 @@ public class JavaExOperator implements Operator {
 
     Object n(long n, Object x, Object y) {
         if (x instanceof Byte || y instanceof Byte) {
-            return new Byte((byte) n);
+            return (byte) n;
         } else if (x instanceof Short || y instanceof Short) {
-            return new Short((short) n);
+            return (short) n;
         } else if (x instanceof Integer || y instanceof Integer) {
-            return new Integer((int) n);
+            return (int) n;
         } else if (x instanceof Long || y instanceof Long) {
-            return new Long(n);
+            return n;
         } else if (x instanceof BigInteger || y instanceof BigInteger) {
             return BigInteger.valueOf(n);
         } else if (x instanceof BigDecimal || y instanceof BigDecimal) {
             return BigDecimal.valueOf(n);
         } else if (x instanceof Float || y instanceof Float) {
-            return new Float((float) n);
+            return (float) n;
         } else if (x instanceof Double || y instanceof Double) {
-            return new Double(n);
+            return (double) n;
         } else {
             return !(x instanceof String) && !(y instanceof String) ? new Long(n) : String.valueOf(n);
         }
@@ -76,7 +76,7 @@ public class JavaExOperator implements Operator {
 
     Object n(double n, Object x) {
         if (x instanceof Float) {
-            return new Float(n);
+            return (float) n;
         } else {
             return x instanceof String ? String.valueOf(n) : new Double(n);
         }
@@ -84,9 +84,9 @@ public class JavaExOperator implements Operator {
 
     Object n(double n, Object x, Object y) {
         if (x instanceof Float || y instanceof Float) {
-            return new Float(n);
+            return (float) n;
         } else if (x instanceof Number || y instanceof Number) {
-            return new Double(n);
+            return n;
         } else {
             return !(x instanceof String) && !(y instanceof String) ? new Double(n) : String.valueOf(n);
         }
@@ -219,7 +219,7 @@ public class JavaExOperator implements Operator {
             if (!str) {
                 throw this.undefined(x, y);
             } else {
-                StringBuffer sb = new StringBuffer(s.length() * ct);
+                StringBuilder sb = new StringBuilder(s.length() * ct);
 
                 for (int i = 0; i < ct; i++) {
                     sb.append(s);
@@ -370,9 +370,9 @@ public class JavaExOperator implements Operator {
     int compare(Object x, Object y) {
         if (x == null && y == null) {
             return 0;
-        } else if (x == null && y != null) {
+        } else if (x == null) {
             return -1;
-        } else if (x != null && y == null) {
+        } else if (y == null) {
             return 1;
         } else if (this.inLong(x) && this.inLong(y)) {
             long c = this.l(x) - this.l(y);
@@ -440,7 +440,7 @@ public class JavaExOperator implements Operator {
         } else if (x instanceof Boolean) {
             return (Boolean) x;
         } else {
-            return x instanceof Number ? ((Number) x).longValue() != 0L : Boolean.valueOf(x.toString());
+            return x instanceof Number ? ((Number) x).longValue() != 0L : Boolean.parseBoolean(x.toString());
         }
     }
 

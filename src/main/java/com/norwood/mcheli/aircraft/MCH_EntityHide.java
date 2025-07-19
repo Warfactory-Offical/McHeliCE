@@ -31,6 +31,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
     protected void entityInit() {
         super.entityInit();
         this.createRopeIndex(-1);
-        this.dataManager.register(AC_ID, new Integer(0));
+        this.dataManager.register(AC_ID, 0);
     }
 
     public void setParent(MCH_EntityAircraft ac, Entity user, int ropeIdx) {
@@ -111,10 +112,10 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
         return !this.isDead;
     }
 
-    protected void writeEntityToNBT(NBTTagCompound nbt) {
+    protected void writeEntityToNBT(@NotNull NBTTagCompound nbt) {
     }
 
-    protected void readEntityFromNBT(NBTTagCompound nbt) {
+    protected void readEntityFromNBT(@NotNull NBTTagCompound nbt) {
     }
 
     @SideOnly(Side.CLIENT)
@@ -122,12 +123,12 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
         return 0.0F;
     }
 
-    public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
+    public boolean processInitialInteract(@NotNull EntityPlayer player, @NotNull EnumHand hand) {
         return false;
     }
 
     public void createRopeIndex(int defaultValue) {
-        this.dataManager.register(ROPE_INDEX, new Integer(defaultValue));
+        this.dataManager.register(ROPE_INDEX, defaultValue);
     }
 
     public int getRopeIndex() {
@@ -135,7 +136,7 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
     }
 
     public void setRopeIndex(int value) {
-        this.dataManager.set(ROPE_INDEX, new Integer(value));
+        this.dataManager.set(ROPE_INDEX, value);
     }
 
     @SideOnly(Side.CLIENT)
@@ -166,7 +167,7 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
         super.onUpdate();
         if (this.user != null && !this.world.isRemote) {
             if (this.ac != null) {
-                this.dataManager.set(AC_ID, new Integer(this.ac.getEntityId()));
+                this.dataManager.set(AC_ID, this.ac.getEntityId());
             }
 
             this.user.startRiding(this);
@@ -312,8 +313,7 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
         if (par1Entity != null) {
             List<Entity> list1 = this.world.getEntitiesWithinAABBExcludingEntity(par1Entity, par2AxisAlignedBB.grow(0.25));
 
-            for (int i = 0; i < list1.size(); i++) {
-                Entity entity = list1.get(i);
+            for (Entity entity : list1) {
                 if (!W_Lib.isEntityLivingBase(entity) && !(entity instanceof MCH_EntitySeat) && !(entity instanceof MCH_EntityHitBox)) {
                     AxisAlignedBB axisalignedbb = entity.getCollisionBoundingBox();
                     if (axisalignedbb != null && axisalignedbb.intersects(par2AxisAlignedBB)) {
@@ -331,7 +331,7 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
         return list;
     }
 
-    public void move(MoverType type, double x, double y, double z) {
+    public void move(@NotNull MoverType type, double x, double y, double z) {
         this.world.profiler.startSection("move");
         double d2 = x;
         double d3 = y;
@@ -385,44 +385,44 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
             AxisAlignedBB axisalignedbb3 = axisalignedbb2.expand(d2, 0.0, d4);
             double d8 = y;
 
-            for (int j1 = 0; j1 < list.size(); j1++) {
-                d8 = list.get(j1).calculateYOffset(axisalignedbb3, d8);
+            for (AxisAlignedBB axisAlignedBB1 : list) {
+                d8 = axisAlignedBB1.calculateYOffset(axisalignedbb3, d8);
             }
 
             axisalignedbb2 = axisalignedbb2.offset(0.0, d8, 0.0);
             double d18 = d2;
 
-            for (int l1 = 0; l1 < list.size(); l1++) {
-                d18 = list.get(l1).calculateXOffset(axisalignedbb2, d18);
+            for (AxisAlignedBB element : list) {
+                d18 = element.calculateXOffset(axisalignedbb2, d18);
             }
 
             axisalignedbb2 = axisalignedbb2.offset(d18, 0.0, 0.0);
             double d19 = d4;
 
-            for (int j2 = 0; j2 < list.size(); j2++) {
-                d19 = list.get(j2).calculateZOffset(axisalignedbb2, d19);
+            for (AxisAlignedBB item : list) {
+                d19 = item.calculateZOffset(axisalignedbb2, d19);
             }
 
             axisalignedbb2 = axisalignedbb2.offset(0.0, 0.0, d19);
             AxisAlignedBB axisalignedbb4 = this.getEntityBoundingBox();
             double d20 = y;
 
-            for (int l2 = 0; l2 < list.size(); l2++) {
-                d20 = list.get(l2).calculateYOffset(axisalignedbb4, d20);
+            for (AxisAlignedBB value : list) {
+                d20 = value.calculateYOffset(axisalignedbb4, d20);
             }
 
             axisalignedbb4 = axisalignedbb4.offset(0.0, d20, 0.0);
             double d21 = d2;
 
-            for (int j3 = 0; j3 < list.size(); j3++) {
-                d21 = list.get(j3).calculateXOffset(axisalignedbb4, d21);
+            for (AxisAlignedBB bb : list) {
+                d21 = bb.calculateXOffset(axisalignedbb4, d21);
             }
 
             axisalignedbb4 = axisalignedbb4.offset(d21, 0.0, 0.0);
             double d22 = d4;
 
-            for (int l3 = 0; l3 < list.size(); l3++) {
-                d22 = list.get(l3).calculateZOffset(axisalignedbb4, d22);
+            for (AxisAlignedBB alignedBB : list) {
+                d22 = alignedBB.calculateZOffset(axisalignedbb4, d22);
             }
 
             axisalignedbb4 = axisalignedbb4.offset(0.0, 0.0, d22);
@@ -440,8 +440,8 @@ public class MCH_EntityHide extends W_Entity implements IEntitySinglePassenger {
                 this.setEntityBoundingBox(axisalignedbb4);
             }
 
-            for (int j4 = 0; j4 < list.size(); j4++) {
-                y = list.get(j4).calculateYOffset(this.getEntityBoundingBox(), y);
+            for (AxisAlignedBB axisAlignedBB : list) {
+                y = axisAlignedBB.calculateYOffset(this.getEntityBoundingBox(), y);
             }
 
             this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0, y, 0.0));

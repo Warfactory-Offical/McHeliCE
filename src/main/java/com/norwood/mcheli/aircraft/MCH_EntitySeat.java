@@ -15,6 +15,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -59,10 +60,6 @@ public class MCH_EntitySeat extends W_Entity implements IEntitySinglePassenger {
 
     public AxisAlignedBB getCollisionBoundingBox() {
         return this.getEntityBoundingBox();
-    }
-
-    public boolean canBePushed() {
-        return false;
     }
 
     public double getMountedYOffset() {
@@ -124,7 +121,7 @@ public class MCH_EntitySeat extends W_Entity implements IEntitySinglePassenger {
         }
     }
 
-    public void updatePassenger(Entity passenger) {
+    public void updatePassenger(@NotNull Entity passenger) {
         this.updatePosition(passenger);
     }
 
@@ -191,7 +188,7 @@ public class MCH_EntitySeat extends W_Entity implements IEntitySinglePassenger {
         return riddenByEntity != null && this.getParent() != null && this.getParent().getIsGunnerMode(riddenByEntity);
     }
 
-    public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
+    public boolean processInitialInteract(@NotNull EntityPlayer player, @NotNull EnumHand hand) {
         if (this.getParent() != null && !this.getParent().isDestroyed()) {
             if (!this.getParent().checkTeam(player)) {
                 return false;

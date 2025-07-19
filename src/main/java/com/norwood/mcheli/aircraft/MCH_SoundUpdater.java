@@ -104,9 +104,9 @@ public class MCH_SoundUpdater extends W_SoundUpdater {
                 }
             }
 
-            boolean updateLocation = false;
+            boolean updateLocation;
             updateLocation = true;
-            if (updateLocation && this.aircraftVolume > 0.0F) {
+            if (this.aircraftVolume > 0.0F) {
                 if (isRide) {
                     this.updateSoundLocation(this.theAircraft);
                 } else {

@@ -1,15 +1,15 @@
 package com.norwood.mcheli.debug._v1.model;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 
 public class ModelLoaderDebug {
     public static void main(String[] args) {
         try {
-            ObjModel model = ObjParser.parse(new FileInputStream(new File(getResource("models/gltd.obj"))));
+            ObjModel model = ObjParser.parse(Files.newInputStream(new File(getResource("models/gltd.obj")).toPath()));
             model.printInfo();
         } catch (Exception var2) {
             var2.printStackTrace();

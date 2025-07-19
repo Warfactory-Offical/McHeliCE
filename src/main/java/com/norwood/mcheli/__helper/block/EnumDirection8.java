@@ -3,6 +3,7 @@ package com.norwood.mcheli.__helper.block;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
+import org.jetbrains.annotations.NotNull;
 
 public enum EnumDirection8 implements IStringSerializable {
     SOUTH(0, 4, "south", new Vec3i(0, 0, 1)),
@@ -46,7 +47,7 @@ public enum EnumDirection8 implements IStringSerializable {
         return this.index;
     }
 
-    public String getName() {
+    public @NotNull String getName() {
         return this.name;
     }
 

@@ -26,11 +26,6 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
     }
 
     @Override
-    public boolean doesGuiPauseGame() {
-        return false;
-    }
-
-    @Override
     public boolean isDrawGui(EntityPlayer player) {
         return player != null
                 && player.world != null
@@ -68,8 +63,7 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
         Entity target = null;
         List<MCH_EntityGunner> list = player.world.getEntitiesWithinAABB(MCH_EntityGunner.class, player.getEntityBoundingBox().grow(5.0, 5.0, 5.0));
 
-        for (int i = 0; i < list.size(); i++) {
-            MCH_EntityGunner gunner = list.get(i);
+        for (MCH_EntityGunner gunner : list) {
             if (gunner.getEntityBoundingBox().calculateIntercept(vec3, vec31) != null && (target == null || player.getDistanceSq(gunner) < player.getDistanceSq(target))) {
                 target = gunner;
             }
@@ -79,46 +73,43 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
             return target;
         } else {
             MCH_ItemSpawnGunner item = (MCH_ItemSpawnGunner) player.getHeldItemMainhand().getItem();
-            if (item.targetType == 1 && !player.world.isRemote && player.getTeam() == null) {
-                return null;
-            } else {
-                List<MCH_EntitySeat> list1 = player.world.getEntitiesWithinAABB(MCH_EntitySeat.class, player.getEntityBoundingBox().grow(5.0, 5.0, 5.0));
-
-                for (int ix = 0; ix < list1.size(); ix++) {
-                    MCH_EntitySeat seat = list1.get(ix);
-                    if (seat.getParent() != null
-                            && seat.getParent().getAcInfo() != null
-                            && seat.getEntityBoundingBox().calculateIntercept(vec3, vec31) != null
-                            && (target == null || player.getDistanceSq(seat) < player.getDistanceSq(target))) {
-                        if (seat.getRiddenByEntity() instanceof MCH_EntityGunner) {
-                            target = seat.getRiddenByEntity();
-                        } else {
-                            target = seat;
-                        }
-                    }
-                }
-
-                if (target == null) {
-                    List<MCH_EntityAircraft> list2 = player.world
-                            .getEntitiesWithinAABB(MCH_EntityAircraft.class, player.getEntityBoundingBox().grow(5.0, 5.0, 5.0));
-
-                    for (int ixx = 0; ixx < list2.size(); ixx++) {
-                        MCH_EntityAircraft ac = list2.get(ixx);
-                        if (!ac.isUAV()
-                                && ac.getAcInfo() != null
-                                && ac.getEntityBoundingBox().calculateIntercept(vec3, vec31) != null
-                                && (target == null || player.getDistanceSq(ac) < player.getDistanceSq(target))) {
-                            if (ac.getRiddenByEntity() instanceof MCH_EntityGunner) {
-                                target = ac.getRiddenByEntity();
-                            } else {
-                                target = ac;
-                            }
-                        }
-                    }
-                }
-
-                return target;
+            if (item.targetType == 1 && !player.world.isRemote) {
+                player.getTeam();
             }
+            List<MCH_EntitySeat> list1 = player.world.getEntitiesWithinAABB(MCH_EntitySeat.class, player.getEntityBoundingBox().grow(5.0, 5.0, 5.0));
+
+            for (MCH_EntitySeat seat : list1) {
+                if (seat.getParent() != null
+                        && seat.getParent().getAcInfo() != null
+                        && seat.getEntityBoundingBox().calculateIntercept(vec3, vec31) != null
+                        && (target == null || player.getDistanceSq(seat) < player.getDistanceSq(target))) {
+                    if (seat.getRiddenByEntity() instanceof MCH_EntityGunner) {
+                        target = seat.getRiddenByEntity();
+                    } else {
+                        target = seat;
+                    }
+                }
+            }
+
+            if (target == null) {
+                List<MCH_EntityAircraft> list2 = player.world
+                        .getEntitiesWithinAABB(MCH_EntityAircraft.class, player.getEntityBoundingBox().grow(5.0, 5.0, 5.0));
+
+                for (MCH_EntityAircraft ac : list2) {
+                    if (!ac.isUAV()
+                            && ac.getAcInfo() != null
+                            && ac.getEntityBoundingBox().calculateIntercept(vec3, vec31) != null
+                            && (target == null || player.getDistanceSq(ac) < player.getDistanceSq(target))) {
+                        if (ac.getRiddenByEntity() instanceof MCH_EntityGunner) {
+                            target = ac.getRiddenByEntity();
+                        } else {
+                            target = ac;
+                        }
+                    }
+                }
+            }
+
+            return target;
         }
     }
 
@@ -139,8 +130,8 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
             GL11.glDisable(3042);
             double factor = size / 512.0;
             double SCALE_FACTOR = scaleFactor * factor;
-            double CX = this.mc.displayWidth / 2;
-            double CY = this.mc.displayHeight / 2;
+            double CX = (double) this.mc.displayWidth / 2;
+            double CY = (double) this.mc.displayHeight / 2;
             double px = (CX - 0.0) / SCALE_FACTOR;
             double py = (CY + 0.0) / SCALE_FACTOR;
             GL11.glPushMatrix();

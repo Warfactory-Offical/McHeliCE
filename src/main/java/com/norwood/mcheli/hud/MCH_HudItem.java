@@ -50,8 +50,8 @@ public abstract class MCH_HudItem extends Gui {
     protected static float ReloadPer = 0.0F;
     protected static float ReloadSec = 0.0F;
     protected static float MortarDist = 0.0F;
-    protected static MCH_LowPassFilterFloat StickX_LPF = new MCH_LowPassFilterFloat(4);
-    protected static MCH_LowPassFilterFloat StickY_LPF = new MCH_LowPassFilterFloat(4);
+    protected static final MCH_LowPassFilterFloat StickX_LPF = new MCH_LowPassFilterFloat(4);
+    protected static final MCH_LowPassFilterFloat StickY_LPF = new MCH_LowPassFilterFloat(4);
     protected static double StickX;
     protected static double StickY;
     protected static double TVM_PosX;
@@ -259,7 +259,7 @@ public abstract class MCH_HudItem extends Gui {
 
             if (wi.maxHeatCount > 0) {
                 double hpp = (double) ws.currentHeat / wi.maxHeatCount;
-                wpn_heat = hpp > 1.0 ? 1.0 : hpp;
+                wpn_heat = Math.min(hpp, 1.0);
             }
 
             int cntLockMax = wb.getLockCountMax();
@@ -300,7 +300,7 @@ public abstract class MCH_HudItem extends Gui {
 
     public static double getSeaAltitude(MCH_EntityAircraft ac) {
         double a = ac.posY - ac.world.getHorizon();
-        return a >= 0.0 ? a : 0.0;
+        return Math.max(a, 0.0);
     }
 
     public static float getRadarRot(MCH_EntityAircraft ac) {

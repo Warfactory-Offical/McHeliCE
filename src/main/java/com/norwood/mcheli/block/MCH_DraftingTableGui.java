@@ -29,6 +29,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -63,7 +64,7 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
     private final EntityPlayer thePlayer;
     public MCH_IRecipeList currentList;
     public MCH_CurrentRecipe current;
-    public List<List<GuiButton>> screenButtonList;
+    public final List<List<GuiButton>> screenButtonList;
     public int screenId = 0;
     private MCH_GuiSliderVertical listSlider;
     private GuiButton buttonCreate;
@@ -140,12 +141,10 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
         this.listSlider = new MCH_GuiSliderVertical(0, this.guiLeft + 360, this.guiTop + 20, 20, 200, "", 0.0F, 0.0F, 0.0F, 1.0F);
         list.add(this.listSlider);
 
-        for (int i = 0; i < this.screenButtonList.size(); i++) {
-            list = this.screenButtonList.get(i);
+        for (List<GuiButton> guiButtons : this.screenButtonList) {
+            list = guiButtons;
 
-            for (int j = 0; j < list.size(); j++) {
-                this.buttonList.add(list.get(j));
-            }
+            this.buttonList.addAll(list);
         }
 
         this.switchScreen(0);
@@ -185,8 +184,8 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
     public void switchScreen(int id) {
         this.screenId = id;
 
-        for (int i = 0; i < this.buttonList.size(); i++) {
-            W_GuiButton.setVisible(this.buttonList.get(i), false);
+        for (GuiButton guiButton : this.buttonList) {
+            W_GuiButton.setVisible(guiButton, false);
         }
 
         if (id < this.screenButtonList.size()) {
@@ -233,7 +232,7 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
             this.currentList = list;
             this.updateListSliderSize(list.getRecipeListSize());
         } else {
-            this.listSlider.setSliderValue(this.current.index / 2);
+            this.listSlider.setSliderValue((float) this.current.index / 2F);
         }
     }
 
@@ -249,12 +248,12 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
         MCH_Lib.DbgLog(this.thePlayer.world, "MCH_DraftingTableGui.onGuiClosed");
     }
 
-    protected void actionPerformed(GuiButton button) throws IOException {
+    protected void actionPerformed(@NotNull GuiButton button) throws IOException {
         super.actionPerformed(button);
         if (this.buttonClickWait <= 0) {
             if (button.enabled) {
                 this.buttonClickWait = 3;
-                int index = 0;
+                int index;
                 int page = this.current.getDescCurrentPage();
                 switch (button.id) {
                     case 10:
@@ -442,7 +441,7 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
 
             this.drawString(this.current.displayName, 120, 20, -1);
             this.drawItemRecipe(this.current.recipe, 121, 34);
-            if (list.size() > 0) {
+            if (!list.isEmpty()) {
                 this.drawHoveringText(list, mx - 30, my, this.fontRenderer);
             }
         }
@@ -495,7 +494,7 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
         }
     }
 
-    protected void handleMouseClick(Slot slotIn, int slotId, int clickedButton, ClickType clickType) {
+    protected void handleMouseClick(@NotNull Slot slotIn, int slotId, int clickedButton, @NotNull ClickType clickType) {
         if (this.getScreenId() != 1) {
             super.handleMouseClick(slotIn, slotId, clickedButton, clickType);
         }
@@ -507,19 +506,17 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
 
     public void drawItemRecipe(IRecipe recipe, int x, int y) {
         if (recipe != null) {
-            if (recipe.getRecipeOutput() != null) {
-                if (recipe.getRecipeOutput().getItem() != null) {
-                    RenderHelper.enableGUIStandardItemLighting();
-                    NonNullList<Ingredient> ingredients = recipe.getIngredients();
+            recipe.getRecipeOutput();
+            recipe.getRecipeOutput().getItem();
+            RenderHelper.enableGUIStandardItemLighting();
+            NonNullList<Ingredient> ingredients = recipe.getIngredients();
 
-                    for (int i = 0; i < ingredients.size(); i++) {
-                        this.drawIngredient(ingredients.get(i), x + i % 3 * 18, y + i / 3 * 18);
-                    }
-
-                    this.drawItemStack(recipe.getRecipeOutput(), x + 54 + 3, y + 18);
-                    RenderHelper.disableStandardItemLighting();
-                }
+            for (int i = 0; i < ingredients.size(); i++) {
+                this.drawIngredient(ingredients.get(i), x + i % 3 * 18, y + i / 3 * 18);
             }
+
+            this.drawItemStack(recipe.getRecipeOutput(), x + 54 + 3, y + 18);
+            RenderHelper.disableStandardItemLighting();
         }
     }
 
@@ -585,13 +582,13 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
             if (this.getScreenId() == 1) {
                 if (wheel > 0) {
                     this.listSlider.scrollDown(1.0F);
-                } else if (wheel < 0) {
+                } else {
                     this.listSlider.scrollUp(1.0F);
                 }
             } else if (this.getScreenId() == 0) {
                 if (wheel > 0) {
                     this.actionPerformed(this.buttonPrev);
-                } else if (wheel < 0) {
+                } else {
                     this.actionPerformed(this.buttonNext);
                 }
             }
@@ -607,7 +604,7 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
             super.drawScreen(mouseX, mouseY, partialTicks);
         } else {
             List<Slot> inventory = this.inventorySlots.inventorySlots;
-            this.inventorySlots.inventorySlots = new ArrayList();
+            this.inventorySlots.inventorySlots = new ArrayList<>();
             super.drawScreen(mouseX, mouseY, partialTicks);
             this.inventorySlots.inventorySlots = inventory;
         }

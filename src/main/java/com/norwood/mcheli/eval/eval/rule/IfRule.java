@@ -15,18 +15,16 @@ public class IfRule extends AbstractRule {
     @Override
     protected AbstractExpression parse(Lex lex) {
         AbstractExpression x = this.nextRule.parse(lex);
-        switch (lex.getType()) {
-            case 2147483634:
-                String ope = lex.getOperator();
-                int pos = lex.getPos();
-                if (this.isMyOperator(ope) && lex.isOperator(this.cond.getOperator())) {
-                    x = this.parseCond(lex, x, ope, pos);
-                }
+        if (lex.getType() == 2147483634) {
+            String ope = lex.getOperator();
+            int pos = lex.getPos();
+            if (this.isMyOperator(ope) && lex.isOperator(this.cond.getOperator())) {
+                x = this.parseCond(lex, x, ope, pos);
+            }
 
-                return x;
-            default:
-                return x;
+            return x;
         }
+        return x;
     }
 
     protected AbstractExpression parseCond(Lex lex, AbstractExpression x, String ope, int pos) {

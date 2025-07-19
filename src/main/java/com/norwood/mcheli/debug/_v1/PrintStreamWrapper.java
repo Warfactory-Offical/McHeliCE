@@ -39,7 +39,7 @@ public class PrintStreamWrapper {
     }
 
     private void printNest() {
-        this.stack.forEach(str -> this.ps.print(str));
+        this.stack.forEach(this.ps::print);
     }
 
     public void println(Object o) {

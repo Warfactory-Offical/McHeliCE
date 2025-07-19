@@ -8,11 +8,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class MCH_RenderTest extends W_Render<Entity> {
-    protected MCH_ModelTest model;
+    protected final MCH_ModelTest model;
     private final float offsetX;
     private final float offsetY;
     private final float offsetZ;
@@ -27,11 +28,11 @@ public class MCH_RenderTest extends W_Render<Entity> {
         this.model = new MCH_ModelTest();
     }
 
-    public static final IRenderFactory<Entity> factory(float x, float y, float z, String texture_name) {
+    public static IRenderFactory<Entity> factory(float x, float y, float z, String texture_name) {
         return renderManager -> new MCH_RenderTest(renderManager, x, y, z, texture_name);
     }
 
-    public void doRender(Entity e, double posX, double posY, double posZ, float par8, float par9) {
+    public void doRender(@NotNull Entity e, double posX, double posY, double posZ, float par8, float par9) {
         if (MCH_Config.TestMode.prmBool) {
             GL11.glPushMatrix();
             GL11.glTranslated(posX + this.offsetX, posY + this.offsetY, posZ + this.offsetZ);

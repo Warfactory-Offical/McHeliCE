@@ -16,6 +16,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -85,7 +86,7 @@ public abstract class W_Entity extends Entity {
     protected void entityInit() {
     }
 
-    public EntityItem dropItemWithOffset(Item item, int par2, float par3) {
+    public EntityItem dropItemWithOffset(@NotNull Item item, int par2, float par3) {
         return this.entityDropItem(new ItemStack(item, par2, 0), par3);
     }
 
@@ -97,11 +98,11 @@ public abstract class W_Entity extends Entity {
         return this.attackEntityFrom(par1DamageSource, (float) par2);
     }
 
-    public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
+    public boolean attackEntityFrom(@NotNull DamageSource par1DamageSource, float par2) {
         return false;
     }
 
-    public void addEntityCrashInfo(CrashReportCategory par1CrashReportCategory) {
+    public void addEntityCrashInfo(@NotNull CrashReportCategory par1CrashReportCategory) {
         super.addEntityCrashInfo(par1CrashReportCategory);
     }
 

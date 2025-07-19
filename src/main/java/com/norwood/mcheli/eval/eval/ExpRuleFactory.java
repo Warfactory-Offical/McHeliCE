@@ -6,7 +6,7 @@ import com.norwood.mcheli.eval.eval.rule.*;
 
 public class ExpRuleFactory {
     private static ExpRuleFactory me;
-    protected Rule rule;
+    protected final Rule rule;
     protected AbstractRule topRule;
     protected LexFactory defaultLexFactory;
 
@@ -68,9 +68,9 @@ public class ExpRuleFactory {
         boolean match = false;
 
         label27:
-        for (int i = 0; i < a_opes.length; i++) {
-            for (int j = 0; j < t_opes.length; j++) {
-                if (a_opes[i].equals(t_opes[j])) {
+        for (String aOpe : a_opes) {
+            for (String tOpe : t_opes) {
+                if (aOpe.equals(tOpe)) {
                     match = true;
                     break label27;
                 }

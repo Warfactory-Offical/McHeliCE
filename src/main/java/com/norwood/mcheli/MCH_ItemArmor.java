@@ -8,6 +8,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -22,7 +23,7 @@ public class MCH_ItemArmor extends W_ItemArmor {
         super(par1, par3, par4);
     }
 
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+    public String getArmorTexture(@NotNull ItemStack stack, @NotNull Entity entity, @NotNull EntityEquipmentSlot slot, @NotNull String type) {
         if (slot == EntityEquipmentSlot.HEAD) {
             return "mcheli:textures/helicopters/ah-64.png";
         } else if (slot == EntityEquipmentSlot.CHEST) {
@@ -36,7 +37,7 @@ public class MCH_ItemArmor extends W_ItemArmor {
 
     @Nullable
     @SideOnly(Side.CLIENT)
-    public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot, ModelBiped _default) {
+    public ModelBiped getArmorModel(@NotNull EntityLivingBase entityLiving, @NotNull ItemStack itemStack, @NotNull EntityEquipmentSlot armorSlot, @NotNull ModelBiped _default) {
         if (model == null) {
             model = new MCH_TEST_ModelBiped();
         }

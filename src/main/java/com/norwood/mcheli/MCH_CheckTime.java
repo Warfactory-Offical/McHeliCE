@@ -3,11 +3,11 @@ package com.norwood.mcheli;
 @Deprecated
 public class MCH_CheckTime {
     public int x = 0;
-    public long[][] pointTimeList = new long[1][1];
-    public int MAX_Y = 0;
+    public final long[][] pointTimeList;
+    public final int MAX_Y;
     private long startTime = 0L;
-    private int y = 0;
-    private int MAX_X = 0;
+    private int y;
+    private final int MAX_X;
 
     public MCH_CheckTime() {
         this.MAX_Y = 100;

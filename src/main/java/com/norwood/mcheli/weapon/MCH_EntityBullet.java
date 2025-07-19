@@ -34,8 +34,7 @@ public class MCH_EntityBullet extends MCH_EntityBaseBullet {
                 float rng = ++pDist + MathHelper.abs(this.getInfo().acceleration);
                 List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().grow(rng, rng, rng));
 
-                for (int i = 0; i < list.size(); i++) {
-                    Entity entity1 = list.get(i);
+                for (Entity entity1 : list) {
                     if (this.canBeCollidedEntity(entity1) && entity1.getDistanceSq(this) < pDist * pDist) {
                         MCH_Lib.DbgLog(this.world, "MCH_EntityBullet.onUpdate:proximityFuse:" + entity1);
                         this.posX = (entity1.posX + this.posX) / 2.0;
@@ -96,8 +95,7 @@ public class MCH_EntityBullet extends MCH_EntityBaseBullet {
             List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(mx, my, mz).grow(21.0, 21.0, 21.0));
             double d0 = 0.0;
 
-            for (int j = 0; j < list.size(); j++) {
-                Entity entity1 = list.get(j);
+            for (Entity entity1 : list) {
                 if (this.canBeCollidedEntity(entity1)) {
                     float f = 0.3F;
                     AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().grow(f, f, f);

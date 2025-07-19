@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
@@ -69,7 +70,7 @@ public class MCH_GuiScoreboard_CreateTeam extends MCH_GuiScoreboard_Base {
 
     public void updateScreen() {
         String teamName = this.editCreateTeamName.getText();
-        this.buttonCreateTeamOK.enabled = teamName.length() > 0 && teamName.length() <= 16;
+        this.buttonCreateTeamOK.enabled = !teamName.isEmpty() && teamName.length() <= 16;
         this.editCreateTeamName.updateCursorCounter();
         this.buttonCreateTeamFF.displayString = "Friendly Fire : " + (friendlyFire ? "ON" : "OFF");
     }
@@ -80,7 +81,7 @@ public class MCH_GuiScoreboard_CreateTeam extends MCH_GuiScoreboard_Base {
         this.editCreateTeamName.setFocused(true);
     }
 
-    protected void keyTyped(char c, int code) throws IOException {
+    protected void keyTyped(char c, int code) {
         if (code == 1) {
             this.switchScreen(MCH_GuiScoreboard_Base.SCREEN_ID.MAIN);
         } else {
@@ -93,12 +94,12 @@ public class MCH_GuiScoreboard_CreateTeam extends MCH_GuiScoreboard_Base {
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
-    protected void actionPerformed(GuiButton btn) throws IOException {
-        if (btn != null && btn.enabled) {
+    protected void actionPerformed(@NotNull GuiButton btn) {
+        if (btn.enabled) {
             switch (btn.id) {
                 case 528:
                     String teamName = this.editCreateTeamName.getText();
-                    if (teamName.length() > 0 && teamName.length() <= 16) {
+                    if (!teamName.isEmpty() && teamName.length() <= 16) {
                         MCH_PacketIndMultiplayCommand.send(768, "scoreboard teams add " + teamName);
                         MCH_PacketIndMultiplayCommand.send(768, "scoreboard teams option " + teamName + " color " + colorNames[this.lastTeamColor]);
                         MCH_PacketIndMultiplayCommand.send(768, "scoreboard teams option " + teamName + " friendlyfire " + friendlyFire);

@@ -4,7 +4,6 @@ import com.norwood.mcheli.__helper.MCH_Utils;
 import com.norwood.mcheli.__helper.addon.AddonResourceLocation;
 
 import java.io.File;
-import java.io.FileFilter;
 
 public abstract class MCH_InfoManagerBase<T extends MCH_BaseInfo> {
     public abstract T newInfo(AddonResourceLocation var1, String var2);
@@ -19,12 +18,9 @@ public abstract class MCH_InfoManagerBase<T extends MCH_BaseInfo> {
     public boolean load(String path, String type) {
         path = path.replace('\\', '/');
         File dir = new File(path + type);
-        File[] files = dir.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                String s = pathname.getName().toLowerCase();
-                return pathname.isFile() && s.length() >= 5 && s.substring(s.length() - 4).compareTo(".txt") == 0;
-            }
+        File[] files = dir.listFiles(pathname -> {
+            String s = pathname.getName().toLowerCase();
+            return pathname.isFile() && s.length() >= 5 && s.substring(s.length() - 4).compareTo(".txt") == 0;
         });
         if (files != null && files.length > 0) {
             for (File f : files) {

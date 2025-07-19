@@ -31,6 +31,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.event.CommandEvent;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -48,10 +49,10 @@ public class MCH_Command extends CommandBase {
     public static final String CMD_SHOW_BB = "showboundingbox";
     public static final String CMD_DELAY_BB = "delayhitbox";
     public static final String CMD_LIST = "list";
-    public static String[] ALL_COMMAND = new String[]{
+    public static final String[] ALL_COMMAND = new String[]{
             "sendss", "modlist", "reconfig", "title", "fill", "status", "killentity", "removeentity", "attackentity", "showboundingbox", "list", "delayhitbox"
     };
-    public static MCH_Command instance = new MCH_Command();
+    public static final MCH_Command instance = new MCH_Command();
 
     public static boolean canUseCommand(Entity player) {
         return player instanceof EntityPlayer && instance.canCommandSenderUseCommand(player);
@@ -61,7 +62,7 @@ public class MCH_Command extends CommandBase {
         if (new CommandGameMode().checkPermission(server, sender)) {
             return true;
         } else {
-            if (sender instanceof EntityPlayer && cmd.length() > 0) {
+            if (sender instanceof EntityPlayer && !cmd.isEmpty()) {
                 String playerName = ((EntityPlayer) sender).getGameProfile().getName();
 
                 for (MCH_Config.CommandPermission c : MCH_Config.CommandPermissionList) {
@@ -81,7 +82,7 @@ public class MCH_Command extends CommandBase {
 
     public static void onCommandEvent(CommandEvent event) {
         if (event.getCommand() instanceof MCH_Command) {
-            if (event.getParameters().length > 0 && event.getParameters()[0].length() > 0) {
+            if (event.getParameters().length > 0 && !event.getParameters()[0].isEmpty()) {
                 if (!checkCommandPermission(MCH_Utils.getServer(), event.getSender(), event.getParameters()[0])) {
                     event.setCanceled(true);
                     TextComponentTranslation c = new TextComponentTranslation("commands.generic.permission");
@@ -94,7 +95,7 @@ public class MCH_Command extends CommandBase {
         }
     }
 
-    public String getName() {
+    public @NotNull String getName() {
         return "mcheli";
     }
 
@@ -102,11 +103,11 @@ public class MCH_Command extends CommandBase {
         return true;
     }
 
-    public String getUsage(ICommandSender sender) {
+    public @NotNull String getUsage(@NotNull ICommandSender sender) {
         return "commands.com.norwood.mcheli.usage";
     }
 
-    public void execute(MinecraftServer server, ICommandSender sender, String[] prm) throws CommandException {
+    public void execute(@NotNull MinecraftServer server, @NotNull ICommandSender sender, String @NotNull [] prm) throws CommandException {
         if (MCH_Config.EnableCommand.prmBool) {
             if (!checkCommandPermission(server, sender, prm[0])) {
                 TextComponentTranslation c = new TextComponentTranslation("commands.generic.permission");
@@ -119,9 +120,7 @@ public class MCH_Command extends CommandBase {
                     }
 
                     EntityPlayerMP player = getPlayer(server, sender, prm[1]);
-                    if (player != null) {
-                        MCH_PacketIndClient.send(player, 1, prm[1]);
-                    }
+                    MCH_PacketIndClient.send(player, 1, prm[1]);
                 } else if (prm[0].equalsIgnoreCase("modlist")) {
                     if (prm.length < 2) {
                         throw new CommandException("Parameter error! : /mcheli modlist playerName");
@@ -131,9 +130,7 @@ public class MCH_Command extends CommandBase {
 
                     for (int i = 1; i < prm.length; i++) {
                         EntityPlayerMP player = getPlayer(server, sender, prm[i]);
-                        if (player != null) {
-                            MCH_PacketIndClient.send(player, 2, "" + MCH_MultiplayPacketHandler.getPlayerInfoId(reqPlayer));
-                        }
+                        MCH_PacketIndClient.send(player, 2, "" + MCH_MultiplayPacketHandler.getPlayerInfoId(reqPlayer));
                     }
                 } else if (prm[0].equalsIgnoreCase("reconfig")) {
                     if (prm.length != 1) {
@@ -141,7 +138,8 @@ public class MCH_Command extends CommandBase {
                     }
 
                     MCH_MOD.proxy.reconfig();
-                    if (sender.getEntityWorld() != null && !sender.getEntityWorld().isRemote) {
+                    sender.getEntityWorld();
+                    if (!sender.getEntityWorld().isRemote) {
                         MCH_PacketNotifyServerSettings.sendAll();
                     }
 
@@ -156,7 +154,7 @@ public class MCH_Command extends CommandBase {
                     }
 
                     String s = buildString(prm, 3);
-                    int showTime = Integer.valueOf(prm[1]);
+                    int showTime = Integer.parseInt(prm[1]);
                     if (showTime < 1) {
                         showTime = 1;
                     }
@@ -165,7 +163,7 @@ public class MCH_Command extends CommandBase {
                         showTime = 180;
                     }
 
-                    int pos = Integer.valueOf(prm[2]);
+                    int pos = Integer.parseInt(prm[2]);
                     if (pos < 0) {
                         pos = 0;
                     }
@@ -208,10 +206,10 @@ public class MCH_Command extends CommandBase {
 
                     MCH_MOD.proxy.save();
                 } else if (prm[0].equalsIgnoreCase("list")) {
-                    String msg = "";
+                    StringBuilder msg = new StringBuilder();
 
                     for (String sx : ALL_COMMAND) {
-                        msg = msg + sx + ", ";
+                        msg.append(sx).append(", ");
                     }
 
                     sender.sendMessage(new TextComponentString("/mcheli command list : " + msg));
@@ -247,49 +245,64 @@ public class MCH_Command extends CommandBase {
             );
         } else {
             String className = args[1].toLowerCase();
-            float damage = Float.valueOf(args[2]);
+            float damage = Float.parseFloat(args[2]);
             String damageName = args.length >= 4 ? args[3].toLowerCase() : "";
             DamageSource ds = DamageSource.GENERIC;
             if (!damageName.isEmpty()) {
-                if (damageName.equals("player")) {
-                    if (sender instanceof EntityPlayer) {
-                        ds = DamageSource.causePlayerDamage((EntityPlayer) sender);
-                    }
-                } else if (damageName.equals("anvil")) {
-                    ds = DamageSource.ANVIL;
-                } else if (damageName.equals("cactus")) {
-                    ds = DamageSource.CACTUS;
-                } else if (damageName.equals("drown")) {
-                    ds = DamageSource.DROWN;
-                } else if (damageName.equals("fall")) {
-                    ds = DamageSource.FALL;
-                } else if (damageName.equals("fallingblock")) {
-                    ds = DamageSource.FALLING_BLOCK;
-                } else if (damageName.equals("generic")) {
-                    ds = DamageSource.GENERIC;
-                } else if (damageName.equals("infire")) {
-                    ds = DamageSource.IN_FIRE;
-                } else if (damageName.equals("inwall")) {
-                    ds = DamageSource.IN_WALL;
-                } else if (damageName.equals("lava")) {
-                    ds = DamageSource.LAVA;
-                } else if (damageName.equals("magic")) {
-                    ds = DamageSource.MAGIC;
-                } else if (damageName.equals("onfire")) {
-                    ds = DamageSource.ON_FIRE;
-                } else if (damageName.equals("starve")) {
-                    ds = DamageSource.STARVE;
-                } else if (damageName.equals("wither")) {
-                    ds = DamageSource.WITHER;
+                switch (damageName) {
+                    case "player":
+                        if (sender instanceof EntityPlayer) {
+                            ds = DamageSource.causePlayerDamage((EntityPlayer) sender);
+                        }
+                        break;
+                    case "anvil":
+                        ds = DamageSource.ANVIL;
+                        break;
+                    case "cactus":
+                        ds = DamageSource.CACTUS;
+                        break;
+                    case "drown":
+                        ds = DamageSource.DROWN;
+                        break;
+                    case "fall":
+                        ds = DamageSource.FALL;
+                        break;
+                    case "fallingblock":
+                        ds = DamageSource.FALLING_BLOCK;
+                        break;
+                    case "generic":
+                        ds = DamageSource.GENERIC;
+                        break;
+                    case "infire":
+                        ds = DamageSource.IN_FIRE;
+                        break;
+                    case "inwall":
+                        ds = DamageSource.IN_WALL;
+                        break;
+                    case "lava":
+                        ds = DamageSource.LAVA;
+                        break;
+                    case "magic":
+                        ds = DamageSource.MAGIC;
+                        break;
+                    case "onfire":
+                        ds = DamageSource.ON_FIRE;
+                        break;
+                    case "starve":
+                        ds = DamageSource.STARVE;
+                        break;
+                    case "wither":
+                        ds = DamageSource.WITHER;
+                        break;
                 }
             }
 
             int attacked = 0;
             List<Entity> list = sender.getEntityWorld().loadedEntityList;
 
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i) != null && !(list.get(i) instanceof EntityPlayer) && list.get(i).getClass().getName().toLowerCase().indexOf(className) >= 0) {
-                    list.get(i).attackEntityFrom(ds, damage);
+            for (Entity entity : list) {
+                if (entity != null && !(entity instanceof EntityPlayer) && entity.getClass().getName().toLowerCase().contains(className)) {
+                    entity.attackEntityFrom(ds, damage);
                     attacked++;
                 }
             }
@@ -306,9 +319,9 @@ public class MCH_Command extends CommandBase {
             int killed = 0;
             List<Entity> list = sender.getEntityWorld().loadedEntityList;
 
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i) != null && !(list.get(i) instanceof EntityPlayer) && list.get(i).getClass().getName().toLowerCase().indexOf(className) >= 0) {
-                    list.get(i).setDead();
+            for (Entity entity : list) {
+                if (entity != null && !(entity instanceof EntityPlayer) && entity.getClass().getName().toLowerCase().contains(className)) {
+                    entity.setDead();
                     killed++;
                 }
             }
@@ -325,9 +338,9 @@ public class MCH_Command extends CommandBase {
             List<Entity> list = sender.getEntityWorld().loadedEntityList;
             int removed = 0;
 
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i) != null && !(list.get(i) instanceof EntityPlayer) && list.get(i).getClass().getName().toLowerCase().indexOf(className) >= 0) {
-                    list.get(i).isDead = true;
+            for (Entity entity : list) {
+                if (entity != null && !(entity instanceof EntityPlayer) && entity.getClass().getName().toLowerCase().contains(className)) {
+                    entity.isDead = true;
                     removed++;
                 }
             }
@@ -349,11 +362,11 @@ public class MCH_Command extends CommandBase {
     }
 
     private void executeStatusSub(ICommandSender sender, String[] args, String title, List<?> list) {
-        int minNum = args.length >= 3 ? Integer.valueOf(args[2]) : 0;
+        int minNum = args.length >= 3 ? Integer.parseInt(args[2]) : 0;
         HashMap<String, Integer> map = new HashMap<>();
 
-        for (int i = 0; i < list.size(); i++) {
-            String key = list.get(i).getClass().getName();
+        for (Object o : list) {
+            String key = o.getClass().getName();
             if (map.containsKey(key)) {
                 map.put(key, map.get(key) + 1);
             } else {
@@ -362,11 +375,7 @@ public class MCH_Command extends CommandBase {
         }
 
         List<Entry<String, Integer>> entries = new ArrayList<>(map.entrySet());
-        Collections.sort(entries, new Comparator<Entry<String, Integer>>() {
-            public int compare(Entry<String, Integer> entry1, Entry<String, Integer> entry2) {
-                return entry1.getKey().compareTo(entry2.getKey());
-            }
-        });
+        entries.sort((entry1, entry2) -> entry1.getKey().compareTo(entry2.getKey()));
         boolean send = false;
         sender.sendMessage(new TextComponentString("--- " + title + " ---"));
 
@@ -441,12 +450,8 @@ public class MCH_Command extends CommandBase {
                         String s = getChatComponentFromNthArg(sender, args, 10).getUnformattedText();
 
                         try {
-                            NBTTagCompound nbtbase = JsonToNBT.getTagFromJson(s);
-                            if (!(nbtbase instanceof NBTTagCompound)) {
-                                throw new CommandException("commands.setblock.tagError", "Not a valid tag");
-                            }
 
-                            nbttagcompound = nbtbase;
+                            nbttagcompound = JsonToNBT.getTagFromJson(s);
                             flag = true;
                         } catch (NBTException var27) {
                             throw new CommandException("commands.setblock.tagError", var27.getMessage());
@@ -504,7 +509,7 @@ public class MCH_Command extends CommandBase {
         }
     }
 
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] prm, BlockPos targetPos) {
+    public @NotNull List<String> getTabCompletions(@NotNull MinecraftServer server, @NotNull ICommandSender sender, String @NotNull [] prm, BlockPos targetPos) {
         if (!MCH_Config.EnableCommand.prmBool) {
             return super.getTabCompletions(server, sender, prm, targetPos);
         } else if (prm.length <= 1) {
@@ -515,9 +520,7 @@ public class MCH_Command extends CommandBase {
                     return getListOfStringsMatchingLastWord(prm, server.getOnlinePlayerNames());
                 }
             } else if (prm[0].equalsIgnoreCase("modlist")) {
-                if (prm.length >= 2) {
-                    return getListOfStringsMatchingLastWord(prm, server.getOnlinePlayerNames());
-                }
+                return getListOfStringsMatchingLastWord(prm, server.getOnlinePlayerNames());
             } else {
                 if (prm[0].equalsIgnoreCase("fill")) {
                     if ((prm.length == 2 || prm.length == 5) && sender instanceof Entity) {

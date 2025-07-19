@@ -26,8 +26,8 @@ public class MCH_RenderTank extends MCH_RenderAircraft<MCH_EntityTank> {
 
     @Override
     public void renderAircraft(MCH_EntityAircraft entity, double posX, double posY, double posZ, float yaw, float pitch, float roll, float tickTime) {
-        MCH_TankInfo tankInfo = null;
-        if (entity != null && entity instanceof MCH_EntityTank) {
+        MCH_TankInfo tankInfo;
+        if (entity instanceof MCH_EntityTank) {
             MCH_EntityTank tank = (MCH_EntityTank) entity;
             tankInfo = tank.getTankInfo();
             if (tankInfo != null) {

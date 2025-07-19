@@ -16,11 +16,11 @@ public class MCH_Parts {
     public float rotation = 0.0F;
     public float rotationMax = 90.0F;
     public float rotationInv = 1.0F;
-    public MCH_Parts.Sound soundStartSwichOn = new MCH_Parts.Sound(this);
-    public MCH_Parts.Sound soundEndSwichOn = new MCH_Parts.Sound(this);
-    public MCH_Parts.Sound soundSwitching = new MCH_Parts.Sound(this);
-    public MCH_Parts.Sound soundStartSwichOff = new MCH_Parts.Sound(this);
-    public MCH_Parts.Sound soundEndSwichOff = new MCH_Parts.Sound(this);
+    public final MCH_Parts.Sound soundStartSwichOn = new Sound(this);
+    public final MCH_Parts.Sound soundEndSwichOn = new Sound(this);
+    public final MCH_Parts.Sound soundSwitching = new Sound(this);
+    public final MCH_Parts.Sound soundStartSwichOff = new Sound(this);
+    public final MCH_Parts.Sound soundEndSwichOff = new Sound(this);
     private boolean status = false;
 
     public MCH_Parts(Entity parent, int shiftBit, DataParameter<Integer> dataKey, String name) {
@@ -117,7 +117,7 @@ public class MCH_Parts {
         }
     }
 
-    public class Sound {
+    public static class Sound {
         public String name = "";
         public float volume = 1.0F;
         public float pitch = 1.0F;

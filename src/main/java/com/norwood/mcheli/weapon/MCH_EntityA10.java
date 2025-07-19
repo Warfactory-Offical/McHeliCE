@@ -28,7 +28,7 @@ public class MCH_EntityA10 extends W_Entity {
     public int power;
     public float acceleration;
     public int explosionPower;
-    public boolean isFlaming;
+    public final boolean isFlaming;
     public String name;
     public MCH_WeaponInfo weaponInfo;
 
@@ -92,16 +92,8 @@ public class MCH_EntityA10 extends W_Entity {
         return this.getEntityBoundingBox();
     }
 
-    public boolean canBePushed() {
-        return false;
-    }
-
     @Override
     public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
-        return false;
-    }
-
-    public boolean canBeCollidedWith() {
         return false;
     }
 

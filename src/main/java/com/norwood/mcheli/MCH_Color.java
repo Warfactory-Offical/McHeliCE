@@ -1,10 +1,10 @@
 package com.norwood.mcheli;
 
 public class MCH_Color {
-    public float a;
-    public float r;
-    public float g;
-    public float b;
+    public final float a;
+    public final float r;
+    public final float g;
+    public final float b;
 
     public MCH_Color(float aa, float rr, float gg, float bb) {
         this.a = this.round(aa);
@@ -22,6 +22,6 @@ public class MCH_Color {
     }
 
     public float round(float f) {
-        return f > 1.0F ? 1.0F : (f < 0.0F ? 0.0F : f);
+        return f > 1.0F ? 1.0F : (Math.max(f, 0.0F));
     }
 }

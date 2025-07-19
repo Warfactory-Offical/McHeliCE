@@ -29,7 +29,7 @@ public class ObjParser {
         int vertexNum = 0;
         int faceNum = 0;
         BufferedReader reader = null;
-        String currentLine = null;
+        String currentLine;
         int lineCount = 0;
 
         ObjModel var31;
@@ -39,7 +39,7 @@ public class ObjParser {
             while ((currentLine = reader.readLine()) != null) {
                 lineCount++;
                 currentLine = currentLine.replaceAll("\\s+", " ").trim();
-                if (!currentLine.startsWith("#") && currentLine.length() != 0) {
+                if (!currentLine.startsWith("#") && !currentLine.isEmpty()) {
                     if (currentLine.startsWith("v ")) {
                         _Vertex vertex = parseVertex(currentLine, lineCount);
                         if (vertex != null) {
@@ -61,9 +61,7 @@ public class ObjParser {
                         }
 
                         _Face face = parseFace(currentLine, lineCount, vertices, textureCoordinates, vertexNormals);
-                        if (face != null) {
-                            group.addFace(face);
-                        }
+                        group.addFace(face);
                     } else if (currentLine.startsWith("g ") | currentLine.startsWith("o ") && currentLine.charAt(2) == '$') {
                         _GroupObject.Builder group2 = parseGroupObject(currentLine, lineCount);
                         if (group2 != null && group != null) {
@@ -153,13 +151,13 @@ public class ObjParser {
     }
 
     private static _Face parseFace(String line, int lineCount, List<_Vertex> vertices, List<_TextureCoord> textureCoordinates, List<_Vertex> vertexNormals) throws DebugException {
-        _Face face = null;
+        _Face face;
         if (!isValidFaceLine(line)) {
             throw new DebugException("Error parsing entry ('" + line + "', line " + lineCount + ") in file - Incorrect format");
         } else {
             String trimmedLine = line.substring(line.indexOf(" ") + 1);
             String[] tokens = trimmedLine.split(" ");
-            String[] subTokens = null;
+            String[] subTokens;
             int[] verticesID = new int[tokens.length];
             _Vertex[] verts = new _Vertex[tokens.length];
             _TextureCoord[] texCoords = new _TextureCoord[tokens.length];
@@ -213,7 +211,7 @@ public class ObjParser {
         _GroupObject.Builder group = null;
         if (isValidGroupObjectLine(line)) {
             String trimmedLine = line.substring(line.indexOf(" ") + 1);
-            if (trimmedLine.length() > 0) {
+            if (!trimmedLine.isEmpty()) {
                 group = _GroupObject.builder().name(trimmedLine);
             }
 

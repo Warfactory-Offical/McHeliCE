@@ -11,6 +11,7 @@ import com.norwood.mcheli.wrapper.W_McClient;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
@@ -57,7 +58,7 @@ public class MCH_AircraftGui extends W_GuiContainer {
         this.buttonList.add(this.buttonReload);
         this.buttonList.add(this.buttonNext);
         this.buttonList.add(this.buttonPrev);
-        if (this.aircraft != null && this.aircraft.getSizeInventory() > 0) {
+        if (this.aircraft.getSizeInventory() > 0) {
             this.buttonList.add(this.buttonInventory);
         }
 
@@ -99,7 +100,7 @@ public class MCH_AircraftGui extends W_GuiContainer {
         super.onGuiClosed();
     }
 
-    protected void actionPerformed(GuiButton button) throws IOException {
+    protected void actionPerformed(@NotNull GuiButton button) throws IOException {
         super.actionPerformed(button);
         if (button.enabled) {
             switch (button.id) {
@@ -142,8 +143,7 @@ public class MCH_AircraftGui extends W_GuiContainer {
 
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         super.drawGuiContainerForegroundLayer(par1, par2);
-        MCH_EntityAircraft ac = this.aircraft;
-        this.drawString(ac.getGuiInventory().getInventoryName(), 10, 10, 16777215);
+        this.drawString(this.aircraft.getGuiInventory().getInventoryName(), 10, 10, 16777215);
         if (this.aircraft.getNumEjectionSeat() > 0) {
             this.drawString("Parachute", 9, 95, 16777215);
         }

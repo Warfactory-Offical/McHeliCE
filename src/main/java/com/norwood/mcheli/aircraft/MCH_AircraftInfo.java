@@ -18,10 +18,10 @@ import java.util.*;
 public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemContent {
     public final String name;
     public String displayName;
-    public HashMap<String, String> displayNameLang;
+    public final HashMap<String, String> displayNameLang;
     public int itemID;
     public List<String> recipeString;
-    public List<IRecipe> recipe;
+    public final List<IRecipe> recipe;
     public boolean isShapedRecipe;
     public String category;
     public boolean creativeOnly;
@@ -33,7 +33,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
     public boolean isEnableEntityRadar;
     public boolean isEnableEjectionSeat;
     public boolean isEnableParachuting;
-    public MCH_AircraftInfo.Flare flare;
+    public final MCH_AircraftInfo.Flare flare;
     public float bodyHeight;
     public float bodyWidth;
     public boolean isFloat;
@@ -53,16 +53,16 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
     public float onGroundPitch;
     public boolean canMoveOnGround;
     public boolean canRotOnGround;
-    public List<MCH_AircraftInfo.WeaponSet> weaponSetList;
-    public List<MCH_SeatInfo> seatList;
-    public List<Integer[]> exclusionSeatList;
-    public List<MCH_Hud> hudList;
+    public final List<MCH_AircraftInfo.WeaponSet> weaponSetList;
+    public final List<MCH_SeatInfo> seatList;
+    public final List<Integer[]> exclusionSeatList;
+    public final List<MCH_Hud> hudList;
     public MCH_Hud hudTvMissile;
     public float damageFactor;
     public float submergedDamageHeight;
     public boolean regeneration;
-    public List<MCH_BoundingBox> extraBoundingBox;
-    public List<MCH_AircraftInfo.Wheel> wheels;
+    public final List<MCH_BoundingBox> extraBoundingBox;
+    public final List<MCH_AircraftInfo.Wheel> wheels;
     public int maxFuel;
     public float fuelConsumption;
     public float fuelSupplyRange;
@@ -76,14 +76,14 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
     public float entityPitch;
     public float entityRoll;
     public float stepHeight;
-    public List<MCH_SeatRackInfo> entityRackList;
+    public final List<MCH_SeatRackInfo> entityRackList;
     public int mobSeatNum;
     public int entityRackNum;
-    public MCH_MobDropOption mobDropOption;
-    public List<MCH_AircraftInfo.RepellingHook> repellingHooks;
-    public List<MCH_AircraftInfo.RideRack> rideRacks;
-    public List<MCH_AircraftInfo.ParticleSplash> particleSplashs;
-    public List<MCH_AircraftInfo.SearchLight> searchLights;
+    public final MCH_MobDropOption mobDropOption;
+    public final List<MCH_AircraftInfo.RepellingHook> repellingHooks;
+    public final List<MCH_AircraftInfo.RideRack> rideRacks;
+    public final List<MCH_AircraftInfo.ParticleSplash> particleSplashs;
+    public final List<MCH_AircraftInfo.SearchLight> searchLights;
     public float rotorSpeed;
     public boolean enableSeaSurfaceParticle;
     public float pivotTurnThrottle;
@@ -101,7 +101,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
     public float bbZmax;
     public float bbZ;
     public boolean alwaysCameraView;
-    public List<MCH_AircraftInfo.CameraPosition> cameraPosition;
+    public final List<MCH_AircraftInfo.CameraPosition> cameraPosition;
     public float cameraRotationSpeed;
     public float speed;
     public float motionFactor;
@@ -125,19 +125,19 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
     public float soundVolume;
     public float soundPitch;
     public _IModelCustom model;
-    public List<MCH_AircraftInfo.Hatch> hatchList;
-    public List<MCH_AircraftInfo.Camera> cameraList;
-    public List<MCH_AircraftInfo.PartWeapon> partWeapon;
-    public List<MCH_AircraftInfo.WeaponBay> partWeaponBay;
-    public List<MCH_AircraftInfo.Canopy> canopyList;
-    public List<MCH_AircraftInfo.LandingGear> landingGear;
-    public List<MCH_AircraftInfo.Throttle> partThrottle;
-    public List<MCH_AircraftInfo.RotPart> partRotPart;
-    public List<MCH_AircraftInfo.CrawlerTrack> partCrawlerTrack;
-    public List<MCH_AircraftInfo.TrackRoller> partTrackRoller;
-    public List<MCH_AircraftInfo.PartWheel> partWheel;
-    public List<MCH_AircraftInfo.PartWheel> partSteeringWheel;
-    public List<MCH_AircraftInfo.Hatch> lightHatchList;
+    public final List<MCH_AircraftInfo.Hatch> hatchList;
+    public final List<MCH_AircraftInfo.Camera> cameraList;
+    public final List<MCH_AircraftInfo.PartWeapon> partWeapon;
+    public final List<MCH_AircraftInfo.WeaponBay> partWeaponBay;
+    public final List<MCH_AircraftInfo.Canopy> canopyList;
+    public final List<MCH_AircraftInfo.LandingGear> landingGear;
+    public final List<MCH_AircraftInfo.Throttle> partThrottle;
+    public final List<MCH_AircraftInfo.RotPart> partRotPart;
+    public final List<MCH_AircraftInfo.CrawlerTrack> partCrawlerTrack;
+    public final List<MCH_AircraftInfo.TrackRoller> partTrackRoller;
+    public final List<MCH_AircraftInfo.PartWheel> partWheel;
+    public final List<MCH_AircraftInfo.PartWheel> partSteeringWheel;
+    public final List<MCH_AircraftInfo.Hatch> lightHatchList;
     private final List<String> textureNameList;
     private String lastWeaponType = "";
     private int lastWeaponIndex = -1;
@@ -161,7 +161,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         this.isEnableEntityRadar = false;
         this.isEnableEjectionSeat = false;
         this.isEnableParachuting = false;
-        this.flare = new MCH_AircraftInfo.Flare(this);
+        this.flare = new Flare(this);
         this.weaponSetList = new ArrayList<>();
         this.seatList = new ArrayList<>();
         this.exclusionSeatList = new ArrayList<>();
@@ -302,7 +302,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
     }
 
     public boolean haveRepellingHook() {
-        return this.repellingHooks.size() > 0;
+        return !this.repellingHooks.isEmpty();
     }
 
     public boolean haveFlare() {
@@ -310,19 +310,19 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
     }
 
     public boolean haveCanopy() {
-        return this.canopyList.size() > 0;
+        return !this.canopyList.isEmpty();
     }
 
     public boolean haveLandingGear() {
-        return this.landingGear.size() > 0;
+        return !this.landingGear.isEmpty();
     }
 
     public abstract String getDefaultHudName(int var1);
 
     @Override
     public boolean validate() throws Exception {
-        if (this.cameraPosition.size() <= 0) {
-            this.cameraPosition.add(new MCH_AircraftInfo.CameraPosition(this));
+        if (this.cameraPosition.isEmpty()) {
+            this.cameraPosition.add(new CameraPosition(this));
         }
 
         this.bbZ = (this.bbZmax + this.bbZmin) / 2.0F;
@@ -330,14 +330,14 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
             this.isUAV = true;
         }
 
-        if (this.isEnableParachuting && this.repellingHooks.size() > 0) {
+        if (this.isEnableParachuting && !this.repellingHooks.isEmpty()) {
             this.isEnableParachuting = false;
             this.repellingHooks.clear();
         }
 
         if (this.isUAV) {
             this.alwaysCameraView = true;
-            if (this.seatList.size() == 0) {
+            if (this.seatList.isEmpty()) {
                 MCH_SeatInfo s = new MCH_SeatInfo(new Vec3d(0.0, 0.0, 0.0), false);
                 this.seatList.add(s);
             }
@@ -358,16 +358,14 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                 this.hudList.add(MCH_HudManager.get(this.getDefaultHudName(1)));
             }
 
-            for (MCH_SeatRackInfo ei : this.entityRackList) {
-                this.seatList.add(ei);
-            }
+            this.seatList.addAll(this.entityRackList);
 
             this.entityRackList.clear();
             if (this.hudTvMissile == null) {
                 this.hudTvMissile = MCH_HudManager.get("tv_missile");
             }
 
-            if (this.textureNameList.size() < 1) {
+            if (this.textureNameList.isEmpty()) {
                 throw new Exception("At least one texture must be set.");
             } else {
                 if (this.itemID <= 0) {
@@ -376,7 +374,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                 for (int i = 0; i < this.partWeaponBay.size(); i++) {
                     MCH_AircraftInfo.WeaponBay wb = this.partWeaponBay.get(i);
                     String[] weaponNames = wb.weaponName.split("\\s*/\\s*");
-                    if (weaponNames.length <= 0) {
+                    if (weaponNames.length == 0) {
                         this.partWeaponBay.remove(i);
                     } else {
                         List<Integer> list = new ArrayList<>();
@@ -388,7 +386,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                             }
                         }
 
-                        if (list.size() <= 0) {
+                        if (list.isEmpty()) {
                             this.partWeaponBay.remove(i);
                         } else {
                             this.partWeaponBay.get(i).weaponIds = list.toArray(new Integer[0]);
@@ -446,15 +444,15 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
     }
 
     public boolean haveHatch() {
-        return this.hatchList.size() > 0;
+        return !this.hatchList.isEmpty();
     }
 
     public boolean havePartCamera() {
-        return this.cameraList.size() > 0;
+        return !this.cameraList.isEmpty();
     }
 
     public boolean havePartThrottle() {
-        return this.partThrottle.size() > 0;
+        return !this.partThrottle.isEmpty();
     }
 
     public MCH_AircraftInfo.WeaponSet getWeaponSetById(int id) {
@@ -496,7 +494,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
             this.displayName = data.trim();
         } else if (item.compareTo("adddisplayname") == 0) {
             String[] s = data.split("\\s*,\\s*");
-            if (s != null && s.length == 2) {
+            if (s.length == 2) {
                 this.displayNameLang.put(s[0].toLowerCase().trim(), s[1].trim());
             }
         } else if (item.equalsIgnoreCase("Category")) {
@@ -541,7 +539,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                 int age = s.length >= 7 ? this.toInt(s[6], 1, 100000) : 80;
                 float motionY = s.length >= 8 ? this.toFloat(s[7]) : 0.01F;
                 float gravity = s.length >= 9 ? this.toFloat(s[8]) : 0.0F;
-                this.particleSplashs.add(new MCH_AircraftInfo.ParticleSplash(this, v, num, size, acc, age, motionY, gravity));
+                this.particleSplashs.add(new ParticleSplash(this, v, num, size, acc, age, motionY, gravity));
             }
         } else if (item.equalsIgnoreCase("AddSearchLight") || item.equalsIgnoreCase("AddFixedSearchLight") || item.equalsIgnoreCase("AddSteeringSearchLight")) {
             String[] s = this.splitParam(data);
@@ -556,7 +554,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                 float stRot = s.length >= 10 ? this.toFloat(s[9]) : 0.0F;
                 boolean fixDir = !item.equalsIgnoreCase("AddSearchLight");
                 boolean steering = item.equalsIgnoreCase("AddSteeringSearchLight");
-                this.searchLights.add(new MCH_AircraftInfo.SearchLight(this, v, cs, ce, h, w, fixDir, yaw, pitch, steering, stRot));
+                this.searchLights.add(new SearchLight(this, v, cs, ce, h, w, fixDir, yaw, pitch, steering, stRot));
             }
         } else if (item.equalsIgnoreCase("AddPartLightHatch")) {
             String[] s = this.splitParam(data);
@@ -564,7 +562,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                 float mx = s.length >= 7 ? this.toFloat(s[6], -1800.0F, 1800.0F) : 90.0F;
                 this.lightHatchList
                         .add(
-                                new MCH_AircraftInfo.Hatch(
+                                new Hatch(
                                         this,
                                         this.toFloat(s[0]),
                                         this.toFloat(s[1]),
@@ -582,11 +580,11 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
             String[] s = this.splitParam(data);
             if (s != null && s.length >= 3) {
                 int inv = s.length >= 4 ? this.toInt(s[3], 1, 100000) : 10;
-                this.repellingHooks.add(new MCH_AircraftInfo.RepellingHook(this, this.toVec3(s[0], s[1], s[2]), inv));
+                this.repellingHooks.add(new RepellingHook(this, this.toVec3(s[0], s[1], s[2]), inv));
             }
         } else if (item.equalsIgnoreCase("AddRack")) {
             String[] s = data.toLowerCase().split("\\s*,\\s*");
-            if (s != null && s.length >= 7) {
+            if (s.length >= 7) {
                 String[] names = s[0].split("\\s*/\\s*");
                 float range = s.length >= 8 ? this.toFloat(s[7]) : 6.0F;
                 float para = s.length >= 9 ? this.toFloat(s[8], 0.0F, 1000000.0F) : 20.0F;
@@ -600,7 +598,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                                         this.toDouble(s[1]),
                                         this.toDouble(s[2]),
                                         this.toDouble(s[3]),
-                                        new MCH_AircraftInfo.CameraPosition(this, this.toVec3(s[4], s[5], s[6]).add(0.0, 1.5, 0.0)),
+                                        new CameraPosition(this, this.toVec3(s[4], s[5], s[6]).add(0.0, 1.5, 0.0)),
                                         range,
                                         para,
                                         yaw,
@@ -612,7 +610,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         } else if (item.equalsIgnoreCase("RideRack")) {
             String[] s = this.splitParam(data);
             if (s.length >= 2) {
-                MCH_AircraftInfo.RideRack r = new MCH_AircraftInfo.RideRack(this, s[0].trim().toLowerCase(), this.toInt(s[1], 1, 10000));
+                MCH_AircraftInfo.RideRack r = new RideRack(this, s[0].trim().toLowerCase(), this.toInt(s[1], 1, 10000));
                 this.rideRacks.add(r);
             }
         } else if (item.equalsIgnoreCase("AddSeat") || item.equalsIgnoreCase("AddGunnerSeat") || item.equalsIgnoreCase("AddFixRotSeat")) {
@@ -633,7 +631,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
             } else {
                 MCH_SeatInfo seat;
                 if (s.length >= 6) {
-                    MCH_AircraftInfo.CameraPosition c = new MCH_AircraftInfo.CameraPosition(this, this.toVec3(s[3], s[4], s[5]));
+                    MCH_AircraftInfo.CameraPosition c = new CameraPosition(this, this.toVec3(s[3], s[4], s[5]));
                     boolean sg = s.length >= 7 && this.toBool(s[6]);
                     if (item.equalsIgnoreCase("AddGunnerSeat")) {
                         if (s.length >= 9) {
@@ -658,7 +656,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                         seat = new MCH_SeatInfo(p, true, c, true, sg, fixRot, fixYaw, fixPitch, rs);
                     }
                 } else {
-                    seat = new MCH_SeatInfo(p, true, new MCH_AircraftInfo.CameraPosition(this), false, false, false, 0.0F, 0.0F, false);
+                    seat = new MCH_SeatInfo(p, true, new CameraPosition(this), false, false, false, 0.0F, 0.0F, false);
                 }
 
                 this.seatList.add(seat);
@@ -671,14 +669,10 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                 this.wheels.clear();
 
                 for (int i = 2; i < sx.length; i++) {
-                    this.wheels.add(new MCH_AircraftInfo.Wheel(this, new Vec3d(x, y, this.toFloat(sx[i]))));
+                    this.wheels.add(new Wheel(this, new Vec3d(x, y, this.toFloat(sx[i]))));
                 }
 
-                Collections.sort(this.wheels, new Comparator<MCH_AircraftInfo.Wheel>() {
-                    public int compare(MCH_AircraftInfo.Wheel arg0, MCH_AircraftInfo.Wheel arg1) {
-                        return arg0.pos.z > arg1.pos.z ? -1 : 1;
-                    }
-                });
+                this.wheels.sort((arg0, arg1) -> arg0.pos.z > arg1.pos.z ? -1 : 1);
             }
         } else if (item.equalsIgnoreCase("ExclusionSeat")) {
             String[] sx = this.splitParam(data);
@@ -736,7 +730,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                 boolean fixRot = sx.length >= 5;
                 float yaw = sx.length >= 5 ? this.toFloat(sx[4]) : 0.0F;
                 float pitch = sx.length >= 6 ? this.toFloat(sx[5]) : 0.0F;
-                this.cameraPosition.add(new MCH_AircraftInfo.CameraPosition(this, this.toVec3(sx[0], sx[1], sx[2]), fixRot, yaw, pitch));
+                this.cameraPosition.add(new CameraPosition(this, this.toVec3(sx[0], sx[1], sx[2]), fixRot, yaw, pitch));
             }
         } else if (item.equalsIgnoreCase("UnmountPosition")) {
             String[] sx = data.split("\\s*,\\s*");
@@ -818,7 +812,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                 float mxy = sx.length >= 11 ? this.toFloat(sx[10]) : 0.0F;
                 float mnp = sx.length >= 12 ? this.toFloat(sx[11]) : 0.0F;
                 float mxp = sx.length >= 13 ? this.toFloat(sx[12]) : 0.0F;
-                MCH_AircraftInfo.Weapon e = new MCH_AircraftInfo.Weapon(
+                MCH_AircraftInfo.Weapon e = new Weapon(
                         this,
                         this.toFloat(sx[1]),
                         this.toFloat(sx[2]),
@@ -835,7 +829,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                         item.equalsIgnoreCase("AddTurretWeapon")
                 );
                 if (type.compareTo(this.lastWeaponType) != 0) {
-                    this.weaponSetList.add(new MCH_AircraftInfo.WeaponSet(this, type));
+                    this.weaponSetList.add(new WeaponSet(this, type));
                     this.lastWeaponIndex++;
                     this.lastWeaponType = type;
                 }
@@ -864,7 +858,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                     rb = sx.length >= 8 ? this.toFloat(sx[7]) : 0.0F;
                 }
 
-                MCH_AircraftInfo.PartWeapon w = new MCH_AircraftInfo.PartWeapon(
+                MCH_AircraftInfo.PartWeapon w = new PartWeapon(
                         this,
                         this.splitParamSlash(sx[0].toLowerCase().trim()),
                         isRot,
@@ -889,7 +883,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
             String[] sx = data.split("\\s*,\\s*");
             if (sx.length >= 5 && this.lastWeaponPart != null) {
                 float rb = sx.length >= 6 ? this.toFloat(sx[5]) : 0.0F;
-                MCH_AircraftInfo.PartWeaponChild w = new MCH_AircraftInfo.PartWeaponChild(
+                MCH_AircraftInfo.PartWeaponChild w = new PartWeaponChild(
                         this,
                         this.lastWeaponPart.name,
                         this.toBool(sx[0]),
@@ -965,10 +959,10 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         } else if (item.equalsIgnoreCase("AddPartWeaponBay") || item.equalsIgnoreCase("AddPartSlideWeaponBay")) {
             boolean slide = item.equalsIgnoreCase("AddPartSlideWeaponBay");
             String[] sx = data.split("\\s*,\\s*");
-            MCH_AircraftInfo.WeaponBay n = null;
+            MCH_AircraftInfo.WeaponBay n;
             if (slide) {
                 if (sx.length >= 4) {
-                    n = new MCH_AircraftInfo.WeaponBay(
+                    n = new WeaponBay(
                             this,
                             sx[0].trim().toLowerCase(),
                             this.toFloat(sx[1]),
@@ -979,13 +973,13 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                             0.0F,
                             90.0F,
                             "wb" + this.partWeaponBay.size(),
-                            slide
+                            true
                     );
                     this.partWeaponBay.add(n);
                 }
             } else if (sx.length >= 7) {
                 float mx = sx.length >= 8 ? this.toFloat(sx[7], -180.0F, 180.0F) : 90.0F;
-                n = new MCH_AircraftInfo.WeaponBay(
+                n = new WeaponBay(
                         this,
                         sx[0].trim().toLowerCase(),
                         this.toFloat(sx[1]),
@@ -996,24 +990,24 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                         this.toFloat(sx[6]),
                         mx / 90.0F,
                         "wb" + this.partWeaponBay.size(),
-                        slide
+                        false
                 );
                 this.partWeaponBay.add(n);
             }
         } else if (item.compareTo("addparthatch") == 0 || item.compareTo("addpartslidehatch") == 0) {
             boolean slide = item.compareTo("addpartslidehatch") == 0;
             String[] sx = data.split("\\s*,\\s*");
-            MCH_AircraftInfo.Hatch n = null;
+            MCH_AircraftInfo.Hatch n;
             if (slide) {
                 if (sx.length >= 3) {
-                    n = new MCH_AircraftInfo.Hatch(
-                            this, this.toFloat(sx[0]), this.toFloat(sx[1]), this.toFloat(sx[2]), 0.0F, 0.0F, 0.0F, 90.0F, "hatch" + this.hatchList.size(), slide
+                    n = new Hatch(
+                            this, this.toFloat(sx[0]), this.toFloat(sx[1]), this.toFloat(sx[2]), 0.0F, 0.0F, 0.0F, 90.0F, "hatch" + this.hatchList.size(), true
                     );
                     this.hatchList.add(n);
                 }
             } else if (sx.length >= 6) {
                 float mx = sx.length >= 7 ? this.toFloat(sx[6], -180.0F, 180.0F) : 90.0F;
-                n = new MCH_AircraftInfo.Hatch(
+                n = new Hatch(
                         this,
                         this.toFloat(sx[0]),
                         this.toFloat(sx[1]),
@@ -1023,7 +1017,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                         this.toFloat(sx[5]),
                         mx,
                         "hatch" + this.hatchList.size(),
-                        slide
+                        false
                 );
                 this.hatchList.add(n);
             }
@@ -1037,19 +1031,19 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
 
             if (slide) {
                 if (sx.length >= 3) {
-                    MCH_AircraftInfo.Canopy c = new MCH_AircraftInfo.Canopy(
-                            this, this.toFloat(sx[0]), this.toFloat(sx[1]), this.toFloat(sx[2]), 0.0F, 0.0F, 0.0F, 90.0F, "canopy" + canopyNum, slide
+                    MCH_AircraftInfo.Canopy c = new Canopy(
+                            this, this.toFloat(sx[0]), this.toFloat(sx[1]), this.toFloat(sx[2]), 0.0F, 0.0F, 0.0F, 90.0F, "canopy" + canopyNum, true
                     );
                     this.canopyList.add(c);
                     if (canopyNum == 0) {
-                        c = new MCH_AircraftInfo.Canopy(this, this.toFloat(sx[0]), this.toFloat(sx[1]), this.toFloat(sx[2]), 0.0F, 0.0F, 0.0F, 90.0F, "canopy", slide);
+                        c = new Canopy(this, this.toFloat(sx[0]), this.toFloat(sx[1]), this.toFloat(sx[2]), 0.0F, 0.0F, 0.0F, 90.0F, "canopy", true);
                         this.canopyList.add(c);
                     }
                 }
             } else if (sx.length >= 6) {
                 float mx = sx.length >= 7 ? this.toFloat(sx[6], -180.0F, 180.0F) : 90.0F;
                 mx /= 90.0F;
-                MCH_AircraftInfo.Canopy c = new MCH_AircraftInfo.Canopy(
+                MCH_AircraftInfo.Canopy c = new Canopy(
                         this,
                         this.toFloat(sx[0]),
                         this.toFloat(sx[1]),
@@ -1059,11 +1053,11 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                         this.toFloat(sx[5]),
                         mx,
                         "canopy" + canopyNum,
-                        slide
+                        false
                 );
                 this.canopyList.add(c);
                 if (canopyNum == 0) {
-                    c = new MCH_AircraftInfo.Canopy(
+                    c = new Canopy(
                             this,
                             this.toFloat(sx[0]),
                             this.toFloat(sx[1]),
@@ -1073,7 +1067,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                             this.toFloat(sx[5]),
                             mx,
                             "canopy",
-                            slide
+                            false
                     );
                     this.canopyList.add(c);
                 }
@@ -1086,7 +1080,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
             if (!item.equalsIgnoreCase("AddPartSlideRotLG") && sxx.length >= 6) {
                 float maxRot = sxx.length >= 7 ? this.toFloat(sxx[6], -180.0F, 180.0F) : 90.0F;
                 maxRot /= 90.0F;
-                MCH_AircraftInfo.LandingGear n = new MCH_AircraftInfo.LandingGear(
+                MCH_AircraftInfo.LandingGear n = new LandingGear(
                         this,
                         this.toFloat(sxx[0]),
                         this.toFloat(sxx[1]),
@@ -1112,7 +1106,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
             if (item.equalsIgnoreCase("AddPartSlideRotLG") && sxx.length >= 9) {
                 float maxRot = sxx.length >= 10 ? this.toFloat(sxx[9], -180.0F, 180.0F) : 90.0F;
                 maxRot /= 90.0F;
-                MCH_AircraftInfo.LandingGear n = new MCH_AircraftInfo.LandingGear(
+                MCH_AircraftInfo.LandingGear n = new LandingGear(
                         this,
                         this.toFloat(sxx[3]),
                         this.toFloat(sxx[4]),
@@ -1134,7 +1128,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                 float x = sxxx.length >= 8 ? this.toFloat(sxxx[7]) : 0.0F;
                 float yx = sxxx.length >= 9 ? this.toFloat(sxxx[8]) : 0.0F;
                 float z = sxxx.length >= 10 ? this.toFloat(sxxx[9]) : 0.0F;
-                MCH_AircraftInfo.Throttle c = new MCH_AircraftInfo.Throttle(
+                MCH_AircraftInfo.Throttle c = new Throttle(
                         this,
                         this.toFloat(sxxx[0]),
                         this.toFloat(sxxx[1]),
@@ -1154,7 +1148,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
             String[] sxxx = data.split("\\s*,\\s*");
             if (sxxx.length >= 7) {
                 boolean always = sxxx.length < 8 || this.toBool(sxxx[7]);
-                MCH_AircraftInfo.RotPart c = new MCH_AircraftInfo.RotPart(
+                MCH_AircraftInfo.RotPart c = new RotPart(
                         this,
                         this.toFloat(sxxx[0]),
                         this.toFloat(sxxx[1]),
@@ -1173,7 +1167,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
             if (sxxx.length >= 3) {
                 boolean ys = sxxx.length < 4 || this.toBool(sxxx[3]);
                 boolean ps = sxxx.length >= 5 && this.toBool(sxxx[4]);
-                MCH_AircraftInfo.Camera c = new MCH_AircraftInfo.Camera(
+                MCH_AircraftInfo.Camera c = new Camera(
                         this, this.toFloat(sxxx[0]), this.toFloat(sxxx[1]), this.toFloat(sxxx[2]), 0.0F, -1.0F, 0.0F, "camera" + this.cameraList.size(), ys, ps
                 );
                 this.cameraList.add(c);
@@ -1190,7 +1184,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                 float pz = sxxx.length >= 10 ? this.toFloat(sxxx[9]) : this.toFloat(sxxx[2]);
                 this.partWheel
                         .add(
-                                new MCH_AircraftInfo.PartWheel(
+                                new PartWheel(
                                         this, this.toFloat(sxxx[0]), this.toFloat(sxxx[1]), this.toFloat(sxxx[2]), rx, ry, rz, rd, px, py, pz, "wheel" + this.partWheel.size()
                                 )
                         );
@@ -1200,7 +1194,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
             if (sxxx.length >= 7) {
                 this.partSteeringWheel
                         .add(
-                                new MCH_AircraftInfo.PartWheel(
+                                new PartWheel(
                                         this,
                                         this.toFloat(sxxx[0]),
                                         this.toFloat(sxxx[1]),
@@ -1218,7 +1212,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
             if (sxxx.length >= 3) {
                 this.partTrackRoller
                         .add(
-                                new MCH_AircraftInfo.TrackRoller(
+                                new TrackRoller(
                                         this, this.toFloat(sxxx[0]), this.toFloat(sxxx[1]), this.toFloat(sxxx[2]), "track_roller" + this.partTrackRoller.size()
                                 )
                         );
@@ -1290,7 +1284,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
             }
 
             List<MCH_AircraftInfo.CrawlerTrackPrm> lp = new ArrayList<>();
-            lp.add(new MCH_AircraftInfo.CrawlerTrackPrm(this, (float) cx[0], (float) cy[0]));
+            lp.add(new CrawlerTrackPrm(this, (float) cx[0], (float) cy[0]));
             double dist = 0.0;
 
             for (int i = 0; i < PC; i++) {
@@ -1300,7 +1294,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                 double dist2 = dist;
 
                 for (int j = 1; dist >= LEN; j++) {
-                    lp.add(new MCH_AircraftInfo.CrawlerTrackPrm(this, (float) (cx[i] + x * (LEN * j / dist2)), (float) (cy[i] + y * (LEN * j / dist2))));
+                    lp.add(new CrawlerTrackPrm(this, (float) (cx[i] + x * (LEN * j / dist2)), (float) (cy[i] + y * (LEN * j / dist2))));
                     dist -= LEN;
                 }
             }
@@ -1320,7 +1314,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                 cp.r = nnr;
             }
 
-            MCH_AircraftInfo.CrawlerTrack c = new MCH_AircraftInfo.CrawlerTrack(this, name);
+            MCH_AircraftInfo.CrawlerTrack c = new CrawlerTrack(this, name);
             c.len = LEN;
             c.cx = cx;
             c.cy = cy;
@@ -1364,7 +1358,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         return true;
     }
 
-    public class Camera extends MCH_AircraftInfo.DrawnPart {
+    public static class Camera extends MCH_AircraftInfo.DrawnPart {
         public final boolean yawSync;
         public final boolean pitchSync;
 
@@ -1375,7 +1369,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class CameraPosition {
+    public static class CameraPosition {
         public final Vec3d pos;
         public final boolean fixRot;
         public final float yaw;
@@ -1397,7 +1391,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class Canopy extends MCH_AircraftInfo.DrawnPart {
+    public static class Canopy extends MCH_AircraftInfo.DrawnPart {
         public final float maxRotFactor;
         public final boolean isSlide;
 
@@ -1408,7 +1402,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class CrawlerTrack extends MCH_AircraftInfo.DrawnPart {
+    public static class CrawlerTrack extends MCH_AircraftInfo.DrawnPart {
         public float len = 0.35F;
         public double[] cx;
         public double[] cy;
@@ -1421,9 +1415,9 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class CrawlerTrackPrm {
-        float x;
-        float y;
+    public static class CrawlerTrackPrm {
+        final float x;
+        final float y;
         float nx;
         float ny;
         float r;
@@ -1434,7 +1428,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class DrawnPart {
+    public static class DrawnPart {
         public final Vec3d pos;
         public final Vec3d rot;
         public final String modelName;
@@ -1448,7 +1442,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class Flare {
+    public static class Flare {
         public int[] types = new int[0];
         public Vec3d pos = new Vec3d(0.0, 0.0, 0.0);
 
@@ -1456,7 +1450,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class Hatch extends MCH_AircraftInfo.DrawnPart {
+    public static class Hatch extends MCH_AircraftInfo.DrawnPart {
         public final float maxRotFactor;
         public final float maxRot;
         public final boolean isSlide;
@@ -1469,7 +1463,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class LandingGear extends MCH_AircraftInfo.DrawnPart {
+    public static class LandingGear extends MCH_AircraftInfo.DrawnPart {
         public final float maxRotFactor;
         public final boolean reverse;
         public final boolean hatch;
@@ -1501,7 +1495,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class PartWeapon extends MCH_AircraftInfo.DrawnPart {
+    public static class PartWeapon extends MCH_AircraftInfo.DrawnPart {
         public final String[] name;
         public final boolean rotBarrel;
         public final boolean isMissile;
@@ -1510,7 +1504,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         public final boolean pitch;
         public final float recoilBuf;
         public final boolean turret;
-        public List<MCH_AircraftInfo.PartWeaponChild> child;
+        public final List<MCH_AircraftInfo.PartWeaponChild> child;
 
         public PartWeapon(
                 MCH_AircraftInfo paramMCH_AircraftInfo,
@@ -1543,7 +1537,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class PartWeaponChild extends MCH_AircraftInfo.DrawnPart {
+    public static class PartWeaponChild extends MCH_AircraftInfo.DrawnPart {
         public final String[] name;
         public final boolean yaw;
         public final boolean pitch;
@@ -1571,7 +1565,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class PartWheel extends MCH_AircraftInfo.DrawnPart {
+    public static class PartWheel extends MCH_AircraftInfo.DrawnPart {
         final float rotDir;
         final Vec3d pos2;
 
@@ -1599,7 +1593,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class ParticleSplash {
+    public static class ParticleSplash {
         public final int num;
         public final float acceleration;
         public final float size;
@@ -1619,7 +1613,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class RepellingHook {
+    public static class RepellingHook {
         final Vec3d pos;
         final int interval;
 
@@ -1629,7 +1623,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class RideRack {
+    public static class RideRack {
         public final String name;
         public final int rackID;
 
@@ -1639,7 +1633,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class RotPart extends MCH_AircraftInfo.DrawnPart {
+    public static class RotPart extends MCH_AircraftInfo.DrawnPart {
         public final float rotSpeed;
         public final boolean rotAlways;
 
@@ -1650,7 +1644,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class SearchLight {
+    public static class SearchLight {
         public final int colorStart;
         public final int colorEnd;
         public final Vec3d pos;
@@ -1680,7 +1674,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class Throttle extends MCH_AircraftInfo.DrawnPart {
+    public static class Throttle extends MCH_AircraftInfo.DrawnPart {
         public final Vec3d slide;
         public final float rot2;
 
@@ -1704,7 +1698,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class TrackRoller extends MCH_AircraftInfo.DrawnPart {
+    public static class TrackRoller extends MCH_AircraftInfo.DrawnPart {
         final int side;
 
         public TrackRoller(MCH_AircraftInfo paramMCH_AircraftInfo, float px, float py, float pz, String name) {
@@ -1713,7 +1707,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class Weapon {
+    public static class Weapon {
         public final Vec3d pos;
         public final float yaw;
         public final float pitch;
@@ -1756,7 +1750,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class WeaponBay extends MCH_AircraftInfo.DrawnPart {
+    public static class WeaponBay extends MCH_AircraftInfo.DrawnPart {
         public final float maxRotFactor;
         public final boolean isSlide;
         private final String weaponName;
@@ -1773,9 +1767,9 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class WeaponSet {
+    public static class WeaponSet {
         public final String type;
-        public ArrayList<MCH_AircraftInfo.Weapon> weapons;
+        public final ArrayList<MCH_AircraftInfo.Weapon> weapons;
 
         public WeaponSet(MCH_AircraftInfo paramMCH_AircraftInfo, String t) {
             this.type = t;
@@ -1783,7 +1777,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         }
     }
 
-    public class Wheel {
+    public static class Wheel {
         public final float size;
         public final Vec3d pos;
 

@@ -6,7 +6,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 public class MCH_Key {
-    public int key;
+    public final int key;
     private boolean isPress;
     private boolean isBeforePress;
 

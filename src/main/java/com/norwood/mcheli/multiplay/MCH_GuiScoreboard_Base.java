@@ -19,8 +19,6 @@ import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
@@ -67,26 +65,22 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
     public static int getScoreBoardLeft(Minecraft mc, int teamNum, int teamIndex) {
         ScaledResolution scaledresolution = new W_ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         int ScaledWidth = scaledresolution.getScaledWidth();
-        return (int) (ScaledWidth / 2 + (getScoreboradWidth(mc) + 10) * (-teamNum / 2.0 + teamIndex));
+        return (int) ((double) ScaledWidth / 2 + (getScoreboradWidth(mc) + 10) * (-teamNum / 2.0 + teamIndex));
     }
 
     public static void drawList(Minecraft mc, FontRenderer fontRendererObj, boolean mng) {
         ArrayList<ScorePlayerTeam> teamList = new ArrayList<>();
         teamList.add(null);
 
-        for (Object team : mc.world.getScoreboard().getTeams()) {
-            teamList.add((ScorePlayerTeam) team);
-        }
+        teamList.addAll(mc.world.getScoreboard().getTeams());
 
-        Collections.sort(teamList, new Comparator<ScorePlayerTeam>() {
-            public int compare(ScorePlayerTeam o1, ScorePlayerTeam o2) {
-                if (o1 == null && o2 == null) {
-                    return 0;
-                } else if (o1 == null) {
-                    return -1;
-                } else {
-                    return o2 == null ? 1 : o1.getName().compareTo(o2.getName());
-                }
+        teamList.sort((o1, o2) -> {
+            if (o1 == null && o2 == null) {
+                return 0;
+            } else if (o1 == null) {
+                return -1;
+            } else {
+                return o2 == null ? 1 : o1.getName().compareTo(o2.getName());
             }
         });
 
@@ -106,7 +100,7 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
         NetHandlerPlayClient nethandlerplayclient = mc.player.connection;
         List<NetworkPlayerInfo> list = Lists.newArrayList(nethandlerplayclient.getPlayerInfoMap());
         int MaxPlayers = (list.size() / 5 + 1) * 5;
-        MaxPlayers = MaxPlayers < 10 ? 10 : MaxPlayers;
+        MaxPlayers = Math.max(MaxPlayers, 10);
         if (MaxPlayers > nethandlerplayclient.currentServerMaxPlayers) {
             MaxPlayers = nethandlerplayclient.currentServerMaxPlayers;
         }
@@ -240,8 +234,7 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
             this.mouseClicked(mouseX, mouseY, mouseButton);
         } catch (Exception var7) {
             if (mouseButton == 0) {
-                for (int l = 0; l < this.buttonList.size(); l++) {
-                    GuiButton guibutton = this.buttonList.get(l);
+                for (GuiButton guibutton : this.buttonList) {
                     if (guibutton.mousePressed(this.mc, mouseX, mouseY)) {
                         guibutton.playPressSound(this.mc.getSoundHandler());
                         this.actionPerformed(guibutton);

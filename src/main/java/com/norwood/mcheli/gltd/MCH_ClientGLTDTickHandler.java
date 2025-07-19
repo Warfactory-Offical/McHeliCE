@@ -94,11 +94,9 @@ public class MCH_ClientGLTDTickHandler extends MCH_ClientTickHandlerBase {
 
         if (this.isBeforeRiding != this.isRiding) {
             if (this.isRiding) {
-                if (viewEntityDummy != null) {
-                    viewEntityDummy.prevPosX = viewEntityDummy.posX;
-                    viewEntityDummy.prevPosY = viewEntityDummy.posY;
-                    viewEntityDummy.prevPosZ = viewEntityDummy.posZ;
-                }
+                viewEntityDummy.prevPosX = viewEntityDummy.posX;
+                viewEntityDummy.prevPosY = viewEntityDummy.posY;
+                viewEntityDummy.prevPosZ = viewEntityDummy.posZ;
             } else {
                 MCH_Lib.enableFirstPersonItemRender();
                 MCH_Lib.setRenderViewEntity(player);

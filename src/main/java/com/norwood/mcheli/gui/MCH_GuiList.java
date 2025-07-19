@@ -2,14 +2,15 @@ package com.norwood.mcheli.gui;
 
 import com.norwood.mcheli.wrapper.W_GuiButton;
 import net.minecraft.client.Minecraft;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MCH_GuiList extends W_GuiButton {
     public final int maxRowNum;
-    public List<MCH_GuiListItem> listItems;
-    public MCH_GuiSliderVertical scrollBar;
+    public final List<MCH_GuiListItem> listItems;
+    public final MCH_GuiSliderVertical scrollBar;
     public MCH_GuiListItem lastPushItem;
 
     public MCH_GuiList(int id, int maxRow, int posX, int posY, int w, int h, String name) {
@@ -20,7 +21,7 @@ public class MCH_GuiList extends W_GuiButton {
         this.lastPushItem = null;
     }
 
-    public void drawButton(Minecraft mc, int x, int y, float partialTicks) {
+    public void drawButton(@NotNull Minecraft mc, int x, int y, float partialTicks) {
         if (this.isVisible()) {
             drawRect(this.x, this.y, this.x + this.width, this.y + this.height, -2143272896);
             this.scrollBar.drawButton(mc, x, y, partialTicks);
@@ -60,16 +61,16 @@ public class MCH_GuiList extends W_GuiButton {
 
     public int getStartRow() {
         int startRow = (int) this.scrollBar.getSliderValue();
-        return startRow >= 0 ? startRow : 0;
+        return Math.max(startRow, 0);
     }
 
-    protected void mouseDragged(Minecraft mc, int x, int y) {
+    protected void mouseDragged(@NotNull Minecraft mc, int x, int y) {
         if (this.isVisible()) {
             this.scrollBar.mouseDragged(mc, x, y);
         }
     }
 
-    public boolean mousePressed(Minecraft mc, int x, int y) {
+    public boolean mousePressed(@NotNull Minecraft mc, int x, int y) {
         boolean b = false;
         if (this.isVisible()) {
             b |= this.scrollBar.mousePressed(mc, x, y);

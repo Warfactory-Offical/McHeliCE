@@ -13,6 +13,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 public class MCH_EntityParticleMarkPoint extends MCH_EntityParticleBase implements ITargetMarkerObject {
@@ -31,10 +32,12 @@ public class MCH_EntityParticleMarkPoint extends MCH_EntityParticleBase implemen
         EntityPlayer player = Minecraft.getMinecraft().player;
         if (player == null) {
             this.setExpired();
-        } else if (player.getTeam() == null && this.team != null) {
-            this.setExpired();
-        } else if (player.getTeam() != null && !player.isOnScoreboardTeam(this.team)) {
-            this.setExpired();
+        } else {
+            player.getTeam();
+            player.getTeam();
+            if (!player.isOnScoreboardTeam(this.team)) {
+                this.setExpired();
+            }
         }
     }
 
@@ -48,7 +51,7 @@ public class MCH_EntityParticleMarkPoint extends MCH_EntityParticleBase implemen
         return 3;
     }
 
-    public void renderParticle(BufferBuilder buffer, Entity entityIn, float par2, float par3, float par4, float par5, float par6, float par7) {
+    public void renderParticle(@NotNull BufferBuilder buffer, @NotNull Entity entityIn, float par2, float par3, float par4, float par5, float par6, float par7) {
         GL11.glPushMatrix();
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayer player = mc.player;
@@ -56,7 +59,7 @@ public class MCH_EntityParticleMarkPoint extends MCH_EntityParticleBase implemen
             double ix = interpPosX;
             double iy = interpPosY;
             double iz = interpPosZ;
-            if (mc.gameSettings.thirdPersonView > 0 && entityIn != null) {
+            if (mc.gameSettings.thirdPersonView > 0) {
                 double dist = W_Reflection.getThirdPersonDistance();
                 float yaw = -entityIn.rotationYaw;
                 float pitch = -entityIn.rotationPitch;

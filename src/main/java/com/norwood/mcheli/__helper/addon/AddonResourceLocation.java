@@ -3,6 +3,7 @@ package com.norwood.mcheli.__helper.addon;
 import com.google.common.base.Strings;
 import com.norwood.mcheli.__helper.MCH_Utils;
 import net.minecraft.util.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
@@ -143,7 +144,7 @@ public class AddonResourceLocation extends ResourceLocation {
         return i;
     }
 
-    public String toString() {
+    public @NotNull String toString() {
         return this.namespace + ":" + this.addonDomain + '|' + this.path;
     }
 }

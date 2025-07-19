@@ -16,7 +16,8 @@ import org.lwjgl.opengl.GL11;
 public class MCH_ItemLightWeaponRender implements _IItemRenderer {
     @SideOnly(Side.CLIENT)
     public static void renderItem(ItemStack pitem, Entity entity, boolean isFirstPerson) {
-        if (pitem != null && pitem.getItem() != null) {
+        if (pitem != null) {
+            pitem.getItem();
             String name = MCH_ItemLightWeaponBase.getName(pitem);
             GL11.glEnable(32826);
             GL11.glEnable(2903);

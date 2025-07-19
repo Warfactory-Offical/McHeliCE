@@ -14,6 +14,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class MCH_ItemContainer extends W_Item {
         this.setMaxStackSize(1);
     }
 
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+    public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World worldIn, EntityPlayer playerIn, @NotNull EnumHand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
         float f = 1.0F;
         float f1 = playerIn.prevRotationPitch + (playerIn.rotationPitch - playerIn.prevRotationPitch) * f;
@@ -51,8 +52,7 @@ public class MCH_ItemContainer extends W_Item {
                     playerIn, playerIn.getEntityBoundingBox().expand(vec32.x * d3, vec32.y * d3, vec32.z * d3).grow(f9, f9, f9)
             );
 
-            for (int i = 0; i < list.size(); i++) {
-                Entity entity = list.get(i);
+            for (Entity entity : list) {
                 if (entity.canBeCollidedWith()) {
                     float f10 = entity.getCollisionBorderSize();
                     AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(f10, f10, f10);

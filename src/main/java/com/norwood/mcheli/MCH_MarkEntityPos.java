@@ -7,8 +7,8 @@ import javax.annotation.Nullable;
 import java.nio.FloatBuffer;
 
 public class MCH_MarkEntityPos {
-    public FloatBuffer pos;
-    public int type;
+    public final FloatBuffer pos;
+    public final int type;
     private final ITargetMarkerObject target;
 
     public MCH_MarkEntityPos(int type, ITargetMarkerObject target) {

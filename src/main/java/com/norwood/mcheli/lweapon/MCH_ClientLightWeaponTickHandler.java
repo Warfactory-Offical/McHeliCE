@@ -90,7 +90,7 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
 
     public static int getPotionNightVisionDuration(EntityPlayer player) {
         PotionEffect cpe = player.getActivePotionEffect(MobEffects.NIGHT_VISION);
-        return player != null && cpe != null ? cpe.getDuration() : 0;
+        return cpe != null ? cpe.getDuration() : 0;
     }
 
     public void initWeaponParam(EntityPlayer player) {

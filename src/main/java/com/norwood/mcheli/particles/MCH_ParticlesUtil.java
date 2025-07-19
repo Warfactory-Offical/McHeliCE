@@ -48,8 +48,8 @@ public class MCH_ParticlesUtil {
         int[][] offset = new int[][]{{0, 0, 0}, {0, 0, -1}, {0, 0, 1}, {1, 0, 0}, {-1, 0, 0}};
         int len = offset.length;
 
-        for (int i = 0; i < len; i++) {
-            W_Particle.BlockParticleParam name = W_Particle.getParticleTileDustName(w, blockX + offset[i][0], blockY + offset[i][1], blockZ + offset[i][2]);
+        for (int[] ints : offset) {
+            W_Particle.BlockParticleParam name = W_Particle.getParticleTileDustName(w, blockX + ints[0], blockY + ints[1], blockZ + ints[2]);
             if (!name.isEmpty()) {
                 Particle e = DEF_spawnParticle(name.name, x, y, z, mx, my, mz, 20.0F, name.stateId);
                 if (e instanceof MCH_EntityBlockDustFX) {
@@ -73,7 +73,7 @@ public class MCH_ParticlesUtil {
 
     public static Particle doSpawnParticle(String type, double x, double y, double z, double mx, double my, double mz, int... params) {
         Minecraft mc = Minecraft.getMinecraft();
-        if (mc != null && mc.getRenderViewEntity() != null && mc.effectRenderer != null) {
+        if (mc.getRenderViewEntity() != null && mc.effectRenderer != null) {
             int i = mc.gameSettings.particleSetting;
             if (i == 1 && mc.world.rand.nextInt(3) == 0) {
                 i = 2;
@@ -189,7 +189,7 @@ public class MCH_ParticlesUtil {
 
     public static void spawnParticle(MCH_ParticleParam p) {
         if (p.world.isRemote) {
-            MCH_EntityParticleBase entityFX = null;
+            MCH_EntityParticleBase entityFX;
             if (p.name.equalsIgnoreCase("Splash")) {
                 entityFX = new MCH_EntityParticleSplash(p.world, p.posX, p.posY, p.posZ, p.motionX, p.motionY, p.motionZ);
             } else {

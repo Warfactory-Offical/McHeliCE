@@ -64,7 +64,7 @@ public class MCH_Lib {
     }
 
     public static Material getMaterialFromName(String name) {
-        return mapMaterial.containsKey(name) ? mapMaterial.get(name) : null;
+        return mapMaterial.getOrDefault(name, null);
     }
 
     public static Vec3d calculateFaceNormal(Vec3d[] vertices) {
@@ -78,11 +78,11 @@ public class MCH_Lib {
     }
 
     public static float RNG(float a, float min, float max) {
-        return a > max ? max : (a < min ? min : a);
+        return a > max ? max : (Math.max(a, min));
     }
 
     public static double RNG(double a, double min, double max) {
-        return a > max ? max : (a < min ? min : a);
+        return a > max ? max : (Math.max(a, min));
     }
 
     public static float smooth(float rot, float prevRot, float tick) {
@@ -260,17 +260,15 @@ public class MCH_Lib {
 
     public static boolean isBlockInWater(World w, int x, int y, int z) {
         int[][] offset = new int[][]{{0, -1, 0}, {0, 0, 0}, {0, 0, -1}, {0, 0, 1}, {-1, 0, 0}, {1, 0, 0}, {0, 1, 0}};
-        if (y <= 0) {
-            return false;
-        } else {
+        if (y > 0) {
             for (int[] o : offset) {
                 if (W_WorldFunc.isBlockWater(w, x + o[0], y + o[1], z + o[2])) {
                     return true;
                 }
             }
 
-            return false;
         }
+        return false;
     }
 
     public static int getBlockIdY(World w, double posX, double posY, double posZ, int size, int lenY, boolean canColliableOnly) {
@@ -296,9 +294,7 @@ public class MCH_Lib {
     }
 
     public static Block getBlockY(World world, double posX, double posY, double posZ, int size, int lenY, boolean canColliableOnly) {
-        if (lenY == 0) {
-            return W_Blocks.AIR;
-        } else {
+        if (lenY != 0) {
             int px = (int) (posX + 0.5);
             int py = (int) (posY + 0.5);
             int pz = (int) (posZ + 0.5);
@@ -313,7 +309,7 @@ public class MCH_Lib {
                     for (int z = -size / 2; z <= size / 2; z++) {
                         IBlockState iblockstate = world.getBlockState(new BlockPos(px + x, py + (lenY > 0 ? y : -y), pz + z));
                         Block block = W_WorldFunc.getBlock(world, px + x, py + (lenY > 0 ? y : -y), pz + z);
-                        if (block != null && block != W_Blocks.AIR) {
+                        if (block != W_Blocks.AIR) {
                             if (!canColliableOnly) {
                                 return block;
                             }
@@ -326,8 +322,8 @@ public class MCH_Lib {
                 }
             }
 
-            return W_Blocks.AIR;
         }
+        return W_Blocks.AIR;
     }
 
     public static Vec3d getYawPitchFromVec(Vec3d v) {
@@ -404,13 +400,7 @@ public class MCH_Lib {
             return false;
         } else {
             String className = entity.getClass().getName();
-            return entity != null
-                    && (
-                    className.indexOf("EntityVehicle") >= 0
-                            || className.indexOf("EntityPlane") >= 0
-                            || className.indexOf("EntityMecha") >= 0
-                            || className.indexOf("EntityAAGun") >= 0
-            );
+            return className.contains("EntityVehicle") || className.contains("EntityPlane") || className.contains("EntityMecha") || className.contains("EntityAAGun");
         }
     }
 }

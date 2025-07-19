@@ -60,6 +60,7 @@ import net.minecraft.world.border.WorldBorder;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -104,7 +105,7 @@ public abstract class MCH_EntityAircraft
     public float rotationRoll;
     public float prevRotationRoll;
     public double currentSpeed;
-    public int currentFuel;
+    public final int currentFuel;
     public float throttleBack = 0.0F;
     public double beforeHoverThrottle;
     public int waitMountEntity = 0;
@@ -112,13 +113,13 @@ public abstract class MCH_EntityAircraft
     public boolean throttleDown = false;
     public boolean moveLeft = false;
     public boolean moveRight = false;
-    public MCH_LowPassFilterFloat lowPassPartialTicks;
+    public final MCH_LowPassFilterFloat lowPassPartialTicks;
     public float lastRiderYaw;
     public float prevLastRiderYaw;
     public float lastRiderPitch;
     public float prevLastRiderPitch;
-    public List<MCH_EntityAircraft.UnmountReserve> listUnmountReserve = new ArrayList<>();
-    public MCH_Camera camera;
+    public final List<MCH_EntityAircraft.UnmountReserve> listUnmountReserve = new ArrayList<>();
+    public final MCH_Camera camera;
     public int serverNoMoveCount = 0;
     public int repairCount;
     public int beforeDamageTaken;
@@ -145,11 +146,11 @@ public abstract class MCH_EntityAircraft
     public MCH_EntityAircraft.WeaponBay[] weaponBays;
     public float[] rotPartRotation;
     public float[] prevRotPartRotation;
-    public float[] rotCrawlerTrack = new float[2];
-    public float[] prevRotCrawlerTrack = new float[2];
-    public float[] throttleCrawlerTrack = new float[2];
-    public float[] rotTrackRoller = new float[2];
-    public float[] prevRotTrackRoller = new float[2];
+    public final float[] rotCrawlerTrack = new float[2];
+    public final float[] prevRotCrawlerTrack = new float[2];
+    public final float[] throttleCrawlerTrack = new float[2];
+    public final float[] rotTrackRoller = new float[2];
+    public final float[] prevRotTrackRoller = new float[2];
     public float rotWheel = 0.0F;
     public float prevRotWheel = 0.0F;
     public float rotYawWheel = 0.0F;
@@ -177,7 +178,7 @@ public abstract class MCH_EntityAircraft
     protected double aircraftPitch;
     protected MCH_WeaponSet[] weapons;
     protected int[] currentWeaponID;
-    protected MCH_WeaponSet dummyWeapon;
+    protected final MCH_WeaponSet dummyWeapon;
     protected int useWeaponStat;
     protected int hitStatus;
     protected Entity lastRiddenByEntity;
@@ -328,8 +329,8 @@ public abstract class MCH_EntityAircraft
         int i1 = MathHelper.floor(aabb.minZ) - 1;
         int j1 = MathHelper.ceil(aabb.maxZ) + 1;
         WorldBorder worldborder = entityIn.world.getWorldBorder();
-        boolean flag = entityIn != null && entityIn.isOutsideBorder();
-        boolean flag1 = entityIn != null && entityIn.world.isInsideWorldBorder(entityIn);
+        boolean flag = entityIn.isOutsideBorder();
+        boolean flag1 = entityIn.world.isInsideWorldBorder(entityIn);
         IBlockState iblockstate = Blocks.STONE.getDefaultState();
         PooledMutableBlockPos blockpos = PooledMutableBlockPos.retain();
 
@@ -341,7 +342,7 @@ public abstract class MCH_EntityAircraft
                     if ((!flag2 || !flag3) && entityIn.world.isBlockLoaded(blockpos.setPos(k1, 64, l1))) {
                         for (int i2 = k; i2 < l; i2++) {
                             if (!flag2 && !flag3 || i2 != l - 1) {
-                                if (entityIn != null && flag == flag1) {
+                                if (flag == flag1) {
                                     entityIn.setOutsideBorder(!flag1);
                                 }
 
@@ -372,8 +373,7 @@ public abstract class MCH_EntityAircraft
         if (entityIn != null) {
             List<Entity> list1 = entityIn.world.getEntitiesWithinAABBExcludingEntity(entityIn, aabb.grow(0.25));
 
-            for (int i = 0; i < list1.size(); i++) {
-                Entity entity = list1.get(i);
+            for (Entity entity : list1) {
                 if (!W_Lib.isEntityLivingBase(entity) && !(entity instanceof MCH_EntitySeat) && !(entity instanceof MCH_EntityHitBox)) {
                     AxisAlignedBB axisalignedbb = entity.getCollisionBoundingBox();
                     if (axisalignedbb != null && axisalignedbb.intersects(aabb)) {
@@ -630,7 +630,7 @@ public abstract class MCH_EntityAircraft
     }
 
     public double getThrottle() {
-        return 0.05 * this.dataManager.get(THROTTLE).intValue();
+        return 0.05 * this.dataManager.get(THROTTLE);
     }
 
     public void setThrottle(double t) {
@@ -647,7 +647,7 @@ public abstract class MCH_EntityAircraft
     }
 
     public int getHP() {
-        return this.getMaxHP() - this.getDamageTaken() >= 0 ? this.getMaxHP() - this.getDamageTaken() : 0;
+        return Math.max(this.getMaxHP() - this.getDamageTaken(), 0);
     }
 
     public int getDamageTaken() {
@@ -765,7 +765,7 @@ public abstract class MCH_EntityAircraft
                 int low = val & 65535;
                 int high = val >> 16 & 65535;
                 if (high < this.brightnessHigh) {
-                    if (this.brightnessHigh > 0 && this.getCountOnUpdate() % 2 == 0) {
+                    if (this.getCountOnUpdate() % 2 == 0) {
                         this.brightnessHigh--;
                     }
                 } else if (high > this.brightnessHigh) {
@@ -1147,7 +1147,7 @@ public abstract class MCH_EntityAircraft
         }
     }
 
-    public void applyEntityCollision(Entity par1Entity) {
+    public void applyEntityCollision(@NotNull Entity par1Entity) {
     }
 
     public void addVelocity(double par1, double par3, double par5) {
@@ -1427,7 +1427,7 @@ public abstract class MCH_EntityAircraft
     }
 
     public boolean haveSearchLight() {
-        return this.getAcInfo() != null && this.getAcInfo().searchLights.size() > 0;
+        return this.getAcInfo() != null && !this.getAcInfo().searchLights.isEmpty();
     }
 
     public float getSearchLightValue(Entity entity) {
@@ -1439,8 +1439,8 @@ public abstract class MCH_EntityAircraft
                     double cx = entity.posX - pos.x;
                     double cy = entity.posY - pos.y;
                     double cz = entity.posZ - pos.z;
-                    double h = 0.0;
-                    double v = 0.0;
+                    double h;
+                    double v;
                     if (!sl.fixDir) {
                         Vec3d vv = MCH_Lib.RotVec3(0.0, 0.0, 1.0, -this.lastSearchLightYaw + sl.yaw, -this.lastSearchLightPitch + sl.pitch, -this.getRotRoll());
                         h = MCH_Lib.getPosAngle(vv.x, vv.z, cx, cz);
@@ -1465,7 +1465,7 @@ public abstract class MCH_EntityAircraft
                             value = (float) (1440.0 * (1.0 - (h + v) / angle));
                         }
 
-                        return value <= 240.0F ? value : 240.0F;
+                        return Math.min(value, 240.0F);
                     }
                 }
             }
@@ -1691,17 +1691,9 @@ public abstract class MCH_EntityAircraft
                     this.noCollisionEntities.put(this.getRidingEntity(), 60);
                 }
 
-                for (Entity key : this.noCollisionEntities.keySet()) {
-                    this.noCollisionEntities.put(key, this.noCollisionEntities.get(key) - 1);
-                }
+                this.noCollisionEntities.replaceAll((k, v) -> this.noCollisionEntities.get(k) - 1);
 
-                Iterator<Integer> key = this.noCollisionEntities.values().iterator();
-
-                while (key.hasNext()) {
-                    if (key.next() <= 0) {
-                        key.remove();
-                    }
-                }
+                this.noCollisionEntities.values().removeIf(integer -> integer <= 0);
             }
         }
     }
@@ -2242,7 +2234,7 @@ public abstract class MCH_EntityAircraft
                     this.repairCount--;
                 } else {
                     this.repairCount = 40;
-                    double hpp = this.getHP() / this.getMaxHP();
+                    double hpp = (double) (double) this.getHP() / this.getMaxHP();
                     if (hpp >= MCH_Config.AutoRepairHP.prmDouble) {
                         this.repair(this.getMaxHP() / 100);
                     }
@@ -2277,8 +2269,7 @@ public abstract class MCH_EntityAircraft
                 List<MCH_EntityAircraft> list = this.world
                         .getEntitiesWithinAABB(MCH_EntityAircraft.class, this.getCollisionBoundingBox().grow(range, range, range));
 
-                for (int i = 0; i < list.size(); i++) {
-                    MCH_EntityAircraft ac = list.get(i);
+                for (MCH_EntityAircraft ac : list) {
                     if (!W_Entity.isEqual(this, ac) && ac.getHP() < ac.getMaxHP()) {
                         ac.setDamageTaken(ac.getDamageTaken() - this.getAcInfo().repairOtherVehiclesValue);
                     }
@@ -2298,7 +2289,7 @@ public abstract class MCH_EntityAircraft
                             Entity e = s.getRiddenByEntity();
                             if (W_Lib.isEntityLivingBase(e) && !e.isDead) {
                                 PotionEffect pe = W_Entity.getActivePotionEffect(e, MobEffects.REGENERATION);
-                                if (pe == null || pe != null && pe.getDuration() < 500) {
+                                if (pe == null || pe.getDuration() < 500) {
                                     W_Entity.addPotionEffect(e, new PotionEffect(MobEffects.REGENERATION, 250, 0, true, true));
                                 }
                             }
@@ -2381,8 +2372,7 @@ public abstract class MCH_EntityAircraft
                 List<MCH_EntityAircraft> list = this.world
                         .getEntitiesWithinAABB(MCH_EntityAircraft.class, this.getCollisionBoundingBox().grow(range, range, range));
 
-                for (int i = 0; i < list.size(); i++) {
-                    MCH_EntityAircraft ac = list.get(i);
+                for (MCH_EntityAircraft ac : list) {
                     if (!W_Entity.isEqual(this, ac)) {
                         if ((!this.onGround || ac.canSupply()) && ac.getFuel() < ac.getMaxFuel()) {
                             int fc = ac.getMaxFuel() - ac.getFuel();
@@ -2534,8 +2524,7 @@ public abstract class MCH_EntityAircraft
                 List<MCH_EntityAircraft> list = this.world
                         .getEntitiesWithinAABB(MCH_EntityAircraft.class, this.getCollisionBoundingBox().grow(range, range, range));
 
-                for (int i = 0; i < list.size(); i++) {
-                    MCH_EntityAircraft ac = list.get(i);
+                for (MCH_EntityAircraft ac : list) {
                     if (!W_Entity.isEqual(this, ac) && ac.canSupply()) {
                         for (int wid = 0; wid < ac.getWeaponNum(); wid++) {
                             MCH_WeaponSet ws = ac.getWeapon(wid);
@@ -2698,7 +2687,7 @@ public abstract class MCH_EntityAircraft
         return this.entityRadar.getEnemyList();
     }
 
-    public void move(MoverType type, double x, double y, double z) {
+    public void move(@NotNull MoverType type, double x, double y, double z) {
         if (this.getAcInfo() != null) {
             this.world.profiler.startSection("move");
             double d2 = x;
@@ -2707,8 +2696,8 @@ public abstract class MCH_EntityAircraft
             List<AxisAlignedBB> list1 = getCollisionBoxes(this, this.getEntityBoundingBox().expand(x, y, z));
             AxisAlignedBB axisalignedbb = this.getEntityBoundingBox();
             if (y != 0.0) {
-                for (int k = 0; k < list1.size(); k++) {
-                    y = list1.get(k).calculateYOffset(this.getEntityBoundingBox(), y);
+                for (AxisAlignedBB axisAlignedBB : list1) {
+                    y = axisAlignedBB.calculateYOffset(this.getEntityBoundingBox(), y);
                 }
 
                 this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0, y, 0.0));
@@ -2716,8 +2705,8 @@ public abstract class MCH_EntityAircraft
 
             boolean flag = this.onGround || d3 != y && d3 < 0.0;
             if (x != 0.0) {
-                for (int j5 = 0; j5 < list1.size(); j5++) {
-                    x = list1.get(j5).calculateXOffset(this.getEntityBoundingBox(), x);
+                for (AxisAlignedBB axisAlignedBB : list1) {
+                    x = axisAlignedBB.calculateXOffset(this.getEntityBoundingBox(), x);
                 }
 
                 if (x != 0.0) {
@@ -2726,13 +2715,8 @@ public abstract class MCH_EntityAircraft
             }
 
             if (z != 0.0) {
-                for (int k5 = list1.size(); k5 < list1.size(); k5++) {
-                    z = list1.get(k5).calculateZOffset(this.getEntityBoundingBox(), z);
-                }
 
-                if (z != 0.0) {
-                    this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0, 0.0, z));
-                }
+                this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0, 0.0, z));
             }
 
             if (this.stepHeight > 0.0F && flag && (d2 != x || d4 != z)) {
@@ -2747,44 +2731,44 @@ public abstract class MCH_EntityAircraft
                 AxisAlignedBB axisalignedbb3 = axisalignedbb2.expand(d2, 0.0, d4);
                 double d8 = y;
 
-                for (int j1 = 0; j1 < list.size(); j1++) {
-                    d8 = list.get(j1).calculateYOffset(axisalignedbb3, d8);
+                for (AxisAlignedBB axisAlignedBB1 : list) {
+                    d8 = axisAlignedBB1.calculateYOffset(axisalignedbb3, d8);
                 }
 
                 axisalignedbb2 = axisalignedbb2.offset(0.0, d8, 0.0);
                 double d18 = d2;
 
-                for (int l1 = 0; l1 < list.size(); l1++) {
-                    d18 = list.get(l1).calculateXOffset(axisalignedbb2, d18);
+                for (AxisAlignedBB element : list) {
+                    d18 = element.calculateXOffset(axisalignedbb2, d18);
                 }
 
                 axisalignedbb2 = axisalignedbb2.offset(d18, 0.0, 0.0);
                 double d19 = d4;
 
-                for (int j2 = 0; j2 < list.size(); j2++) {
-                    d19 = list.get(j2).calculateZOffset(axisalignedbb2, d19);
+                for (AxisAlignedBB item : list) {
+                    d19 = item.calculateZOffset(axisalignedbb2, d19);
                 }
 
                 axisalignedbb2 = axisalignedbb2.offset(0.0, 0.0, d19);
                 AxisAlignedBB axisalignedbb4 = this.getEntityBoundingBox();
                 double d20 = y;
 
-                for (int l2 = 0; l2 < list.size(); l2++) {
-                    d20 = list.get(l2).calculateYOffset(axisalignedbb4, d20);
+                for (AxisAlignedBB value : list) {
+                    d20 = value.calculateYOffset(axisalignedbb4, d20);
                 }
 
                 axisalignedbb4 = axisalignedbb4.offset(0.0, d20, 0.0);
                 double d21 = d2;
 
-                for (int j3 = 0; j3 < list.size(); j3++) {
-                    d21 = list.get(j3).calculateXOffset(axisalignedbb4, d21);
+                for (AxisAlignedBB bb : list) {
+                    d21 = bb.calculateXOffset(axisalignedbb4, d21);
                 }
 
                 axisalignedbb4 = axisalignedbb4.offset(d21, 0.0, 0.0);
                 double d22 = d4;
 
-                for (int l3 = 0; l3 < list.size(); l3++) {
-                    d22 = list.get(l3).calculateZOffset(axisalignedbb4, d22);
+                for (AxisAlignedBB alignedBB : list) {
+                    d22 = alignedBB.calculateZOffset(axisalignedbb4, d22);
                 }
 
                 axisalignedbb4 = axisalignedbb4.offset(0.0, 0.0, d22);
@@ -2802,8 +2786,8 @@ public abstract class MCH_EntityAircraft
                     this.setEntityBoundingBox(axisalignedbb4);
                 }
 
-                for (int j4 = 0; j4 < list.size(); j4++) {
-                    y = list.get(j4).calculateYOffset(this.getEntityBoundingBox(), y);
+                for (AxisAlignedBB axisAlignedBB : list) {
+                    y = axisAlignedBB.calculateYOffset(this.getEntityBoundingBox(), y);
                 }
 
                 this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0, y, 0.0));
@@ -2868,7 +2852,7 @@ public abstract class MCH_EntityAircraft
         if (MCH_Config.Collision_DestroyBlock.prmBool) {
             for (int l = 0; l < 4; l++) {
                 int i1 = MathHelper.floor(this.posX + (l % 2 - 0.5) * 0.8);
-                int j1 = MathHelper.floor(this.posZ + (l / 2 - 0.5) * 0.8);
+                int j1 = MathHelper.floor(this.posZ + ((double) l / 2D - 0.5) * 0.8);
 
                 for (int k1 = 0; k1 < 2; k1++) {
                     int l1 = MathHelper.floor(this.posY) + k1;
@@ -2955,7 +2939,7 @@ public abstract class MCH_EntityAircraft
                 for (int x = -1; x <= 1; x++) {
                     for (int z = -1; z <= 1; z++) {
                         Block block = W_WorldFunc.getBlock(this.world, (int) (this.posX + 0.5) + x, (int) (this.posY + 0.5) - y, (int) (this.posZ + 0.5) + z);
-                        if (!b && block != null && !Block.isEqualTo(block, Blocks.AIR)) {
+                        if (!b && !Block.isEqualTo(block, Blocks.AIR)) {
                             if (seaOnly && W_Block.isEqual(block, W_Block.getWater())) {
                                 count--;
                             }
@@ -3007,10 +2991,6 @@ public abstract class MCH_EntityAircraft
 
     public AxisAlignedBB getCollisionBoundingBox() {
         return this.getEntityBoundingBox();
-    }
-
-    public boolean canBePushed() {
-        return false;
     }
 
     public double getMountedYOffset() {
@@ -3283,7 +3263,7 @@ public abstract class MCH_EntityAircraft
         }
     }
 
-    public void updatePassenger(Entity passenger) {
+    public void updatePassenger(@NotNull Entity passenger) {
         this.updateRiderPosition(passenger, this.posX, this.posY, this.posZ);
     }
 
@@ -3403,12 +3383,10 @@ public abstract class MCH_EntityAircraft
     }
 
     protected MCH_SeatInfo[] getSeatsInfo() {
-        if (this.seatsInfo != null) {
-            return this.seatsInfo;
-        } else {
+        if (this.seatsInfo == null) {
             this.newSeatsPos();
-            return this.seatsInfo;
         }
+        return this.seatsInfo;
     }
 
     protected void setSeatsInfo(MCH_SeatInfo[] v) {
@@ -3546,9 +3524,8 @@ public abstract class MCH_EntityAircraft
             }
 
             List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().grow(d, d, d));
-            if (list != null && !list.isEmpty()) {
-                for (int i = 0; i < list.size(); i++) {
-                    Entity entity = list.get(i);
+            if (!list.isEmpty()) {
+                for (Entity entity : list) {
                     if (entity instanceof EntityMinecartEmpty) {
                         if (this.dismountedUserCtrl) {
                             return;
@@ -3604,10 +3581,10 @@ public abstract class MCH_EntityAircraft
     public void onUpdate_Seats() {
         boolean b = false;
 
-        for (int i = 0; i < this.seats.length; i++) {
-            if (this.seats[i] != null) {
-                if (!this.seats[i].isDead) {
-                    this.seats[i].fallDistance = 0.0F;
+        for (MCH_EntitySeat seat : this.seats) {
+            if (seat != null) {
+                if (!seat.isDead) {
+                    seat.fallDistance = 0.0F;
                 }
             } else {
                 b = true;
@@ -3632,8 +3609,7 @@ public abstract class MCH_EntityAircraft
     public void searchSeat() {
         List<MCH_EntitySeat> list = this.world.getEntitiesWithinAABB(MCH_EntitySeat.class, this.getEntityBoundingBox().grow(60.0, 60.0, 60.0));
 
-        for (int i = 0; i < list.size(); i++) {
-            MCH_EntitySeat seat = list.get(i);
+        for (MCH_EntitySeat seat : list) {
             if (!seat.isDead
                     && seat.parentUniqueID.equals(this.getCommonUniqueId())
                     && seat.seatID >= 0
@@ -3852,7 +3828,7 @@ public abstract class MCH_EntityAircraft
             }
 
             rByEntity.setPosition(v.x, v.y, v.z);
-            this.listUnmountReserve.add(new MCH_EntityAircraft.UnmountReserve(this, rByEntity, v.x, v.y, v.z));
+            this.listUnmountReserve.add(new UnmountReserve(this, rByEntity, v.x, v.y, v.z));
         }
     }
 
@@ -3864,10 +3840,8 @@ public abstract class MCH_EntityAircraft
                 }
             }
 
-            return false;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public void ejectSeat(@Nullable Entity entity) {
@@ -3949,8 +3923,7 @@ public abstract class MCH_EntityAircraft
     public void mountMobToSeats() {
         List<EntityLivingBase> list = this.world.getEntitiesWithinAABB(W_Lib.getEntityLivingBaseClass(), this.getEntityBoundingBox().grow(3.0, 2.0, 3.0));
 
-        for (int i = 0; i < list.size(); i++) {
-            Entity entity = list.get(i);
+        for (Entity entity : list) {
             if (!(entity instanceof EntityPlayer) && entity.getRidingEntity() == null) {
                 int sid = 1;
 
@@ -3995,8 +3968,7 @@ public abstract class MCH_EntityAircraft
                 float range = info.range;
                 List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, bb.grow(range, range, range));
 
-                for (int i = 0; i < list.size(); i++) {
-                    Entity entity = list.get(i);
+                for (Entity entity : list) {
                     if (this.canRideSeatOrRack(1 + sid, entity)) {
                         if (entity instanceof MCH_IEntityCanRideAircraft) {
                             if (((MCH_IEntityCanRideAircraft) entity).canRideAircraft(this, sid, info)) {
@@ -4043,7 +4015,7 @@ public abstract class MCH_EntityAircraft
                 seat.posX = entity.posX = this.posX + v.x;
                 seat.posY = entity.posY = this.posY + v.y;
                 seat.posZ = entity.posZ = this.posZ + v.z;
-                MCH_EntityAircraft.UnmountReserve ur = new MCH_EntityAircraft.UnmountReserve(this, entity, entity.posX, entity.posY, entity.posZ);
+                MCH_EntityAircraft.UnmountReserve ur = new UnmountReserve(this, entity, entity.posX, entity.posY, entity.posZ);
                 ur.cnt = 8;
                 this.listUnmountReserve.add(ur);
                 entity.dismountRidingEntity();
@@ -4078,8 +4050,7 @@ public abstract class MCH_EntityAircraft
             AxisAlignedBB bb = this.getCollisionBoundingBox();
             List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, bb.grow(60.0, 60.0, 60.0));
 
-            for (int i = 0; i < list.size(); i++) {
-                Entity entity = list.get(i);
+            for (Entity entity : list) {
                 if (entity instanceof MCH_EntityAircraft) {
                     MCH_EntityAircraft ac = (MCH_EntityAircraft) entity;
                     if (ac.getAcInfo() != null) {
@@ -4142,8 +4113,7 @@ public abstract class MCH_EntityAircraft
                 AxisAlignedBB bb = this.getCollisionBoundingBox();
                 List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, bb.grow(60.0, 60.0, 60.0));
 
-                for (int i = 0; i < list.size(); i++) {
-                    Entity entity = list.get(i);
+                for (Entity entity : list) {
                     if (entity instanceof MCH_EntityAircraft) {
                         MCH_EntityAircraft ac = (MCH_EntityAircraft) entity;
                         if (ac.getAcInfo() != null) {
@@ -4262,10 +4232,8 @@ public abstract class MCH_EntityAircraft
     }
 
     public boolean isMountedOtherTeamEntity(@Nullable EntityLivingBase player) {
-        if (player == null) {
-            return false;
-        } else {
-            EntityLivingBase target = null;
+        if (player != null) {
+            EntityLivingBase target;
             if (this.getRiddenByEntity() instanceof EntityLivingBase) {
                 target = (EntityLivingBase) this.getRiddenByEntity();
                 if (player.getTeam() != null && target.getTeam() != null && !player.isOnSameTeam(target)) {
@@ -4282,8 +4250,8 @@ public abstract class MCH_EntityAircraft
                 }
             }
 
-            return false;
         }
+        return false;
     }
 
     public boolean isMountedEntity(int entityId) {
@@ -4324,7 +4292,7 @@ public abstract class MCH_EntityAircraft
         return ret;
     }
 
-    public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
+    public boolean processInitialInteract(@NotNull EntityPlayer player, @NotNull EnumHand hand) {
         if (this.isDestroyed()) {
             return false;
         } else if (this.getAcInfo() == null) {
@@ -4395,11 +4363,10 @@ public abstract class MCH_EntityAircraft
         } else {
             for (Integer[] a : this.getAcInfo().exclusionSeatList) {
                 if (Arrays.asList(a).contains(seatId)) {
-                    Integer[] arr$ = a;
                     int len$ = a.length;
 
                     for (int i$ = 0; i$ < len$; i$++) {
-                        int id = arr$[i$];
+                        int id = a[i$];
                         if (this.getEntityBySeatId(id) != null) {
                             return false;
                         }
@@ -4584,11 +4551,9 @@ public abstract class MCH_EntityAircraft
     public MCH_WeaponSet[] createWeapon(int seat_num) {
         this.currentWeaponID = new int[seat_num];
 
-        for (int i = 0; i < this.currentWeaponID.length; i++) {
-            this.currentWeaponID[i] = -1;
-        }
+        Arrays.fill(this.currentWeaponID, -1);
 
-        if (this.getAcInfo() != null && this.getAcInfo().weaponSetList.size() > 0 && seat_num > 0) {
+        if (this.getAcInfo() != null && !this.getAcInfo().weaponSetList.isEmpty() && seat_num > 0) {
             MCH_WeaponSet[] weaponSetArray = new MCH_WeaponSet[this.getAcInfo().weaponSetList.size()];
 
             for (int i = 0; i < this.getAcInfo().weaponSetList.size(); i++) {
@@ -5152,9 +5117,7 @@ public abstract class MCH_EntityAircraft
             Integer[] arr$ = info.weaponIds;
             int len$ = arr$.length;
 
-            for (int i$ = 0; i$ < len$; i$++) {
-                int wid = arr$[i$];
-
+            for (int wid : arr$) {
                 for (int sid = 0; sid < this.currentWeaponID.length; sid++) {
                     if (wid == this.currentWeaponID[sid] && this.getEntityBySeatId(sid) != null) {
                         isSelected = true;
@@ -5423,7 +5386,7 @@ public abstract class MCH_EntityAircraft
             }
 
             if (!this.isDestroyed() && !this.world.isRemote && this.partLandingGear != null) {
-                int blockId = 0;
+                int blockId;
                 if (!this.isLandingGearFolded() && this.partLandingGear.getFactor() <= 0.1F) {
                     blockId = MCH_Lib.getBlockIdY(this, 3, -20);
                     if ((this.getCurrentThrottle() <= 0.8F || this.onGround || blockId != 0)
@@ -5489,7 +5452,7 @@ public abstract class MCH_EntityAircraft
         MCH_EntityAircraft.WeaponBay[] wbs = new MCH_EntityAircraft.WeaponBay[this.getAcInfo().partWeaponBay.size()];
 
         for (int i = 0; i < wbs.length; i++) {
-            wbs[i] = new MCH_EntityAircraft.WeaponBay(this);
+            wbs[i] = new WeaponBay(this);
         }
 
         return wbs;
@@ -5720,7 +5683,7 @@ public abstract class MCH_EntityAircraft
         this.towedChainEntity = towedChainEntity;
     }
 
-    public void setEntityBoundingBox(AxisAlignedBB bb) {
+    public void setEntityBoundingBox(@NotNull AxisAlignedBB bb) {
         super.setEntityBoundingBox(new MCH_AircraftBoundingBox(this, bb));
     }
 
@@ -5744,7 +5707,7 @@ public abstract class MCH_EntityAircraft
         return this;
     }
 
-    public class UnmountReserve {
+    public static class UnmountReserve {
         final Entity entity;
         final double posX;
         final double posY;
@@ -5759,7 +5722,7 @@ public abstract class MCH_EntityAircraft
         }
     }
 
-    public class WeaponBay {
+    public static class WeaponBay {
         public float rot = 0.0F;
         public float prevRot = 0.0F;
 

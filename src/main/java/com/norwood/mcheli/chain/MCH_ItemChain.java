@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -106,24 +107,7 @@ public class MCH_ItemChain extends W_Item {
     @Nullable
     public static MCH_EntityChain getTowedEntityChain(Entity entity) {
         List<MCH_EntityChain> list = entity.world.getEntitiesWithinAABB(MCH_EntityChain.class, entity.getEntityBoundingBox().grow(25.0, 25.0, 25.0));
-        if (list == null) {
-            return null;
-        } else {
-            for (int i = 0; i < list.size(); i++) {
-                MCH_EntityChain chain = list.get(i);
-                if (chain.isTowingEntity()) {
-                    if (W_Entity.isEqual(chain.towEntity, entity)) {
-                        return chain;
-                    }
-
-                    if (W_Entity.isEqual(chain.towedEntity, entity)) {
-                        return chain;
-                    }
-                }
-            }
-
-            return null;
-        }
+        return null;
     }
 
     public static void setTowedEntity(ItemStack item, @Nullable Entity entity) {
@@ -160,6 +144,6 @@ public class MCH_ItemChain extends W_Item {
         return null;
     }
 
-    public void onCreated(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
+    public void onCreated(@NotNull ItemStack par1ItemStack, @NotNull World par2World, @NotNull EntityPlayer par3EntityPlayer) {
     }
 }

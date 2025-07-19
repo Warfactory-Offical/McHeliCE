@@ -130,7 +130,7 @@ public abstract class Col2Expression extends AbstractExpression {
 
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if (this.expl.getPriority() < this.prio) {
             sb.append(this.share.paren.getOperator());
             sb.append(this.expl);

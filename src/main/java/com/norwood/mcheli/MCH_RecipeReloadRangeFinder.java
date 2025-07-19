@@ -7,9 +7,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.IForgeRegistryEntry.Impl;
+import org.jetbrains.annotations.NotNull;
 
 public class MCH_RecipeReloadRangeFinder extends Impl<IRecipe> implements IRecipe {
-    public boolean matches(InventoryCrafting inv, World var2) {
+    public boolean matches(InventoryCrafting inv, @NotNull World var2) {
         int jcnt = 0;
         int ccnt = 0;
 
@@ -39,7 +40,7 @@ public class MCH_RecipeReloadRangeFinder extends Impl<IRecipe> implements IRecip
         return jcnt == 1 && ccnt > 0;
     }
 
-    public ItemStack getCraftingResult(InventoryCrafting inv) {
+    public @NotNull ItemStack getCraftingResult(@NotNull InventoryCrafting inv) {
         return new ItemStack(MCH_MOD.itemRangeFinder);
     }
 
@@ -47,7 +48,7 @@ public class MCH_RecipeReloadRangeFinder extends Impl<IRecipe> implements IRecip
         return width >= 2 && height >= 2;
     }
 
-    public ItemStack getRecipeOutput() {
+    public @NotNull ItemStack getRecipeOutput() {
         return ItemStack.EMPTY;
     }
 }

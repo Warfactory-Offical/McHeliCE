@@ -36,16 +36,13 @@ public class MCH_EntityBomb extends MCH_EntityBaseBullet {
             float dist = this.getInfo().proximityFuseDist;
             if (dist > 0.1F && this.getCountOnUpdate() % 10 == 0) {
                 List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().grow(dist, dist, dist));
-                if (list != null) {
-                    for (int i = 0; i < list.size(); i++) {
-                        Entity entity = list.get(i);
-                        if (W_Lib.isEntityLivingBase(entity) && this.canBeCollidedEntity(entity)) {
-                            RayTraceResult m = new RayTraceResult(
-                                    new Vec3d(this.posX, this.posY, this.posZ), EnumFacing.DOWN, new BlockPos(this.posX + 0.5, this.posY + 0.5, this.posZ + 0.5)
-                            );
-                            this.onImpact(m, 1.0F);
-                            break;
-                        }
+                for (Entity entity : list) {
+                    if (W_Lib.isEntityLivingBase(entity) && this.canBeCollidedEntity(entity)) {
+                        RayTraceResult m = new RayTraceResult(
+                                new Vec3d(this.posX, this.posY, this.posZ), EnumFacing.DOWN, new BlockPos(this.posX + 0.5, this.posY + 0.5, this.posZ + 0.5)
+                        );
+                        this.onImpact(m, 1.0F);
+                        break;
                     }
                 }
             }

@@ -19,13 +19,13 @@ public class ShareRuleValue extends Rule {
     public AbstractRule funcArgRule;
     public LexFactory lexFactory;
     public AbstractExpression paren;
-    protected List<String>[] opeList = new List[4];
+    protected final List<String>[] opeList = new List[4];
 
     @Override
     public Expression parse(String str) {
         if (str == null) {
             return null;
-        } else if (str.trim().length() <= 0) {
+        } else if (str.trim().isEmpty()) {
             return new ShareRuleValue.EmptyExpression();
         } else {
             ShareExpValue exp = new ShareExpValue();

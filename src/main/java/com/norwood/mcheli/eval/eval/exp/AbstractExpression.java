@@ -101,11 +101,11 @@ public abstract class AbstractExpression {
     }
 
     protected void evalArgsLong(List<Long> args) {
-        args.add(new Long(this.evalLong()));
+        args.add(this.evalLong());
     }
 
     protected void evalArgsDouble(List<Double> args) {
-        args.add(new Double(this.evalDouble()));
+        args.add(this.evalDouble());
     }
 
     protected void evalArgsObject(List<Object> args) {

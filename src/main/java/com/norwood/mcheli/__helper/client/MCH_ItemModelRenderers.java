@@ -7,11 +7,8 @@ import com.norwood.mcheli.__helper.client.renderer.item.CustomItemStackRenderer;
 import com.norwood.mcheli.__helper.client.renderer.item.IItemModelRenderer;
 import com.norwood.mcheli.__helper.info.ContentRegistries;
 import com.norwood.mcheli.__helper.info.IItemContent;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.IStateMapper;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -34,16 +31,8 @@ public class MCH_ItemModelRenderers {
     @SubscribeEvent
     static void onModelRegistryEvent(ModelRegistryEvent event) {
         registerModelLocation(Item.getItemFromBlock(MCH_MOD.blockDraftingTable));
-        ModelLoader.setCustomStateMapper(MCH_MOD.blockDraftingTable, new IStateMapper() {
-            public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn) {
-                return Maps.newHashMap();
-            }
-        });
-        ModelLoader.setCustomStateMapper(MCH_MOD.blockDraftingTableLit, new IStateMapper() {
-            public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn) {
-                return Maps.newHashMap();
-            }
-        });
+        ModelLoader.setCustomStateMapper(MCH_MOD.blockDraftingTable, blockIn -> Maps.newHashMap());
+        ModelLoader.setCustomStateMapper(MCH_MOD.blockDraftingTableLit, blockIn -> Maps.newHashMap());
         registerModelLocation(MCH_MOD.itemSpawnGunnerVsMonster);
         registerModelLocation(MCH_MOD.itemSpawnGunnerVsPlayer);
         registerModelLocation(MCH_MOD.itemRangeFinder);

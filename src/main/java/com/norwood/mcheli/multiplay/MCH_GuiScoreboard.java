@@ -7,6 +7,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
@@ -93,7 +94,7 @@ public class MCH_GuiScoreboard extends W_GuiContainer implements MCH_IGuiScorebo
         this.getCurrentScreen().keyTypedScreen(c, code);
     }
 
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         try {
             for (MCH_GuiScoreboard_Base s : this.listScreen.values()) {
                 s.mouseClickedScreen(mouseX, mouseY, mouseButton);
@@ -104,8 +105,8 @@ public class MCH_GuiScoreboard extends W_GuiContainer implements MCH_IGuiScorebo
         }
     }
 
-    protected void actionPerformed(GuiButton btn) throws IOException {
-        if (btn != null && btn.enabled) {
+    protected void actionPerformed(@NotNull GuiButton btn) throws IOException {
+        if (btn.enabled) {
             this.getCurrentScreen().actionPerformedScreen(btn);
         }
     }
@@ -137,7 +138,7 @@ public class MCH_GuiScoreboard extends W_GuiContainer implements MCH_IGuiScorebo
         this.getCurrentScreen().drawGuiContainerBackgroundLayer(par1, par2, par3);
     }
 
-    public void setWorldAndResolution(Minecraft mc, int width, int height) {
+    public void setWorldAndResolution(@NotNull Minecraft mc, int width, int height) {
         super.setWorldAndResolution(mc, width, height);
 
         for (MCH_GuiScoreboard_Base s : this.listScreen.values()) {

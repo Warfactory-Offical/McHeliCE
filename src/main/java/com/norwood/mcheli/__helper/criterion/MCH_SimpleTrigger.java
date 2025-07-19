@@ -7,6 +7,7 @@ import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -18,11 +19,11 @@ public class MCH_SimpleTrigger implements ICriterionTrigger<MCH_SimpleListeners.
         this.id = id;
     }
 
-    public ResourceLocation getId() {
+    public @NotNull ResourceLocation getId() {
         return this.id;
     }
 
-    public void addListener(PlayerAdvancements playerAdvancementsIn, Listener<MCH_SimpleListeners.SimpleInstance> listener) {
+    public void addListener(@NotNull PlayerAdvancements playerAdvancementsIn, @NotNull Listener<MCH_SimpleListeners.SimpleInstance> listener) {
         MCH_SimpleListeners listeners = this.listeners.get(playerAdvancementsIn);
         if (listeners == null) {
             listeners = new MCH_SimpleListeners(playerAdvancementsIn);
@@ -32,7 +33,7 @@ public class MCH_SimpleTrigger implements ICriterionTrigger<MCH_SimpleListeners.
         listeners.add(listener);
     }
 
-    public void removeListener(PlayerAdvancements playerAdvancementsIn, Listener<MCH_SimpleListeners.SimpleInstance> listener) {
+    public void removeListener(@NotNull PlayerAdvancements playerAdvancementsIn, @NotNull Listener<MCH_SimpleListeners.SimpleInstance> listener) {
         MCH_SimpleListeners listeners = this.listeners.get(playerAdvancementsIn);
         if (listeners != null) {
             listeners.remove(listener);
@@ -42,11 +43,11 @@ public class MCH_SimpleTrigger implements ICriterionTrigger<MCH_SimpleListeners.
         }
     }
 
-    public void removeAllListeners(PlayerAdvancements playerAdvancementsIn) {
+    public void removeAllListeners(@NotNull PlayerAdvancements playerAdvancementsIn) {
         this.listeners.remove(playerAdvancementsIn);
     }
 
-    public MCH_SimpleListeners.SimpleInstance deserializeInstance(JsonObject json, JsonDeserializationContext context) {
+    public MCH_SimpleListeners.@NotNull SimpleInstance deserializeInstance(@NotNull JsonObject json, @NotNull JsonDeserializationContext context) {
         return new MCH_SimpleListeners.SimpleInstance(this.id);
     }
 

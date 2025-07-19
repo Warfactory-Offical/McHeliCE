@@ -7,9 +7,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.IForgeRegistryEntry.Impl;
+import org.jetbrains.annotations.NotNull;
 
 public class MCH_RecipeFuel extends Impl<IRecipe> implements IRecipe {
-    public boolean matches(InventoryCrafting inv, World var2) {
+    public boolean matches(InventoryCrafting inv, @NotNull World var2) {
         int jcnt = 0;
         int ccnt = 0;
 
@@ -37,7 +38,7 @@ public class MCH_RecipeFuel extends Impl<IRecipe> implements IRecipe {
         return jcnt == 1 && ccnt > 0;
     }
 
-    public ItemStack getCraftingResult(InventoryCrafting inv) {
+    public @NotNull ItemStack getCraftingResult(InventoryCrafting inv) {
         ItemStack output = new ItemStack(MCH_MOD.itemFuel);
 
         for (int i = 0; i < inv.getSizeInventory(); i++) {
@@ -71,7 +72,7 @@ public class MCH_RecipeFuel extends Impl<IRecipe> implements IRecipe {
         return width >= 3 && height >= 3;
     }
 
-    public ItemStack getRecipeOutput() {
+    public @NotNull ItemStack getRecipeOutput() {
         return ItemStack.EMPTY;
     }
 }

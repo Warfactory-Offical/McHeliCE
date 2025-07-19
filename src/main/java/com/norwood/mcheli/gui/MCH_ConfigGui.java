@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -121,9 +122,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
         this.listControlButtons.add(this.buttonFlightSimMode);
         this.listControlButtons.add(this.buttonSwitchWeaponWheel);
 
-        for (GuiButton b : this.listControlButtons) {
-            this.buttonList.add(b);
-        }
+        this.buttonList.addAll(this.listControlButtons);
 
         this.listRenderButtons = new ArrayList<>();
         this.buttonShowHUDTP = new MCH_GuiOnOffButton(0, x1, y + 25, 150, 20, "Show HUD Third Person : ");
@@ -154,9 +153,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
         this.listRenderButtons.add(this.sliderEntityMarkerSize);
         this.listRenderButtons.add(this.sliderBlockMarkerSize);
 
-        for (GuiButton b : this.listRenderButtons) {
-            this.buttonList.add(b);
-        }
+        this.buttonList.addAll(this.listRenderButtons);
 
         this.listKeyBindingButtons = new ArrayList<>();
         this.waitKeyButtonId = 0;
@@ -195,9 +192,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
             this.keyBindingList.addItem(item);
         }
 
-        for (GuiButton b : this.listKeyBindingButtons) {
-            this.buttonList.add(b);
-        }
+        this.buttonList.addAll(this.listKeyBindingButtons);
 
         this.listDevelopButtons = new ArrayList<>();
         if (Minecraft.getMinecraft().isSingleplayer()) {
@@ -213,9 +208,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
 
         this.listDevelopButtons.add(new W_GuiButton(52, x1, y + 175, 90, 20, "Controls <<"));
 
-        for (GuiButton b : this.listDevelopButtons) {
-            this.buttonList.add(b);
-        }
+        this.buttonList.addAll(this.listDevelopButtons);
 
         this.buttonList.add(new GuiButton(100, x2, y + 175, 80, 20, "Save & Close"));
         this.buttonList.add(new GuiButton(101, x2 + 90, y + 175, 60, 20, "Cancel"));
@@ -399,7 +392,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
             if (var16 != 0) {
                 if (var16 > 0) {
                     this.keyBindingList.scrollDown(2.0F);
-                } else if (var16 < 0) {
+                } else {
                     this.keyBindingList.scrollUp(2.0F);
                 }
             }
@@ -424,7 +417,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
         super.onGuiClosed();
     }
 
-    protected void actionPerformed(GuiButton button) {
+    protected void actionPerformed(@NotNull GuiButton button) {
         try {
             super.actionPerformed(button);
             if (!button.enabled) {
@@ -488,9 +481,9 @@ public class MCH_ConfigGui extends W_GuiContainer {
                     List<Entity> list = this.mc.world.loadedEntityList;
                     Set<String> reloaded = Sets.newHashSet();
 
-                    for (int i = 0; i < list.size(); i++) {
-                        if (list.get(i) instanceof MCH_EntityAircraft) {
-                            MCH_EntityAircraft ac = (MCH_EntityAircraft) list.get(i);
+                    for (Entity value : list) {
+                        if (value instanceof MCH_EntityAircraft) {
+                            MCH_EntityAircraft ac = (MCH_EntityAircraft) value;
                             if (ac.getAcInfo() != null && !reloaded.contains(ac.getAcInfo().name)) {
                                 ContentRegistries.get(ac.getAcInfo().getClass()).reload(ac.getAcInfo().name);
                                 ac.changeType(ac.getAcInfo().name);
@@ -512,9 +505,9 @@ public class MCH_ConfigGui extends W_GuiContainer {
                         ContentRegistries.get(ac.getAcInfo().getClass()).reload(name);
                         List<Entity> entityList = this.mc.world.loadedEntityList;
 
-                        for (int ix = 0; ix < entityList.size(); ix++) {
-                            if (entityList.get(ix) instanceof MCH_EntityAircraft) {
-                                ac = (MCH_EntityAircraft) entityList.get(ix);
+                        for (Entity entity : entityList) {
+                            if (entity instanceof MCH_EntityAircraft) {
+                                ac = (MCH_EntityAircraft) entity;
                                 if (ac.getAcInfo() != null && ac.getAcInfo().name.equals(name)) {
                                     ac.changeType(name);
                                     ac.onAcInfoReloaded();

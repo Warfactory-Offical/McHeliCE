@@ -46,7 +46,7 @@ public class MCH_CurrentRecipe {
         this.descMaxPage = this.descTexture.size();
         MCH_AircraftInfo info = null;
         if (list instanceof MCH_AircraftInfoManager) {
-            info = ((MCH_AircraftInfoManager) list).getAcInfoFromItem(this.recipe);
+            info = ((MCH_AircraftInfoManager<?>) list).getAcInfoFromItem(this.recipe);
             if (info != null) {
                 this.descMaxPage++;
                 String dir = info.getDirectoryName();
@@ -183,7 +183,7 @@ public class MCH_CurrentRecipe {
                     itemName = itemName.substring(5);
                 }
 
-                if (itemName.indexOf(":") >= 0) {
+                if (itemName.contains(":")) {
                     itemName = itemName.substring(itemName.indexOf(":") + 1);
                 }
 

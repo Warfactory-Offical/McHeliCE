@@ -7,6 +7,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleBlockDust;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -23,7 +24,7 @@ public class MCH_EntityBlockDustFX extends ParticleBlockDust {
         @Nullable
         public Particle createParticle(
                 int particleID,
-                World worldIn,
+                @NotNull World worldIn,
                 double xCoordIn,
                 double yCoordIn,
                 double zCoordIn,

@@ -31,11 +31,6 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
     }
 
     @Override
-    public boolean doesGuiPauseGame() {
-        return false;
-    }
-
-    @Override
     public boolean isDrawGui(EntityPlayer player) {
         if (MCH_ItemLightWeaponBase.isHeld(player)) {
             Entity re = player.getRidingEntity();
@@ -137,19 +132,19 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
 
     void drawGuiFGM148(EntityPlayer player, MCH_WeaponGuidanceSystem gs, boolean canFire, ItemStack itemStack) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        double fac = this.width / 800.0 < this.height / 700.0 ? this.width / 800.0 : this.height / 700.0;
+        double fac = Math.min(this.width / 800.0, this.height / 700.0);
         int size = (int) (1024.0 * fac);
         size = size / 64 * 64;
         fac = size / 1024.0;
-        double left = -(size - this.width) / 2;
-        double top = -(size - this.height) / 2 - 20;
+        double left = (double) -(size - this.width) / 2;
+        double top = (double) -(size - this.height) / 2 - 20;
         double right = left + size;
         double bottom = top + size;
         Vec3d pos = MCH_ClientLightWeaponTickHandler.getMartEntityPos();
         if (gs.getLockCount() > 0) {
             int scale = scaleFactor > 0 ? scaleFactor : 2;
             if (pos == null) {
-                pos = new Vec3d(this.width / 2 * scale, this.height / 2 * scale, 0.0);
+                pos = new Vec3d((double) this.width / 2 * scale, (double) this.height / 2 * scale, 0.0);
             }
 
             double IX = 280.0 * fac;
@@ -165,7 +160,7 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
             if (player.ticksExisted % 6 >= 3) {
                 pos = MCH_ClientLightWeaponTickHandler.getMartEntityBBPos();
                 if (pos == null) {
-                    pos = new Vec3d((this.width / 2 - 65) * scale, (this.height / 2 + 50) * scale, 0.0);
+                    pos = new Vec3d(((double) this.width / 2 - 65) * scale, ((double) this.height / 2 + 50) * scale, 0.0);
                 }
 
                 double bx = pos.x / scale;
@@ -237,19 +232,18 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
             this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0, 1024.0);
         }
 
+        double x = 768.0;
+        double y;
+        double w = 890.0;
+        double h;
         if (MCH_ClientLightWeaponTickHandler.weaponMode == 1) {
-            double x = 768.0;
-            double y = 340.0;
-            double w = 890.0;
-            double h = 455.0;
-            this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0, 1024.0);
+            y = 340.0;
+            h = 455.0;
         } else {
-            double x = 768.0;
-            double y = 456.0;
-            double w = 890.0;
-            double h = 565.0;
-            this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0, 1024.0);
+            y = 456.0;
+            h = 565.0;
         }
+        this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0, 1024.0);
 
         if (!canFire) {
             double var53 = 379.0;

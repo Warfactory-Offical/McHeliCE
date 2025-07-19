@@ -7,9 +7,9 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
-import java.nio.Buffer;
 import java.nio.FloatBuffer;
 
 public abstract class W_Render<T extends Entity> extends Render<T> {
@@ -33,7 +33,7 @@ public abstract class W_Render<T extends Entity> extends Render<T> {
         super.bindTexture(new ResourceLocation(W_MOD.DOMAIN, path));
     }
 
-    protected ResourceLocation getEntityTexture(T entity) {
+    protected ResourceLocation getEntityTexture(@NotNull T entity) {
         return TEX_DEFAULT;
     }
 

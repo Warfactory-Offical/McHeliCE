@@ -28,7 +28,7 @@ public abstract class MCH_WeaponBase {
     public int interval;
     public int delayedInterval;
     public int numMode;
-    public int lockTime;
+    public final int lockTime;
     public int piercing;
     public int heatCount;
     public MCH_Cartridge cartridge;
@@ -208,9 +208,7 @@ public abstract class MCH_WeaponBase {
             double acc = this.acceleration < 4.0F ? this.acceleration : 4.0;
             double accFac = this.acceleration / acc;
             double my = v.y * this.acceleration / s;
-            if (my <= 0.0) {
-                return -1.0;
-            } else {
+            if (!(my <= 0.0)) {
                 double mx = v.x * this.acceleration / s;
                 double mz = v.z * this.acceleration / s;
                 double ls = my / this.weaponInfo.gravity;
@@ -248,8 +246,8 @@ public abstract class MCH_WeaponBase {
                     }
                 }
 
-                return -1.0;
             }
+            return -1.0;
         }
     }
 }

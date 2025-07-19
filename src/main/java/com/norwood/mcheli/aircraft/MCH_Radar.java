@@ -38,8 +38,7 @@ public class MCH_Radar {
             List<Entity> list = centerEntity.world
                     .getEntitiesWithinAABBExcludingEntity(centerEntity, centerEntity.getEntityBoundingBox().grow(range, range, range));
 
-            for (int i = 0; i < list.size(); i++) {
-                Entity entity = list.get(i);
+            for (Entity entity : list) {
                 if (entity instanceof EntityLiving) {
                     double x = entity.posX - centerEntity.posX;
                     double z = entity.posZ - centerEntity.posZ;

@@ -17,7 +17,7 @@ public abstract class MCH_ClientTickHandlerBase {
     public static float playerRotMaxYaw = 180.0F;
     public static boolean playerRotLimitYaw = false;
     private static int mouseWheel = 0;
-    protected Minecraft mc;
+    protected final Minecraft mc;
 
     public MCH_ClientTickHandlerBase(Minecraft minecraft) {
         this.mc = minecraft;

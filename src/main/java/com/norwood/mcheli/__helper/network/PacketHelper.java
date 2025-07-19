@@ -31,7 +31,7 @@ public class PacketHelper {
     }
 
     @Nullable
-    public static NBTTagCompound readCompoundTag(ByteArrayDataInput data) throws IOException {
+    public static NBTTagCompound readCompoundTag(ByteArrayDataInput data) {
         byte b0 = data.readByte();
         if (b0 == 0) {
             return null;
@@ -78,7 +78,7 @@ public class PacketHelper {
     }
 
     @Nullable
-    public static IRecipe readRecipe(ByteArrayDataInput data) throws IOException {
+    public static IRecipe readRecipe(ByteArrayDataInput data) {
         return ForgeRegistries.RECIPES.getValue(new ResourceLocation(data.readUTF()));
     }
 }

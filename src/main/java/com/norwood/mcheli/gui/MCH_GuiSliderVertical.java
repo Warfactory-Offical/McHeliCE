@@ -6,12 +6,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 public class MCH_GuiSliderVertical extends W_GuiButton {
-    public float valueMin = 0.0F;
-    public float valueMax = 1.0F;
-    public float valueStep = 0.1F;
+    public final float valueMin;
+    public float valueMax;
+    public final float valueStep;
     private float currentSlider;
     private boolean isMousePress;
 
@@ -41,7 +42,7 @@ public class MCH_GuiSliderVertical extends W_GuiButton {
         }
     }
 
-    protected void mouseDragged(Minecraft mc, int x, int y) {
+    protected void mouseDragged(@NotNull Minecraft mc, int x, int y) {
         if (this.isVisible()) {
             if (this.isMousePress) {
                 this.currentSlider = (float) (y - (this.y + 4)) / (this.height - 8);
@@ -82,7 +83,7 @@ public class MCH_GuiSliderVertical extends W_GuiButton {
         }
 
         int n = (int) (this.denormalizeValue(this.currentSlider) * d);
-        return n / d;
+        return (float) n / d;
     }
 
     public float normalizeValue(float f) {
@@ -106,7 +107,7 @@ public class MCH_GuiSliderVertical extends W_GuiButton {
         return f;
     }
 
-    public boolean mousePressed(Minecraft mc, int x, int y) {
+    public boolean mousePressed(@NotNull Minecraft mc, int x, int y) {
         if (super.mousePressed(mc, x, y)) {
             this.currentSlider = (float) (y - (this.y + 4)) / (this.height - 8);
             if (this.currentSlider < 0.0F) {
@@ -128,7 +129,7 @@ public class MCH_GuiSliderVertical extends W_GuiButton {
         this.isMousePress = false;
     }
 
-    public void drawButton(Minecraft mc, int x, int y, float partialTicks) {
+    public void drawButton(@NotNull Minecraft mc, int x, int y, float partialTicks) {
         if (this.isVisible()) {
             FontRenderer fontrenderer = mc.fontRenderer;
             mc.getTextureManager().bindTexture(new ResourceLocation("mcheli", "textures/gui/widgets.png"));

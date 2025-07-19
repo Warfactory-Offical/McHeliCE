@@ -16,7 +16,7 @@ public class MCH_DamageFactor {
     }
 
     public float getDamageFactor(Class<? extends Entity> c) {
-        return this.map.containsKey(c) ? this.map.get(c) : 1.0F;
+        return this.map.getOrDefault(c, 1.0F);
     }
 
     public float getDamageFactor(Entity e) {

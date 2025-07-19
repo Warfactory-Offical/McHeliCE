@@ -63,7 +63,7 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
 
     public static void registerModels_Bullet() {
         for (MCH_WeaponInfo wi : ContentRegistries.weapon().values()) {
-            _IModelCustom m = null;
+            _IModelCustom m;
             if (!wi.bulletModelName.isEmpty()) {
                 m = MCH_ModelManager.load("bullets", wi.bulletModelName);
                 if (m != null) {

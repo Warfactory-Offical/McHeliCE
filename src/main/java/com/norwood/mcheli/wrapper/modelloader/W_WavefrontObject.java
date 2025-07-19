@@ -37,10 +37,10 @@ public class W_WavefrontObject extends W_ModelCustom {
     private static Matcher face_V_VN_Matcher;
     private static Matcher face_V_Matcher;
     private static Matcher groupObjectMatcher;
-    public ArrayList<W_Vertex> vertices = new ArrayList<>();
-    public ArrayList<W_Vertex> vertexNormals = new ArrayList<>();
-    public ArrayList<W_TextureCoordinate> textureCoordinates = new ArrayList<>();
-    public ArrayList<W_GroupObject> groupObjects = new ArrayList<>();
+    public final ArrayList<W_Vertex> vertices = new ArrayList<>();
+    public final ArrayList<W_Vertex> vertexNormals = new ArrayList<>();
+    public final ArrayList<W_TextureCoordinate> textureCoordinates = new ArrayList<>();
+    public final ArrayList<W_GroupObject> groupObjects = new ArrayList<>();
     private W_GroupObject currentGroupObject;
     private final String fileName;
 
@@ -164,7 +164,7 @@ public class W_WavefrontObject extends W_ModelCustom {
 
     private void loadObjModel(InputStream inputStream) throws _ModelFormatException {
         BufferedReader reader = null;
-        String currentLine = null;
+        String currentLine;
         int lineCount = 0;
 
         try {
@@ -173,7 +173,7 @@ public class W_WavefrontObject extends W_ModelCustom {
             while ((currentLine = reader.readLine()) != null) {
                 lineCount++;
                 currentLine = currentLine.replaceAll("\\s+", " ").trim();
-                if (!currentLine.startsWith("#") && currentLine.length() != 0) {
+                if (!currentLine.startsWith("#") && !currentLine.isEmpty()) {
                     if (currentLine.startsWith("v ")) {
                         W_Vertex vertex = this.parseVertex(currentLine, lineCount);
                         if (vertex != null) {
@@ -196,9 +196,7 @@ public class W_WavefrontObject extends W_ModelCustom {
                         }
 
                         W_Face face = this.parseFace(currentLine, lineCount);
-                        if (face != null) {
-                            this.currentGroupObject.faces.add(face);
-                        }
+                        this.currentGroupObject.faces.add(face);
                     } else if (currentLine.startsWith("g ") | currentLine.startsWith("o ") && currentLine.charAt(2) == '$') {
                         W_GroupObject group = this.parseGroupObject(currentLine, lineCount);
                         if (group != null && this.currentGroupObject != null) {
@@ -380,12 +378,12 @@ public class W_WavefrontObject extends W_ModelCustom {
     }
 
     private W_Face parseFace(String line, int lineCount) throws _ModelFormatException {
-        W_Face face = null;
+        W_Face face;
         if (isValidFaceLine(line)) {
             face = new W_Face();
             String trimmedLine = line.substring(line.indexOf(" ") + 1);
             String[] tokens = trimmedLine.split(" ");
-            String[] subTokens = null;
+            String[] subTokens;
             if (tokens.length == 3) {
                 if (this.currentGroupObject.glDrawingMode == -1) {
                     this.currentGroupObject.glDrawingMode = 4;
@@ -481,7 +479,7 @@ public class W_WavefrontObject extends W_ModelCustom {
         W_GroupObject group = null;
         if (isValidGroupObjectLine(line)) {
             String trimmedLine = line.substring(line.indexOf(" ") + 1);
-            if (trimmedLine.length() > 0) {
+            if (!trimmedLine.isEmpty()) {
                 group = new W_GroupObject(trimmedLine);
             }
 
@@ -510,7 +508,7 @@ public class W_WavefrontObject extends W_ModelCustom {
         BufferBuilder builder = tessellator.getBuffer();
 
         for (W_GroupObject groupObject : this.groupObjects) {
-            if (groupObject.faces.size() > 0) {
+            if (!groupObject.faces.isEmpty()) {
                 for (W_Face face : groupObject.faces) {
                     for (int i = 0; i < face.vertices.length / 3; i++) {
                         W_Vertex v1 = face.vertices[i * 3];
@@ -567,7 +565,7 @@ public class W_WavefrontObject extends W_ModelCustom {
         int faceCnt = 0;
 
         for (W_GroupObject groupObject : this.groupObjects) {
-            if (groupObject.faces.size() > 0) {
+            if (!groupObject.faces.isEmpty()) {
                 for (W_Face face : groupObject.faces) {
                     if (++faceCnt >= startFace) {
                         if (faceCnt > maxLine) {

@@ -43,7 +43,7 @@ public class MCH_EntityASMissile extends MCH_EntityBaseBullet {
 
         if (this.getInfo() != null && !this.world.isRemote && this.isBomblet != 1) {
             Block block = W_WorldFunc.getBlock(this.world, (int) this.targetPosX, (int) this.targetPosY, (int) this.targetPosZ);
-            if (block != null && block.isCollidable()) {
+            if (block.isCollidable()) {
                 double dist = this.getDistance(this.targetPosX, this.targetPosY, this.targetPosZ);
                 if (dist < this.getInfo().proximityFuseDist) {
                     if (this.getInfo().bomblet > 0) {

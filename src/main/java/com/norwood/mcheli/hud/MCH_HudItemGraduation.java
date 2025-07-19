@@ -127,7 +127,7 @@ public class MCH_HudItemGraduation extends MCH_HudItem {
             line[i * 4] = azPosX;
             line[i * 4 + 1] = posY;
             line[i * 4 + 2] = azPosX;
-            line[i * 4 + 3] = posY + (y % 3 == 0 ? 10 : (y % 45 == 0 ? 15 : 5));
+            line[i * 4 + 3] = posY + (y % 3 == 0 ? 10 : 5);
             if (y % 45 == 0) {
                 this.drawCenteredString(MCH_Lib.getAzimuthStr8(y), azPosX, posY - 10, -65536);
             } else if (y % 3 == 0) {

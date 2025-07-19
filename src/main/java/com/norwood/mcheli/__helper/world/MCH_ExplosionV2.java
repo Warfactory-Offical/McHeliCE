@@ -46,12 +46,12 @@ public class MCH_ExplosionV2 extends Explosion {
     public final float size;
     public final boolean causesFire;
     public final boolean damagesTerrain;
-    public World world;
+    public final World world;
     public boolean isDestroyBlock;
     public int countSetFireEntity;
     public boolean isPlaySound;
     public boolean isInWater;
-    public EntityPlayer explodedPlayer;
+    public final EntityPlayer explodedPlayer;
     public float explosionSizeBlock;
     public MCH_DamageFactor damageFactor = null;
     private final MCH_Explosion.ExplosionResult result;
@@ -131,9 +131,9 @@ public class MCH_ExplosionV2 extends Explosion {
                                             ex + j1,
                                             ey + i1,
                                             ez + k1,
-                                            j1 / range * (explosionRNG.nextFloat() - 0.2),
+                                            (double) j1 / range * (explosionRNG.nextFloat() - 0.2),
                                             1.0 - Math.sqrt(j1 * j1 + k1 * k1) / range + explosionRNG.nextFloat() * 0.4 * range * 0.4,
-                                            k1 / range * (explosionRNG.nextFloat() - 0.2),
+                                            (double) k1 / range * (explosionRNG.nextFloat() - 0.2),
                                             explosionRNG.nextInt(range) * 3 + range
                                     );
                                     MCH_ParticlesUtil.spawnParticle(prm);
@@ -211,8 +211,7 @@ public class MCH_ExplosionV2 extends Explosion {
         List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this.exploder, W_AxisAlignedBB.getAABB(i, kx, i2, j, l1, j2));
         Vec3d vec3 = W_WorldFunc.getWorldVec3(this.world, this.x, this.y, this.z);
 
-        for (int k2 = 0; k2 < list.size(); k2++) {
-            Entity entity = list.get(k2);
+        for (Entity entity : list) {
             double d7 = entity.getDistance(this.x, this.y, this.z) / f;
             if (d7 <= 1.0) {
                 double d0 = entity.posX - this.x;
@@ -294,7 +293,7 @@ public class MCH_ExplosionV2 extends Explosion {
                 }
             }
 
-            return i / j;
+            return (double) i / j;
         } else {
             return 0.0;
         }
@@ -358,7 +357,7 @@ public class MCH_ExplosionV2 extends Explosion {
                 int lx = W_WorldFunc.getBlockId(this.world, ix, jx, kx);
                 IBlockState iblockstate = this.world.getBlockState(chunkpositionx.down());
                 Block b = iblockstate.getBlock();
-                if (lx == 0 && b != null && iblockstate.isOpaqueCube() && explosionRNG.nextInt(3) == 0) {
+                if (lx == 0 && iblockstate.isOpaqueCube() && explosionRNG.nextInt(3) == 0) {
                     W_WorldFunc.setBlock(this.world, ix, jx, kx, W_Blocks.FIRE);
                 }
             }
@@ -409,7 +408,7 @@ public class MCH_ExplosionV2 extends Explosion {
             );
         }
 
-        int es = (int) (this.size >= 4.0F ? this.size : 4.0F);
+        int es = (int) (Math.max(this.size, 4.0F));
         if (this.size <= 1.0F || cnt % es == 0) {
             if (this.world.rand.nextBoolean()) {
                 my *= 3.0;
@@ -422,14 +421,14 @@ public class MCH_ExplosionV2 extends Explosion {
             }
 
             MCH_ParticleParam prm = new MCH_ParticleParam(
-                    this.world, "explode", px, py, pz, mx, my, mz, this.size < 8.0F ? this.size * 2.0F : (this.size < 2.0F ? 2.0F : 16.0F)
+                    this.world, "explode", px, py, pz, mx, my, mz, this.size < 8.0F ? this.size * 2.0F : 16.0F
             );
             prm.r = prm.g = prm.b = 0.3F + this.world.rand.nextFloat() * 0.4F;
             prm.r += 0.1F;
             prm.g += 0.05F;
             prm.b += 0.0F;
             prm.age = 10 + this.world.rand.nextInt(30);
-            prm.age = (int) (prm.age * (this.size < 6.0F ? this.size : 6.0F));
+            prm.age = (int) (prm.age * (Math.min(this.size, 6.0F)));
             prm.age = prm.age * 2 / 3;
             prm.diffusible = true;
             MCH_ParticlesUtil.spawnParticle(prm);
@@ -459,7 +458,7 @@ public class MCH_ExplosionV2 extends Explosion {
     }
 
     public EntityLivingBase getExplosivePlacedBy() {
-        return this.explodedPlayer != null && this.explodedPlayer instanceof EntityPlayer ? this.explodedPlayer : super.getExplosivePlacedBy();
+        return this.explodedPlayer != null ? this.explodedPlayer : super.getExplosivePlacedBy();
     }
 
     public MCH_Explosion.ExplosionResult getResult() {

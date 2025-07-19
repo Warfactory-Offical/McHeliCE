@@ -2,13 +2,12 @@ package com.norwood.mcheli;
 
 import net.minecraft.util.math.MathHelper;
 
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 public class MCH_Math {
-    public static float PI = (float) Math.PI;
-    public static MCH_Math instance = new MCH_Math();
+    public static final float PI = (float) Math.PI;
+    public static final MCH_Math instance = new MCH_Math();
 
     public static MCH_Math.FVector3D newVec3D() {
         return instance.privateNewVec3D(0.0F, 0.0F, 0.0F);
@@ -152,10 +151,6 @@ public class MCH_Math {
             q.y *= 1.0F;
             q.z = q.z * SIGN(m.m21 + m.m12);
         } else {
-            if (!(q.z >= q.w) || !(q.z >= q.x) || !(q.z >= q.y)) {
-                QuatIdentity(q);
-                return false;
-            }
 
             q.w = q.w * SIGN(m.m10 - m.m01);
             q.x = q.x * SIGN(m.m20 + m.m02);
@@ -601,7 +596,7 @@ public class MCH_Math {
     }
 
     public MCH_Math.FVector3D privateNewVec3D(float x, float y, float z) {
-        MCH_Math.FVector3D v = new MCH_Math.FVector3D(this);
+        MCH_Math.FVector3D v = new FVector3D(this);
         v.x = x;
         v.y = y;
         v.z = z;
@@ -609,13 +604,13 @@ public class MCH_Math {
     }
 
     private MCH_Math.FQuat privateNewQuat() {
-        MCH_Math.FQuat q = new MCH_Math.FQuat(this);
+        MCH_Math.FQuat q = new FQuat(this);
         QuatIdentity(q);
-        return new MCH_Math.FQuat(this);
+        return new FQuat(this);
     }
 
     private MCH_Math.FMatrix privateNewMatrix() {
-        MCH_Math.FMatrix m = new MCH_Math.FMatrix(this);
+        MCH_Math.FMatrix m = new FMatrix(this);
         MatIdentity(m);
         return m;
     }
@@ -624,7 +619,7 @@ public class MCH_Math {
         return Atan2(y, x);
     }
 
-    public class FMatrix {
+    public static class FMatrix {
         float m00;
         float m10;
         float m20;
@@ -671,7 +666,7 @@ public class MCH_Math {
         }
     }
 
-    public class FQuat {
+    public static class FQuat {
         public float w;
         public float x;
         public float y;
@@ -681,7 +676,7 @@ public class MCH_Math {
         }
     }
 
-    public class FVector2D {
+    public static class FVector2D {
         public float x;
         public float y;
 
@@ -689,7 +684,7 @@ public class MCH_Math {
         }
     }
 
-    public class FVector3D {
+    public static class FVector3D {
         public float x;
         public float y;
         public float z;

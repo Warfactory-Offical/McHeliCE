@@ -59,8 +59,8 @@ public class MCH_ConfigPrm {
             String[] validVerSplit = this.validVer.split("\\.");
             if (configVerSplit.length == 3 && validVerSplit.length == 3) {
                 for (int i = 0; i < 3; i++) {
-                    int n1 = Integer.valueOf(configVerSplit[i].replaceAll("[a-zA-Z-_]", "").trim());
-                    int n2 = Integer.valueOf(validVerSplit[i].replaceAll("[a-zA-Z-_]", "").trim());
+                    int n1 = Integer.parseInt(configVerSplit[i].replaceAll("[a-zA-Z-_]", "").trim());
+                    int n2 = Integer.parseInt(validVerSplit[i].replaceAll("[a-zA-Z-_]", "").trim());
                     if (n1 > n2) {
                         return true;
                     }

@@ -123,7 +123,7 @@ public class MCH_ClientTankTickHandler extends MCH_AircraftClientTickHandler {
             this.isRiding = false;
         }
 
-        if (!this.isBeforeRiding && this.isRiding && tank != null) {
+        if (!this.isBeforeRiding && this.isRiding) {
             W_Reflection.setThirdPersonDistance(tank.thirdPersonDist);
             MCH_ViewEntityDummy.getInstance(this.mc.world).setPosition(tank.posX, tank.posY + 0.5, tank.posZ);
         } else if (this.isBeforeRiding && !this.isRiding) {
@@ -140,7 +140,7 @@ public class MCH_ClientTankTickHandler extends MCH_AircraftClientTickHandler {
 
     protected void playerControl(EntityPlayer player, MCH_EntityTank tank, boolean isPilot) {
         MCH_TankPacketPlayerControl pc = new MCH_TankPacketPlayerControl();
-        boolean send = false;
+        boolean send;
         send = this.commonPlayerControl(player, tank, isPilot, pc);
         if (tank.getAcInfo().defaultFreelook && pc.switchFreeLook > 0) {
             pc.switchFreeLook = 0;

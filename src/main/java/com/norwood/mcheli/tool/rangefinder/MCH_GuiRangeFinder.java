@@ -27,11 +27,6 @@ public class MCH_GuiRangeFinder extends MCH_Gui {
     }
 
     @Override
-    public boolean doesGuiPauseGame() {
-        return false;
-    }
-
-    @Override
     public boolean isDrawGui(EntityPlayer player) {
         return MCH_ItemRangeFinder.canUse(player);
     }
@@ -67,14 +62,14 @@ public class MCH_GuiRangeFinder extends MCH_Gui {
         GL11.glDisable(3042);
         double factor = size / 512.0;
         double SCALE_FACTOR = scaleFactor * factor;
-        double CX = this.mc.displayWidth / 2;
-        double CY = this.mc.displayHeight / 2;
+        double CX = (double) this.mc.displayWidth / 2;
+        double CY = (double) this.mc.displayHeight / 2;
         double px = (CX - 80.0 * SCALE_FACTOR) / SCALE_FACTOR;
         double py = (CY + 55.0 * SCALE_FACTOR) / SCALE_FACTOR;
         GL11.glPushMatrix();
         GL11.glScaled(factor, factor, factor);
         ItemStack item = player.getHeldItemMainhand();
-        int damage = (int) ((item.getMaxDamage() - item.getMetadata()) / item.getMaxDamage() * 100.0);
+        int damage = (int) ((double) (item.getMaxDamage() - item.getMetadata()) / item.getMaxDamage() * 100.0);
         this.drawDigit(String.format("%3d", damage), (int) px, (int) py, 13, damage > 0 ? -15663328 : -61424);
         if (damage <= 0) {
             this.drawString("Please craft", (int) px + 40, (int) py, -65536);

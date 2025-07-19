@@ -117,7 +117,7 @@ public class MCH_ClientVehicleTickHandler extends MCH_AircraftClientTickHandler 
 
     protected void playerControl(EntityPlayer player, MCH_EntityVehicle vehicle, boolean isPilot) {
         MCH_PacketVehiclePlayerControl pc = new MCH_PacketVehiclePlayerControl();
-        boolean send = false;
+        boolean send;
         send = this.commonPlayerControl(player, vehicle, isPilot, pc);
         if (this.KeyExtra.isKeyDown()) {
             if (vehicle.getTowChainEntity() != null) {

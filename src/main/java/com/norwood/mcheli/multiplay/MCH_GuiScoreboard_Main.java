@@ -4,6 +4,7 @@ import com.norwood.mcheli.MCH_ServerSettings;
 import com.norwood.mcheli.wrapper.W_GuiButton;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.List;
@@ -42,7 +43,7 @@ public class MCH_GuiScoreboard_Main extends MCH_GuiScoreboard_Base {
         }
     }
 
-    protected void keyTyped(char c, int code) throws IOException {
+    protected void keyTyped(char c, int code) {
         if (code == 1) {
             this.mc.player.closeScreen();
         }
@@ -50,16 +51,15 @@ public class MCH_GuiScoreboard_Main extends MCH_GuiScoreboard_Base {
 
     @Override
     public void updateScreenButtons(List<GuiButton> list) {
-        for (Object o : list) {
-            GuiButton button = (GuiButton) o;
-            if (button.id == 1024) {
-                button.displayString = "PVP : " + (MCH_ServerSettings.enablePVP ? "ON" : "OFF");
+        for (GuiButton o : list) {
+            if (o.id == 1024) {
+                o.displayString = "PVP : " + (MCH_ServerSettings.enablePVP ? "ON" : "OFF");
             }
         }
     }
 
-    protected void actionPerformed(GuiButton btn) throws IOException {
-        if (btn != null && btn.enabled) {
+    protected void actionPerformed(@NotNull GuiButton btn) {
+        if (btn.enabled) {
             switch (btn.id) {
                 case 256:
                     MCH_PacketIndMultiplayCommand.send(256, "");

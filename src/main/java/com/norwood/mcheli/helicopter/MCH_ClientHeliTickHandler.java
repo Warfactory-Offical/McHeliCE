@@ -142,7 +142,7 @@ public class MCH_ClientHeliTickHandler extends MCH_AircraftClientTickHandler {
 
     protected void playerControl(EntityPlayer player, MCH_EntityHeli heli, boolean isPilot) {
         MCH_HeliPacketPlayerControl pc = new MCH_HeliPacketPlayerControl();
-        boolean send = false;
+        boolean send;
         send = this.commonPlayerControl(player, heli, isPilot, pc);
         if (isPilot) {
             if (this.KeyExtra.isKeyDown()) {

@@ -93,9 +93,8 @@ public class FieldExpression extends Col2OpeExpression {
 
     @Override
     public String toString() {
-        String sb = this.expl.toString() +
+        return this.expl.toString() +
                 '.' +
                 this.expr.toString();
-        return sb;
     }
 }

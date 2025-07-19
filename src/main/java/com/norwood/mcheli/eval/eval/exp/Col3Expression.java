@@ -125,7 +125,7 @@ public abstract class Col3Expression extends AbstractExpression {
 
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if (this.exp1.getPriority() > this.prio && this.exp1.getCols() < 2) {
             sb.append(this.exp1.toString());
         } else {

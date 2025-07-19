@@ -95,7 +95,7 @@ public abstract class ContentLoader {
     }
 
     protected ContentLoader.ContentEntry makeEntry(String filepath, @Nullable IContentFactory factory, boolean reload) throws IOException {
-        List<String> lines = null;
+        List<String> lines;
 
         try (BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(this.getInputStreamByName(filepath), StandardCharsets.UTF_8))) {
             lines = bufferedreader.lines().collect(Collectors.toList());
@@ -126,13 +126,13 @@ public abstract class ContentLoader {
                 MCH_MOD.proxy.onParseStartFile(location);
             }
 
-            Object var4;
+            IContentData var4;
             try {
                 IContentData content = this.factory.create(location, this.filepath);
                 if (content != null) {
                     content.parse(this.lines, Files.getFileExtension(this.filepath), this.reload);
                     if (!content.validate()) {
-                        MCH_Logger.get().debug("Invalid content info: " + this.filepath);
+                        MCH_Logger.get().debug("Invalid content info: {}", this.filepath);
                     }
                 }
 
@@ -143,13 +143,13 @@ public abstract class ContentLoader {
                     msg = msg + "at line:" + ((ContentParseException) var8).getLineNo() + ".";
                 }
 
-                MCH_Logger.get().error(msg + " file:{}, domain:{}", location.getPath(), this.domain, var8);
+                MCH_Logger.get().error("{} file:{}, domain:{}", msg, location.getPath(), this.domain, var8);
                 var4 = null;
             } finally {
                 MCH_MOD.proxy.onParseFinishFile(location);
             }
 
-            return (IContentData) var4;
+            return var4;
         }
 
         public ContentType getType() {

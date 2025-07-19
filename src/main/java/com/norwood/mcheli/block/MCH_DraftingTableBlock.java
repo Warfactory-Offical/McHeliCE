@@ -10,7 +10,6 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,6 +24,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
@@ -44,7 +44,7 @@ public class MCH_DraftingTableBlock extends W_BlockContainer implements ITileEnt
     }
 
     public boolean onBlockActivated(
-            World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float par7, float par8, float par9
+            World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityPlayer player, @NotNull EnumHand hand, @NotNull EnumFacing facing, float par7, float par8, float par9
     ) {
         if (!world.isRemote) {
             if (!player.isSneaking()) {
@@ -72,7 +72,7 @@ public class MCH_DraftingTableBlock extends W_BlockContainer implements ITileEnt
         return true;
     }
 
-    public TileEntity createNewTileEntity(World world, int a) {
+    public TileEntity createNewTileEntity(@NotNull World world, int a) {
         return new MCH_DraftingTableTileEntity();
     }
 
@@ -80,7 +80,7 @@ public class MCH_DraftingTableBlock extends W_BlockContainer implements ITileEnt
         return new MCH_DraftingTableTileEntity();
     }
 
-    public boolean shouldCheckWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+    public boolean shouldCheckWeakPower(@NotNull IBlockState state, @NotNull IBlockAccess world, @NotNull BlockPos pos, @NotNull EnumFacing side) {
         return true;
     }
 
@@ -92,7 +92,7 @@ public class MCH_DraftingTableBlock extends W_BlockContainer implements ITileEnt
         return false;
     }
 
-    public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player) {
+    public boolean canHarvestBlock(@NotNull IBlockAccess world, @NotNull BlockPos pos, @NotNull EntityPlayer player) {
         return true;
     }
 

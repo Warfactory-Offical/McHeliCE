@@ -58,7 +58,7 @@ public class MCH_Multiplay {
     }
 
     public static boolean isMonster(Entity entity) {
-        return entity.getClass().toString().toLowerCase().indexOf("monster") >= 0;
+        return entity.getClass().toString().toLowerCase().contains("monster");
     }
 
     public static MCH_TargetType canSpotEntity(Entity user, double posX, double posY, double posZ, Entity target, boolean checkSee) {
@@ -79,9 +79,8 @@ public class MCH_Multiplay {
             if (spotter.getTeam() != null) {
                 if (target instanceof EntityPlayer) {
                     EntityPlayer player = (EntityPlayer) target;
-                    if (player.getTeam() == null) {
-                        row = 3;
-                    } else if (spotter.isOnSameTeam(player)) {
+                    player.getTeam();
+                    if (spotter.isOnSameTeam(player)) {
                         row = 4;
                     } else {
                         row = 5;
@@ -91,12 +90,13 @@ public class MCH_Multiplay {
                     EntityPlayer rideEntity = ac.getFirstMountPlayer();
                     if (rideEntity == null) {
                         row = 6;
-                    } else if (rideEntity.getTeam() == null) {
-                        row = 7;
-                    } else if (spotter.isOnSameTeam(rideEntity)) {
-                        row = 8;
                     } else {
-                        row = 9;
+                        rideEntity.getTeam();
+                        if (spotter.isOnSameTeam(rideEntity)) {
+                            row = 8;
+                        } else {
+                            row = 9;
+                        }
                     }
                 }
             } else if (target instanceof EntityPlayer || target instanceof MCH_EntityAircraft) {
@@ -158,11 +158,9 @@ public class MCH_Multiplay {
                 try {
                     EntityPlayerMP jumpPlayer = CommandTeleport.getPlayer(minecraftServer, player, playerName);
                     BlockPos cc = null;
-                    if (jumpPlayer != null && jumpPlayer.dimension == player.dimension) {
+                    if (jumpPlayer.dimension == player.dimension) {
                         cc = jumpPlayer.getBedLocation(jumpPlayer.dimension);
-                        if (cc != null) {
-                            cc = EntityPlayer.getBedSpawnLocation(minecraftServer.getWorld(jumpPlayer.dimension), cc, true);
-                        }
+                        cc = EntityPlayer.getBedSpawnLocation(minecraftServer.getWorld(jumpPlayer.dimension), cc, true);
 
                         if (cc == null) {
                             cc = jumpPlayer.world.provider.getRandomizedSpawnPoint();
@@ -196,9 +194,8 @@ public class MCH_Multiplay {
                 Collections.shuffle(list);
                 ArrayList<String> listTeam = new ArrayList<>();
 
-                for (Object o : teams) {
-                    ScorePlayerTeam team = (ScorePlayerTeam) o;
-                    listTeam.add(team.getName());
+                for (ScorePlayerTeam o : teams) {
+                    listTeam.add(o.getName());
                 }
 
                 Collections.shuffle(listTeam);
@@ -211,8 +208,8 @@ public class MCH_Multiplay {
                     }
                 }
 
-                for (int jx = 0; jx < listTeam.size(); jx++) {
-                    String exe_cmd = "teams join " + listTeam.get(jx);
+                for (String s : listTeam) {
+                    String exe_cmd = "teams join " + s;
                     String[] process_cmd = exe_cmd.split(" ");
                     if (process_cmd.length > 3) {
                         MCH_Lib.DbgLog(false, "ShuffleTeam:" + exe_cmd);
@@ -254,8 +251,7 @@ public class MCH_Multiplay {
             List<Integer> entityList = new ArrayList<>();
             Vec3d pos = new Vec3d(posX, posY, posZ);
 
-            for (int i = 0; i < list.size(); i++) {
-                Entity entity = list.get(i);
+            for (Entity entity : list) {
                 if (canSpotEntityWithFilter(targetFilter, entity)) {
                     MCH_TargetType stopType = canSpotEntity(player, posX, posY, posZ, entity, true);
                     if (stopType != MCH_TargetType.NONE && stopType != MCH_TargetType.SAME_TEAM_PLAYER) {
@@ -275,7 +271,7 @@ public class MCH_Multiplay {
                 }
             }
 
-            if (entityList.size() > 0) {
+            if (!entityList.isEmpty()) {
                 int[] entityId = new int[entityList.size()];
 
                 for (int ix = 0; ix < entityId.length; ix++) {

@@ -16,7 +16,7 @@ public class MCH_BoundingBox {
     public final float height;
     public final float damegeFactor;
     public Vec3d rotatedOffset;
-    public List<Vec3d> pos = new ArrayList<>();
+    public final List<Vec3d> pos = new ArrayList<>();
     private AxisAlignedBB boundingBox;
 
     public MCH_BoundingBox(double x, double y, double z, float w, float h, float df) {

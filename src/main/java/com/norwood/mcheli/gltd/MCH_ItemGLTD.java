@@ -11,6 +11,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class MCH_ItemGLTD extends W_Item {
         this.maxStackSize = 1;
     }
 
-    public ActionResult<ItemStack> onItemRightClick(World par2World, EntityPlayer par3EntityPlayer, EnumHand handIn) {
+    public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World par2World, EntityPlayer par3EntityPlayer, @NotNull EnumHand handIn) {
         ItemStack itemstack = par3EntityPlayer.getHeldItem(handIn);
         float f = 1.0F;
         float f1 = par3EntityPlayer.prevRotationPitch + (par3EntityPlayer.rotationPitch - par3EntityPlayer.prevRotationPitch) * f;
@@ -48,8 +49,7 @@ public class MCH_ItemGLTD extends W_Item {
                     par3EntityPlayer, par3EntityPlayer.getEntityBoundingBox().expand(vec32.x * d3, vec32.y * d3, vec32.z * d3).grow(f9, f9, f9)
             );
 
-            for (int i = 0; i < list.size(); i++) {
-                Entity entity = list.get(i);
+            for (Entity entity : list) {
                 if (entity.canBeCollidedWith()) {
                     float f10 = entity.getCollisionBorderSize();
                     AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(f10, f10, f10);

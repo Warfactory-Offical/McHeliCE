@@ -35,6 +35,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ITeleporter;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -81,11 +82,11 @@ public class MCH_EntityGunner extends EntityLivingBase {
         return this.world.getScoreboard().getTeam(this.getTeamName());
     }
 
-    public boolean isOnSameTeam(Entity entityIn) {
+    public boolean isOnSameTeam(@NotNull Entity entityIn) {
         return super.isOnSameTeam(entityIn);
     }
 
-    public ITextComponent getDisplayName() {
+    public @NotNull ITextComponent getDisplayName() {
         Team team = this.getTeam();
         return team != null ? new TextComponentString(ScorePlayerTeam.formatPlayerName(team, team.getName() + " Gunner")) : new TextComponentString("");
     }
@@ -94,7 +95,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
         return this.isCreative;
     }
 
-    public void onDeath(DamageSource source) {
+    public void onDeath(@NotNull DamageSource source) {
         super.onDeath(source);
     }
 
@@ -182,7 +183,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
     }
 
     public boolean canAttackEntity(EntityLivingBase entity, MCH_EntityAircraft ac, MCH_WeaponSet ws) {
-        boolean ret = false;
+        boolean ret;
         if (this.targetType == 0) {
             ret = entity != this
                     && !(entity instanceof EntityEnderman)
@@ -234,8 +235,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
                             list = this.world.getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(rh, rv, rh));
                         }
 
-                        for (int i = 0; i < list.size(); i++) {
-                            EntityLivingBase entity = list.get(i);
+                        for (EntityLivingBase entity : list) {
                             if (this.canAttackEntity(entity, ac, ws)
                                     && this.checkPitch(entity, ac, pos)
                                     && (nextTarget == null || this.getDistance(entity) < this.getDistance(nextTarget))
@@ -402,7 +402,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
         }
     }
 
-    public void writeEntityToNBT(NBTTagCompound nbt) {
+    public void writeEntityToNBT(@NotNull NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
         nbt.setBoolean("Creative", this.isCreative);
         nbt.setString("OwnerUUID", this.ownerUUID);
@@ -410,7 +410,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
         nbt.setInteger("TargetType", this.targetType);
     }
 
-    public void readEntityFromNBT(NBTTagCompound nbt) {
+    public void readEntityFromNBT(@NotNull NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
         this.isCreative = nbt.getBoolean("Creative");
         this.ownerUUID = nbt.getString("OwnerUUID");
@@ -419,7 +419,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
     }
 
     @Nullable
-    public Entity changeDimension(int dimensionIn, ITeleporter teleporter) {
+    public Entity changeDimension(int dimensionIn, @NotNull ITeleporter teleporter) {
         return null;
     }
 
@@ -436,7 +436,7 @@ public class MCH_EntityGunner extends EntityLivingBase {
         MCH_Lib.DbgLog(this.world, "MCH_EntityGunner.setDead type=%d :" + this, this.targetType);
     }
 
-    public boolean attackEntityFrom(DamageSource ds, float amount) {
+    public boolean attackEntityFrom(@NotNull DamageSource ds, float amount) {
         if (ds == DamageSource.OUT_OF_WORLD) {
             this.setDead();
         }
@@ -444,18 +444,18 @@ public class MCH_EntityGunner extends EntityLivingBase {
         return super.attackEntityFrom(ds, amount);
     }
 
-    public ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn) {
+    public @NotNull ItemStack getItemStackFromSlot(@NotNull EntityEquipmentSlot slotIn) {
         return ItemStack.EMPTY;
     }
 
-    public void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack) {
+    public void setItemStackToSlot(@NotNull EntityEquipmentSlot slotIn, @NotNull ItemStack stack) {
     }
 
-    public Iterable<ItemStack> getArmorInventoryList() {
+    public @NotNull Iterable<ItemStack> getArmorInventoryList() {
         return Collections.emptyList();
     }
 
-    public EnumHandSide getPrimaryHand() {
+    public @NotNull EnumHandSide getPrimaryHand() {
         return EnumHandSide.RIGHT;
     }
 }

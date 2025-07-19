@@ -30,9 +30,7 @@ public class MCH_WeaponTorpedo extends MCH_WeaponBase {
     }
 
     protected boolean shotNoGuided(MCH_WeaponParam prm) {
-        if (this.worldObj.isRemote) {
-            return true;
-        } else {
+        if (!this.worldObj.isRemote) {
             float yaw = prm.rotYaw;
             float pitch = prm.rotPitch;
             double mx = -MathHelper.sin(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI);
@@ -51,8 +49,8 @@ public class MCH_WeaponTorpedo extends MCH_WeaponBase {
             e.accelerationInWater = this.getInfo() != null ? this.getInfo().accelerationInWater : 1.0;
             this.worldObj.spawnEntity(e);
             this.playSound(prm.entity);
-            return true;
         }
+        return true;
     }
 
     protected boolean shotGuided(MCH_WeaponParam prm) {

@@ -12,6 +12,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ITeleporter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -26,11 +27,7 @@ public abstract class W_EntityContainer extends W_Entity implements IInventory {
         Arrays.fill(this.containerItems, ItemStack.EMPTY);
     }
 
-    @Override
-    protected void entityInit() {
-    }
-
-    public ItemStack getStackInSlot(int par1) {
+    public @NotNull ItemStack getStackInSlot(int par1) {
         return this.containerItems[par1];
     }
 
@@ -39,7 +36,7 @@ public abstract class W_EntityContainer extends W_Entity implements IInventory {
     }
 
     public int getUsingSlotNum() {
-        int numUsingSlot = 0;
+        int numUsingSlot;
         if (this.containerItems == null) {
             numUsingSlot = 0;
         } else {
@@ -66,26 +63,26 @@ public abstract class W_EntityContainer extends W_Entity implements IInventory {
         return true;
     }
 
-    public ItemStack decrStackSize(int par1, int par2) {
+    public @NotNull ItemStack decrStackSize(int par1, int par2) {
         if (!this.containerItems[par1].isEmpty()) {
+            ItemStack itemstack;
             if (this.containerItems[par1].getCount() <= par2) {
-                ItemStack itemstack = this.containerItems[par1];
+                itemstack = this.containerItems[par1];
                 this.containerItems[par1] = ItemStack.EMPTY;
-                return itemstack;
             } else {
-                ItemStack itemstack = this.containerItems[par1].splitStack(par2);
+                itemstack = this.containerItems[par1].splitStack(par2);
                 if (this.containerItems[par1].getCount() == 0) {
                     this.containerItems[par1] = ItemStack.EMPTY;
                 }
 
-                return itemstack;
             }
+            return itemstack;
         } else {
             return ItemStack.EMPTY;
         }
     }
 
-    public ItemStack removeStackFromSlot(int par1) {
+    public @NotNull ItemStack removeStackFromSlot(int par1) {
         if (!this.containerItems[par1].isEmpty()) {
             ItemStack itemstack = this.containerItems[par1];
             this.containerItems[par1] = ItemStack.EMPTY;
@@ -107,11 +104,11 @@ public abstract class W_EntityContainer extends W_Entity implements IInventory {
     public void onInventoryChanged() {
     }
 
-    public boolean isUsableByPlayer(EntityPlayer par1EntityPlayer) {
+    public boolean isUsableByPlayer(@NotNull EntityPlayer par1EntityPlayer) {
         return !this.isDead;
     }
 
-    public boolean isItemValidForSlot(int par1, ItemStack par2ItemStack) {
+    public boolean isItemValidForSlot(int par1, @NotNull ItemStack par2ItemStack) {
         return true;
     }
 
@@ -123,7 +120,7 @@ public abstract class W_EntityContainer extends W_Entity implements IInventory {
         return "Inventory";
     }
 
-    public String getName() {
+    public @NotNull String getName() {
         return this.getInvName();
     }
 
@@ -131,7 +128,7 @@ public abstract class W_EntityContainer extends W_Entity implements IInventory {
         return this.getInvName();
     }
 
-    public ITextComponent getDisplayName() {
+    public @NotNull ITextComponent getDisplayName() {
         return new TextComponentString(this.getInventoryName());
     }
 
@@ -179,7 +176,7 @@ public abstract class W_EntityContainer extends W_Entity implements IInventory {
         super.setDead();
     }
 
-    protected void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
+    protected void writeEntityToNBT(@NotNull NBTTagCompound par1NBTTagCompound) {
         NBTTagList nbttaglist = new NBTTagList();
 
         for (int i = 0; i < this.containerItems.length; i++) {
@@ -194,7 +191,7 @@ public abstract class W_EntityContainer extends W_Entity implements IInventory {
         par1NBTTagCompound.setTag("Items", nbttaglist);
     }
 
-    protected void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
+    protected void readEntityFromNBT(@NotNull NBTTagCompound par1NBTTagCompound) {
         NBTTagList nbttaglist = W_NBTTag.getTagList(par1NBTTagCompound, "Items", 10);
         this.containerItems = new ItemStack[this.getSizeInventory()];
         Arrays.fill(this.containerItems, ItemStack.EMPTY);
@@ -203,13 +200,13 @@ public abstract class W_EntityContainer extends W_Entity implements IInventory {
         for (int i = 0; i < nbttaglist.tagCount(); i++) {
             NBTTagCompound nbttagcompound1 = W_NBTTag.tagAt(nbttaglist, i);
             int j = nbttagcompound1.getByte("Slot") & 255;
-            if (j >= 0 && j < this.containerItems.length) {
+            if (j < this.containerItems.length) {
                 this.containerItems[j] = new ItemStack(nbttagcompound1);
             }
         }
     }
 
-    public Entity changeDimension(int dimensionIn, ITeleporter teleporter) {
+    public Entity changeDimension(int dimensionIn, @NotNull ITeleporter teleporter) {
         this.dropContentsWhenDead = false;
         return super.changeDimension(dimensionIn, teleporter);
     }
@@ -223,10 +220,10 @@ public abstract class W_EntityContainer extends W_Entity implements IInventory {
         }
     }
 
-    public void openInventory(EntityPlayer player) {
+    public void openInventory(@NotNull EntityPlayer player) {
     }
 
-    public void closeInventory(EntityPlayer player) {
+    public void closeInventory(@NotNull EntityPlayer player) {
     }
 
     public void markDirty() {

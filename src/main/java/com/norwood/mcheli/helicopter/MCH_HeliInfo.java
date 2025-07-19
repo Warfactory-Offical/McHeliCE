@@ -12,7 +12,7 @@ import java.util.List;
 public class MCH_HeliInfo extends MCH_AircraftInfo {
     public MCH_ItemHeli item = null;
     public boolean isEnableFoldBlade;
-    public List<MCH_HeliInfo.Rotor> rotorList;
+    public final List<MCH_HeliInfo.Rotor> rotorList;
 
     public MCH_HeliInfo(AddonResourceLocation location, String path) {
         super(location, path);
@@ -67,7 +67,7 @@ public class MCH_HeliInfo extends MCH_AircraftInfo {
             String[] s = data.split("\\s*,\\s*");
             if (s.length == 8 || s.length == 9) {
                 boolean cfb = s.length == 9 && this.toBool(s[8]);
-                MCH_HeliInfo.Rotor e = new MCH_HeliInfo.Rotor(
+                MCH_HeliInfo.Rotor e = new Rotor(
                         this,
                         this.toInt(s[0]),
                         this.toInt(s[1]),
@@ -101,7 +101,7 @@ public class MCH_HeliInfo extends MCH_AircraftInfo {
         MCH_MOD.proxy.registerModelsHeli(this, true);
     }
 
-    public class Rotor extends MCH_AircraftInfo.DrawnPart {
+    public static class Rotor extends MCH_AircraftInfo.DrawnPart {
         public final int bladeNum;
         public final int bladeRot;
         public final boolean haveFoldFunc;

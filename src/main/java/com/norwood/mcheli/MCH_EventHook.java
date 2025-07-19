@@ -132,13 +132,8 @@ public class MCH_EventHook extends W_EventHook {
             return;
         }
 
-        if (selfDamage) {
-            aircraft.attackEntityFrom(event.getSource(), damage * 2.0F);
-            event.setAmount(damage * factor);
-        } else {
-            aircraft.attackEntityFrom(event.getSource(), damage * 2.0F);
-            event.setAmount(damage * factor);
-        }
+        aircraft.attackEntityFrom(event.getSource(), damage * 2.0F);
+        event.setAmount(damage * factor);
     }
 
 
@@ -153,12 +148,9 @@ public class MCH_EventHook extends W_EventHook {
 
         if (ac == null) {
             List<MCH_EntityAircraft> list = entity.world.getEntitiesWithinAABB(MCH_EntityAircraft.class, entity.getEntityBoundingBox().grow(50.0, 50.0, 50.0));
-            if (list != null) {
-                for (int i = 0; i < list.size(); i++) {
-                    MCH_EntityAircraft tmp = list.get(i);
-                    if (tmp.isMountedEntity(entity)) {
-                        return tmp;
-                    }
+            for (MCH_EntityAircraft tmp : list) {
+                if (tmp.isMountedEntity(entity)) {
+                    return tmp;
                 }
             }
         }

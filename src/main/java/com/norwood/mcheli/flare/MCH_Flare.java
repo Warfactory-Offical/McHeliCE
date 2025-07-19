@@ -33,12 +33,12 @@ public class MCH_Flare {
         if (FLARE_DATA == null) {
             int delay = w.isRemote ? 50 : 0;
             FLARE_DATA = new MCH_Flare.FlareParam[11];
-            FLARE_DATA[1] = new MCH_Flare.FlareParam(1, 3, 200 + delay, 100, 16);
-            FLARE_DATA[2] = new MCH_Flare.FlareParam(3, 5, 300 + delay, 200, 16);
-            FLARE_DATA[3] = new MCH_Flare.FlareParam(2, 3, 200 + delay, 100, 16);
-            FLARE_DATA[4] = new MCH_Flare.FlareParam(1, 3, 200 + delay, 100, 16);
-            FLARE_DATA[5] = new MCH_Flare.FlareParam(2, 3, 200 + delay, 100, 16);
-            FLARE_DATA[10] = new MCH_Flare.FlareParam(8, 1, 250 + delay, 60, 1);
+            FLARE_DATA[1] = new FlareParam(1, 3, 200 + delay, 100, 16);
+            FLARE_DATA[2] = new FlareParam(3, 5, 300 + delay, 200, 16);
+            FLARE_DATA[3] = new FlareParam(2, 3, 200 + delay, 100, 16);
+            FLARE_DATA[4] = new FlareParam(1, 3, 200 + delay, 100, 16);
+            FLARE_DATA[5] = new FlareParam(2, 3, 200 + delay, 100, 16);
+            FLARE_DATA[10] = new FlareParam(8, 1, 250 + delay, 60, 1);
             FLARE_DATA[0] = FLARE_DATA[1];
             FLARE_DATA[6] = FLARE_DATA[1];
             FLARE_DATA[7] = FLARE_DATA[1];
@@ -187,7 +187,7 @@ public class MCH_Flare {
             ty += this.aircraft.motionY / 2.0;
             tz += this.aircraft.motionZ;
             if (type == 10) {
-                r += 360 / num / 2 + i * (360 / num);
+                r += (double) 360 / num / 2 + i * ((double) 360 / num);
                 r *= Math.PI / 180.0;
                 tx = -Math.sin(r) * 2.0;
                 tz = Math.cos(r) * 2.0;
@@ -210,7 +210,7 @@ public class MCH_Flare {
         }
     }
 
-    class FlareParam {
+    static class FlareParam {
         public final int num;
         public final int interval;
         public final int tickWait;

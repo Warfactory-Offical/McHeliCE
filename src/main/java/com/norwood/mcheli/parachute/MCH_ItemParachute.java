@@ -7,6 +7,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 public class MCH_ItemParachute extends W_Item {
     public MCH_ItemParachute(int par1) {
@@ -14,7 +15,7 @@ public class MCH_ItemParachute extends W_Item {
         this.maxStackSize = 1;
     }
 
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn) {
+    public @NotNull ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, @NotNull EnumHand handIn) {
         ItemStack itemstack = player.getHeldItem(handIn);
         if (!world.isRemote && player.getRidingEntity() == null && !player.onGround) {
             double x = player.posX + 0.5;

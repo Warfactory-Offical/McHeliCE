@@ -7,7 +7,7 @@ import net.minecraft.util.math.Vec3d;
 import java.util.Arrays;
 import java.util.List;
 
-class _Face implements DebugInfoObject {
+public class _Face implements DebugInfoObject {
     private final int[] verticesID;
     private final _Vertex[] vertices;
     private final _Vertex[] vertexNormals;

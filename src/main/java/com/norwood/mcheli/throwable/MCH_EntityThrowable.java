@@ -18,6 +18,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IThrowableEntity;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -68,7 +69,7 @@ public class MCH_EntityThrowable extends EntityThrowable implements IThrowableEn
         this.dataManager.register(INFO_NAME, "");
     }
 
-    public void shoot(Entity entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity, float inaccuracy) {
+    public void shoot(@NotNull Entity entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity, float inaccuracy) {
         float f = 0.4F;
         this.motionX = -MathHelper.sin(rotationYawIn / 180.0F * (float) Math.PI) * MathHelper.cos(rotationPitchIn / 180.0F * (float) Math.PI) * f;
         this.motionZ = MathHelper.cos(rotationYawIn / 180.0F * (float) Math.PI) * MathHelper.cos(rotationPitchIn / 180.0F * (float) Math.PI) * f;
@@ -91,7 +92,7 @@ public class MCH_EntityThrowable extends EntityThrowable implements IThrowableEn
             Material mat = W_WorldFunc.getBlockMaterial(
                     this.world, (int) (this.posX + 0.5), (int) this.posY, (int) (this.posZ + 0.5)
             );
-            if (block != null && mat == Material.WATER) {
+            if (mat == Material.WATER) {
                 this.motionY = this.motionY + this.getInfo().gravityInWater;
             } else {
                 this.motionY = this.motionY + this.getInfo().gravity;
@@ -250,7 +251,7 @@ public class MCH_EntityThrowable extends EntityThrowable implements IThrowableEn
         }
     }
 
-    protected void onImpact(RayTraceResult m) {
+    protected void onImpact(@NotNull RayTraceResult m) {
         if (this.getInfo() != null) {
             this.lastOnImpact = m;
         }

@@ -24,8 +24,8 @@ public class MCH_RenderVehicle extends MCH_RenderAircraft<MCH_EntityVehicle> {
 
     @Override
     public void renderAircraft(MCH_EntityAircraft entity, double posX, double posY, double posZ, float yaw, float pitch, float roll, float tickTime) {
-        MCH_VehicleInfo vehicleInfo = null;
-        if (entity != null && entity instanceof MCH_EntityVehicle) {
+        MCH_VehicleInfo vehicleInfo;
+        if (entity instanceof MCH_EntityVehicle) {
             MCH_EntityVehicle vehicle = (MCH_EntityVehicle) entity;
             vehicleInfo = vehicle.getVehicleInfo();
             if (vehicleInfo != null) {

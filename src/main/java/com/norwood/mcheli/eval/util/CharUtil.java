@@ -6,7 +6,7 @@ public class CharUtil {
     }
 
     public static String escapeString(String str, int pos, int len) {
-        StringBuffer sb = new StringBuffer(len);
+        StringBuilder sb = new StringBuilder(len);
         int end_pos = pos + len;
 
         for (int[] ret = new int[1]; pos < end_pos; pos += ret[0]) {

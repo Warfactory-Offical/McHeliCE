@@ -12,6 +12,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
@@ -72,11 +73,11 @@ public class MCH_RenderGLTD extends W_Render<MCH_EntityGLTD> {
         GL11.glPopMatrix();
     }
 
-    public boolean shouldRender(MCH_EntityGLTD livingEntity, ICamera camera, double camX, double camY, double camZ) {
+    public boolean shouldRender(@NotNull MCH_EntityGLTD livingEntity, @NotNull ICamera camera, double camX, double camY, double camZ) {
         return true;
     }
 
-    protected ResourceLocation getEntityTexture(MCH_EntityGLTD entity) {
+    protected ResourceLocation getEntityTexture(@NotNull MCH_EntityGLTD entity) {
         return TEX_DEFAULT;
     }
 }

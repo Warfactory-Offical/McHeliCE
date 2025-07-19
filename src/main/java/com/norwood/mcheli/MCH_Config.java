@@ -443,17 +443,17 @@ public class MCH_Config {
                 ReplaceRenderViewEntity,
                 null
         };
-        DamageVsEntity = new MCH_Config.DamageFactor(this, "DamageVsEntity");
-        DamageVsLiving = new MCH_Config.DamageFactor(this, "DamageVsLiving");
-        DamageVsPlayer = new MCH_Config.DamageFactor(this, "DamageVsPlayer");
-        DamageVsMCHeliAircraft = new MCH_Config.DamageFactor(this, "DamageVsMCHeliAircraft");
-        DamageVsMCHeliTank = new MCH_Config.DamageFactor(this, "DamageVsMCHeliTank");
-        DamageVsMCHeliVehicle = new MCH_Config.DamageFactor(this, "DamageVsMCHeliVehicle");
-        DamageVsMCHeliOther = new MCH_Config.DamageFactor(this, "DamageVsMCHeliOther");
-        DamageAircraftByExternal = new MCH_Config.DamageFactor(this, "DamageMCHeliAircraftByExternal");
-        DamageTankByExternal = new MCH_Config.DamageFactor(this, "DamageMCHeliTankByExternal");
-        DamageVehicleByExternal = new MCH_Config.DamageFactor(this, "DamageMCHeliVehicleByExternal");
-        DamageOtherByExternal = new MCH_Config.DamageFactor(this, "DamageMCHeliOtherByExternal");
+        DamageVsEntity = new DamageFactor(this, "DamageVsEntity");
+        DamageVsLiving = new DamageFactor(this, "DamageVsLiving");
+        DamageVsPlayer = new DamageFactor(this, "DamageVsPlayer");
+        DamageVsMCHeliAircraft = new DamageFactor(this, "DamageVsMCHeliAircraft");
+        DamageVsMCHeliTank = new DamageFactor(this, "DamageVsMCHeliTank");
+        DamageVsMCHeliVehicle = new DamageFactor(this, "DamageVsMCHeliVehicle");
+        DamageVsMCHeliOther = new DamageFactor(this, "DamageVsMCHeliOther");
+        DamageAircraftByExternal = new DamageFactor(this, "DamageMCHeliAircraftByExternal");
+        DamageTankByExternal = new DamageFactor(this, "DamageMCHeliTankByExternal");
+        DamageVehicleByExternal = new DamageFactor(this, "DamageMCHeliVehicleByExternal");
+        DamageOtherByExternal = new DamageFactor(this, "DamageMCHeliOtherByExternal");
         DamageFactorList = new MCH_Config.DamageFactor[]{
                 DamageVsEntity,
                 DamageVsLiving,
@@ -496,11 +496,9 @@ public class MCH_Config {
     }
 
     public static float applyDamageVsEntity(Entity target, DamageSource ds, float damage) {
-        if (target == null) {
-            return damage;
-        } else {
+        if (target != null) {
             String targetName = target.getClass().toString();
-            List<MCH_Config.DamageEntity> list;
+            List<DamageEntity> list;
             if (target instanceof MCH_EntityHeli || target instanceof MCP_EntityPlane) {
                 list = DamageVsMCHeliAircraft.list;
             } else if (target instanceof MCH_EntityTank) {
@@ -517,14 +515,14 @@ public class MCH_Config {
                 list = DamageVsEntity.list;
             }
 
-            for (MCH_Config.DamageEntity de : list) {
+            for (DamageEntity de : list) {
                 if (de.name.isEmpty() || targetName.indexOf(de.name) > 0) {
                     damage = (float) (damage * de.factor);
                 }
             }
 
-            return damage;
         }
+        return damage;
     }
 
     public static List<Block> getBreakableBlockListFromType(int n) {
@@ -615,18 +613,18 @@ public class MCH_Config {
         }
 
         for (MCH_ConfigPrm p : CommandPermission) {
-            MCH_Config.CommandPermission cpm = new MCH_Config.CommandPermission(this, p.prmString);
+            MCH_Config.CommandPermission cpm = new CommandPermission(this, p.prmString);
             if (!cpm.name.isEmpty()) {
                 CommandPermissionList.add(cpm);
             }
         }
 
-        if (IgnoreBulletHitList.size() <= 0) {
+        if (IgnoreBulletHitList.isEmpty()) {
             IgnoreBulletHitList.add("flansmod.common.guns.EntityBullet");
             IgnoreBulletHitList.add("flansmod.common.guns.EntityGrenade");
         }
 
-        boolean isNoDamageVsSetting = DamageVs.size() <= 0;
+        boolean isNoDamageVsSetting = DamageVs.isEmpty();
 
         for (MCH_ConfigPrm px : DamageVs) {
             for (MCH_Config.DamageFactor df : DamageFactorList) {
@@ -637,7 +635,7 @@ public class MCH_Config {
         }
 
         for (MCH_Config.DamageFactor dfx : DamageFactorList) {
-            if (dfx.list.size() <= 0) {
+            if (dfx.list.isEmpty()) {
                 DamageVs.add(new MCH_ConfigPrm(dfx.itemName, "1.0"));
             } else {
                 boolean foundCommon = false;
@@ -667,9 +665,9 @@ public class MCH_Config {
             HitBoxDelayTick.prmInt = 50;
         }
 
-        PitchLimitMax.prmInt = PitchLimitMax.prmInt < 0 ? 0 : (PitchLimitMax.prmInt > 80 ? 80 : PitchLimitMax.prmInt);
-        PitchLimitMin.prmInt = PitchLimitMin.prmInt > 0 ? 0 : (PitchLimitMin.prmInt < -80 ? -80 : PitchLimitMin.prmInt);
-        RollLimit.prmInt = RollLimit.prmInt < 0 ? 0 : (RollLimit.prmInt > 80 ? 80 : RollLimit.prmInt);
+        PitchLimitMax.prmInt = PitchLimitMax.prmInt < 0 ? 0 : (Math.min(PitchLimitMax.prmInt, 80));
+        PitchLimitMin.prmInt = PitchLimitMin.prmInt > 0 ? 0 : (Math.max(PitchLimitMin.prmInt, -80));
+        RollLimit.prmInt = RollLimit.prmInt < 0 ? 0 : (Math.min(RollLimit.prmInt, 80));
         if (isNoDamageVsSetting) {
             DamageVs.add(new MCH_ConfigPrm("DamageVsEntity", "3.0, flansmod"));
             DamageVs.add(new MCH_ConfigPrm("DamageMCHeliAircraftByExternal", "0.5, flansmod"));
@@ -680,15 +678,15 @@ public class MCH_Config {
     public MCH_Config.DamageEntity newDamageEntity(String s) {
         String[] splt = s.split("\\s*,\\s*");
         if (splt.length == 1) {
-            return new MCH_Config.DamageEntity(this, Double.parseDouble(splt[0]), "");
+            return new DamageEntity(this, Double.parseDouble(splt[0]), "");
         } else {
-            return splt.length == 2 ? new MCH_Config.DamageEntity(this, Double.parseDouble(splt[0]), splt[1]) : new MCH_Config.DamageEntity(this, 1.0, "");
+            return splt.length == 2 ? new DamageEntity(this, Double.parseDouble(splt[0]), splt[1]) : new DamageEntity(this, 1.0, "");
         }
     }
 
     public int toInt255(String s) {
-        int a = Integer.valueOf(s);
-        return a > 255 ? 255 : (a < 0 ? 0 : a);
+        int a = Integer.parseInt(s);
+        return a > 255 ? 255 : (Math.max(a, 0));
     }
 
     public void load() {
@@ -798,7 +796,7 @@ public class MCH_Config {
 
         pw.println();
         pw.println(";CommandPermission = commandName(eg, modlist, status, fill...):playerName1, playerName2, playerName3...");
-        if (CommandPermission.size() == 0) {
+        if (CommandPermission.isEmpty()) {
             pw.println(";CommandPermission = modlist :example1, example2");
             pw.println(";CommandPermission = status :  example2");
         }
@@ -810,7 +808,7 @@ public class MCH_Config {
         pw.println();
         pw.println();
         pw.println("[Key config]");
-        pw.println("http://minecraft.gamepedia.com/Key_codes");
+        pw.println("https://minecraft.gamepedia.com/Key_codes");
         pw.println();
 
         for (MCH_ConfigPrm px : KeyConfig) {
@@ -818,7 +816,7 @@ public class MCH_Config {
         }
     }
 
-    public class CommandPermission {
+    public static class CommandPermission {
         public final String name;
         public final String[] players;
 
@@ -834,7 +832,7 @@ public class MCH_Config {
         }
     }
 
-    class DamageEntity {
+    public static class DamageEntity {
         public final double factor;
         public final String name;
 
@@ -844,9 +842,9 @@ public class MCH_Config {
         }
     }
 
-    class DamageFactor {
+    public static class DamageFactor {
         public final String itemName;
-        public List<MCH_Config.DamageEntity> list;
+        public final List<MCH_Config.DamageEntity> list;
 
         public DamageFactor(MCH_Config paramMCH_Config, String itemName) {
             this.itemName = itemName;

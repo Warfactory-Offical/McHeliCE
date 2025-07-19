@@ -95,23 +95,23 @@ public class MCH_AircraftPacketHandler {
                     Entity e = player.world.getEntityByID(status.entityID_Ac);
                     if (e instanceof MCH_EntityAircraft) {
                         MCH_EntityAircraft ac = (MCH_EntityAircraft) e;
-                        String msg = "onPacketNotifyAmmoNum:";
-                        msg = msg + (ac.getAcInfo() != null ? ac.getAcInfo().displayName : "null") + ":";
+                        StringBuilder msg = new StringBuilder("onPacketNotifyAmmoNum:");
+                        msg.append(ac.getAcInfo() != null ? ac.getAcInfo().displayName : "null").append(":");
                         if (status.all) {
-                            msg = msg + "All=true, Num=" + status.num;
+                            msg.append("All=true, Num=").append(status.num);
 
                             for (int i = 0; i < ac.getWeaponNum() && i < status.num; i++) {
                                 ac.getWeapon(i).setAmmoNum(status.ammo[i]);
                                 ac.getWeapon(i).setRestAllAmmoNum(status.restAmmo[i]);
-                                msg = msg + ", [" + status.ammo[i] + "/" + status.restAmmo[i] + "]";
+                                msg.append(", [").append(status.ammo[i]).append("/").append(status.restAmmo[i]).append("]");
                             }
 
-                            MCH_Lib.DbgLog(e.world, msg);
+                            MCH_Lib.DbgLog(e.world, msg.toString());
                         } else if (status.weaponID < ac.getWeaponNum()) {
-                            msg = msg + "All=false, WeaponID=" + status.weaponID + ", " + status.ammo[0] + ", " + status.restAmmo[0];
+                            msg.append("All=false, WeaponID=").append(status.weaponID).append(", ").append(status.ammo[0]).append(", ").append(status.restAmmo[0]);
                             ac.getWeapon(status.weaponID).setAmmoNum(status.ammo[0]);
                             ac.getWeapon(status.weaponID).setRestAllAmmoNum(status.restAmmo[0]);
-                            MCH_Lib.DbgLog(e.world, msg);
+                            MCH_Lib.DbgLog(e.world, msg.toString());
                         } else {
                             MCH_Lib.DbgLog(e.world, "Error:" + status.weaponID);
                         }
@@ -182,23 +182,23 @@ public class MCH_AircraftPacketHandler {
             status.readData(data);
             if (status.entityID_AC > 0) {
                 scheduler.addScheduledTask(() -> {
-                    String msg = "onPacketStatusResponse:EID=" + status.entityID_AC + ":";
+                    StringBuilder msg = new StringBuilder("onPacketStatusResponse:EID=" + status.entityID_AC + ":");
                     Entity e = player.world.getEntityByID(status.entityID_AC);
                     if (e instanceof MCH_EntityAircraft) {
                         MCH_EntityAircraft ac = (MCH_EntityAircraft) e;
                         if (status.seatNum > 0 && status.weaponIDs != null && status.weaponIDs.length == status.seatNum) {
-                            msg = msg + "seatNum=" + status.seatNum + ":";
+                            msg.append("seatNum=").append(status.seatNum).append(":");
 
                             for (int i = 0; i < status.seatNum; i++) {
                                 ac.updateWeaponID(i, status.weaponIDs[i]);
-                                msg = msg + "[" + i + "," + status.weaponIDs[i] + "]";
+                                msg.append("[").append(i).append(",").append(status.weaponIDs[i]).append("]");
                             }
                         } else {
-                            msg = msg + "Error seatNum=" + status.seatNum;
+                            msg.append("Error seatNum=").append(status.seatNum);
                         }
                     }
 
-                    MCH_Lib.DbgLog(true, msg);
+                    MCH_Lib.DbgLog(true, msg.toString());
                 });
             }
         }
@@ -280,10 +280,10 @@ public class MCH_AircraftPacketHandler {
 
             scheduler.addScheduledTask(() -> {
                 Entity e = player.world.getEntityByID(packet.entityID_Ac);
-                if (e != null && e instanceof MCH_EntityAircraft) {
+                if (e instanceof MCH_EntityAircraft) {
                     MCH_EntityAircraft ac = (MCH_EntityAircraft) e;
                     e = player.world.getEntityByID(packet.entityID_TVMissile);
-                    if (e != null && e instanceof MCH_EntityTvMissile) {
+                    if (e instanceof MCH_EntityTvMissile) {
                         ((MCH_EntityTvMissile) e).shootingEntity = player;
                         ac.setTVMissile((MCH_EntityTvMissile) e);
                     }
@@ -331,7 +331,7 @@ public class MCH_AircraftPacketHandler {
             MCH_PacketSeatPlayerControl pc = new MCH_PacketSeatPlayerControl();
             pc.readData(data);
             scheduler.addScheduledTask(() -> {
-                MCH_EntityAircraft ac = null;
+                MCH_EntityAircraft ac;
                 if (player.getRidingEntity() instanceof MCH_EntitySeat) {
                     MCH_EntitySeat seat = (MCH_EntitySeat) player.getRidingEntity();
                     ac = seat.getParent();
@@ -401,9 +401,9 @@ public class MCH_AircraftPacketHandler {
                             for (WorldServer world : MCH_Utils.getServer().worlds) {
                                 List<Entity> list = world.loadedEntityList;
 
-                                for (int ix = 0; ix < list.size(); ix++) {
-                                    if (list.get(ix) instanceof MCH_EntityAircraft) {
-                                        ac = (MCH_EntityAircraft) list.get(ix);
+                                for (Entity entity : list) {
+                                    if (entity instanceof MCH_EntityAircraft) {
+                                        ac = (MCH_EntityAircraft) entity;
                                         if (ac.getAcInfo() != null && ac.getAcInfo().name.equals(name)) {
                                             ac.changeType(name);
                                             ac.createSeats(UUID.randomUUID().toString());
@@ -420,9 +420,9 @@ public class MCH_AircraftPacketHandler {
                         for (WorldServer world : MCH_Utils.getServer().worlds) {
                             List<Entity> list = world.loadedEntityList;
 
-                            for (int i = 0; i < list.size(); i++) {
-                                if (list.get(i) instanceof MCH_EntityAircraft) {
-                                    MCH_EntityAircraft entityAircraft = (MCH_EntityAircraft) list.get(i);
+                            for (Entity entity : list) {
+                                if (entity instanceof MCH_EntityAircraft) {
+                                    MCH_EntityAircraft entityAircraft = (MCH_EntityAircraft) entity;
                                     if (entityAircraft.getAcInfo() != null) {
                                         entityAircraft.changeType(entityAircraft.getAcInfo().name);
                                         entityAircraft.createSeats(UUID.randomUUID().toString());

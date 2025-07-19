@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 
 public abstract class W_TickHandler implements ITickHandler {
-    protected Minecraft mc;
+    protected final Minecraft mc;
 
     public W_TickHandler(Minecraft m) {
         this.mc = m;

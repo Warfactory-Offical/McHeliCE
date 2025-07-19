@@ -39,12 +39,12 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
     public int round;
     public int suppliedNum;
     public int maxAmmo;
-    public List<MCH_WeaponInfo.RoundItem> roundItems;
+    public final List<MCH_WeaponInfo.RoundItem> roundItems;
     public int soundDelay;
     public float soundVolume;
     public float soundPitch;
     public float soundPitchRandom;
-    public int soundPattern;
+    public final int soundPattern;
     public int lockTime;
     public boolean ridableOnly;
     public float proximityFuseDist;
@@ -294,11 +294,11 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
             this.suppliedNum = this.toInt(data, 1, 30000);
         } else if (item.equalsIgnoreCase("Item")) {
             String[] s = data.split("\\s*,\\s*");
-            if (s.length >= 2 && s[1].length() > 0 && this.roundItems.size() < 3) {
+            if (s.length >= 2 && !s[1].isEmpty() && this.roundItems.size() < 3) {
                 int n = this.toInt(s[0], 1, 64);
                 if (n > 0) {
                     int damage = s.length >= 3 ? this.toInt(s[2], 0, 100000000) : 0;
-                    this.roundItems.add(new MCH_WeaponInfo.RoundItem(n, s[1].toLowerCase().trim(), damage));
+                    this.roundItems.add(new RoundItem(n, s[1].toLowerCase().trim(), damage));
                 }
             }
         } else if (item.compareTo("sounddelay") == 0) {
@@ -367,7 +367,7 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
 
                     this.listMuzzleFlash
                             .add(
-                                    new MCH_WeaponInfo.MuzzleFlash(
+                                    new MuzzleFlash(
                                             this.toFloat(sx[0]),
                                             this.toFloat(sx[1]),
                                             0.0F,
@@ -389,7 +389,7 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
 
                     this.listMuzzleFlashSmoke
                             .add(
-                                    new MCH_WeaponInfo.MuzzleFlash(
+                                    new MuzzleFlash(
                                             this.toFloat(sx[0]),
                                             this.toFloat(sx[2]),
                                             this.toFloat(sx[3]),
@@ -413,7 +413,7 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
                 this.disableSmoke = this.toBool(data);
             } else if (item.equalsIgnoreCase("SetCartridge")) {
                 String[] sx = data.split("\\s*,\\s*");
-                if (sx.length > 0 && sx[0].length() > 0) {
+                if (sx.length > 0 && !sx[0].isEmpty()) {
                     float ac = sx.length >= 2 ? this.toFloat(sx[1]) : 0.0F;
                     float yw = sx.length >= 3 ? this.toFloat(sx[2]) : 0.0F;
                     float pt = sx.length >= 4 ? this.toFloat(sx[3]) : 0.0F;
@@ -457,17 +457,17 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
             } else if (item.equalsIgnoreCase("Radius")) {
                 this.radius = this.toInt(data, 1, 1000);
             } else if (item.equalsIgnoreCase("Target")) {
-                if (data.indexOf("block") >= 0) {
+                if (data.contains("block")) {
                     this.target = 64;
                 } else {
                     this.target = 0;
-                    this.target = this.target | (data.indexOf("planes") >= 0 ? 32 : 0);
-                    this.target = this.target | (data.indexOf("helicopters") >= 0 ? 16 : 0);
-                    this.target = this.target | (data.indexOf("vehicles") >= 0 ? 8 : 0);
-                    this.target = this.target | (data.indexOf("tanks") >= 0 ? 8 : 0);
-                    this.target = this.target | (data.indexOf("players") >= 0 ? 4 : 0);
-                    this.target = this.target | (data.indexOf("monsters") >= 0 ? 2 : 0);
-                    this.target = this.target | (data.indexOf("others") >= 0 ? 1 : 0);
+                    this.target = this.target | (data.contains("planes") ? 32 : 0);
+                    this.target = this.target | (data.contains("helicopters") ? 16 : 0);
+                    this.target = this.target | (data.contains("vehicles") ? 8 : 0);
+                    this.target = this.target | (data.contains("tanks") ? 8 : 0);
+                    this.target = this.target | (data.contains("players") ? 4 : 0);
+                    this.target = this.target | (data.contains("monsters") ? 2 : 0);
+                    this.target = this.target | (data.contains("others") ? 1 : 0);
                 }
             } else if (item.equalsIgnoreCase("MarkTime")) {
                 this.markTime = this.toInt(data, 1, 30000) + 1;
@@ -478,16 +478,23 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
                 if (sx.length >= 2) {
                     Class<? extends Entity> c = null;
                     String className = sx[0].toLowerCase();
-                    if (className.equals("player")) {
-                        c = EntityPlayer.class;
-                    } else if (className.equals("heli") || className.equals("helicopter")) {
-                        c = MCH_EntityHeli.class;
-                    } else if (className.equals("plane")) {
-                        c = MCP_EntityPlane.class;
-                    } else if (className.equals("tank")) {
-                        c = MCH_EntityTank.class;
-                    } else if (className.equals("vehicle")) {
-                        c = MCH_EntityVehicle.class;
+                    switch (className) {
+                        case "player":
+                            c = EntityPlayer.class;
+                            break;
+                        case "heli":
+                        case "helicopter":
+                            c = MCH_EntityHeli.class;
+                            break;
+                        case "plane":
+                            c = MCP_EntityPlane.class;
+                            break;
+                        case "tank":
+                            c = MCH_EntityTank.class;
+                            break;
+                        case "vehicle":
+                            c = MCH_EntityVehicle.class;
+                            break;
                     }
 
                     if (c != null) {
@@ -533,8 +540,6 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
             return "Dummy";
         } else if (this.type.equalsIgnoreCase("Smoke")) {
             return "Smoke";
-        } else if (this.type.equalsIgnoreCase("Smoke")) {
-            return "Smoke";
         } else if (this.type.equalsIgnoreCase("Dispenser")) {
             return "Dispenser";
         } else {
@@ -542,7 +547,7 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
         }
     }
 
-    public class MuzzleFlash {
+    public static class MuzzleFlash {
         public final float dist;
         public final float size;
         public final float range;
@@ -566,7 +571,7 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
         }
     }
 
-    public class RoundItem {
+    public static class RoundItem {
         public final int num;
         public final String itemName;
         public final int damage;

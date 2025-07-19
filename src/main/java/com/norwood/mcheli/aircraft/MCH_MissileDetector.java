@@ -37,7 +37,7 @@ public class MCH_MissileDetector {
             if (this.ac.getEntityData().getBoolean("LockOn")) {
                 if (this.alertCount == 0) {
                     this.alertCount = 10;
-                    if (this.ac != null && this.ac.haveFlare() && !this.ac.isDestroyed()) {
+                    if (this.ac.haveFlare() && !this.ac.isDestroyed()) {
                         for (int i = 0; i < 2; i++) {
                             Entity entity = this.ac.getEntityBySeatId(i);
                             if (entity instanceof EntityPlayerMP) {
@@ -77,13 +77,10 @@ public class MCH_MissileDetector {
 
     public boolean destroyMissile() {
         List<MCH_EntityBaseBullet> list = this.world.getEntitiesWithinAABB(MCH_EntityBaseBullet.class, this.ac.getEntityBoundingBox().grow(60.0, 60.0, 60.0));
-        if (list != null) {
-            for (int i = 0; i < list.size(); i++) {
-                MCH_EntityBaseBullet msl = list.get(i);
-                if (msl.targetEntity != null && (this.ac.isMountedEntity(msl.targetEntity) || msl.targetEntity.equals(this.ac))) {
-                    msl.targetEntity = null;
-                    msl.setDead();
-                }
+        for (MCH_EntityBaseBullet msl : list) {
+            if (msl.targetEntity != null && (this.ac.isMountedEntity(msl.targetEntity) || msl.targetEntity.equals(this.ac))) {
+                msl.targetEntity = null;
+                msl.setDead();
             }
         }
 
@@ -92,12 +89,9 @@ public class MCH_MissileDetector {
 
     public boolean isLockedByMissile() {
         List<MCH_EntityBaseBullet> list = this.world.getEntitiesWithinAABB(MCH_EntityBaseBullet.class, this.ac.getEntityBoundingBox().grow(60.0, 60.0, 60.0));
-        if (list != null) {
-            for (int i = 0; i < list.size(); i++) {
-                MCH_EntityBaseBullet msl = list.get(i);
-                if (msl.targetEntity != null && (this.ac.isMountedEntity(msl.targetEntity) || msl.targetEntity.equals(this.ac))) {
-                    return true;
-                }
+        for (MCH_EntityBaseBullet msl : list) {
+            if (msl.targetEntity != null && (this.ac.isMountedEntity(msl.targetEntity) || msl.targetEntity.equals(this.ac))) {
+                return true;
             }
         }
 

@@ -25,7 +25,6 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 @SideOnly(Side.CLIENT)
 public class MCH_GuiTargetMarker extends MCH_Gui {
@@ -57,20 +56,12 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
                 }
             }
 
-            Iterator<Integer> i = spotedEntity.values().iterator();
-
-            while (i.hasNext()) {
-                if (i.next() <= 0) {
-                    i.remove();
-                }
-            }
+            spotedEntity.values().removeIf(integer -> integer <= 0);
         }
     }
 
     public static boolean isSpotedEntity(@Nullable Entity entity) {
-        if (entity == null) {
-            return false;
-        } else {
+        if (entity != null) {
             int entityId = entity.getEntityId();
 
             for (int key : spotedEntity.keySet()) {
@@ -79,8 +70,8 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
                 }
             }
 
-            return false;
         }
+        return false;
     }
 
     public static void addSpotedEntity(int entityId, int count) {
@@ -117,7 +108,8 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
                     return;
                 }
 
-                if (clientPlayer.getTeam() != null && clientPlayer.isOnSameTeam(entity)) {
+                clientPlayer.getTeam();
+                if (clientPlayer.isOnSameTeam(entity)) {
                     spotType = MCH_TargetType.SAME_TEAM_PLAYER;
                 }
             }
@@ -214,11 +206,6 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
     }
 
     @Override
-    public boolean doesGuiPauseGame() {
-        return false;
-    }
-
-    @Override
     public boolean isDrawGui(EntityPlayer player) {
         return player != null && player.world != null;
     }
@@ -245,15 +232,15 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
         int DW = this.mc.displayWidth;
         int DSW = this.mc.displayWidth / scale;
         int DSH = this.mc.displayHeight / scale;
-        double x = 9999.0;
-        double z = 9999.0;
-        double y = 9999.0;
+        double x;
+        double z;
+        double y;
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
 
         for (int i = 0; i < 2; i++) {
             if (i == 0) {
-                builder.begin(i == 0 ? 4 : 1, DefaultVertexFormats.POSITION_COLOR);
+                builder.begin(4, DefaultVertexFormats.POSITION_COLOR);
             }
 
             for (MCH_MarkEntityPos e : entityPos) {
@@ -263,9 +250,9 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
                 y = e.pos.get(1) / scale;
                 if (z < 1.0) {
                     y = DSH - y;
-                } else if (x < DW / 2) {
+                } else if (x < (double) DW / 2) {
                     x = 10000.0;
-                } else if (x >= DW / 2) {
+                } else if (x >= (double) DW / 2) {
                     x = -10000.0;
                 }
 
@@ -281,7 +268,7 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
                         double dist = this.mc.player.getDistance(target.getX(), target.getY(), target.getZ());
                         GL11.glEnable(3553);
                         this.drawCenteredString(String.format("%.0fm", dist), (int) x, (int) (y + MARK_SIZE * 1.1 + 16.0), color);
-                        if (x >= DSW / 2 - 20 && x <= DSW / 2 + 20 && y >= DSH / 2 - 20 && y <= DSH / 2 + 20) {
+                        if (x >= (double) DSW / 2 - 20 && x <= (double) DSW / 2 + 20 && y >= (double) DSH / 2 - 20 && y <= (double) DSH / 2 + 20) {
                             this.drawString(String.format("x : %.0f", target.getX()), (int) (x + MARK_SIZE + 18.0), (int) y - 12, color);
                             this.drawString(String.format("y : %.0f", target.getY()), (int) (x + MARK_SIZE + 18.0), (int) y - 4, color);
                             this.drawString(String.format("z : %.0f", target.getZ()), (int) (x + MARK_SIZE + 18.0), (int) y + 4, color);
@@ -294,15 +281,15 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
                         builder.begin(1, DefaultVertexFormats.POSITION_COLOR);
                         double S = 30.0;
                         if (x < S) {
-                            drawRhombus(builder, 1, S, DSH / 2, this.zLevel, MARK_SIZE, color);
+                            drawRhombus(builder, 1, S, (double) DSH / 2, this.zLevel, MARK_SIZE, color);
                         } else if (x > DSW - S) {
-                            drawRhombus(builder, 4, DSW - S, DSH / 2, this.zLevel, MARK_SIZE, color);
+                            drawRhombus(builder, 4, DSW - S, (double) DSH / 2, this.zLevel, MARK_SIZE, color);
                         }
 
                         if (y < S) {
-                            drawRhombus(builder, 8, DSW / 2, S, this.zLevel, MARK_SIZE, color);
+                            drawRhombus(builder, 8, (double) DSW / 2, S, this.zLevel, MARK_SIZE, color);
                         } else if (y > DSH - S * 2.0) {
-                            drawRhombus(builder, 2, DSW / 2, DSH - S * 2.0, this.zLevel, MARK_SIZE, color);
+                            drawRhombus(builder, 2, (double) DSW / 2, DSH - S * 2.0, this.zLevel, MARK_SIZE, color);
                         }
                     }
 

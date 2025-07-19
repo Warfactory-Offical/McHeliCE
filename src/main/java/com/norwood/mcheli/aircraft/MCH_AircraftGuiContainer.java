@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class MCH_AircraftGuiContainer extends Container {
     public final EntityPlayer player;
@@ -44,7 +45,7 @@ public class MCH_AircraftGuiContainer extends Container {
         super.detectAndSendChanges();
     }
 
-    public boolean canInteractWith(EntityPlayer player) {
+    public boolean canInteractWith(@NotNull EntityPlayer player) {
         if (this.aircraft.getGuiInventory().isUsableByPlayer(player)) {
             return true;
         } else {
@@ -61,7 +62,7 @@ public class MCH_AircraftGuiContainer extends Container {
         }
     }
 
-    public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
+    public @NotNull ItemStack transferStackInSlot(@NotNull EntityPlayer player, int slotIndex) {
         MCH_AircraftInventory iv = this.aircraft.getGuiInventory();
         Slot slot = this.inventorySlots.get(slotIndex);
         if (slot == null) {
@@ -106,7 +107,7 @@ public class MCH_AircraftGuiContainer extends Container {
         }
     }
 
-    public void onContainerClosed(EntityPlayer player) {
+    public void onContainerClosed(@NotNull EntityPlayer player) {
         super.onContainerClosed(player);
         if (!player.world.isRemote) {
             MCH_AircraftInventory iv = this.aircraft.getGuiInventory();

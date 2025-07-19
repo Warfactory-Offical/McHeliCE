@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
@@ -72,8 +73,8 @@ public class MCH_GuiUavStation extends W_GuiContainer {
         this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
     }
 
-    protected void actionPerformed(GuiButton btn) throws IOException {
-        if (btn != null && btn.enabled) {
+    protected void actionPerformed(@NotNull GuiButton btn) {
+        if (btn.enabled) {
             if (btn.id == 256) {
                 if (this.uavStation != null
                         && !this.uavStation.isDead

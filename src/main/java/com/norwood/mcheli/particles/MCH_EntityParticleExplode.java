@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 public class MCH_EntityParticleExplode extends MCH_EntityParticleBase {
     private static final VertexFormat VERTEX_FORMAT = new VertexFormat()
@@ -35,7 +36,7 @@ public class MCH_EntityParticleExplode extends MCH_EntityParticleBase {
     }
 
     public void renderParticle(
-            BufferBuilder buffer, Entity entityIn, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_
+            @NotNull BufferBuilder buffer, @NotNull Entity entityIn, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_
     ) {
         int i = (int) ((this.nowCount + p_70539_2_) * 15.0F / this.endCount);
         if (i <= 15) {
@@ -47,7 +48,7 @@ public class MCH_EntityParticleExplode extends MCH_EntityParticleBase {
             this.theRenderEngine.bindTexture(texture);
             float f6 = i % 4 / 4.0F;
             float f7 = f6 + 0.24975F;
-            float f8 = i / 4 / 4.0F;
+            float f8 = (float) (float) i / 4 / 4.0F;
             float f9 = f8 + 0.24975F;
             float f10 = 2.0F * this.size;
             float f11 = (float) (this.prevPosX + (this.posX - this.prevPosX) * p_70539_2_ - interpPosX);

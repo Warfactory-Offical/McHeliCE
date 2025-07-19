@@ -122,7 +122,7 @@ public class MCH_Camera {
 
                 if (this.getMode(uid) == 1 || this.getMode(uid) == 2) {
                     PotionEffect pe = W_Entity.getActivePotionEffect(viewer, MobEffects.NIGHT_VISION);
-                    if ((pe == null || pe != null && pe.getDuration() < 500) && !viewer.world.isRemote) {
+                    if ((pe == null || pe.getDuration() < 500) && !viewer.world.isRemote) {
                         W_Entity.addPotionEffect(viewer, new PotionEffect(MobEffects.NIGHT_VISION, 250, 0, true, false));
                     }
                 }
@@ -145,13 +145,7 @@ public class MCH_Camera {
     public void setCameraZoom(float z) {
         float prevZoom = this.zoom;
         this.zoom = Math.max(z, 1.0F);
-        if (this.zoom > prevZoom) {
-            this.lastZoomDir = 1;
-        } else if (this.zoom < prevZoom) {
-            this.lastZoomDir = -1;
-        } else {
-            this.lastZoomDir = 0;
-        }
+        this.lastZoomDir = Float.compare(this.zoom, prevZoom);
     }
 
     public int getLastZoomDir() {

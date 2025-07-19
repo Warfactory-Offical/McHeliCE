@@ -42,10 +42,8 @@ public class MCH_HudItemTexture extends MCH_HudItem {
             int w = 0;
             int h = 0;
             W_TextureUtil.TextureParam prm = W_TextureUtil.getTextureInfo("mcheli", "textures/gui/" + this.name + ".png");
-            if (prm != null) {
-                w = prm.width;
-                h = prm.height;
-            }
+            w = prm.width;
+            h = prm.height;
 
             this.textureWidth = w > 0 ? w : 256;
             this.textureHeight = h > 0 ? h : 256;

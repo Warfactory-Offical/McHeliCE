@@ -31,7 +31,7 @@ import java.util.List;
 
 public class MCH_ClientEventHook extends W_ClientEventHook {
     private static final ResourceLocation ir_strobe = new ResourceLocation("mcheli", "textures/ir_strobe.png");
-    public static List<MCH_EntityAircraft> haveSearchLightAircraft = new ArrayList<>();
+    public static final List<MCH_EntityAircraft> haveSearchLightAircraft = new ArrayList<>();
     private static boolean cancelRender = true;
     MCH_TextureManagerDummy dummyTextureManager = null;
 
@@ -47,10 +47,6 @@ public class MCH_ClientEventHook extends W_ClientEventHook {
                 event.setCanceled(true);
             }
         }
-    }
-
-    @Override
-    public void renderLivingEventSpecialsPost(Post<EntityLivingBase> event) {
     }
 
     private void renderIRStrobe(EntityLivingBase entity, Post<EntityLivingBase> event) {
@@ -114,7 +110,7 @@ public class MCH_ClientEventHook extends W_ClientEventHook {
                 || !(event.getEntity().getRidingEntity() instanceof MCH_EntityAircraft) && !(event.getEntity().getRidingEntity() instanceof MCH_EntitySeat)) {
             if (MCH_Config.EnableReplaceTextureManager.prmBool) {
                 RenderManager rm = W_Reflection.getRenderManager(event.getRenderer());
-                if (rm != null && !(rm.renderEngine instanceof MCH_TextureManagerDummy)) {
+                if (!(rm.renderEngine instanceof MCH_TextureManagerDummy)) {
                     if (this.dummyTextureManager == null) {
                         this.dummyTextureManager = new MCH_TextureManagerDummy(rm.renderEngine);
                     }
@@ -153,14 +149,6 @@ public class MCH_ClientEventHook extends W_ClientEventHook {
                 }
             }
         }
-    }
-
-    @Override
-    public void renderPlayerPost(net.minecraftforge.client.event.RenderPlayerEvent.Post event) {
-    }
-
-    @Override
-    public void worldEventUnload(Unload event) {
     }
 
     @Override

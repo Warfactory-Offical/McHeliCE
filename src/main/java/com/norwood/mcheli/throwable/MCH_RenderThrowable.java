@@ -6,6 +6,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
@@ -35,7 +36,7 @@ public class MCH_RenderThrowable extends W_Render<MCH_EntityThrowable> {
         }
     }
 
-    protected ResourceLocation getEntityTexture(MCH_EntityThrowable entity) {
+    protected ResourceLocation getEntityTexture(@NotNull MCH_EntityThrowable entity) {
         return TEX_DEFAULT;
     }
 }

@@ -19,7 +19,7 @@ public class AddonPack {
     private final String addonDomain;
     private final String addonName;
     private final String addonVersion;
-    protected ImmutableMap<String, JsonElement> packMetaMap;
+    protected final ImmutableMap<String, JsonElement> packMetaMap;
     private final File addonFile;
     private final String credits;
     private final List<String> authors;
@@ -55,10 +55,6 @@ public class AddonPack {
         String addonDomain = JsonUtils.getString(addonJson, "domain", null);
         String packName = JsonUtils.getString(packJson, "description", addonFile.getName());
         String version = JsonUtils.getString(addonJson, "version", "0.0");
-        if (addonDomain == null) {
-            MCH_Logger.get().warn("A addon domain is not specified! file:{}", addonFile.getName());
-            addonDomain = "<!mcheli_share_domain>";
-        }
 
         String credits = JsonUtils.getString(addonJson, "credits", "");
         String description = JsonUtils.getString(addonJson, "description", "");

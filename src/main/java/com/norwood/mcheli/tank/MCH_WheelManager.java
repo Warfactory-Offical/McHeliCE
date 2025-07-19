@@ -68,10 +68,7 @@ public class MCH_WheelManager {
     public void move(double x, double y, double z) {
         MCH_EntityAircraft ac = this.parent;
         if (ac.getAcInfo() != null) {
-            boolean showLog = 0 == 1;
-            if (showLog) {
-                MCH_Lib.DbgLog(ac.world, "[" + (ac.world.isRemote ? "Client" : "Server") + "] ==============================");
-            }
+            boolean showLog = false;
 
             for (MCH_EntityWheel wheel : this.wheels) {
                 wheel.prevPosX = wheel.posX;
@@ -141,28 +138,6 @@ public class MCH_WheelManager {
                 }
 
                 rv = rv.add(v.x * f, v.y * f, v.z * f);
-                if (showLog) {
-                    v = v.rotateYaw((float) (ac.getRotYaw() * Math.PI / 180.0));
-                    MCH_Lib.DbgLog(
-                            ac.world,
-                            "%2d : %.2f :[%+.1f, %+.1f, %+.1f][%s %d %d][%+.2f(%+.2f), %+.2f(%+.2f)][%+.1f, %+.1f, %+.1f]",
-                            ixx,
-                            f,
-                            v.x,
-                            v.y,
-                            v.z,
-                            w1.isPlus ? "+" : "-",
-                            w1.onGround ? 1 : 0,
-                            w2.onGround ? 1 : 0,
-                            w1.posY - w1.prevPosY,
-                            w1.motionY,
-                            w2.posY - w2.prevPosY,
-                            w2.motionY,
-                            v.x,
-                            v.y,
-                            v.z
-                    );
-                }
             }
 
             rv = rv.normalize();
@@ -197,21 +172,6 @@ public class MCH_WheelManager {
             if (!W_Lib.isClientPlayer(ac.getRiddenByEntity())) {
                 ac.setRotPitch(pitch);
                 ac.setRotRoll(roll);
-            }
-
-            if (showLog) {
-                MCH_Lib.DbgLog(
-                        ac.world,
-                        "%+03d, %+03d :[%.2f, %.2f, %.2f] yaw=%.2f, pitch=%.2f, roll=%.2f",
-                        (int) pitch,
-                        (int) roll,
-                        rv.x,
-                        rv.y,
-                        rv.z,
-                        ac.getRotYaw(),
-                        this.targetPitch,
-                        this.targetRoll
-                );
             }
 
             for (MCH_EntityWheel wheel : this.wheels) {

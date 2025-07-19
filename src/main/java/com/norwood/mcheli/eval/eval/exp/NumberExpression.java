@@ -68,7 +68,7 @@ public class NumberExpression extends WordExpression {
     @Override
     public Object evalObject() {
         try {
-            return new Long(NumberUtil.parseLong(this.word));
+            return NumberUtil.parseLong(this.word);
         } catch (Exception var6) {
             try {
                 return Long.valueOf(this.word);

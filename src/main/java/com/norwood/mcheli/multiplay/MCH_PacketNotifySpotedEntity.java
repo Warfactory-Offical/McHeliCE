@@ -25,10 +25,6 @@ public class MCH_PacketNotifySpotedEntity extends MCH_Packet {
                 pkt.num = 300;
             }
 
-            if (pkt.num > entityId.length) {
-                pkt.num = entityId.length;
-            }
-
             pkt.entityId = entityId;
             W_Network.sendToPlayer(pkt, player);
         }

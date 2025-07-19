@@ -9,9 +9,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class MCH_WeaponTvMissile extends MCH_WeaponBase {
-    protected MCH_EntityTvMissile lastShotTvMissile = null;
-    protected Entity lastShotEntity = null;
-    protected boolean isTVGuided = false;
+    protected MCH_EntityTvMissile lastShotTvMissile;
+    protected Entity lastShotEntity;
+    protected boolean isTVGuided;
 
     public MCH_WeaponTvMissile(World w, Vec3d v, float yaw, float pitch, String nm, MCH_WeaponInfo wi) {
         super(w, v, yaw, pitch, nm, wi);

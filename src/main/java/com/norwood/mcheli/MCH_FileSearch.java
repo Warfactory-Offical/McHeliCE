@@ -27,15 +27,14 @@ public class MCH_FileSearch {
         } else {
             File[] files = dir.listFiles();
 
-            for (int i = 0; i < files.length; i++) {
-                File file = files[i];
+            for (File file : files) {
                 this.addFile(type, fileNamePattern, this.set, file, period);
                 if (isRecursive && file.isDirectory()) {
-                    this.listFiles(file.getAbsolutePath(), fileNamePattern, type, isRecursive, period);
+                    this.listFiles(file.getAbsolutePath(), fileNamePattern, type, true, period);
                 }
             }
 
-            return this.set.toArray(new File[this.set.size()]);
+            return this.set.toArray(new File[0]);
         }
     }
 

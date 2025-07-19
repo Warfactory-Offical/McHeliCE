@@ -12,6 +12,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
@@ -29,7 +30,7 @@ public class MCH_BakedModel implements IBakedModel {
         this.overrides = new MCH_ItemOverrideList(bakedModel);
     }
 
-    public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
+    public @NotNull List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
         return this.bakedModel.getQuads(state, side, rand);
     }
 
@@ -45,24 +46,24 @@ public class MCH_BakedModel implements IBakedModel {
         return this.renderer.shouldRenderer(PooledModelParameters.getTargetRendererStack(), PooledModelParameters.getTransformType()) || this.bakedModel.isBuiltInRenderer();
     }
 
-    public TextureAtlasSprite getParticleTexture() {
+    public @NotNull TextureAtlasSprite getParticleTexture() {
         return this.bakedModel.getParticleTexture();
     }
 
     @Deprecated
-    public ItemCameraTransforms getItemCameraTransforms() {
+    public @NotNull ItemCameraTransforms getItemCameraTransforms() {
         return this.bakedModel.getItemCameraTransforms();
     }
 
-    public ItemOverrideList getOverrides() {
+    public @NotNull ItemOverrideList getOverrides() {
         return this.overrides;
     }
 
-    public boolean isAmbientOcclusion(IBlockState state) {
+    public boolean isAmbientOcclusion(@NotNull IBlockState state) {
         return this.bakedModel.isAmbientOcclusion(state);
     }
 
-    public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType cameraTransformType) {
+    public @NotNull Pair<? extends IBakedModel, Matrix4f> handlePerspective(@NotNull TransformType cameraTransformType) {
         PooledModelParameters.setTransformType(cameraTransformType);
         Pair<? extends IBakedModel, Matrix4f> pair = this.bakedModel.handlePerspective(cameraTransformType);
         return Pair.of(new MCH_BakedModel(pair.getLeft(), this.renderer), pair.getRight());

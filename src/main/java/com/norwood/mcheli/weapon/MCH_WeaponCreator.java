@@ -9,7 +9,7 @@ public class MCH_WeaponCreator {
     @Nullable
     public static MCH_WeaponBase createWeapon(World w, String weaponName, Vec3d v, float yaw, float pitch, MCH_IEntityLockChecker lockChecker, boolean onTurret) {
         MCH_WeaponInfo info = MCH_WeaponInfoManager.get(weaponName);
-        if (info != null && info.type != "") {
+        if (info != null && !info.type.isEmpty()) {
             MCH_WeaponBase weapon = null;
             if (info.type.compareTo("machinegun1") == 0) {
                 weapon = new MCH_WeaponMachineGun1(w, v, yaw, pitch, weaponName, info);

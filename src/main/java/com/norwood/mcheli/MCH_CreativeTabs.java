@@ -9,9 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -40,8 +40,8 @@ public class MCH_CreativeTabs extends CreativeTabs {
         }
     }
 
-    public ItemStack createIcon() {
-        if (this.iconItems.size() <= 0) {
+    public @NotNull ItemStack createIcon() {
+        if (this.iconItems.isEmpty()) {
             return ItemStack.EMPTY;
         } else {
             this.currentIconIndex = (this.currentIconIndex + 1) % this.iconItems.size();
@@ -49,7 +49,7 @@ public class MCH_CreativeTabs extends CreativeTabs {
         }
     }
 
-    public ItemStack getIcon() {
+    public @NotNull ItemStack getIcon() {
         if (this.fixedItem != null) {
             return new ItemStack(this.fixedItem, 1, 0);
         } else {
@@ -69,24 +69,22 @@ public class MCH_CreativeTabs extends CreativeTabs {
     }
 
     @SideOnly(Side.CLIENT)
-    public void displayAllRelevantItems(NonNullList<ItemStack> list) {
+    public void displayAllRelevantItems(@NotNull NonNullList<ItemStack> list) {
         super.displayAllRelevantItems(list);
-        Comparator<ItemStack> cmp = new Comparator<ItemStack>() {
-            public int compare(ItemStack i1, ItemStack i2) {
-                if (i1.getItem() instanceof MCH_ItemAircraft && i2.getItem() instanceof MCH_ItemAircraft) {
-                    MCH_AircraftInfo info1 = ((MCH_ItemAircraft) i1.getItem()).getAircraftInfo();
-                    MCH_AircraftInfo info2 = ((MCH_ItemAircraft) i2.getItem()).getAircraftInfo();
-                    if (info1 != null && info2 != null) {
-                        String s1 = info1.category + "." + info1.name;
-                        String s2 = info2.category + "." + info2.name;
-                        return s1.compareTo(s2);
-                    }
+        Comparator<ItemStack> cmp = (i1, i2) -> {
+            if (i1.getItem() instanceof MCH_ItemAircraft && i2.getItem() instanceof MCH_ItemAircraft) {
+                MCH_AircraftInfo info1 = ((MCH_ItemAircraft) i1.getItem()).getAircraftInfo();
+                MCH_AircraftInfo info2 = ((MCH_ItemAircraft) i2.getItem()).getAircraftInfo();
+                if (info1 != null && info2 != null) {
+                    String s1 = info1.category + "." + info1.name;
+                    String s2 = info2.category + "." + info2.name;
+                    return s1.compareTo(s2);
                 }
-
-                return i1.getItem().getTranslationKey().compareTo(i2.getItem().getTranslationKey());
             }
+
+            return i1.getItem().getTranslationKey().compareTo(i2.getItem().getTranslationKey());
         };
-        Collections.sort(list, cmp);
+        list.sort(cmp);
     }
 
     public void addIconItem(Item i) {
@@ -95,7 +93,7 @@ public class MCH_CreativeTabs extends CreativeTabs {
         }
     }
 
-    public String getTranslationKey() {
+    public @NotNull String getTranslationKey() {
         return "MC Heli";
     }
 }

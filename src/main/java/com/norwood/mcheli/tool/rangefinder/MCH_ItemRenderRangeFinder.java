@@ -27,7 +27,7 @@ public class MCH_ItemRenderRangeFinder implements _IItemRenderer {
     public void renderItem(_IItemRenderer.ItemRenderType type, ItemStack item, Object... data) {
         GL11.glPushMatrix();
         W_McClient.MOD_bindTexture("textures/rangefinder.png");
-        float size = 1.0F;
+        float size;
         switch (type) {
             case ENTITY:
                 size = 2.2F;

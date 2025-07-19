@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 public class W_Item extends Item {
     public W_Item(int par1) {
@@ -12,11 +13,11 @@ public class W_Item extends Item {
     public W_Item() {
     }
 
-    public static int getIdFromItem(Item i) {
+    public static int getIdFromItem(@NotNull Item i) {
         return i == null ? 0 : REGISTRY.getIDForObject(i);
     }
 
-    public static Item getItemById(int i) {
+    public static @NotNull Item getItemById(int i) {
         return Item.getItemById(i);
     }
 
@@ -28,7 +29,7 @@ public class W_Item extends Item {
         return ForgeRegistries.ITEMS.getKey(item).toString();
     }
 
-    public static Item getItemFromBlock(Block block) {
+    public static @NotNull Item getItemFromBlock(@NotNull Block block) {
         return Item.getItemFromBlock(block);
     }
 }

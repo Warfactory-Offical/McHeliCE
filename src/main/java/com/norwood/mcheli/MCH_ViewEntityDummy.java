@@ -7,6 +7,7 @@ import net.minecraft.stats.RecipeBook;
 import net.minecraft.stats.StatisticsManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 public class MCH_ViewEntityDummy extends EntityPlayerSP {
     private static final AxisAlignedBB ZERO_AABB = new AxisAlignedBB(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
@@ -55,7 +56,7 @@ public class MCH_ViewEntityDummy extends EntityPlayerSP {
         }
     }
 
-    public AxisAlignedBB getEntityBoundingBox() {
+    public @NotNull AxisAlignedBB getEntityBoundingBox() {
         return ZERO_AABB;
     }
 

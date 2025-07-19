@@ -59,7 +59,7 @@ public class MCH_WeaponATMissile extends MCH_WeaponEntitySeeker {
     }
 
     protected boolean shotServer(MCH_WeaponParam prm) {
-        Entity tgtEnt = null;
+        Entity tgtEnt;
         tgtEnt = prm.user.world.getEntityByID(prm.option1);
         if (tgtEnt != null && !tgtEnt.isDead) {
             float yaw = prm.user.rotationYaw + this.fixRotationYaw;

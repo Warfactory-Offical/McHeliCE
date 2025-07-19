@@ -6,6 +6,7 @@ import org.jline.utils.OSUtils;
 
 import javax.annotation.Nullable;
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +66,7 @@ public abstract class ResourceLoader implements Closeable {
             return list;
         }
 
-        private void loadFiles(File dir, List<ResourceLoader.ResourceEntry> list, Predicate<? super ResourceLoader.ResourceEntry> filePathFilter) throws IOException {
+        private void loadFiles(File dir, List<ResourceLoader.ResourceEntry> list, Predicate<? super ResourceLoader.ResourceEntry> filePathFilter) {
             if (dir.exists()) {
                 if (dir.isDirectory()) {
                     for (File file : dir.listFiles()) {
@@ -103,7 +104,7 @@ public abstract class ResourceLoader implements Closeable {
             if (file1 == null) {
                 throw new FileNotFoundException(String.format("'%s' in ResourcePack '%s'", this.dir, resource.getPath()));
             } else {
-                return new BufferedInputStream(new FileInputStream(file1));
+                return new BufferedInputStream(Files.newInputStream(file1.toPath()));
             }
         }
 
@@ -130,7 +131,7 @@ public abstract class ResourceLoader implements Closeable {
         }
 
         @Override
-        public void close() throws IOException {
+        public void close() {
         }
     }
 

@@ -6,12 +6,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class MCH_RenderFlare extends W_Render<MCH_EntityFlare> {
     public static final IRenderFactory<MCH_EntityFlare> FACTORY = MCH_RenderFlare::new;
-    protected MCH_ModelFlare model = new MCH_ModelFlare();
+    protected final MCH_ModelFlare model = new MCH_ModelFlare();
 
     public MCH_RenderFlare(RenderManager renderManager) {
         super(renderManager);
@@ -30,7 +31,7 @@ public class MCH_RenderFlare extends W_Render<MCH_EntityFlare> {
         GL11.glPopMatrix();
     }
 
-    protected ResourceLocation getEntityTexture(MCH_EntityFlare entity) {
+    protected ResourceLocation getEntityTexture(@NotNull MCH_EntityFlare entity) {
         return TEX_DEFAULT;
     }
 }

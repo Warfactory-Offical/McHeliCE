@@ -7,6 +7,7 @@ import com.norwood.mcheli.wrapper.W_Render;
 import com.norwood.mcheli.wrapper.W_WorldFunc;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.entity.RenderManager;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 public abstract class MCH_RenderBulletBase<T extends W_Entity> extends W_Render<T> {
@@ -14,13 +15,13 @@ public abstract class MCH_RenderBulletBase<T extends W_Entity> extends W_Render<
         super(renderManager);
     }
 
-    public void doRender(T e, double var2, double var4, double var6, float var8, float var9) {
+    public void doRender(@NotNull T e, double var2, double var4, double var6, float var8, float var9) {
         if (e instanceof MCH_EntityBaseBullet && ((MCH_EntityBaseBullet) e).getInfo() != null) {
             MCH_Color c = ((MCH_EntityBaseBullet) e).getInfo().color;
 
             for (int y = 0; y < 3; y++) {
                 Block b = W_WorldFunc.getBlock(e.world, (int) (e.posX + 0.5), (int) (e.posY + 1.5 - y), (int) (e.posZ + 0.5));
-                if (b != null && b == W_Block.getWater()) {
+                if (b == W_Block.getWater()) {
                     c = ((MCH_EntityBaseBullet) e).getInfo().colorInWater;
                     break;
                 }

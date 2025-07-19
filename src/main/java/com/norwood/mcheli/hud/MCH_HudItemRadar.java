@@ -26,10 +26,10 @@ public class MCH_HudItemRadar extends MCH_HudItem {
     @Override
     public void execute() {
         if (this.isEntityRadar) {
-            if (EntityList != null && EntityList.size() > 0) {
+            if (EntityList != null && !EntityList.isEmpty()) {
                 this.drawEntityList(EntityList, (float) calc(this.rot), centerX + calc(this.left), centerY + calc(this.top), calc(this.width), calc(this.height));
             }
-        } else if (EnemyList != null && EnemyList.size() > 0) {
+        } else if (EnemyList != null && !EnemyList.isEmpty()) {
             this.drawEntityList(EnemyList, (float) calc(this.rot), centerX + calc(this.left), centerY + calc(this.top), calc(this.width), calc(this.height));
         }
     }

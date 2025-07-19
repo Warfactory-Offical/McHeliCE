@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 public class MCH_EntityTofu extends Entity {
     public MCH_EntityTofu(World worldIn) {
@@ -27,16 +28,12 @@ public class MCH_EntityTofu extends Entity {
         }
     }
 
-    public boolean canBeCollidedWith() {
-        return false;
+    public void applyEntityCollision(@NotNull Entity entityIn) {
     }
 
-    public void applyEntityCollision(Entity entityIn) {
+    protected void readEntityFromNBT(@NotNull NBTTagCompound compound) {
     }
 
-    protected void readEntityFromNBT(NBTTagCompound compound) {
-    }
-
-    protected void writeEntityToNBT(NBTTagCompound compound) {
+    protected void writeEntityToNBT(@NotNull NBTTagCompound compound) {
     }
 }

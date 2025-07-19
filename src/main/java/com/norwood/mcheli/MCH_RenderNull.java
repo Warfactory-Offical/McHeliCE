@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 @SideOnly(Side.CLIENT)
 public class MCH_RenderNull extends W_Render<Entity> {
@@ -17,7 +18,7 @@ public class MCH_RenderNull extends W_Render<Entity> {
         this.shadowSize = 0.0F;
     }
 
-    public void doRender(Entity entity, double posX, double posY, double posZ, float par8, float tickTime) {
+    public void doRender(@NotNull Entity entity, double posX, double posY, double posZ, float par8, float tickTime) {
     }
 
     @Override

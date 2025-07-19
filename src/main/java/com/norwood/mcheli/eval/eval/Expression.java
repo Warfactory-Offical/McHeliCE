@@ -59,7 +59,7 @@ public abstract class Expression {
             if (this.ae == null && e == null) {
                 return true;
             } else {
-                return this.ae != null && e != null && this.ae.equals(e);
+                return this.ae != null && this.ae.equals(e);
             }
         } else {
             return super.equals(obj);

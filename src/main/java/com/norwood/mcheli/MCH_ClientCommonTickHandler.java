@@ -61,21 +61,21 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
     private static double mouseRollDeltaY = 0.0;
     private static boolean isRideAircraft = false;
     private static float prevTick = 0.0F;
-    public MCH_GuiCommon gui_Common;
-    public MCH_Gui gui_Heli;
-    public MCH_Gui gui_Plane;
-    public MCH_Gui gui_Tank;
-    public MCH_Gui gui_GLTD;
-    public MCH_Gui gui_Vehicle;
-    public MCH_Gui gui_LWeapon;
-    public MCH_Gui gui_Wrench;
-    public MCH_Gui gui_EMarker;
-    public MCH_Gui gui_SwnGnr;
-    public MCH_Gui gui_RngFndr;
-    public MCH_Gui gui_Title;
-    public MCH_Gui[] guis;
-    public MCH_Gui[] guiTicks;
-    public MCH_ClientTickHandlerBase[] ticks;
+    public final MCH_GuiCommon gui_Common;
+    public final MCH_Gui gui_Heli;
+    public final MCH_Gui gui_Plane;
+    public final MCH_Gui gui_Tank;
+    public final MCH_Gui gui_GLTD;
+    public final MCH_Gui gui_Vehicle;
+    public final MCH_Gui gui_LWeapon;
+    public final MCH_Gui gui_Wrench;
+    public final MCH_Gui gui_EMarker;
+    public final MCH_Gui gui_SwnGnr;
+    public final MCH_Gui gui_RngFndr;
+    public final MCH_Gui gui_Title;
+    public final MCH_Gui[] guis;
+    public final MCH_Gui[] guiTicks;
+    public final MCH_ClientTickHandlerBase[] ticks;
     public MCH_Key[] Keys;
     public MCH_Key KeyCamDistUp;
     public MCH_Key KeyCamDistDown;
@@ -285,10 +285,7 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
             double dist = mouseRollDeltaX * mouseRollDeltaX + mouseRollDeltaY * mouseRollDeltaY;
             if (dist > 1.0) {
                 dist = MathHelper.sqrt(dist);
-                double d = dist;
-                if (dist > getMaxStickLength()) {
-                    d = getMaxStickLength();
-                }
+                double d = Math.min(dist, getMaxStickLength());
 
                 mouseRollDeltaX /= dist;
                 mouseRollDeltaY /= dist;
@@ -318,7 +315,7 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
             EntityPlayer player = this.mc.player;
             if (player != null) {
                 ItemStack currentItemstack = player.getHeldItem(EnumHand.MAIN_HAND);
-                if (currentItemstack != null && currentItemstack.getItem() instanceof MCH_ItemWrench && player.getItemInUseCount() > 0) {
+                if (currentItemstack.getItem() instanceof MCH_ItemWrench && player.getItemInUseCount() > 0) {
                     W_Reflection.setItemRendererMainProgress(1.0F);
                 }
 
@@ -544,10 +541,6 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
     }
 
     @Override
-    public void onPlayerTickPost(EntityPlayer player) {
-    }
-
-    @Override
     public void onRenderTickPost(float partialTicks) {
         if (this.mc.player != null) {
             MCH_ClientTickHandlerBase.applyRotLimit(this.mc.player);
@@ -562,7 +555,7 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
 
         if (this.mc.currentScreen == null
                 || this.mc.currentScreen instanceof GuiChat
-                || this.mc.currentScreen.getClass().toString().indexOf("GuiDriveableController") >= 0) {
+                || this.mc.currentScreen.getClass().toString().contains("GuiDriveableController")) {
             for (MCH_Gui gui : this.guis) {
                 if (this.drawGui(gui, partialTicks)) {
                     break;

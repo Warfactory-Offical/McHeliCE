@@ -6,7 +6,7 @@ import com.norwood.mcheli.debug._v1.PrintStreamWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-class _GroupObject implements DebugInfoObject {
+public class _GroupObject implements DebugInfoObject {
     public final String name;
     private final List<_Face> faces;
 
@@ -27,7 +27,7 @@ class _GroupObject implements DebugInfoObject {
         stream.println();
     }
 
-    static class Builder {
+    public static class Builder {
         private String name;
         private final List<_Face> faces = new ArrayList<>();
 

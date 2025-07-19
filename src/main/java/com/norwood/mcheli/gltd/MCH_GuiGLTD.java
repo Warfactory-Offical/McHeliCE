@@ -29,11 +29,6 @@ public class MCH_GuiGLTD extends MCH_Gui {
     }
 
     @Override
-    public boolean doesGuiPauseGame() {
-        return false;
-    }
-
-    @Override
     public boolean isDrawGui(EntityPlayer player) {
         return player.getRidingEntity() != null && player.getRidingEntity() instanceof MCH_EntityGLTD;
     }

@@ -97,7 +97,7 @@ public class MCH_CommonPacketHandler {
                 scheduler.addScheduledTask(() -> {
                     Entity target = player.world.getEntityByID(pkt.entityID);
                     if (target != null) {
-                        MCH_EntityAircraft ac = null;
+                        MCH_EntityAircraft ac;
                         if (target instanceof MCH_EntityAircraft) {
                             ac = (MCH_EntityAircraft) target;
                         } else if (target instanceof MCH_EntitySeat) {

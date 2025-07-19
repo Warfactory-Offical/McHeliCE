@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 public class MCH_EntityFlare extends W_Entity implements IEntityAdditionalSpawnData {
     public double gravity = -0.013;
@@ -40,7 +41,7 @@ public class MCH_EntityFlare extends W_Entity implements IEntityAdditionalSpawnD
         this.fuseCount = fuseCount;
     }
 
-    public boolean isEntityInvulnerable(DamageSource source) {
+    public boolean isEntityInvulnerable(@NotNull DamageSource source) {
         return true;
     }
 
@@ -170,7 +171,7 @@ public class MCH_EntityFlare extends W_Entity implements IEntityAdditionalSpawnD
         par1NBTTagCompound.setTag("direction", this.newDoubleNBTList(this.motionX, this.motionY, this.motionZ));
     }
 
-    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
+    public void readEntityFromNBT(@NotNull NBTTagCompound par1NBTTagCompound) {
         this.setDead();
     }
 

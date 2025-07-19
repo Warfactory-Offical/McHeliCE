@@ -8,10 +8,10 @@ import org.lwjgl.opengl.GL11;
 
 @Deprecated
 public class MCH_ItemAircraftRender implements _IItemRenderer {
-    float size = 0.1F;
-    float x = 0.1F;
-    float y = 0.1F;
-    float z = 0.1F;
+    final float size = 0.1F;
+    final float x = 0.1F;
+    final float y = 0.1F;
+    final float z = 0.1F;
 
     @Override
     public boolean handleRenderType(ItemStack item, _IItemRenderer.ItemRenderType type) {
@@ -21,7 +21,7 @@ public class MCH_ItemAircraftRender implements _IItemRenderer {
                 return false;
             }
 
-            if (info != null && info.name.equalsIgnoreCase("mh-60l_dap")) {
+            if (info.name.equalsIgnoreCase("mh-60l_dap")) {
                 return type == _IItemRenderer.ItemRenderType.EQUIPPED
                         || type == _IItemRenderer.ItemRenderType.EQUIPPED_FIRST_PERSON
                         || type == _IItemRenderer.ItemRenderType.ENTITY

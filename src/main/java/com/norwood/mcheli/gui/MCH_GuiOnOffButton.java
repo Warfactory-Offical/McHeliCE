@@ -2,6 +2,7 @@ package com.norwood.mcheli.gui;
 
 import com.norwood.mcheli.wrapper.W_GuiButton;
 import net.minecraft.client.Minecraft;
+import org.jetbrains.annotations.NotNull;
 
 public class MCH_GuiOnOffButton extends W_GuiButton {
     private final String dispOnOffString;
@@ -26,7 +27,7 @@ public class MCH_GuiOnOffButton extends W_GuiButton {
         this.setOnOff(!this.getOnOff());
     }
 
-    public boolean mousePressed(Minecraft mc, int x, int y) {
+    public boolean mousePressed(@NotNull Minecraft mc, int x, int y) {
         if (super.mousePressed(mc, x, y)) {
             this.switchOnOff();
             return true;

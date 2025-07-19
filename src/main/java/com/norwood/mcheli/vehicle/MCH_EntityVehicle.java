@@ -280,7 +280,7 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
     protected void onUpdate_ControlOnGround() {
         if (!this.world.isRemote) {
             boolean move = false;
-            float yaw = this.rotationYaw;
+            float yaw;
             double x = 0.0;
             double z = 0.0;
             if (this.getVehicleInfo().isEnableMove) {

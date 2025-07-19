@@ -14,15 +14,15 @@ public class Lex {
     public static final int TYPE_CHAR = 2147483636;
     public static final int TYPE_EOF = Integer.MAX_VALUE;
     public static final int TYPE_ERR = -1;
-    protected List<String>[] opeList;
-    protected String string;
+    protected final List<String>[] opeList;
+    protected final String string;
     protected int pos = 0;
     protected int len = 0;
     protected int type = -1;
     protected String ope;
-    protected ShareExpValue expShare;
-    protected String SPC_CHAR = " \t\r\n";
-    protected String NUMBER_CHAR = "._";
+    protected final ShareExpValue expShare;
+    protected final String SPC_CHAR = " \t\r\n";
+    protected final String NUMBER_CHAR = "._";
 
     protected Lex(String str, List<String>[] lists, AbstractExpression paren, ShareExpValue exp) {
         this.string = str;
@@ -66,9 +66,7 @@ public class Lex {
                 List<String> list = this.opeList[i];
                 if (list != null) {
                     label36:
-                    for (int j = 0; j < list.size(); j++) {
-                        String ope = list.get(j);
-
+                    for (String ope : list) {
                         for (int k = 0; k <= i; k++) {
                             char c = this.string.charAt(pos + k);
                             char o = ope.charAt(k);

@@ -125,7 +125,7 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
             this.isRiding = false;
         }
 
-        if (!this.isBeforeRiding && this.isRiding && plane != null) {
+        if (!this.isBeforeRiding && this.isRiding) {
             W_Reflection.setThirdPersonDistance(plane.thirdPersonDist);
             MCH_ViewEntityDummy.getInstance(this.mc.world).setPosition(plane.posX, plane.posY + 0.5, plane.posZ);
         } else if (this.isBeforeRiding && !this.isRiding) {
@@ -142,7 +142,7 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
 
     protected void playerControl(EntityPlayer player, MCP_EntityPlane plane, boolean isPilot) {
         MCP_PlanePacketPlayerControl pc = new MCP_PlanePacketPlayerControl();
-        boolean send = false;
+        boolean send;
         send = this.commonPlayerControl(player, plane, isPilot, pc);
         if (isPilot) {
             if (this.KeySwitchMode.isKeyDown()) {

@@ -2,7 +2,6 @@ package com.norwood.mcheli.wrapper;
 
 import com.norwood.mcheli.__helper.network.MCH_WrapPacketData;
 import com.norwood.mcheli.__helper.network.MCH_WrapPacketHandler;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;

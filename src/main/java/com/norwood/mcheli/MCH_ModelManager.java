@@ -16,7 +16,7 @@ import java.util.Random;
 public class MCH_ModelManager extends W_ModelBase {
     private static final MCH_ModelManager instance = new MCH_ModelManager();
     private static final HashMap<String, _IModelCustom> map = new HashMap<>();
-    private static ModelRenderer defaultModel = null;
+    private static final ModelRenderer defaultModel;
     private static boolean forceReloadMode = false;
     private static final Random rand = new Random();
 
@@ -49,7 +49,7 @@ public class MCH_ModelManager extends W_ModelBase {
                 map.remove(name);
             }
 
-            _IModelCustom model = null;
+            _IModelCustom model;
 
             try {
                 model = MCH_Models.loadModel(name);

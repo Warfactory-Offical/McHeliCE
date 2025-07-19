@@ -35,13 +35,8 @@ public class MCH_GuiTitle extends MCH_Gui {
     }
 
     @Override
-    public boolean doesGuiPauseGame() {
-        return false;
-    }
-
-    @Override
     public boolean isDrawGui(EntityPlayer player) {
-        if (this.restShowTick > 0 && this.chatLines.size() > 0 && player != null && player.world != null) {
+        if (this.restShowTick > 0 && !this.chatLines.isEmpty() && player != null && player.world != null) {
             if (this.prevPlayerTick != player.ticksExisted) {
                 this.showTick++;
                 this.restShowTick--;
@@ -110,7 +105,7 @@ public class MCH_GuiTitle extends MCH_Gui {
                 if (l + j1 > k) {
                     String s1 = this.mc.fontRenderer.trimStringToWidth(s, k - l, false);
                     String s2 = s1.length() < s.length() ? s.substring(s1.length()) : null;
-                    if (s2 != null && s2.length() > 0) {
+                    if (s2 != null) {
                         int k1 = s1.lastIndexOf(" ");
                         if (k1 >= 0 && this.mc.fontRenderer.getStringWidth(s.substring(0, k1)) > 0) {
                             s1 = s.substring(0, k1);
@@ -170,23 +165,23 @@ public class MCH_GuiTitle extends MCH_Gui {
         float charAlpha = this.mc.gameSettings.chatOpacity * 0.9F + 0.1F;
         float scale = this.mc.gameSettings.chatScale * 2.0F;
         GL11.glPushMatrix();
-        float posY = 0.0F;
+        float posY;
         switch (this.position) {
             case 0:
             default:
-                posY = this.mc.displayHeight / 2 / scaleFactor - this.chatLines.size() / 2.0F * 9.0F * scale;
+                posY = (float) this.mc.displayHeight / 2 / scaleFactor - this.chatLines.size() / 2.0F * 9.0F * scale;
                 break;
             case 1:
                 posY = 0.0F;
                 break;
             case 2:
-                posY = this.mc.displayHeight / scaleFactor - this.chatLines.size() * 9.0F * scale;
+                posY = (float) this.mc.displayHeight / scaleFactor - this.chatLines.size() * 9.0F * scale;
                 break;
             case 3:
-                posY = this.mc.displayHeight / 3 / scaleFactor - this.chatLines.size() / 2.0F * 9.0F * scale;
+                posY = (float) this.mc.displayHeight / 3 / scaleFactor - this.chatLines.size() / 2.0F * 9.0F * scale;
                 break;
             case 4:
-                posY = this.mc.displayHeight * 2 / 3 / scaleFactor - this.chatLines.size() / 2.0F * 9.0F * scale;
+                posY = (float) (this.mc.displayHeight * 2) / 3 / scaleFactor - this.chatLines.size() / 2.0F * 9.0F * scale;
         }
 
         GL11.glTranslatef(0.0F, posY, 0.0F);

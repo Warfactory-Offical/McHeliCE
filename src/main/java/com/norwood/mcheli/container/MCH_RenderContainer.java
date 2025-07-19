@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
@@ -23,7 +24,7 @@ public class MCH_RenderContainer extends W_Render<MCH_EntityContainer> {
         this.shadowSize = 0.5F;
     }
 
-    public void doRender(MCH_EntityContainer entity, double posX, double posY, double posZ, float par8, float tickTime) {
+    public void doRender(@NotNull MCH_EntityContainer entity, double posX, double posY, double posZ, float par8, float tickTime) {
         if (!MCH_RenderAircraft.shouldSkipRender(entity)) {
             GL11.glPushMatrix();
             GL11.glEnable(2884);
@@ -39,7 +40,7 @@ public class MCH_RenderContainer extends W_Render<MCH_EntityContainer> {
         }
     }
 
-    protected ResourceLocation getEntityTexture(MCH_EntityContainer entity) {
+    protected ResourceLocation getEntityTexture(@NotNull MCH_EntityContainer entity) {
         return TEX_DEFAULT;
     }
 }

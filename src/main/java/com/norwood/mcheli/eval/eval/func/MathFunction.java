@@ -1,15 +1,14 @@
 package com.norwood.mcheli.eval.eval.func;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 public class MathFunction implements Function {
     @Override
     public long evalLong(Object object, String name, Long[] args) throws Throwable {
         Class<?>[] types = new Class[args.length];
 
-        for (int i = 0; i < types.length; i++) {
-            types[i] = long.class;
-        }
+        Arrays.fill(types, long.class);
 
         Method m = Math.class.getMethod(name, types);
         Object ret = m.invoke(null, args);
@@ -20,9 +19,7 @@ public class MathFunction implements Function {
     public double evalDouble(Object object, String name, Double[] args) throws Throwable {
         Class<?>[] types = new Class[args.length];
 
-        for (int i = 0; i < types.length; i++) {
-            types[i] = double.class;
-        }
+        Arrays.fill(types, double.class);
 
         Method m = Math.class.getMethod(name, types);
         Object ret = m.invoke(null, args);

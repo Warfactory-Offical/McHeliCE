@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import org.jetbrains.annotations.NotNull;
 
 public enum LegacyModelLoader implements ICustomModelLoader {
     INSTANCE;
@@ -14,10 +15,10 @@ public enum LegacyModelLoader implements ICustomModelLoader {
     public static final String VARIANT = "mcheli_legacy";
     static final String TEMPLATE = "{'parent':'item/generated','textures':{'layer0':'__item__'}}".replaceAll("'", "\"");
 
-    public void onResourceManagerReload(IResourceManager resourceManager) {
+    public void onResourceManagerReload(@NotNull IResourceManager resourceManager) {
     }
 
-    public boolean accepts(ResourceLocation modelLocation) {
+    public boolean accepts(@NotNull ResourceLocation modelLocation) {
         if (!(modelLocation instanceof ModelResourceLocation)) {
             return false;
         } else {
@@ -26,11 +27,10 @@ public enum LegacyModelLoader implements ICustomModelLoader {
         }
     }
 
-    public IModel loadModel(ResourceLocation modelLocation) throws Exception {
+    public @NotNull IModel loadModel(ResourceLocation modelLocation) throws Exception {
         String path = modelLocation.getNamespace() + ":items/" + modelLocation.getPath();
         ModelBlock modelblock = ModelBlock.deserialize(TEMPLATE.replaceAll("__item__", path));
-        ModelBlock parent = ModelLoaderRegistry.getModel(modelblock.getParentLocation()).asVanillaModel().get();
-        modelblock.parent = parent;
+        modelblock.parent = ModelLoaderRegistry.getModel(modelblock.getParentLocation()).asVanillaModel().get();
         return new MCH_WrapperItemLayerModel(modelblock);
     }
 }

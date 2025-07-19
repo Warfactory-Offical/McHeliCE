@@ -56,7 +56,7 @@ public class FunctionExpression extends Col1Expression {
         if (e1 == null) {
             return e2 == null;
         } else {
-            return e2 != null && e1.equals(e2);
+            return e1.equals(e2);
         }
     }
 
@@ -226,7 +226,7 @@ public class FunctionExpression extends Col1Expression {
 
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if (this.target != null) {
             sb.append(this.target);
             sb.append('.');

@@ -25,6 +25,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -287,9 +288,8 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
             this.setRotation(this.rotationYaw, this.rotationPitch);
             if (!this.world.isRemote) {
                 List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().grow(0.2, 0.0, 0.2));
-                if (list != null && !list.isEmpty()) {
-                    for (int l = 0; l < list.size(); l++) {
-                        Entity entity = list.get(l);
+                if (!list.isEmpty()) {
+                    for (Entity entity : list) {
                         if (entity.canBePushed() && entity instanceof MCH_EntityContainer) {
                             entity.applyEntityCollision(this);
                         }
@@ -299,7 +299,7 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
                 if (MCH_Config.Collision_DestroyBlock.prmBool) {
                     for (int lx = 0; lx < 4; lx++) {
                         int i1 = MathHelper.floor(this.posX + (lx % 2 - 0.5) * 0.8);
-                        int j1 = MathHelper.floor(this.posZ + (lx / 2 - 0.5) * 0.8);
+                        int j1 = MathHelper.floor(this.posZ + ((double) lx / 2D - 0.5) * 0.8);
 
                         for (int k1 = 0; k1 < 2; k1++) {
                             int l1 = MathHelper.floor(this.posY) + k1;
@@ -330,10 +330,8 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
         return 2.0F;
     }
 
-    public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
-        if (player != null) {
-            this.displayInventory(player);
-        }
+    public boolean processInitialInteract(@NotNull EntityPlayer player, @NotNull EnumHand hand) {
+        this.displayInventory(player);
 
         return true;
     }

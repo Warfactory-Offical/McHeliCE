@@ -30,9 +30,9 @@ public class MCH_Models {
             try {
                 model = loader.load(resourceManager, resource);
             } catch (FileNotFoundException var10) {
-                MCH_Utils.logger().debug("model file not found '" + resource + "' at ." + loader.getExtension());
+                MCH_Utils.logger().debug("model file not found '{}' at .{}", resource, loader.getExtension());
             } catch (IOException var11) {
-                MCH_Utils.logger().error("load model error '" + resource + "' at ." + loader.getExtension(), var11);
+                MCH_Utils.logger().error("load model error '{}' at .{}", resource, loader.getExtension(), var11);
                 return null;
             }
 

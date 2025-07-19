@@ -50,7 +50,7 @@ public class AddonManager {
             }
         }
 
-        MCH_Utils.logger().info("Load complete addons. count:" + addons.size());
+        MCH_Utils.logger().info("Load complete addons. count:{}", addons.size());
         return addons;
     }
 
@@ -72,7 +72,7 @@ public class AddonManager {
         checkExistAddonDir(GeneratedAddonPack.instance().getFile());
         addReloadableResource(GeneratedAddonPack.instance(), MCH_MOD.class);
         FMLClientHandler.instance().refreshResources((Predicate) null);
-        MCH_Utils.logger().info("Load complete addons and add resources. count:" + addons.size());
+        MCH_Utils.logger().info("Load complete addons and add resources. count:{}", addons.size());
         return addons;
     }
 

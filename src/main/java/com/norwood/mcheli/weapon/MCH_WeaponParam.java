@@ -10,7 +10,7 @@ public class MCH_WeaponParam {
     public double posZ = 0.0;
     public float rotYaw = 0.0F;
     public float rotPitch = 0.0F;
-    public float rotRoll = 0.0F;
+    public final float rotRoll = 0.0F;
     public int option1 = 0;
     public int option2 = 0;
     public boolean isInfinity = false;

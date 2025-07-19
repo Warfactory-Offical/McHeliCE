@@ -39,6 +39,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -272,10 +273,6 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
         return this.getEntityBoundingBox();
     }
 
-    public boolean canBePushed() {
-        return false;
-    }
-
     public double getMountedYOffset() {
         Entity riddenByEntity = this.getRiddenByEntity();
         if (this.getKind() == 2 && riddenByEntity != null) {
@@ -301,7 +298,7 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
         return !this.isDead;
     }
 
-    public void applyEntityCollision(Entity par1Entity) {
+    public void applyEntityCollision(@NotNull Entity par1Entity) {
     }
 
     public void addVelocity(double par1, double par3, double par5) {
@@ -339,7 +336,7 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
         }
 
         int uavStationKind = this.getKind();
-        if (this.ticksExisted >= 30 || uavStationKind <= 0 || uavStationKind == 1 || uavStationKind != 2 || this.world.isRemote && !this.isRequestedSyncStatus) {
+        if (this.ticksExisted >= 30 || uavStationKind != 2 || this.world.isRemote && !this.isRequestedSyncStatus) {
             this.isRequestedSyncStatus = true;
         }
 
@@ -403,17 +400,14 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
     public void searchLastControlAircraft() {
         if (!this.loadedLastControlAircraftGuid.isEmpty()) {
             List<MCH_EntityAircraft> list = this.world.getEntitiesWithinAABB(MCH_EntityAircraft.class, this.getCollisionBoundingBox().grow(120.0, 120.0, 120.0));
-            if (list != null) {
-                for (int i = 0; i < list.size(); i++) {
-                    MCH_EntityAircraft ac = list.get(i);
-                    if (ac.getCommonUniqueId().equals(this.loadedLastControlAircraftGuid)) {
-                        String n = "no info : " + ac;
-                        MCH_Lib.DbgLog(this.world, "MCH_EntityUavStation.searchLastControlAircraft:found" + n);
-                        this.setLastControlAircraft(ac);
-                        this.setLastControlAircraftEntityId(W_Entity.getEntityId(ac));
-                        this.loadedLastControlAircraftGuid = "";
-                        return;
-                    }
+            for (MCH_EntityAircraft ac : list) {
+                if (ac.getCommonUniqueId().equals(this.loadedLastControlAircraftGuid)) {
+                    String n = "no info : " + ac;
+                    MCH_Lib.DbgLog(this.world, "MCH_EntityUavStation.searchLastControlAircraft:found" + n);
+                    this.setLastControlAircraft(ac);
+                    this.setLastControlAircraftEntityId(W_Entity.getEntityId(ac));
+                    this.loadedLastControlAircraftGuid = "";
+                    return;
                 }
             }
         }
@@ -481,7 +475,7 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
         this.motionZ = this.velocityZ;
     }
 
-    public void updatePassenger(Entity passenger) {
+    public void updatePassenger(@NotNull Entity passenger) {
         if (this.isPassenger(passenger)) {
             double x = -Math.sin(this.rotationYaw * Math.PI / 180.0) * 0.9;
             double z = Math.cos(this.rotationYaw * Math.PI / 180.0) * 0.9;
@@ -574,7 +568,7 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
         super.setInventorySlotContents(par1, itemStack);
     }
 
-    public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
+    public boolean processInitialInteract(@NotNull EntityPlayer player, @NotNull EnumHand hand) {
         if (hand != EnumHand.MAIN_HAND) {
             return false;
         } else {

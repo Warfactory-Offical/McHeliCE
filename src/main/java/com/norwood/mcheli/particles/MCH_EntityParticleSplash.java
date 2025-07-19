@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 public class MCH_EntityParticleSplash extends MCH_EntityParticleBase {
     public MCH_EntityParticleSplash(World par1World, double x, double y, double z, double mx, double my, double mz) {
@@ -67,7 +68,7 @@ public class MCH_EntityParticleSplash extends MCH_EntityParticleBase {
         this.motionZ *= 0.9;
     }
 
-    public void renderParticle(BufferBuilder buffer, Entity entityIn, float par2, float par3, float par4, float par5, float par6, float par7) {
+    public void renderParticle(BufferBuilder buffer, @NotNull Entity entityIn, float par2, float par3, float par4, float par5, float par6, float par7) {
         W_McClient.MOD_bindTexture("textures/particles/smoke.png");
         float f6 = this.particleTextureIndexX / 8.0F;
         float f7 = f6 + 0.125F;

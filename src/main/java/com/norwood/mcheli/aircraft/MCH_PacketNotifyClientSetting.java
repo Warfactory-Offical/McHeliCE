@@ -34,7 +34,7 @@ public class MCH_PacketNotifyClientSetting extends MCH_Packet {
     @Override
     public void readData(ByteArrayDataInput di) {
         try {
-            byte data = 0;
+            byte data;
             data = di.readByte();
             this.dismountAll = this.getBit(data, 0);
             this.heliAutoThrottleDown = this.getBit(data, 1);

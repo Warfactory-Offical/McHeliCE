@@ -6,8 +6,8 @@ import com.norwood.mcheli.eval.eval.repl.ReplaceAdapter;
 import com.norwood.mcheli.eval.eval.rule.ShareRuleValue;
 
 public class Replace4RefactorGetter extends ReplaceAdapter {
-    protected Refactor ref;
-    protected ShareRuleValue rule;
+    protected final Refactor ref;
+    protected final ShareRuleValue rule;
 
     Replace4RefactorGetter(Refactor ref, Rule rule) {
         this.ref = ref;
@@ -27,12 +27,10 @@ public class Replace4RefactorGetter extends ReplaceAdapter {
         } else {
             AbstractExpression exp2 = exp.expr;
             String name = this.ref.getNewName(obj, exp2.getWord());
-            if (name == null) {
-                return exp;
-            } else {
+            if (name != null) {
                 exp.expr = this.rule.parse(name, exp2.share);
-                return exp;
             }
+            return exp;
         }
     }
 

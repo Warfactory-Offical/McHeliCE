@@ -45,7 +45,7 @@ public class TechneModelLoader implements _IModelCustomLoader, IVertexModelLoade
 
     @Nullable
     @Override
-    public _IModelCustom load(IResourceManager resourceManager, ResourceLocation location) throws IOException, _ModelFormatException {
+    public _IModelCustom load(IResourceManager resourceManager, ResourceLocation location) throws _ModelFormatException {
         return null;
     }
 }

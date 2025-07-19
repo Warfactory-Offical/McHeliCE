@@ -156,8 +156,7 @@ public class MCH_WeaponGuidanceSystem {
                 Entity tgtEnt = null;
                 double dist = this.lockRange * this.lockRange * 2.0;
 
-                for (int i = 0; i < list.size(); i++) {
-                    Entity entity = list.get(i);
+                for (Entity entity : list) {
                     if (this.canLockEntity(entity)) {
                         double dx = entity.posX - user.posX;
                         double dy = entity.posY - user.posY;
@@ -274,7 +273,7 @@ public class MCH_WeaponGuidanceSystem {
             return false;
         } else {
             String className = entity.getClass().getName();
-            if (className.indexOf("EntityCamera") >= 0) {
+            if (className.contains("EntityCamera")) {
                 return false;
             } else if (!W_Lib.isEntityLivingBase(entity) && !(entity instanceof MCH_EntityAircraft)) {
                 return false;

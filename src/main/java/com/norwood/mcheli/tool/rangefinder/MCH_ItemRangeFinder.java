@@ -16,6 +16,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 public class MCH_ItemRangeFinder extends W_Item {
     public static int rangeFinderUseCooldown = 0;
@@ -80,13 +81,13 @@ public class MCH_ItemRangeFinder extends W_Item {
         }
     }
 
-    public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {
+    public void onPlayerStoppedUsing(@NotNull ItemStack stack, World worldIn, @NotNull EntityLivingBase entityLiving, int timeLeft) {
         if (worldIn.isRemote) {
             onStopUseItem();
         }
     }
 
-    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
+    public @NotNull ItemStack onItemUseFinish(@NotNull ItemStack stack, @NotNull World worldIn, @NotNull EntityLivingBase entityLiving) {
         return stack;
     }
 
@@ -95,15 +96,15 @@ public class MCH_ItemRangeFinder extends W_Item {
         return true;
     }
 
-    public EnumAction getItemUseAction(ItemStack itemStack) {
+    public @NotNull EnumAction getItemUseAction(@NotNull ItemStack itemStack) {
         return EnumAction.BOW;
     }
 
-    public int getMaxItemUseDuration(ItemStack itemStack) {
+    public int getMaxItemUseDuration(@NotNull ItemStack itemStack) {
         return 72000;
     }
 
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn) {
+    public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World world, EntityPlayer player, @NotNull EnumHand handIn) {
         ItemStack itemstack = player.getHeldItem(handIn);
         if (canUse(player)) {
             player.setActiveHand(handIn);
