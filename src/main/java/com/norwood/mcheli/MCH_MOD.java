@@ -247,7 +247,6 @@ public class MCH_MOD {
         creativeTabsPlane = new MCH_CreativeTabs("MC Heli Planes");
         creativeTabsTank = new MCH_CreativeTabs("MC Heli Tanks");
         creativeTabsVehicle = new MCH_CreativeTabs("MC Heli Vehicles");
-        W_ItemList.init();
         proxy.loadConfig("config/mcheli.cfg");
         config = proxy.config;
         ContentRegistries.loadContents(addonDir);
