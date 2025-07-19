@@ -104,7 +104,7 @@ public abstract class ContentLoader {
         return new ContentLoader.ContentEntry(filepath, this.domain, factory, lines, reload);
     }
 
-    static class ContentEntry {
+    public static class ContentEntry {
         private final String filepath;
         private final String domain;
         private final IContentFactory factory;

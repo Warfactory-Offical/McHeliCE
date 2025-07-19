@@ -141,7 +141,3 @@ achievement.McHeliAintWarHell=ホント戦争は地獄だぜ
 achievement.McHeliAintWarHell.desc=?
 achievement.McHeliReliefSupplies=支援物資
 achievement.McHeliReliefSupplies.desc=コンテナを投下
-
-gui.com.norwood.mcheli.gameConfig=Config設定 (準備中...)
-gui.com.norwood.mcheli.generateLegacyAsisst=Addonの自動生成
-gui.com.norwood.mcheli.generateLegacyAsisst.desc=テンプレートアドオンを自動生成します。\\n生成したアドオンに従来の機体ファイルを入れることで読み込みに対応させることが出来ます。
