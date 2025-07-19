@@ -10,20 +10,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class CustomItemStackRenderer extends TileEntityItemStackRenderer {
-   private static CustomItemStackRenderer instance;
+    private static CustomItemStackRenderer instance;
 
-   public void renderByItem(ItemStack p_192838_1_, float partialTicks) {
-      IItemModelRenderer renderer = MCH_ItemModelRenderers.getRenderer(p_192838_1_.getItem());
-      if (renderer != null) {
-         renderer.renderItem(p_192838_1_, PooledModelParameters.getEntity(), PooledModelParameters.getTransformType(), Animation.getPartialTickTime());
-      }
-   }
+    public static CustomItemStackRenderer getInstance() {
+        if (instance == null) {
+            instance = new CustomItemStackRenderer();
+        }
 
-   public static CustomItemStackRenderer getInstance() {
-      if (instance == null) {
-         instance = new CustomItemStackRenderer();
-      }
+        return instance;
+    }
 
-      return instance;
-   }
+    public void renderByItem(ItemStack p_192838_1_, float partialTicks) {
+        IItemModelRenderer renderer = MCH_ItemModelRenderers.getRenderer(p_192838_1_.getItem());
+        if (renderer != null) {
+            renderer.renderItem(p_192838_1_, PooledModelParameters.getEntity(), PooledModelParameters.getTransformType(), Animation.getPartialTickTime());
+        }
+    }
 }

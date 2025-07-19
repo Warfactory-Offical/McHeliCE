@@ -1,139 +1,141 @@
 package com.norwood.mcheli.eval.eval.exp;
 
-import java.util.List;
 import com.norwood.mcheli.eval.eval.EvalException;
 
+import java.util.List;
+import java.util.Objects;
+
 public abstract class AbstractExpression {
-   public static final int TRUE = 1;
-   public static final int FALSE = 0;
-   protected String string = null;
-   protected int pos = -1;
-   private String ope1;
-   private String ope2;
-   public ShareExpValue share;
-   protected int prio;
+    public static final int TRUE = 1;
+    public static final int FALSE = 0;
+    public ShareExpValue share;
+    protected String string = null;
+    protected int pos = -1;
+    protected int prio;
+    private String ope1;
+    private String ope2;
 
-   protected final boolean isTrue(boolean lng) {
-      return lng ? this.evalLong() != 0L : this.evalDouble() != 0.0;
-   }
+    protected AbstractExpression() {
+    }
 
-   protected AbstractExpression() {
-   }
+    protected AbstractExpression(AbstractExpression from, ShareExpValue s) {
+        this.string = from.string;
+        this.pos = from.pos;
+        this.prio = from.prio;
+        if (s != null) {
+            this.share = s;
+        } else {
+            this.share = from.share;
+        }
 
-   protected AbstractExpression(AbstractExpression from, ShareExpValue s) {
-      this.string = from.string;
-      this.pos = from.pos;
-      this.prio = from.prio;
-      if (s != null) {
-         this.share = s;
-      } else {
-         this.share = from.share;
-      }
+        this.ope1 = from.ope1;
+        this.ope2 = from.ope2;
+    }
 
-      this.ope1 = from.ope1;
-      this.ope2 = from.ope2;
-   }
+    private static boolean same(String str1, String str2) {
+        return Objects.equals(str1, str2);
+    }
 
-   public abstract AbstractExpression dup(ShareExpValue var1);
+    protected final boolean isTrue(boolean lng) {
+        return lng ? this.evalLong() != 0L : this.evalDouble() != 0.0;
+    }
 
-   public final String getOperator() {
-      return this.ope1;
-   }
+    public abstract AbstractExpression dup(ShareExpValue var1);
 
-   public final String getEndOperator() {
-      return this.ope2;
-   }
+    public final String getOperator() {
+        return this.ope1;
+    }
 
-   public final void setOperator(String ope) {
-      this.ope1 = ope;
-   }
+    public final void setOperator(String ope) {
+        this.ope1 = ope;
+    }
 
-   public final void setEndOperator(String ope) {
-      this.ope2 = ope;
-   }
+    public final String getEndOperator() {
+        return this.ope2;
+    }
 
-   protected String getWord() {
-      return this.getOperator();
-   }
+    public final void setEndOperator(String ope) {
+        this.ope2 = ope;
+    }
 
-   protected void setWord(String word) {
-      throw new EvalException(2001, word, this.string, this.pos, null);
-   }
+    protected String getWord() {
+        return this.getOperator();
+    }
 
-   protected abstract int getCols();
+    protected void setWord(String word) {
+        throw new EvalException(2001, word, this.string, this.pos, null);
+    }
 
-   protected final void setPos(String string, int pos) {
-      this.string = string;
-      this.pos = pos;
-   }
+    protected abstract int getCols();
 
-   protected abstract int getFirstPos();
+    protected final void setPos(String string, int pos) {
+        this.string = string;
+        this.pos = pos;
+    }
 
-   public final void setPriority(int prio) {
-      this.prio = prio;
-   }
+    protected abstract int getFirstPos();
 
-   protected final int getPriority() {
-      return this.prio;
-   }
+    protected final int getPriority() {
+        return this.prio;
+    }
 
-   protected void let(Object val, int pos) {
-      throw new EvalException(2004, this.toString(), this.string, pos, null);
-   }
+    public final void setPriority(int prio) {
+        this.prio = prio;
+    }
 
-   protected void let(long val, int pos) {
-      this.let(new Long(val), pos);
-   }
+    protected void let(Object val, int pos) {
+        throw new EvalException(2004, this.toString(), this.string, pos, null);
+    }
 
-   protected void let(double val, int pos) {
-      this.let(new Double(val), pos);
-   }
+    protected void let(long val, int pos) {
+        this.let(new Long(val), pos);
+    }
 
-   protected Object getVariable() {
-      String word = this.toString();
-      throw new EvalException(2002, word, this.string, this.pos, null);
-   }
+    protected void let(double val, int pos) {
+        this.let(new Double(val), pos);
+    }
 
-   protected void evalArgsLong(List<Long> args) {
-      args.add(new Long(this.evalLong()));
-   }
+    protected Object getVariable() {
+        String word = this.toString();
+        throw new EvalException(2002, word, this.string, this.pos, null);
+    }
 
-   protected void evalArgsDouble(List<Double> args) {
-      args.add(new Double(this.evalDouble()));
-   }
+    protected void evalArgsLong(List<Long> args) {
+        args.add(new Long(this.evalLong()));
+    }
 
-   protected void evalArgsObject(List<Object> args) {
-      args.add(this.evalObject());
-   }
+    protected void evalArgsDouble(List<Double> args) {
+        args.add(new Double(this.evalDouble()));
+    }
 
-   public abstract long evalLong();
+    protected void evalArgsObject(List<Object> args) {
+        args.add(this.evalObject());
+    }
 
-   public abstract double evalDouble();
+    public abstract long evalLong();
 
-   public abstract Object evalObject();
+    public abstract double evalDouble();
 
-   protected abstract void search();
+    public abstract Object evalObject();
 
-   protected abstract AbstractExpression replace();
+    protected abstract void search();
 
-   protected abstract AbstractExpression replaceVar();
+    protected abstract AbstractExpression replace();
 
-   @Override
-   public abstract boolean equals(Object var1);
+    protected abstract AbstractExpression replaceVar();
 
-   @Override
-   public abstract int hashCode();
+    @Override
+    public abstract boolean equals(Object var1);
 
-   public boolean same(AbstractExpression exp) {
-      return same(this.getOperator(), exp.getOperator()) && same(this.getEndOperator(), exp.getEndOperator()) && this.equals(exp);
-   }
+    @Override
+    public abstract int hashCode();
 
-   private static boolean same(String str1, String str2) {
-      return str1 == null ? str2 == null : str1.equals(str2);
-   }
+    public boolean same(AbstractExpression exp) {
+        return same(this.getOperator(), exp.getOperator()) && same(this.getEndOperator(), exp.getEndOperator()) && this.equals(exp);
+    }
 
-   public abstract void dump(int var1);
+    public abstract void dump(int var1);
 
-   @Override
-   public abstract String toString();
+    @Override
+    public abstract String toString();
 }

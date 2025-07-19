@@ -6,48 +6,51 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 public class MCH_Key {
-   public int key;
-   private boolean isPress;
-   private boolean isBeforePress;
+    public int key;
+    private boolean isPress;
+    private boolean isBeforePress;
 
-   public MCH_Key(int k) {
-      this.key = k;
-      this.isPress = false;
-      this.isBeforePress = false;
-   }
+    public MCH_Key(int k) {
+        this.key = k;
+        this.isPress = false;
+        this.isBeforePress = false;
+    }
 
-   public boolean isKeyDown() {
-      return !this.isBeforePress && this.isPress;
-   }
+    public static boolean isKeyDown(int key) {
+        if (key > 0) {
+            return Keyboard.isKeyDown(key);
+        } else {
+            return key < 0 && Mouse.isButtonDown(key + 100);
+        }
+    }
 
-   public boolean isKeyPress() {
-      return this.isPress;
-   }
+    public static boolean isKeyDown(KeyBinding keyBind) {
+        return isKeyDown(W_KeyBinding.getKeyCode(keyBind));
+    }
 
-   public boolean isKeyUp() {
-      return this.isBeforePress && !this.isPress;
-   }
+    public boolean isKeyDown() {
+        return !this.isBeforePress && this.isPress;
+    }
 
-   public void update() {
-      if (this.key != 0) {
-         this.isBeforePress = this.isPress;
-         if (this.key >= 0) {
-            this.isPress = Keyboard.isKeyDown(this.key);
-         } else {
-            this.isPress = Mouse.isButtonDown(this.key + 100);
-         }
-      }
-   }
+    public boolean isKeyPress() {
+        return this.isPress;
+    }
 
-   public static boolean isKeyDown(int key) {
-      if (key > 0) {
-         return Keyboard.isKeyDown(key);
-      } else {
-         return key < 0 ? Mouse.isButtonDown(key + 100) : false;
-      }
-   }
+    public boolean isKeyUp() {
+        return this.isBeforePress && !this.isPress;
+    }
 
-   public static boolean isKeyDown(KeyBinding keyBind) {
-      return isKeyDown(W_KeyBinding.getKeyCode(keyBind));
-   }
+    public void update() {
+        if (key == 0) return;
+
+        isBeforePress = isPress;
+
+        if (key >= 0) {
+            isPress = Keyboard.isKeyDown(key);
+        } else {
+            int mouseButton = key + 100;
+            isPress = Mouse.isButtonDown(mouseButton);
+        }
+    }
+
 }

@@ -2,111 +2,112 @@ package com.norwood.mcheli.__helper.info;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import com.norwood.mcheli.MCH_BaseInfo;
 import com.norwood.mcheli.__helper.MCH_Logger;
 
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+
 public class ContentRegistry<T extends MCH_BaseInfo> {
-   private Class<T> contentClass;
-   private String dir;
-   private Map<String, T> registry;
+    private final Class<T> contentClass;
+    private final String dir;
+    private final Map<String, T> registry;
 
-   private ContentRegistry(Class<T> contentClass, String dir, Map<String, T> table) {
-      this.contentClass = contentClass;
-      this.dir = dir;
-      this.registry = Maps.newHashMap(table);
-   }
+    private ContentRegistry(Class<T> contentClass, String dir, Map<String, T> table) {
+        this.contentClass = contentClass;
+        this.dir = dir;
+        this.registry = Maps.newHashMap(table);
+    }
 
-   @Nullable
-   public T get(@Nullable String key) {
-      return key == null ? null : this.registry.get(key);
-   }
+    private static <TYPE extends IContentData> void putTable(Map<String, TYPE> table, TYPE content) {
+        table.put(content.getLoation().getPath(), content);
+    }
 
-   @Nullable
-   public T findFirst(Predicate<? super T> filter) {
-      return this.registry.values().stream().filter(filter).findFirst().orElse(null);
-   }
+    public static <TYPE extends MCH_BaseInfo> ContentRegistry.Builder<TYPE> builder(Class<TYPE> type, String dir) {
+        return new ContentRegistry.Builder<>(type, dir);
+    }
 
-   public boolean reload(String key) {
-      T content = this.get(key);
-      if (content != null) {
-         IContentData newContent = ContentRegistries.reparseContent(content, this.dir);
-         if (this.contentClass.isInstance(newContent)) {
-            T castedContent = this.contentClass.cast(newContent);
-            this.registry.replace(key, castedContent);
-            return true;
-         }
+    @Nullable
+    public T get(@Nullable String key) {
+        return key == null ? null : this.registry.get(key);
+    }
 
-         MCH_Logger.get().error("Content cast error, old dir:{}, new dir:{}", content.getClass(), newContent.getClass());
-      }
+    @Nullable
+    public T findFirst(Predicate<? super T> filter) {
+        return this.registry.values().stream().filter(filter).findFirst().orElse(null);
+    }
 
-      return false;
-   }
+    public boolean reload(String key) {
+        T content = this.get(key);
+        if (content != null) {
+            IContentData newContent = ContentRegistries.reparseContent(content, this.dir);
+            if (this.contentClass.isInstance(newContent)) {
+                T castedContent = this.contentClass.cast(newContent);
+                this.registry.replace(key, castedContent);
+                return true;
+            }
 
-   public void reloadAll() {
-      for (T content : ContentRegistries.reloadAllAddonContents(this)) {
-         this.registry.replace(content.getLoation().getPath(), content);
-      }
-   }
+            MCH_Logger.get().error("Content cast error, old dir:{}, new dir:{}", content.getClass(), newContent.getClass());
+        }
 
-   public List<T> values() {
-      return ImmutableList.copyOf(this.registry.values());
-   }
+        return false;
+    }
 
-   public Set<Entry<String, T>> entries() {
-      return this.registry.entrySet();
-   }
+    public void reloadAll() {
+        for (T content : ContentRegistries.reloadAllAddonContents(this)) {
+            this.registry.replace(content.getLoation().getPath(), content);
+        }
+    }
 
-   public void forEachValue(Consumer<? super T> action) {
-      this.registry.values().forEach(action);
-   }
+    public List<T> values() {
+        return ImmutableList.copyOf(this.registry.values());
+    }
 
-   public boolean contains(String key) {
-      return this.registry.containsKey(key);
-   }
+    public Set<Entry<String, T>> entries() {
+        return this.registry.entrySet();
+    }
 
-   public int size() {
-      return this.registry.size();
-   }
+    public void forEachValue(Consumer<? super T> action) {
+        this.registry.values().forEach(action);
+    }
 
-   public Class<T> getType() {
-      return this.contentClass;
-   }
+    public boolean contains(String key) {
+        return this.registry.containsKey(key);
+    }
 
-   public String getDirectoryName() {
-      return this.dir;
-   }
+    public int size() {
+        return this.registry.size();
+    }
 
-   private static <TYPE extends IContentData> void putTable(Map<String, TYPE> table, TYPE content) {
-      table.put(content.getLoation().getPath(), content);
-   }
+    public Class<T> getType() {
+        return this.contentClass;
+    }
 
-   public static <TYPE extends MCH_BaseInfo> ContentRegistry.Builder<TYPE> builder(Class<TYPE> type, String dir) {
-      return new ContentRegistry.Builder<>(type, dir);
-   }
+    public String getDirectoryName() {
+        return this.dir;
+    }
 
-   public static class Builder<E extends MCH_BaseInfo> {
-      private Class<E> clazz;
-      private String dirName;
-      private Map<String, E> map = Maps.newHashMap();
+    public static class Builder<E extends MCH_BaseInfo> {
+        private final Class<E> clazz;
+        private final String dirName;
+        private final Map<String, E> map = Maps.newHashMap();
 
-      Builder(Class<E> clazz, String dir) {
-         this.clazz = clazz;
-         this.dirName = dir;
-      }
+        Builder(Class<E> clazz, String dir) {
+            this.clazz = clazz;
+            this.dirName = dir;
+        }
 
-      public void put(E content) {
-         ContentRegistry.putTable(this.map, content);
-      }
+        public void put(E content) {
+            ContentRegistry.putTable(this.map, content);
+        }
 
-      public ContentRegistry<E> build() {
-         return new ContentRegistry<>(this.clazz, this.dirName, this.map);
-      }
-   }
+        public ContentRegistry<E> build() {
+            return new ContentRegistry<>(this.clazz, this.dirName, this.map);
+        }
+    }
 }

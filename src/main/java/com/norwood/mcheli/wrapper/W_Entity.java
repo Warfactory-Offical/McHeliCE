@@ -1,6 +1,5 @@
 package com.norwood.mcheli.wrapper;
 
-import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.Entity;
@@ -18,104 +17,106 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+
 public abstract class W_Entity extends Entity {
-   protected double _renderDistanceWeight = 1.0;
+    protected double _renderDistanceWeight = 1.0;
 
-   public W_Entity(World par1World) {
-      super(par1World);
-   }
+    public W_Entity(World par1World) {
+        super(par1World);
+    }
 
-   protected void entityInit() {
-   }
+    public static boolean isEntityFallingBlock(Entity entity) {
+        return entity instanceof EntityFallingBlock;
+    }
 
-   public static boolean isEntityFallingBlock(Entity entity) {
-      return entity instanceof EntityFallingBlock;
-   }
+    public static int getEntityId(@Nullable Entity entity) {
+        return entity != null ? entity.getEntityId() : -1;
+    }
 
-   public static int getEntityId(@Nullable Entity entity) {
-      return entity != null ? entity.getEntityId() : -1;
-   }
+    public static boolean isEqual(@Nullable Entity e1, @Nullable Entity e2) {
+        int i1 = getEntityId(e1);
+        int i2 = getEntityId(e2);
+        return i1 == i2;
+    }
 
-   public static boolean isEqual(@Nullable Entity e1, @Nullable Entity e2) {
-      int i1 = getEntityId(e1);
-      int i2 = getEntityId(e2);
-      return i1 == i2;
-   }
+    public static boolean attackEntityFrom(Entity entity, DamageSource ds, float par2) {
+        return entity.attackEntityFrom(ds, par2);
+    }
 
-   public EntityItem dropItemWithOffset(Item item, int par2, float par3) {
-      return this.entityDropItem(new ItemStack(item, par2, 0), par3);
-   }
+    public static float getBlockExplosionResistance(Entity entity, Explosion par1Explosion, World par2World, int par3, int par4, int par5, Block par6Block) {
+        if (par6Block != null) {
+            try {
+                return entity.getExplosionResistance(par1Explosion, par2World, new BlockPos(par3, par4, par5), par6Block.getDefaultState());
+            } catch (Exception var8) {
+                var8.printStackTrace();
+            }
+        }
 
-   public String getEntityName() {
-      return super.getEntityString();
-   }
+        return 0.0F;
+    }
 
-   public boolean attackEntityFrom(DamageSource par1DamageSource, int par2) {
-      return this.attackEntityFrom(par1DamageSource, (float)par2);
-   }
+    public static boolean shouldExplodeBlock(Entity entity, Explosion par1Explosion, World par2World, int par3, int par4, int par5, int par6, float par7) {
+        return entity.canExplosionDestroyBlock(par1Explosion, par2World, new BlockPos(par3, par4, par5), W_Block.getBlockById(par6).getDefaultState(), par7);
+    }
 
-   public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
-      return false;
-   }
+    public static PotionEffect getActivePotionEffect(Entity entity, Potion par1Potion) {
+        return entity instanceof EntityLivingBase ? ((EntityLivingBase) entity).getActivePotionEffect(par1Potion) : null;
+    }
 
-   public static boolean attackEntityFrom(Entity entity, DamageSource ds, float par2) {
-      return entity.attackEntityFrom(ds, par2);
-   }
+    public static void removePotionEffectClient(Entity entity, Potion potion) {
+        if (entity instanceof EntityLivingBase) {
+            ((EntityLivingBase) entity).removePotionEffect(potion);
+        }
+    }
 
-   public void addEntityCrashInfo(CrashReportCategory par1CrashReportCategory) {
-      super.addEntityCrashInfo(par1CrashReportCategory);
-   }
+    public static void removePotionEffect(Entity entity, Potion potion) {
+        if (entity instanceof EntityLivingBase) {
+            ((EntityLivingBase) entity).removePotionEffect(potion);
+        }
+    }
 
-   public static float getBlockExplosionResistance(Entity entity, Explosion par1Explosion, World par2World, int par3, int par4, int par5, Block par6Block) {
-      if (par6Block != null) {
-         try {
-            return entity.getExplosionResistance(par1Explosion, par2World, new BlockPos(par3, par4, par5), par6Block.getDefaultState());
-         } catch (Exception var8) {
-            var8.printStackTrace();
-         }
-      }
+    public static void addPotionEffect(Entity entity, PotionEffect pe) {
+        if (entity instanceof EntityLivingBase) {
+            ((EntityLivingBase) entity).addPotionEffect(pe);
+        }
+    }
 
-      return 0.0F;
-   }
+    protected void entityInit() {
+    }
 
-   public static boolean shouldExplodeBlock(Entity entity, Explosion par1Explosion, World par2World, int par3, int par4, int par5, int par6, float par7) {
-      return entity.canExplosionDestroyBlock(par1Explosion, par2World, new BlockPos(par3, par4, par5), W_Block.getBlockById(par6).getDefaultState(), par7);
-   }
+    public EntityItem dropItemWithOffset(Item item, int par2, float par3) {
+        return this.entityDropItem(new ItemStack(item, par2, 0), par3);
+    }
 
-   public static PotionEffect getActivePotionEffect(Entity entity, Potion par1Potion) {
-      return entity instanceof EntityLivingBase ? ((EntityLivingBase)entity).getActivePotionEffect(par1Potion) : null;
-   }
+    public String getEntityName() {
+        return super.getEntityString();
+    }
 
-   public static void removePotionEffectClient(Entity entity, Potion potion) {
-      if (entity instanceof EntityLivingBase) {
-         ((EntityLivingBase)entity).removePotionEffect(potion);
-      }
-   }
+    public boolean attackEntityFrom(DamageSource par1DamageSource, int par2) {
+        return this.attackEntityFrom(par1DamageSource, (float) par2);
+    }
 
-   public static void removePotionEffect(Entity entity, Potion potion) {
-      if (entity instanceof EntityLivingBase) {
-         ((EntityLivingBase)entity).removePotionEffect(potion);
-      }
-   }
+    public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
+        return false;
+    }
 
-   public static void addPotionEffect(Entity entity, PotionEffect pe) {
-      if (entity instanceof EntityLivingBase) {
-         ((EntityLivingBase)entity).addPotionEffect(pe);
-      }
-   }
+    public void addEntityCrashInfo(CrashReportCategory par1CrashReportCategory) {
+        super.addEntityCrashInfo(par1CrashReportCategory);
+    }
 
-   protected void doBlockCollisions() {
-      super.doBlockCollisions();
-   }
+    protected void doBlockCollisions() {
+        super.doBlockCollisions();
+    }
 
-   @SideOnly(Side.CLIENT)
-   public boolean isInRangeToRenderDist(double distance) {
-      double d0 = this.getEntityBoundingBox().getAverageEdgeLength();
-      if (Double.isNaN(d0)) {
-         d0 = 1.0;
-      }
+    @SideOnly(Side.CLIENT)
+    public boolean isInRangeToRenderDist(double distance) {
+        double d0 = this.getEntityBoundingBox().getAverageEdgeLength();
+        if (Double.isNaN(d0)) {
+            d0 = 1.0;
+        }
 
-      d0 = d0 * 64.0 * this._renderDistanceWeight;
-      return distance < d0 * d0;
-   }
+        d0 = d0 * 64.0 * this._renderDistanceWeight;
+        return distance < d0 * d0;
+    }
 }

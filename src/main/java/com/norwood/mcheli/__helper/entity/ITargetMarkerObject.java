@@ -1,52 +1,53 @@
 package com.norwood.mcheli.__helper.entity;
 
-import javax.annotation.Nullable;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+
 public interface ITargetMarkerObject {
-   double getX();
+    static ITargetMarkerObject fromEntity(Entity target) {
+        return new ITargetMarkerObject.EntityWrapper(target);
+    }
 
-   double getY();
+    double getX();
 
-   double getZ();
+    double getY();
 
-   @Nullable
-   default Entity getEntity() {
-      return null;
-   }
+    double getZ();
 
-   static ITargetMarkerObject fromEntity(Entity target) {
-      return new ITargetMarkerObject.EntityWrapper(target);
-   }
+    @Nullable
+    default Entity getEntity() {
+        return null;
+    }
 
-   @SideOnly(Side.CLIENT)
-   public static class EntityWrapper implements ITargetMarkerObject {
-      private final Entity target;
+    @SideOnly(Side.CLIENT)
+    class EntityWrapper implements ITargetMarkerObject {
+        private final Entity target;
 
-      public EntityWrapper(Entity entity) {
-         this.target = entity;
-      }
+        public EntityWrapper(Entity entity) {
+            this.target = entity;
+        }
 
-      @Override
-      public double getX() {
-         return this.target.posX;
-      }
+        @Override
+        public double getX() {
+            return this.target.posX;
+        }
 
-      @Override
-      public double getY() {
-         return this.target.posY;
-      }
+        @Override
+        public double getY() {
+            return this.target.posY;
+        }
 
-      @Override
-      public double getZ() {
-         return this.target.posZ;
-      }
+        @Override
+        public double getZ() {
+            return this.target.posZ;
+        }
 
-      @Override
-      public Entity getEntity() {
-         return this.target;
-      }
-   }
+        @Override
+        public Entity getEntity() {
+            return this.target;
+        }
+    }
 }

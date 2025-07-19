@@ -1,6 +1,5 @@
 package com.norwood.mcheli.gltd;
 
-import java.util.Random;
 import com.norwood.mcheli.MCH_RenderLib;
 import com.norwood.mcheli.__helper.client._IModelCustom;
 import com.norwood.mcheli.wrapper.W_Lib;
@@ -15,67 +14,69 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import java.util.Random;
+
 @SideOnly(Side.CLIENT)
 public class MCH_RenderGLTD extends W_Render<MCH_EntityGLTD> {
-   public static final IRenderFactory<MCH_EntityGLTD> FACTORY = MCH_RenderGLTD::new;
-   public static final Random rand = new Random();
-   public static _IModelCustom model;
+    public static final IRenderFactory<MCH_EntityGLTD> FACTORY = MCH_RenderGLTD::new;
+    public static final Random rand = new Random();
+    public static _IModelCustom model;
 
-   public MCH_RenderGLTD(RenderManager renderManager) {
-      super(renderManager);
-      this.shadowSize = 0.5F;
-   }
+    public MCH_RenderGLTD(RenderManager renderManager) {
+        super(renderManager);
+        this.shadowSize = 0.5F;
+    }
 
-   public void doRender(MCH_EntityGLTD entity, double posX, double posY, double posZ, float par8, float tickTime) {
-      GL11.glPushMatrix();
-      GL11.glTranslated(posX, posY + 0.25, posZ);
-      this.setCommonRenderParam(true, entity.getBrightnessForRender());
-      this.bindTexture("textures/gltd.png");
-      Minecraft mc = Minecraft.getMinecraft();
-      boolean isNotRenderHead = false;
-      if (entity.getRiddenByEntity() != null) {
-         entity.isUsedPlayer = true;
-         entity.renderRotaionYaw = entity.getRiddenByEntity().rotationYaw;
-         entity.renderRotaionPitch = entity.getRiddenByEntity().rotationPitch;
-         isNotRenderHead = mc.gameSettings.thirdPersonView == 0 && W_Lib.isClientPlayer(entity.getRiddenByEntity());
-      }
+    public void doRender(MCH_EntityGLTD entity, double posX, double posY, double posZ, float par8, float tickTime) {
+        GL11.glPushMatrix();
+        GL11.glTranslated(posX, posY + 0.25, posZ);
+        this.setCommonRenderParam(true, entity.getBrightnessForRender());
+        this.bindTexture("textures/gltd.png");
+        Minecraft mc = Minecraft.getMinecraft();
+        boolean isNotRenderHead = false;
+        if (entity.getRiddenByEntity() != null) {
+            entity.isUsedPlayer = true;
+            entity.renderRotaionYaw = entity.getRiddenByEntity().rotationYaw;
+            entity.renderRotaionPitch = entity.getRiddenByEntity().rotationPitch;
+            isNotRenderHead = mc.gameSettings.thirdPersonView == 0 && W_Lib.isClientPlayer(entity.getRiddenByEntity());
+        }
 
-      if (entity.isUsedPlayer) {
-         GL11.glPushMatrix();
-         GL11.glRotatef(-entity.rotationYaw, 0.0F, 1.0F, 0.0F);
-         model.renderPart("$body");
-         GL11.glPopMatrix();
-      } else {
-         GL11.glRotatef(-entity.rotationYaw, 0.0F, 1.0F, 0.0F);
-         model.renderPart("$body");
-      }
+        if (entity.isUsedPlayer) {
+            GL11.glPushMatrix();
+            GL11.glRotatef(-entity.rotationYaw, 0.0F, 1.0F, 0.0F);
+            model.renderPart("$body");
+            GL11.glPopMatrix();
+        } else {
+            GL11.glRotatef(-entity.rotationYaw, 0.0F, 1.0F, 0.0F);
+            model.renderPart("$body");
+        }
 
-      GL11.glTranslatef(0.0F, 0.45F, 0.0F);
-      if (entity.isUsedPlayer) {
-         GL11.glRotatef(entity.renderRotaionYaw, 0.0F, -1.0F, 0.0F);
-         GL11.glRotatef(entity.renderRotaionPitch, 1.0F, 0.0F, 0.0F);
-      }
+        GL11.glTranslatef(0.0F, 0.45F, 0.0F);
+        if (entity.isUsedPlayer) {
+            GL11.glRotatef(entity.renderRotaionYaw, 0.0F, -1.0F, 0.0F);
+            GL11.glRotatef(entity.renderRotaionPitch, 1.0F, 0.0F, 0.0F);
+        }
 
-      GL11.glTranslatef(0.0F, -0.45F, 0.0F);
-      if (!isNotRenderHead) {
-         model.renderPart("$head");
-      }
+        GL11.glTranslatef(0.0F, -0.45F, 0.0F);
+        if (!isNotRenderHead) {
+            model.renderPart("$head");
+        }
 
-      GL11.glTranslatef(0.0F, 0.45F, 0.0F);
-      this.restoreCommonRenderParam();
-      GL11.glDisable(2896);
-      Vec3d[] v = new Vec3d[]{new Vec3d(0.0, 0.2, 0.0), new Vec3d(0.0, 0.2, 100.0)};
-      int a = rand.nextInt(64);
-      MCH_RenderLib.drawLine(v, 1619066752 | a << 24);
-      GL11.glEnable(2896);
-      GL11.glPopMatrix();
-   }
+        GL11.glTranslatef(0.0F, 0.45F, 0.0F);
+        this.restoreCommonRenderParam();
+        GL11.glDisable(2896);
+        Vec3d[] v = new Vec3d[]{new Vec3d(0.0, 0.2, 0.0), new Vec3d(0.0, 0.2, 100.0)};
+        int a = rand.nextInt(64);
+        MCH_RenderLib.drawLine(v, 1619066752 | a << 24);
+        GL11.glEnable(2896);
+        GL11.glPopMatrix();
+    }
 
-   public boolean shouldRender(MCH_EntityGLTD livingEntity, ICamera camera, double camX, double camY, double camZ) {
-      return true;
-   }
+    public boolean shouldRender(MCH_EntityGLTD livingEntity, ICamera camera, double camX, double camY, double camZ) {
+        return true;
+    }
 
-   protected ResourceLocation getEntityTexture(MCH_EntityGLTD entity) {
-      return TEX_DEFAULT;
-   }
+    protected ResourceLocation getEntityTexture(MCH_EntityGLTD entity) {
+        return TEX_DEFAULT;
+    }
 }

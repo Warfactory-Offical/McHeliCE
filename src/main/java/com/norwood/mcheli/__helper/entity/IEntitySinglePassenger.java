@@ -1,9 +1,10 @@
 package com.norwood.mcheli.__helper.entity;
 
-import javax.annotation.Nullable;
 import net.minecraft.entity.Entity;
 
+import javax.annotation.Nullable;
+
 public interface IEntitySinglePassenger {
-   @Nullable
-   Entity getRiddenByEntity();
+    @Nullable
+    Entity getRiddenByEntity();
 }

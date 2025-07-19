@@ -1,9 +1,6 @@
 package com.norwood.mcheli.__helper.info;
 
 import com.google.common.collect.Maps;
-import java.util.Map;
-import java.util.function.BiFunction;
-import javax.annotation.Nullable;
 import com.norwood.mcheli.__helper.MCH_Utils;
 import com.norwood.mcheli.__helper.addon.AddonResourceLocation;
 import com.norwood.mcheli.helicopter.MCH_HeliInfo;
@@ -14,37 +11,41 @@ import com.norwood.mcheli.throwable.MCH_ThrowableInfo;
 import com.norwood.mcheli.vehicle.MCH_VehicleInfo;
 import com.norwood.mcheli.weapon.MCH_WeaponInfo;
 
+import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.function.BiFunction;
+
 public class ContentFactories {
-   private static final Map<String, IContentFactory> TABLE = Maps.newHashMap();
+    private static final Map<String, IContentFactory> TABLE = Maps.newHashMap();
 
-   @Nullable
-   public static IContentFactory getFactory(@Nullable String dirName) {
-      return dirName == null ? null : TABLE.get(dirName);
-   }
+    static {
+        TABLE.put("helicopters", createFactory(ContentType.HELICOPTER, MCH_HeliInfo::new));
+        TABLE.put("planes", createFactory(ContentType.PLANE, MCP_PlaneInfo::new));
+        TABLE.put("tanks", createFactory(ContentType.TANK, MCH_TankInfo::new));
+        TABLE.put("vehicles", createFactory(ContentType.VEHICLE, MCH_VehicleInfo::new));
+        TABLE.put("throwable", createFactory(ContentType.THROWABLE, MCH_ThrowableInfo::new));
+        TABLE.put("weapons", createFactory(ContentType.WEAPON, MCH_WeaponInfo::new));
+        if (MCH_Utils.isClient()) {
+            TABLE.put("hud", createFactory(ContentType.HUD, MCH_Hud::new));
+        }
+    }
 
-   private static IContentFactory createFactory(final ContentType type, final BiFunction<AddonResourceLocation, String, IContentData> function) {
-      return new IContentFactory() {
-         @Override
-         public IContentData create(AddonResourceLocation location, String filepath) {
-            return function.apply(location, filepath);
-         }
+    @Nullable
+    public static IContentFactory getFactory(@Nullable String dirName) {
+        return dirName == null ? null : TABLE.get(dirName);
+    }
 
-         @Override
-         public ContentType getType() {
-            return type;
-         }
-      };
-   }
+    private static IContentFactory createFactory(final ContentType type, final BiFunction<AddonResourceLocation, String, IContentData> function) {
+        return new IContentFactory() {
+            @Override
+            public IContentData create(AddonResourceLocation location, String filepath) {
+                return function.apply(location, filepath);
+            }
 
-   static {
-      TABLE.put("helicopters", createFactory(ContentType.HELICOPTER, MCH_HeliInfo::new));
-      TABLE.put("planes", createFactory(ContentType.PLANE, MCP_PlaneInfo::new));
-      TABLE.put("tanks", createFactory(ContentType.TANK, MCH_TankInfo::new));
-      TABLE.put("vehicles", createFactory(ContentType.VEHICLE, MCH_VehicleInfo::new));
-      TABLE.put("throwable", createFactory(ContentType.THROWABLE, MCH_ThrowableInfo::new));
-      TABLE.put("weapons", createFactory(ContentType.WEAPON, MCH_WeaponInfo::new));
-      if (MCH_Utils.isClient()) {
-         TABLE.put("hud", createFactory(ContentType.HUD, MCH_Hud::new));
-      }
-   }
+            @Override
+            public ContentType getType() {
+                return type;
+            }
+        };
+    }
 }

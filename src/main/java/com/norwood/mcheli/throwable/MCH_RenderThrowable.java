@@ -10,32 +10,32 @@ import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class MCH_RenderThrowable extends W_Render<MCH_EntityThrowable> {
-   public static final IRenderFactory<MCH_EntityThrowable> FACTORY = MCH_RenderThrowable::new;
+    public static final IRenderFactory<MCH_EntityThrowable> FACTORY = MCH_RenderThrowable::new;
 
-   public MCH_RenderThrowable(RenderManager renderManager) {
-      super(renderManager);
-      this.shadowSize = 0.0F;
-   }
+    public MCH_RenderThrowable(RenderManager renderManager) {
+        super(renderManager);
+        this.shadowSize = 0.0F;
+    }
 
-   public void doRender(MCH_EntityThrowable entity, double posX, double posY, double posZ, float par8, float tickTime) {
-      MCH_ThrowableInfo info = entity.getInfo();
-      if (info != null) {
-         GL11.glPushMatrix();
-         GL11.glTranslated(posX, posY, posZ);
-         GL11.glRotatef(entity.rotationYaw, 0.0F, -1.0F, 0.0F);
-         GL11.glRotatef(entity.rotationPitch, 1.0F, 0.0F, 0.0F);
-         this.setCommonRenderParam(true, entity.getBrightnessForRender());
-         if (info.model != null) {
-            this.bindTexture("textures/throwable/" + info.name + ".png");
-            info.model.renderAll();
-         }
+    public void doRender(MCH_EntityThrowable entity, double posX, double posY, double posZ, float par8, float tickTime) {
+        MCH_ThrowableInfo info = entity.getInfo();
+        if (info != null) {
+            GL11.glPushMatrix();
+            GL11.glTranslated(posX, posY, posZ);
+            GL11.glRotatef(entity.rotationYaw, 0.0F, -1.0F, 0.0F);
+            GL11.glRotatef(entity.rotationPitch, 1.0F, 0.0F, 0.0F);
+            this.setCommonRenderParam(true, entity.getBrightnessForRender());
+            if (info.model != null) {
+                this.bindTexture("textures/throwable/" + info.name + ".png");
+                info.model.renderAll();
+            }
 
-         this.restoreCommonRenderParam();
-         GL11.glPopMatrix();
-      }
-   }
+            this.restoreCommonRenderParam();
+            GL11.glPopMatrix();
+        }
+    }
 
-   protected ResourceLocation getEntityTexture(MCH_EntityThrowable entity) {
-      return TEX_DEFAULT;
-   }
+    protected ResourceLocation getEntityTexture(MCH_EntityThrowable entity) {
+        return TEX_DEFAULT;
+    }
 }

@@ -27,7 +27,7 @@ public class AddonManager {
 
     @Nullable
     public static AddonPack get(String addonDomain) {
-        return (AddonPack) ("@builtin".equals(addonDomain) ? BuiltinAddonPack.instance() : ADDON_LIST.get(addonDomain));
+        return "@builtin".equals(addonDomain) ? BuiltinAddonPack.instance() : ADDON_LIST.get(addonDomain);
     }
 
     public static List<AddonPack> getLoadedAddons() {

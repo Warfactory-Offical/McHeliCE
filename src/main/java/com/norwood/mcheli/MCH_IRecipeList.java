@@ -3,7 +3,7 @@ package com.norwood.mcheli;
 import net.minecraft.item.crafting.IRecipe;
 
 public interface MCH_IRecipeList {
-   int getRecipeListSize();
+    int getRecipeListSize();
 
-   IRecipe getRecipe(int var1);
+    IRecipe getRecipe(int var1);
 }

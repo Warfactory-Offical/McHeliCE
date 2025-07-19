@@ -1,8 +1,6 @@
 package com.norwood.mcheli.__helper;
 
 import com.google.common.collect.Sets;
-import java.util.Set;
-import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -12,34 +10,37 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 
+import javax.annotation.Nullable;
+import java.util.Set;
+
 @ObjectHolder("mcheli")
 @EventBusSubscriber(
-   modid = "mcheli"
+        modid = "mcheli"
 )
 public class MCH_Items {
-   private static Set<Item> registryWrapper = Sets.newLinkedHashSet();
+    private static final Set<Item> registryWrapper = Sets.newLinkedHashSet();
 
-   @SubscribeEvent
-   static void onItemRegistryEvent(Register<Item> event) {
-      for (Item item : registryWrapper) {
-         event.getRegistry().register(item);
-      }
-   }
+    @SubscribeEvent
+    static void onItemRegistryEvent(Register<Item> event) {
+        for (Item item : registryWrapper) {
+            event.getRegistry().register(item);
+        }
+    }
 
-   public static void register(Item item, String name) {
-      registryWrapper.add(item.setRegistryName(MCH_Utils.suffix(name)));
-   }
+    public static void register(Item item, String name) {
+        registryWrapper.add(item.setRegistryName(MCH_Utils.suffix(name)));
+    }
 
-   public static void registerBlock(Block block) {
-      registryWrapper.add(new ItemBlock(block).setRegistryName(block.getRegistryName()));
-   }
+    public static void registerBlock(Block block) {
+        registryWrapper.add(new ItemBlock(block).setRegistryName(block.getRegistryName()));
+    }
 
-   @Nullable
-   public static Item get(String name) {
-      return (Item)ForgeRegistries.ITEMS.getValue(MCH_Utils.suffix(name));
-   }
+    @Nullable
+    public static Item get(String name) {
+        return ForgeRegistries.ITEMS.getValue(MCH_Utils.suffix(name));
+    }
 
-   public static String getName(Item item) {
-      return ForgeRegistries.ITEMS.getKey(item).toString();
-   }
+    public static String getName(Item item) {
+        return ForgeRegistries.ITEMS.getKey(item).toString();
+    }
 }

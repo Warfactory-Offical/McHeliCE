@@ -1,25 +1,13 @@
 package com.norwood.mcheli;
 
-import java.io.File;
-import java.util.List;
 import com.norwood.mcheli.__helper.addon.AddonManager;
 import com.norwood.mcheli.__helper.addon.AddonPack;
 import com.norwood.mcheli.__helper.client.MCH_ItemModelRenderers;
 import com.norwood.mcheli.__helper.client._IModelCustom;
 import com.norwood.mcheli.__helper.client.model.LegacyModelLoader;
-import com.norwood.mcheli.__helper.client.renderer.item.BuiltInDraftingTableItemRenderer;
-import com.norwood.mcheli.__helper.client.renderer.item.BuiltInGLTDItemRenderer;
-import com.norwood.mcheli.__helper.client.renderer.item.BuiltInInvisibleItemRenderer;
-import com.norwood.mcheli.__helper.client.renderer.item.BuiltInLightWeaponItemRenderer;
-import com.norwood.mcheli.__helper.client.renderer.item.BuiltInRangeFinderItemRenderer;
-import com.norwood.mcheli.__helper.client.renderer.item.BuiltInWrenchItemRenderer;
+import com.norwood.mcheli.__helper.client.renderer.item.*;
 import com.norwood.mcheli.__helper.info.ContentRegistries;
-import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
-import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
-import com.norwood.mcheli.aircraft.MCH_EntityHide;
-import com.norwood.mcheli.aircraft.MCH_EntitySeat;
-import com.norwood.mcheli.aircraft.MCH_RenderAircraft;
-import com.norwood.mcheli.aircraft.MCH_SoundUpdater;
+import com.norwood.mcheli.aircraft.*;
 import com.norwood.mcheli.block.MCH_DraftingTableRenderer;
 import com.norwood.mcheli.block.MCH_DraftingTableTileEntity;
 import com.norwood.mcheli.chain.MCH_EntityChain;
@@ -55,34 +43,8 @@ import com.norwood.mcheli.uav.MCH_RenderUavStation;
 import com.norwood.mcheli.vehicle.MCH_EntityVehicle;
 import com.norwood.mcheli.vehicle.MCH_RenderVehicle;
 import com.norwood.mcheli.vehicle.MCH_VehicleInfo;
-import com.norwood.mcheli.weapon.MCH_BulletModel;
-import com.norwood.mcheli.weapon.MCH_DefaultBulletModels;
-import com.norwood.mcheli.weapon.MCH_EntityA10;
-import com.norwood.mcheli.weapon.MCH_EntityAAMissile;
-import com.norwood.mcheli.weapon.MCH_EntityASMissile;
-import com.norwood.mcheli.weapon.MCH_EntityATMissile;
-import com.norwood.mcheli.weapon.MCH_EntityBomb;
-import com.norwood.mcheli.weapon.MCH_EntityBullet;
-import com.norwood.mcheli.weapon.MCH_EntityCartridge;
-import com.norwood.mcheli.weapon.MCH_EntityDispensedItem;
-import com.norwood.mcheli.weapon.MCH_EntityMarkerRocket;
-import com.norwood.mcheli.weapon.MCH_EntityRocket;
-import com.norwood.mcheli.weapon.MCH_EntityTorpedo;
-import com.norwood.mcheli.weapon.MCH_EntityTvMissile;
-import com.norwood.mcheli.weapon.MCH_RenderA10;
-import com.norwood.mcheli.weapon.MCH_RenderAAMissile;
-import com.norwood.mcheli.weapon.MCH_RenderASMissile;
-import com.norwood.mcheli.weapon.MCH_RenderBomb;
-import com.norwood.mcheli.weapon.MCH_RenderBullet;
-import com.norwood.mcheli.weapon.MCH_RenderCartridge;
-import com.norwood.mcheli.weapon.MCH_RenderNone;
-import com.norwood.mcheli.weapon.MCH_RenderTvMissile;
-import com.norwood.mcheli.weapon.MCH_WeaponInfo;
-import com.norwood.mcheli.wrapper.W_Item;
-import com.norwood.mcheli.wrapper.W_LanguageRegistry;
-import com.norwood.mcheli.wrapper.W_McClient;
-import com.norwood.mcheli.wrapper.W_Reflection;
-import com.norwood.mcheli.wrapper.W_TickRegistry;
+import com.norwood.mcheli.weapon.*;
+import com.norwood.mcheli.wrapper.*;
 import com.norwood.mcheli.wrapper.modelloader.W_ModelCustom;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -93,430 +55,433 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.io.File;
+import java.util.List;
+
 public class MCH_ClientProxy extends MCH_CommonProxy {
-   public String lastLoadHUDPath = "";
+    public String lastLoadHUDPath = "";
 
-   @Override
-   public String getDataDir() {
-      return Minecraft.getMinecraft().gameDir.getPath();
-   }
-
-   @Override
-   public void registerRenderer() {
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntitySeat.class, MCH_RenderTest.factory(0.0F, 0.3125F, 0.0F, "seat"));
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityHeli.class, MCH_RenderHeli.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCP_EntityPlane.class, MCP_RenderPlane.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityTank.class, MCH_RenderTank.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityGLTD.class, MCH_RenderGLTD.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityChain.class, MCH_RenderChain.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityParachute.class, MCH_RenderParachute.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityContainer.class, MCH_RenderContainer.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityVehicle.class, MCH_RenderVehicle.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityUavStation.class, MCH_RenderUavStation.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityCartridge.class, MCH_RenderCartridge.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityHide.class, MCH_RenderNull.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_ViewEntityDummy.class, MCH_RenderNull.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityRocket.class, MCH_RenderBullet.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityTvMissile.class, MCH_RenderTvMissile.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityBullet.class, MCH_RenderBullet.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityA10.class, MCH_RenderA10.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityAAMissile.class, MCH_RenderAAMissile.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityASMissile.class, MCH_RenderASMissile.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityATMissile.class, MCH_RenderTvMissile.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityTorpedo.class, MCH_RenderBullet.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityBomb.class, MCH_RenderBomb.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityMarkerRocket.class, MCH_RenderBullet.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityDispensedItem.class, MCH_RenderNone.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityFlare.class, MCH_RenderFlare.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityThrowable.class, MCH_RenderThrowable.FACTORY);
-      RenderingRegistry.registerEntityRenderingHandler(MCH_EntityGunner.class, MCH_RenderGunner.FACTORY);
-      MCH_ItemModelRenderers.registerRenderer(MCH_MOD.itemJavelin, new BuiltInLightWeaponItemRenderer());
-      MCH_ItemModelRenderers.registerRenderer(MCH_MOD.itemStinger, new BuiltInLightWeaponItemRenderer());
-      MCH_ItemModelRenderers.registerRenderer(MCH_MOD.invisibleItem, new BuiltInInvisibleItemRenderer());
-      MCH_ItemModelRenderers.registerRenderer(MCH_MOD.itemGLTD, new BuiltInGLTDItemRenderer());
-      MCH_ItemModelRenderers.registerRenderer(MCH_MOD.itemWrench, new BuiltInWrenchItemRenderer());
-      MCH_ItemModelRenderers.registerRenderer(MCH_MOD.itemRangeFinder, new BuiltInRangeFinderItemRenderer());
-      ModelLoaderRegistry.registerLoader(LegacyModelLoader.INSTANCE);
-   }
-
-   @Override
-   public void registerBlockRenderer() {
-      ClientRegistry.bindTileEntitySpecialRenderer(MCH_DraftingTableTileEntity.class, new MCH_DraftingTableRenderer());
-      MCH_ItemModelRenderers.registerRenderer(W_Item.getItemFromBlock(MCH_MOD.blockDraftingTable), new BuiltInDraftingTableItemRenderer());
-   }
-
-   @Override
-   public void registerModels() {
-      MCH_ModelManager.setForceReloadMode(true);
-      MCH_RenderAircraft.debugModel = MCH_ModelManager.load("box");
-      MCH_ModelManager.load("a-10");
-      MCH_RenderGLTD.model = MCH_ModelManager.load("gltd");
-      MCH_ModelManager.load("chain");
-      MCH_ModelManager.load("container");
-      MCH_ModelManager.load("parachute1");
-      MCH_ModelManager.load("parachute2");
-      MCH_ModelManager.load("lweapons", "fim92");
-      MCH_ModelManager.load("lweapons", "fgm148");
-
-      for (String s : MCH_RenderUavStation.MODEL_NAME) {
-         MCH_ModelManager.load(s);
-      }
-
-      MCH_ModelManager.load("wrench");
-      MCH_ModelManager.load("rangefinder");
-      ContentRegistries.heli().forEachValue(info -> this.registerModelsHeli(info, false));
-      ContentRegistries.plane().forEachValue(info -> this.registerModelsPlane(info, false));
-      ContentRegistries.tank().forEachValue(info -> this.registerModelsTank(info, false));
-      ContentRegistries.vehicle().forEachValue(info -> this.registerModelsVehicle(info, false));
-      registerModels_Bullet();
-      MCH_DefaultBulletModels.Bullet = this.loadBulletModel("bullet");
-      MCH_DefaultBulletModels.AAMissile = this.loadBulletModel("aamissile");
-      MCH_DefaultBulletModels.ATMissile = this.loadBulletModel("asmissile");
-      MCH_DefaultBulletModels.ASMissile = this.loadBulletModel("asmissile");
-      MCH_DefaultBulletModels.Bomb = this.loadBulletModel("bomb");
-      MCH_DefaultBulletModels.Rocket = this.loadBulletModel("rocket");
-      MCH_DefaultBulletModels.Torpedo = this.loadBulletModel("torpedo");
-
-      for (MCH_ThrowableInfo wi : ContentRegistries.throwable().values()) {
-         wi.model = MCH_ModelManager.load("throwable", wi.name);
-      }
-
-      MCH_ModelManager.load("blocks", "drafting_table");
-   }
-
-   public static void registerModels_Bullet() {
-      for (MCH_WeaponInfo wi : ContentRegistries.weapon().values()) {
-         _IModelCustom m = null;
-         if (!wi.bulletModelName.isEmpty()) {
-            m = MCH_ModelManager.load("bullets", wi.bulletModelName);
-            if (m != null) {
-               wi.bulletModel = new MCH_BulletModel(wi.bulletModelName, m);
+    public static void registerModels_Bullet() {
+        for (MCH_WeaponInfo wi : ContentRegistries.weapon().values()) {
+            _IModelCustom m = null;
+            if (!wi.bulletModelName.isEmpty()) {
+                m = MCH_ModelManager.load("bullets", wi.bulletModelName);
+                if (m != null) {
+                    wi.bulletModel = new MCH_BulletModel(wi.bulletModelName, m);
+                }
             }
-         }
 
-         if (!wi.bombletModelName.isEmpty()) {
-            m = MCH_ModelManager.load("bullets", wi.bombletModelName);
-            if (m != null) {
-               wi.bombletModel = new MCH_BulletModel(wi.bombletModelName, m);
+            if (!wi.bombletModelName.isEmpty()) {
+                m = MCH_ModelManager.load("bullets", wi.bombletModelName);
+                if (m != null) {
+                    wi.bombletModel = new MCH_BulletModel(wi.bombletModelName, m);
+                }
             }
-         }
 
-         if (wi.cartridge != null && !wi.cartridge.name.isEmpty()) {
-            wi.cartridge.model = MCH_ModelManager.load("bullets", wi.cartridge.name);
-            if (wi.cartridge.model == null) {
-               wi.cartridge = null;
+            if (wi.cartridge != null && !wi.cartridge.name.isEmpty()) {
+                wi.cartridge.model = MCH_ModelManager.load("bullets", wi.cartridge.name);
+                if (wi.cartridge.model == null) {
+                    wi.cartridge = null;
+                }
             }
-         }
-      }
-   }
+        }
+    }
 
-   @Override
-   public void registerModelsHeli(MCH_HeliInfo info, boolean reload) {
-      MCH_ModelManager.setForceReloadMode(reload);
-      info.model = MCH_ModelManager.load("helicopters", info.name);
+    @Override
+    public String getDataDir() {
+        return Minecraft.getMinecraft().gameDir.getPath();
+    }
 
-      for (MCH_HeliInfo.Rotor rotor : info.rotorList) {
-         rotor.model = this.loadPartModel("helicopters", info.name, info.model, rotor.modelName);
-      }
+    @Override
+    public void registerRenderer() {
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntitySeat.class, MCH_RenderTest.factory(0.0F, 0.3125F, 0.0F, "seat"));
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityHeli.class, MCH_RenderHeli.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCP_EntityPlane.class, MCP_RenderPlane.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityTank.class, MCH_RenderTank.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityGLTD.class, MCH_RenderGLTD.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityChain.class, MCH_RenderChain.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityParachute.class, MCH_RenderParachute.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityContainer.class, MCH_RenderContainer.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityVehicle.class, MCH_RenderVehicle.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityUavStation.class, MCH_RenderUavStation.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityCartridge.class, MCH_RenderCartridge.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityHide.class, MCH_RenderNull.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_ViewEntityDummy.class, MCH_RenderNull.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityRocket.class, MCH_RenderBullet.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityTvMissile.class, MCH_RenderTvMissile.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityBullet.class, MCH_RenderBullet.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityA10.class, MCH_RenderA10.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityAAMissile.class, MCH_RenderAAMissile.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityASMissile.class, MCH_RenderASMissile.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityATMissile.class, MCH_RenderTvMissile.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityTorpedo.class, MCH_RenderBullet.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityBomb.class, MCH_RenderBomb.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityMarkerRocket.class, MCH_RenderBullet.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityDispensedItem.class, MCH_RenderNone.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityFlare.class, MCH_RenderFlare.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityThrowable.class, MCH_RenderThrowable.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityGunner.class, MCH_RenderGunner.FACTORY);
+        MCH_ItemModelRenderers.registerRenderer(MCH_MOD.itemJavelin, new BuiltInLightWeaponItemRenderer());
+        MCH_ItemModelRenderers.registerRenderer(MCH_MOD.itemStinger, new BuiltInLightWeaponItemRenderer());
+        MCH_ItemModelRenderers.registerRenderer(MCH_MOD.invisibleItem, new BuiltInInvisibleItemRenderer());
+        MCH_ItemModelRenderers.registerRenderer(MCH_MOD.itemGLTD, new BuiltInGLTDItemRenderer());
+        MCH_ItemModelRenderers.registerRenderer(MCH_MOD.itemWrench, new BuiltInWrenchItemRenderer());
+        MCH_ItemModelRenderers.registerRenderer(MCH_MOD.itemRangeFinder, new BuiltInRangeFinderItemRenderer());
+        ModelLoaderRegistry.registerLoader(LegacyModelLoader.INSTANCE);
+    }
 
-      this.registerCommonPart("helicopters", info);
-      MCH_ModelManager.setForceReloadMode(false);
-   }
+    @Override
+    public void registerBlockRenderer() {
+        ClientRegistry.bindTileEntitySpecialRenderer(MCH_DraftingTableTileEntity.class, new MCH_DraftingTableRenderer());
+        MCH_ItemModelRenderers.registerRenderer(W_Item.getItemFromBlock(MCH_MOD.blockDraftingTable), new BuiltInDraftingTableItemRenderer());
+    }
 
-   @Override
-   public void registerModelsPlane(MCP_PlaneInfo info, boolean reload) {
-      MCH_ModelManager.setForceReloadMode(reload);
-      info.model = MCH_ModelManager.load("planes", info.name);
+    @Override
+    public void registerModels() {
+        MCH_ModelManager.setForceReloadMode(true);
+        MCH_RenderAircraft.debugModel = MCH_ModelManager.load("box");
+        MCH_ModelManager.load("a-10");
+        MCH_RenderGLTD.model = MCH_ModelManager.load("gltd");
+        MCH_ModelManager.load("chain");
+        MCH_ModelManager.load("container");
+        MCH_ModelManager.load("parachute1");
+        MCH_ModelManager.load("parachute2");
+        MCH_ModelManager.load("lweapons", "fim92");
+        MCH_ModelManager.load("lweapons", "fgm148");
 
-      for (MCH_AircraftInfo.DrawnPart n : info.nozzles) {
-         n.model = this.loadPartModel("planes", info.name, info.model, n.modelName);
-      }
+        for (String s : MCH_RenderUavStation.MODEL_NAME) {
+            MCH_ModelManager.load(s);
+        }
 
-      for (MCP_PlaneInfo.Rotor r : info.rotorList) {
-         r.model = this.loadPartModel("planes", info.name, info.model, r.modelName);
+        MCH_ModelManager.load("wrench");
+        MCH_ModelManager.load("rangefinder");
+        ContentRegistries.heli().forEachValue(info -> this.registerModelsHeli(info, false));
+        ContentRegistries.plane().forEachValue(info -> this.registerModelsPlane(info, false));
+        ContentRegistries.tank().forEachValue(info -> this.registerModelsTank(info, false));
+        ContentRegistries.vehicle().forEachValue(info -> this.registerModelsVehicle(info, false));
+        registerModels_Bullet();
+        MCH_DefaultBulletModels.Bullet = this.loadBulletModel("bullet");
+        MCH_DefaultBulletModels.AAMissile = this.loadBulletModel("aamissile");
+        MCH_DefaultBulletModels.ATMissile = this.loadBulletModel("asmissile");
+        MCH_DefaultBulletModels.ASMissile = this.loadBulletModel("asmissile");
+        MCH_DefaultBulletModels.Bomb = this.loadBulletModel("bomb");
+        MCH_DefaultBulletModels.Rocket = this.loadBulletModel("rocket");
+        MCH_DefaultBulletModels.Torpedo = this.loadBulletModel("torpedo");
 
-         for (MCP_PlaneInfo.Blade b : r.blades) {
-            b.model = this.loadPartModel("planes", info.name, info.model, b.modelName);
-         }
-      }
+        for (MCH_ThrowableInfo wi : ContentRegistries.throwable().values()) {
+            wi.model = MCH_ModelManager.load("throwable", wi.name);
+        }
 
-      for (MCP_PlaneInfo.Wing w : info.wingList) {
-         w.model = this.loadPartModel("planes", info.name, info.model, w.modelName);
-         if (w.pylonList != null) {
-            for (MCP_PlaneInfo.Pylon p : w.pylonList) {
-               p.model = this.loadPartModel("planes", info.name, info.model, p.modelName);
+        MCH_ModelManager.load("blocks", "drafting_table");
+    }
+
+    @Override
+    public void registerModelsHeli(MCH_HeliInfo info, boolean reload) {
+        MCH_ModelManager.setForceReloadMode(reload);
+        info.model = MCH_ModelManager.load("helicopters", info.name);
+
+        for (MCH_HeliInfo.Rotor rotor : info.rotorList) {
+            rotor.model = this.loadPartModel("helicopters", info.name, info.model, rotor.modelName);
+        }
+
+        this.registerCommonPart("helicopters", info);
+        MCH_ModelManager.setForceReloadMode(false);
+    }
+
+    @Override
+    public void registerModelsPlane(MCP_PlaneInfo info, boolean reload) {
+        MCH_ModelManager.setForceReloadMode(reload);
+        info.model = MCH_ModelManager.load("planes", info.name);
+
+        for (MCH_AircraftInfo.DrawnPart n : info.nozzles) {
+            n.model = this.loadPartModel("planes", info.name, info.model, n.modelName);
+        }
+
+        for (MCP_PlaneInfo.Rotor r : info.rotorList) {
+            r.model = this.loadPartModel("planes", info.name, info.model, r.modelName);
+
+            for (MCP_PlaneInfo.Blade b : r.blades) {
+                b.model = this.loadPartModel("planes", info.name, info.model, b.modelName);
             }
-         }
-      }
+        }
 
-      this.registerCommonPart("planes", info);
-      MCH_ModelManager.setForceReloadMode(false);
-   }
+        for (MCP_PlaneInfo.Wing w : info.wingList) {
+            w.model = this.loadPartModel("planes", info.name, info.model, w.modelName);
+            if (w.pylonList != null) {
+                for (MCP_PlaneInfo.Pylon p : w.pylonList) {
+                    p.model = this.loadPartModel("planes", info.name, info.model, p.modelName);
+                }
+            }
+        }
 
-   @Override
-   public void registerModelsVehicle(MCH_VehicleInfo info, boolean reload) {
-      MCH_ModelManager.setForceReloadMode(reload);
-      info.model = MCH_ModelManager.load("vehicles", info.name);
+        this.registerCommonPart("planes", info);
+        MCH_ModelManager.setForceReloadMode(false);
+    }
 
-      for (MCH_VehicleInfo.VPart vp : info.partList) {
-         vp.model = this.loadPartModel("vehicles", info.name, info.model, vp.modelName);
-         if (vp.child != null) {
-            this.registerVCPModels(info, vp);
-         }
-      }
+    @Override
+    public void registerModelsVehicle(MCH_VehicleInfo info, boolean reload) {
+        MCH_ModelManager.setForceReloadMode(reload);
+        info.model = MCH_ModelManager.load("vehicles", info.name);
 
-      this.registerCommonPart("vehicles", info);
-      MCH_ModelManager.setForceReloadMode(false);
-   }
+        for (MCH_VehicleInfo.VPart vp : info.partList) {
+            vp.model = this.loadPartModel("vehicles", info.name, info.model, vp.modelName);
+            if (vp.child != null) {
+                this.registerVCPModels(info, vp);
+            }
+        }
 
-   @Override
-   public void registerModelsTank(MCH_TankInfo info, boolean reload) {
-      MCH_ModelManager.setForceReloadMode(reload);
-      info.model = MCH_ModelManager.load("tanks", info.name);
-      this.registerCommonPart("tanks", info);
-      MCH_ModelManager.setForceReloadMode(false);
-   }
+        this.registerCommonPart("vehicles", info);
+        MCH_ModelManager.setForceReloadMode(false);
+    }
 
-   private MCH_BulletModel loadBulletModel(String name) {
-      _IModelCustom m = MCH_ModelManager.load("bullets", name);
-      return m != null ? new MCH_BulletModel(name, m) : null;
-   }
+    @Override
+    public void registerModelsTank(MCH_TankInfo info, boolean reload) {
+        MCH_ModelManager.setForceReloadMode(reload);
+        info.model = MCH_ModelManager.load("tanks", info.name);
+        this.registerCommonPart("tanks", info);
+        MCH_ModelManager.setForceReloadMode(false);
+    }
 
-   private _IModelCustom loadPartModel(String path, String name, _IModelCustom body, String part) {
-      return body instanceof W_ModelCustom && ((W_ModelCustom)body).containsPart("$" + part) ? null : MCH_ModelManager.load(path, name + "_" + part);
-   }
+    private MCH_BulletModel loadBulletModel(String name) {
+        _IModelCustom m = MCH_ModelManager.load("bullets", name);
+        return m != null ? new MCH_BulletModel(name, m) : null;
+    }
 
-   private void registerCommonPart(String path, MCH_AircraftInfo info) {
-      for (MCH_AircraftInfo.Hatch h : info.hatchList) {
-         h.model = this.loadPartModel(path, info.name, info.model, h.modelName);
-      }
+    private _IModelCustom loadPartModel(String path, String name, _IModelCustom body, String part) {
+        return body instanceof W_ModelCustom && ((W_ModelCustom) body).containsPart("$" + part) ? null : MCH_ModelManager.load(path, name + "_" + part);
+    }
 
-      for (MCH_AircraftInfo.Camera c : info.cameraList) {
-         c.model = this.loadPartModel(path, info.name, info.model, c.modelName);
-      }
+    private void registerCommonPart(String path, MCH_AircraftInfo info) {
+        for (MCH_AircraftInfo.Hatch h : info.hatchList) {
+            h.model = this.loadPartModel(path, info.name, info.model, h.modelName);
+        }
 
-      for (MCH_AircraftInfo.Throttle c : info.partThrottle) {
-         c.model = this.loadPartModel(path, info.name, info.model, c.modelName);
-      }
+        for (MCH_AircraftInfo.Camera c : info.cameraList) {
+            c.model = this.loadPartModel(path, info.name, info.model, c.modelName);
+        }
 
-      for (MCH_AircraftInfo.RotPart c : info.partRotPart) {
-         c.model = this.loadPartModel(path, info.name, info.model, c.modelName);
-      }
+        for (MCH_AircraftInfo.Throttle c : info.partThrottle) {
+            c.model = this.loadPartModel(path, info.name, info.model, c.modelName);
+        }
 
-      for (MCH_AircraftInfo.PartWeapon p : info.partWeapon) {
-         p.model = this.loadPartModel(path, info.name, info.model, p.modelName);
+        for (MCH_AircraftInfo.RotPart c : info.partRotPart) {
+            c.model = this.loadPartModel(path, info.name, info.model, c.modelName);
+        }
 
-         for (MCH_AircraftInfo.PartWeaponChild wc : p.child) {
-            wc.model = this.loadPartModel(path, info.name, info.model, wc.modelName);
-         }
-      }
+        for (MCH_AircraftInfo.PartWeapon p : info.partWeapon) {
+            p.model = this.loadPartModel(path, info.name, info.model, p.modelName);
 
-      for (MCH_AircraftInfo.Canopy c : info.canopyList) {
-         c.model = this.loadPartModel(path, info.name, info.model, c.modelName);
-      }
+            for (MCH_AircraftInfo.PartWeaponChild wc : p.child) {
+                wc.model = this.loadPartModel(path, info.name, info.model, wc.modelName);
+            }
+        }
 
-      for (MCH_AircraftInfo.DrawnPart n : info.landingGear) {
-         n.model = this.loadPartModel(path, info.name, info.model, n.modelName);
-      }
+        for (MCH_AircraftInfo.Canopy c : info.canopyList) {
+            c.model = this.loadPartModel(path, info.name, info.model, c.modelName);
+        }
 
-      for (MCH_AircraftInfo.WeaponBay w : info.partWeaponBay) {
-         w.model = this.loadPartModel(path, info.name, info.model, w.modelName);
-      }
+        for (MCH_AircraftInfo.DrawnPart n : info.landingGear) {
+            n.model = this.loadPartModel(path, info.name, info.model, n.modelName);
+        }
 
-      for (MCH_AircraftInfo.CrawlerTrack c : info.partCrawlerTrack) {
-         c.model = this.loadPartModel(path, info.name, info.model, c.modelName);
-      }
+        for (MCH_AircraftInfo.WeaponBay w : info.partWeaponBay) {
+            w.model = this.loadPartModel(path, info.name, info.model, w.modelName);
+        }
 
-      for (MCH_AircraftInfo.TrackRoller c : info.partTrackRoller) {
-         c.model = this.loadPartModel(path, info.name, info.model, c.modelName);
-      }
+        for (MCH_AircraftInfo.CrawlerTrack c : info.partCrawlerTrack) {
+            c.model = this.loadPartModel(path, info.name, info.model, c.modelName);
+        }
 
-      for (MCH_AircraftInfo.PartWheel c : info.partWheel) {
-         c.model = this.loadPartModel(path, info.name, info.model, c.modelName);
-      }
+        for (MCH_AircraftInfo.TrackRoller c : info.partTrackRoller) {
+            c.model = this.loadPartModel(path, info.name, info.model, c.modelName);
+        }
 
-      for (MCH_AircraftInfo.PartWheel c : info.partSteeringWheel) {
-         c.model = this.loadPartModel(path, info.name, info.model, c.modelName);
-      }
-   }
+        for (MCH_AircraftInfo.PartWheel c : info.partWheel) {
+            c.model = this.loadPartModel(path, info.name, info.model, c.modelName);
+        }
 
-   private void registerVCPModels(MCH_VehicleInfo info, MCH_VehicleInfo.VPart vp) {
-      for (MCH_VehicleInfo.VPart vcp : vp.child) {
-         vcp.model = this.loadPartModel("vehicles", info.name, info.model, vcp.modelName);
-         if (vcp.child != null) {
-            this.registerVCPModels(info, vcp);
-         }
-      }
-   }
+        for (MCH_AircraftInfo.PartWheel c : info.partSteeringWheel) {
+            c.model = this.loadPartModel(path, info.name, info.model, c.modelName);
+        }
+    }
 
-   @Override
-   public void registerClientTick() {
-      Minecraft mc = Minecraft.getMinecraft();
-      MCH_ClientCommonTickHandler.instance = new MCH_ClientCommonTickHandler(mc, MCH_MOD.config);
-      W_TickRegistry.registerTickHandler(MCH_ClientCommonTickHandler.instance, Side.CLIENT);
-   }
+    private void registerVCPModels(MCH_VehicleInfo info, MCH_VehicleInfo.VPart vp) {
+        for (MCH_VehicleInfo.VPart vcp : vp.child) {
+            vcp.model = this.loadPartModel("vehicles", info.name, info.model, vcp.modelName);
+            if (vcp.child != null) {
+                this.registerVCPModels(info, vcp);
+            }
+        }
+    }
 
-   @Override
-   public boolean isRemote() {
-      return true;
-   }
+    @Override
+    public void registerClientTick() {
+        Minecraft mc = Minecraft.getMinecraft();
+        MCH_ClientCommonTickHandler.instance = new MCH_ClientCommonTickHandler(mc, MCH_MOD.config);
+        W_TickRegistry.registerTickHandler(MCH_ClientCommonTickHandler.instance, Side.CLIENT);
+    }
 
-   @Override
-   public String side() {
-      return "Client";
-   }
+    @Override
+    public boolean isRemote() {
+        return true;
+    }
 
-   @Override
-   public MCH_SoundUpdater CreateSoundUpdater(MCH_EntityAircraft aircraft) {
-      return aircraft != null && aircraft.world.isRemote ? new MCH_SoundUpdater(Minecraft.getMinecraft(), aircraft, Minecraft.getMinecraft().player) : null;
-   }
+    @Override
+    public String side() {
+        return "Client";
+    }
 
-   @Override
-   public void registerSounds() {
-      super.registerSounds();
-      W_McClient.addSound("alert.ogg");
-      W_McClient.addSound("locked.ogg");
-      W_McClient.addSound("gltd.ogg");
-      W_McClient.addSound("zoom.ogg");
-      W_McClient.addSound("ng.ogg");
-      W_McClient.addSound("a-10_snd.ogg");
-      W_McClient.addSound("gau-8_snd.ogg");
-      W_McClient.addSound("hit.ogg");
-      W_McClient.addSound("helidmg.ogg");
-      W_McClient.addSound("heli.ogg");
-      W_McClient.addSound("plane.ogg");
-      W_McClient.addSound("plane_cc.ogg");
-      W_McClient.addSound("plane_cv.ogg");
-      W_McClient.addSound("chain.ogg");
-      W_McClient.addSound("chain_ct.ogg");
-      W_McClient.addSound("eject_seat.ogg");
-      W_McClient.addSound("fim92_snd.ogg");
-      W_McClient.addSound("fim92_reload.ogg");
-      W_McClient.addSound("lockon.ogg");
+    @Override
+    public MCH_SoundUpdater CreateSoundUpdater(MCH_EntityAircraft aircraft) {
+        return aircraft != null && aircraft.world.isRemote ? new MCH_SoundUpdater(Minecraft.getMinecraft(), aircraft, Minecraft.getMinecraft().player) : null;
+    }
 
-      for (MCH_WeaponInfo info : ContentRegistries.weapon().values()) {
-         W_McClient.addSound(info.soundFileName + ".ogg");
-      }
+    @Override
+    public void registerSounds() {
+        super.registerSounds();
+        W_McClient.addSound("alert.ogg");
+        W_McClient.addSound("locked.ogg");
+        W_McClient.addSound("gltd.ogg");
+        W_McClient.addSound("zoom.ogg");
+        W_McClient.addSound("ng.ogg");
+        W_McClient.addSound("a-10_snd.ogg");
+        W_McClient.addSound("gau-8_snd.ogg");
+        W_McClient.addSound("hit.ogg");
+        W_McClient.addSound("helidmg.ogg");
+        W_McClient.addSound("heli.ogg");
+        W_McClient.addSound("plane.ogg");
+        W_McClient.addSound("plane_cc.ogg");
+        W_McClient.addSound("plane_cv.ogg");
+        W_McClient.addSound("chain.ogg");
+        W_McClient.addSound("chain_ct.ogg");
+        W_McClient.addSound("eject_seat.ogg");
+        W_McClient.addSound("fim92_snd.ogg");
+        W_McClient.addSound("fim92_reload.ogg");
+        W_McClient.addSound("lockon.ogg");
 
-      for (MCH_AircraftInfo info : ContentRegistries.plane().values()) {
-         if (!info.soundMove.isEmpty()) {
-            W_McClient.addSound(info.soundMove + ".ogg");
-         }
-      }
+        for (MCH_WeaponInfo info : ContentRegistries.weapon().values()) {
+            W_McClient.addSound(info.soundFileName + ".ogg");
+        }
 
-      for (MCH_AircraftInfo infox : ContentRegistries.heli().values()) {
-         if (!infox.soundMove.isEmpty()) {
-            W_McClient.addSound(infox.soundMove + ".ogg");
-         }
-      }
+        for (MCH_AircraftInfo info : ContentRegistries.plane().values()) {
+            if (!info.soundMove.isEmpty()) {
+                W_McClient.addSound(info.soundMove + ".ogg");
+            }
+        }
 
-      for (MCH_AircraftInfo infoxx : ContentRegistries.tank().values()) {
-         if (!infoxx.soundMove.isEmpty()) {
-            W_McClient.addSound(infoxx.soundMove + ".ogg");
-         }
-      }
+        for (MCH_AircraftInfo infox : ContentRegistries.heli().values()) {
+            if (!infox.soundMove.isEmpty()) {
+                W_McClient.addSound(infox.soundMove + ".ogg");
+            }
+        }
 
-      for (MCH_AircraftInfo infoxxx : ContentRegistries.vehicle().values()) {
-         if (!infoxxx.soundMove.isEmpty()) {
-            W_McClient.addSound(infoxxx.soundMove + ".ogg");
-         }
-      }
-   }
+        for (MCH_AircraftInfo infoxx : ContentRegistries.tank().values()) {
+            if (!infoxx.soundMove.isEmpty()) {
+                W_McClient.addSound(infoxx.soundMove + ".ogg");
+            }
+        }
 
-   @Override
-   public void loadConfig(String fileName) {
-      this.lastConfigFileName = fileName;
-      this.config = new MCH_Config(Minecraft.getMinecraft().gameDir.getPath(), "/" + fileName);
-      this.config.load();
-      this.config.write();
-   }
+        for (MCH_AircraftInfo infoxxx : ContentRegistries.vehicle().values()) {
+            if (!infoxxx.soundMove.isEmpty()) {
+                W_McClient.addSound(infoxxx.soundMove + ".ogg");
+            }
+        }
+    }
 
-   @Override
-   public void reconfig() {
-      MCH_Lib.DbgLog(false, "MCH_ClientProxy.reconfig()");
-      this.loadConfig(this.lastConfigFileName);
-      MCH_ClientCommonTickHandler.instance.updatekeybind(this.config);
-   }
+    @Override
+    public void loadConfig(String fileName) {
+        this.lastConfigFileName = fileName;
+        this.config = new MCH_Config(Minecraft.getMinecraft().gameDir.getPath(), "/" + fileName);
+        this.config.load();
+        this.config.write();
+    }
 
-   @Override
-   public void reloadHUD() {
-      ContentRegistries.hud().reloadAll();
-   }
+    @Override
+    public void reconfig() {
+        MCH_Lib.DbgLog(false, "MCH_ClientProxy.reconfig()");
+        this.loadConfig(this.lastConfigFileName);
+        MCH_ClientCommonTickHandler.instance.updatekeybind(this.config);
+    }
 
-   @Override
-   public Entity getClientPlayer() {
-      return Minecraft.getMinecraft().player;
-   }
+    @Override
+    public void reloadHUD() {
+        ContentRegistries.hud().reloadAll();
+    }
 
-   @Override
-   public void init() {
-      MinecraftForge.EVENT_BUS.register(new MCH_ParticlesUtil());
-      MinecraftForge.EVENT_BUS.register(new MCH_ClientEventHook());
-   }
+    @Override
+    public Entity getClientPlayer() {
+        return Minecraft.getMinecraft().player;
+    }
 
-   @Override
-   public void setCreativeDigDelay(int n) {
-      W_Reflection.setCreativeDigSpeed(n);
-   }
+    @Override
+    public void init() {
+        MinecraftForge.EVENT_BUS.register(new MCH_ParticlesUtil());
+        MinecraftForge.EVENT_BUS.register(new MCH_ClientEventHook());
+    }
 
-   @Override
-   public boolean isFirstPerson() {
-      return Minecraft.getMinecraft().gameSettings.thirdPersonView == 0;
-   }
+    @Override
+    public void setCreativeDigDelay(int n) {
+        W_Reflection.setCreativeDigSpeed(n);
+    }
 
-   @Override
-   public boolean isSinglePlayer() {
-      return Minecraft.getMinecraft().isSingleplayer();
-   }
+    @Override
+    public boolean isFirstPerson() {
+        return Minecraft.getMinecraft().gameSettings.thirdPersonView == 0;
+    }
 
-   @Override
-   public void readClientModList() {
-      try {
-         Minecraft mc = Minecraft.getMinecraft();
-         MCH_MultiplayClient.readModList(mc.getSession().getPlayerID(), mc.getSession().getUsername());
-      } catch (Exception var2) {
-         var2.printStackTrace();
-      }
-   }
+    @Override
+    public boolean isSinglePlayer() {
+        return Minecraft.getMinecraft().isSingleplayer();
+    }
 
-   @Override
-   public void printChatMessage(ITextComponent chat, int showTime, int pos) {
-      ((MCH_GuiTitle)MCH_ClientCommonTickHandler.instance.gui_Title).setupTitle(chat, showTime, pos);
-   }
+    @Override
+    public void readClientModList() {
+        try {
+            Minecraft mc = Minecraft.getMinecraft();
+            MCH_MultiplayClient.readModList(mc.getSession().getPlayerID(), mc.getSession().getUsername());
+        } catch (Exception var2) {
+            var2.printStackTrace();
+        }
+    }
 
-   @Override
-   public void hitBullet() {
-      MCH_ClientCommonTickHandler.instance.gui_Common.hitBullet();
-   }
+    @Override
+    public void printChatMessage(ITextComponent chat, int showTime, int pos) {
+        ((MCH_GuiTitle) MCH_ClientCommonTickHandler.instance.gui_Title).setupTitle(chat, showTime, pos);
+    }
 
-   @Override
-   public void clientLocked() {
-      MCH_ClientCommonTickHandler.isLocked = true;
-   }
+    @Override
+    public void hitBullet() {
+        MCH_ClientCommonTickHandler.instance.gui_Common.hitBullet();
+    }
 
-   @Override
-   public void setRenderEntityDistanceWeight(double renderDistWeight) {
-      Entity.setRenderDistanceWeight(renderDistWeight);
-   }
+    @Override
+    public void clientLocked() {
+        MCH_ClientCommonTickHandler.isLocked = true;
+    }
 
-   @Override
-   public List<AddonPack> loadAddonPacks(File addonDir) {
-      return AddonManager.loadAddonsAndAddResources(addonDir);
-   }
+    @Override
+    public void setRenderEntityDistanceWeight(double renderDistWeight) {
+        Entity.setRenderDistanceWeight(renderDistWeight);
+    }
 
-   @Override
-   public boolean canLoadContentDirName(String dir) {
-      return "hud".equals(dir) || super.canLoadContentDirName(dir);
-   }
+    @Override
+    public List<AddonPack> loadAddonPacks(File addonDir) {
+        return AddonManager.loadAddonsAndAddResources(addonDir);
+    }
 
-   @Override
-   public void updateGeneratedLanguage() {
-      W_LanguageRegistry.updateGeneratedLang();
-   }
+    @Override
+    public boolean canLoadContentDirName(String dir) {
+        return "hud".equals(dir) || super.canLoadContentDirName(dir);
+    }
 
-   @Deprecated
-   @Override
-   public void updateSoundsJson() {
-      MCH_SoundsJson.updateGenerated();
-   }
+    @Override
+    public void updateGeneratedLanguage() {
+        W_LanguageRegistry.updateGeneratedLang();
+    }
+
+    @Deprecated
+    @Override
+    public void updateSoundsJson() {
+        MCH_SoundsJson.updateGenerated();
+    }
 }

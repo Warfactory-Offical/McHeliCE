@@ -8,9 +8,9 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
 public @interface Debug {
-   String id() default "";
+    String id() default "";
 
-   String version();
+    String version();
 
-   String target() default "";
+    String target() default "";
 }

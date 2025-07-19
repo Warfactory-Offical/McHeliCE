@@ -7,27 +7,27 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @Deprecated
 @SideOnly(Side.CLIENT)
 public interface _IItemRenderer {
-   boolean handleRenderType(ItemStack var1, _IItemRenderer.ItemRenderType var2);
+    boolean handleRenderType(ItemStack var1, _IItemRenderer.ItemRenderType var2);
 
-   boolean shouldUseRenderHelper(_IItemRenderer.ItemRenderType var1, ItemStack var2, _IItemRenderer.ItemRendererHelper var3);
+    boolean shouldUseRenderHelper(_IItemRenderer.ItemRenderType var1, ItemStack var2, _IItemRenderer.ItemRendererHelper var3);
 
-   void renderItem(_IItemRenderer.ItemRenderType var1, ItemStack var2, Object... var3);
+    void renderItem(_IItemRenderer.ItemRenderType var1, ItemStack var2, Object... var3);
 
-   @Deprecated
-   public static enum ItemRenderType {
-      ENTITY,
-      EQUIPPED,
-      EQUIPPED_FIRST_PERSON,
-      INVENTORY,
-      FIRST_PERSON_MAP;
-   }
+    @Deprecated
+    enum ItemRenderType {
+        ENTITY,
+        EQUIPPED,
+        EQUIPPED_FIRST_PERSON,
+        INVENTORY,
+        FIRST_PERSON_MAP
+    }
 
-   @Deprecated
-   public static enum ItemRendererHelper {
-      ENTITY_ROTATION,
-      ENTITY_BOBBING,
-      EQUIPPED_BLOCK,
-      BLOCK_3D,
-      INVENTORY_BLOCK;
-   }
+    @Deprecated
+    enum ItemRendererHelper {
+        ENTITY_ROTATION,
+        ENTITY_BOBBING,
+        EQUIPPED_BLOCK,
+        BLOCK_3D,
+        INVENTORY_BLOCK
+    }
 }

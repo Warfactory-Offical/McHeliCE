@@ -8,29 +8,29 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
 public class MCH_DummyEntityPlayer extends W_EntityPlayer {
-   public MCH_DummyEntityPlayer(World worldIn, EntityPlayer player) {
-      super(worldIn, player);
-   }
+    public MCH_DummyEntityPlayer(World worldIn, EntityPlayer player) {
+        super(worldIn, player);
+    }
 
-   public void sendMessage(ITextComponent var1) {
-   }
+    public void sendMessage(ITextComponent var1) {
+    }
 
-   public boolean canUseCommand(int var1, String var2) {
-      return false;
-   }
+    public boolean canUseCommand(int var1, String var2) {
+        return false;
+    }
 
-   public Entity getCommandSenderEntity() {
-      return super.getCommandSenderEntity();
-   }
+    public Entity getCommandSenderEntity() {
+        return super.getCommandSenderEntity();
+    }
 
-   public boolean isSpectator() {
-      return false;
-   }
+    public boolean isSpectator() {
+        return false;
+    }
 
-   public boolean isCreative() {
-      return false;
-   }
+    public boolean isCreative() {
+        return false;
+    }
 
-   public void sendChatToPlayer(ChatMessageComponent chatmessagecomponent) {
-   }
+    public void sendChatToPlayer(ChatMessageComponent chatmessagecomponent) {
+    }
 }

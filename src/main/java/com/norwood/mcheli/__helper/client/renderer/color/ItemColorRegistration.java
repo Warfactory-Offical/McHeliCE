@@ -9,15 +9,15 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 @EventBusSubscriber(
-   modid = "mcheli",
-   value = {Side.CLIENT}
+        modid = "mcheli",
+        value = {Side.CLIENT}
 )
 public class ItemColorRegistration {
-   @SubscribeEvent
-   static void onRegisterItemColor(Item event) {
-      ItemColors itemColors = event.getItemColors();
-      itemColors.registerItemColorHandler(
-         MCH_ItemSpawnGunner::getColorFromItemStack, new net.minecraft.item.Item[]{MCH_MOD.itemSpawnGunnerVsMonster, MCH_MOD.itemSpawnGunnerVsPlayer}
-      );
-   }
+    @SubscribeEvent
+    static void onRegisterItemColor(Item event) {
+        ItemColors itemColors = event.getItemColors();
+        itemColors.registerItemColorHandler(
+                MCH_ItemSpawnGunner::getColorFromItemStack,
+                MCH_MOD.itemSpawnGunnerVsMonster, MCH_MOD.itemSpawnGunnerVsPlayer);
+    }
 }

@@ -14,27 +14,27 @@ import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class BuiltInRangeFinderItemRenderer implements IItemModelRenderer {
-   @Override
-   public boolean shouldRenderer(ItemStack itemStack, TransformType transformType) {
-      return IItemModelRenderer.isFirstPerson(transformType) || IItemModelRenderer.isThirdPerson(transformType) || transformType == TransformType.GROUND;
-   }
+    @Override
+    public boolean shouldRenderer(ItemStack itemStack, TransformType transformType) {
+        return IItemModelRenderer.isFirstPerson(transformType) || IItemModelRenderer.isThirdPerson(transformType) || transformType == TransformType.GROUND;
+    }
 
-   @Override
-   public void renderItem(ItemStack itemStack, EntityLivingBase entity, TransformType transformType, float partialTicks) {
-      GL11.glPushMatrix();
-      W_McClient.MOD_bindTexture("textures/rangefinder.png");
-      boolean flag = true;
-      if (IItemModelRenderer.isFirstPerson(transformType)) {
-         flag = entity instanceof EntityPlayer && !MCH_ItemRangeFinder.isUsingScope((EntityPlayer)entity);
-         if (entity.isHandActive() && entity.getActiveHand() == EnumHand.MAIN_HAND) {
-            GL11.glTranslated(0.6563F, 0.3438F, 0.01F);
-         }
-      }
+    @Override
+    public void renderItem(ItemStack itemStack, EntityLivingBase entity, TransformType transformType, float partialTicks) {
+        GL11.glPushMatrix();
+        W_McClient.MOD_bindTexture("textures/rangefinder.png");
+        boolean flag = true;
+        if (IItemModelRenderer.isFirstPerson(transformType)) {
+            flag = entity instanceof EntityPlayer && !MCH_ItemRangeFinder.isUsingScope((EntityPlayer) entity);
+            if (entity.isHandActive() && entity.getActiveHand() == EnumHand.MAIN_HAND) {
+                GL11.glTranslated(0.6563F, 0.3438F, 0.01F);
+            }
+        }
 
-      if (flag) {
-         MCH_ModelManager.render("rangefinder");
-      }
+        if (flag) {
+            MCH_ModelManager.render("rangefinder");
+        }
 
-      GL11.glPopMatrix();
-   }
+        GL11.glPopMatrix();
+    }
 }

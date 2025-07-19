@@ -6,37 +6,37 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class MCH_EntityTofu extends Entity {
-   public MCH_EntityTofu(World worldIn) {
-      super(worldIn);
-   }
+    public MCH_EntityTofu(World worldIn) {
+        super(worldIn);
+    }
 
-   public MCH_EntityTofu(World world, double x, double y, double z) {
-      this(world);
-      this.setPosition(x, y, z);
-   }
+    public MCH_EntityTofu(World world, double x, double y, double z) {
+        this(world);
+        this.setPosition(x, y, z);
+    }
 
-   protected void entityInit() {
-      this.setNoGravity(true);
-   }
+    protected void entityInit() {
+        this.setNoGravity(true);
+    }
 
-   public void onUpdate() {
-      super.onUpdate();
-      this.move(MoverType.SELF, 1.0, 0.0, 0.0);
-      if (!this.world.isRemote && this.ticksExisted > 100) {
-         this.setDead();
-      }
-   }
+    public void onUpdate() {
+        super.onUpdate();
+        this.move(MoverType.SELF, 1.0, 0.0, 0.0);
+        if (!this.world.isRemote && this.ticksExisted > 100) {
+            this.setDead();
+        }
+    }
 
-   public boolean canBeCollidedWith() {
-      return false;
-   }
+    public boolean canBeCollidedWith() {
+        return false;
+    }
 
-   public void applyEntityCollision(Entity entityIn) {
-   }
+    public void applyEntityCollision(Entity entityIn) {
+    }
 
-   protected void readEntityFromNBT(NBTTagCompound compound) {
-   }
+    protected void readEntityFromNBT(NBTTagCompound compound) {
+    }
 
-   protected void writeEntityToNBT(NBTTagCompound compound) {
-   }
+    protected void writeEntityToNBT(NBTTagCompound compound) {
+    }
 }

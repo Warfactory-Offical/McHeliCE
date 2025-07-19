@@ -9,17 +9,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class MCH_RenderNone extends MCH_RenderBulletBase<W_Entity> {
-   public static final IRenderFactory<W_Entity> FACTORY = MCH_RenderNone::new;
+    public static final IRenderFactory<W_Entity> FACTORY = MCH_RenderNone::new;
 
-   protected MCH_RenderNone(RenderManager renderManager) {
-      super(renderManager);
-   }
+    protected MCH_RenderNone(RenderManager renderManager) {
+        super(renderManager);
+    }
 
-   @Override
-   public void renderBullet(W_Entity entity, double posX, double posY, double posZ, float yaw, float partialTickTime) {
-   }
+    @Override
+    public void renderBullet(W_Entity entity, double posX, double posY, double posZ, float yaw, float partialTickTime) {
+    }
 
-   protected ResourceLocation getEntityTexture(W_Entity entity) {
-      return TEX_DEFAULT;
-   }
+    protected ResourceLocation getEntityTexture(W_Entity entity) {
+        return TEX_DEFAULT;
+    }
 }

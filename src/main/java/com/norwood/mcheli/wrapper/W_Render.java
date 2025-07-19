@@ -1,7 +1,5 @@
 package com.norwood.mcheli.wrapper;
 
-import java.nio.Buffer;
-import java.nio.FloatBuffer;
 import com.norwood.mcheli.MCH_Config;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -11,51 +9,54 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
+import java.nio.Buffer;
+import java.nio.FloatBuffer;
+
 public abstract class W_Render<T extends Entity> extends Render<T> {
-   private static FloatBuffer colorBuffer = GLAllocation.createDirectFloatBuffer(16);
-   protected static final ResourceLocation TEX_DEFAULT = new ResourceLocation(W_MOD.DOMAIN, "textures/default.png");
-   public int srcBlend;
-   public int dstBlend;
+    protected static final ResourceLocation TEX_DEFAULT = new ResourceLocation(W_MOD.DOMAIN, "textures/default.png");
+    private static final FloatBuffer colorBuffer = GLAllocation.createDirectFloatBuffer(16);
+    public int srcBlend;
+    public int dstBlend;
 
-   protected W_Render(RenderManager renderManager) {
-      super(renderManager);
-   }
+    protected W_Render(RenderManager renderManager) {
+        super(renderManager);
+    }
 
-   protected void bindTexture(String path) {
-      super.bindTexture(new ResourceLocation(W_MOD.DOMAIN, path));
-   }
+    public static FloatBuffer setColorBuffer(float p_74521_0_, float p_74521_1_, float p_74521_2_, float p_74521_3_) {
+        colorBuffer.clear();
+        colorBuffer.put(p_74521_0_).put(p_74521_1_).put(p_74521_2_).put(p_74521_3_);
+        colorBuffer.flip();
+        return colorBuffer;
+    }
 
-   protected ResourceLocation getEntityTexture(T entity) {
-      return TEX_DEFAULT;
-   }
+    protected void bindTexture(String path) {
+        super.bindTexture(new ResourceLocation(W_MOD.DOMAIN, path));
+    }
 
-   public static FloatBuffer setColorBuffer(float p_74521_0_, float p_74521_1_, float p_74521_2_, float p_74521_3_) {
-      ((Buffer)colorBuffer).clear();
-      colorBuffer.put(p_74521_0_).put(p_74521_1_).put(p_74521_2_).put(p_74521_3_);
-      ((Buffer)colorBuffer).flip();
-      return colorBuffer;
-   }
+    protected ResourceLocation getEntityTexture(T entity) {
+        return TEX_DEFAULT;
+    }
 
-   public void setCommonRenderParam(boolean smoothShading, int lighting) {
-      if (smoothShading && MCH_Config.SmoothShading.prmBool) {
-         GL11.glShadeModel(7425);
-      }
+    public void setCommonRenderParam(boolean smoothShading, int lighting) {
+        if (smoothShading && MCH_Config.SmoothShading.prmBool) {
+            GL11.glShadeModel(7425);
+        }
 
-      GL11.glAlphaFunc(516, 0.001F);
-      GL11.glEnable(2884);
-      int j = lighting % 65536;
-      int k = lighting / 65536;
-      OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j / 1.0F, k / 1.0F);
-      GL11.glColor4f(0.75F, 0.75F, 0.75F, 1.0F);
-      GL11.glEnable(3042);
-      this.srcBlend = GL11.glGetInteger(3041);
-      this.dstBlend = GL11.glGetInteger(3040);
-      GL11.glBlendFunc(770, 771);
-   }
+        GL11.glAlphaFunc(516, 0.001F);
+        GL11.glEnable(2884);
+        int j = lighting % 65536;
+        int k = lighting / 65536;
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
+        GL11.glColor4f(0.75F, 0.75F, 0.75F, 1.0F);
+        GL11.glEnable(3042);
+        this.srcBlend = GL11.glGetInteger(3041);
+        this.dstBlend = GL11.glGetInteger(3040);
+        GL11.glBlendFunc(770, 771);
+    }
 
-   public void restoreCommonRenderParam() {
-      GL11.glBlendFunc(this.srcBlend, this.dstBlend);
-      GL11.glDisable(3042);
-      GL11.glShadeModel(7424);
-   }
+    public void restoreCommonRenderParam() {
+        GL11.glBlendFunc(this.srcBlend, this.dstBlend);
+        GL11.glDisable(3042);
+        GL11.glShadeModel(7424);
+    }
 }
