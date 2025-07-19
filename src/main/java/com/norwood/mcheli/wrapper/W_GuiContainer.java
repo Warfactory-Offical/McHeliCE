@@ -2,11 +2,11 @@ package com.norwood.mcheli.wrapper;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.opengl.GL11;
 
 public abstract class W_GuiContainer extends GuiContainer {
    private float time;
@@ -16,47 +16,46 @@ public abstract class W_GuiContainer extends GuiContainer {
    }
 
    public void drawItemStack(ItemStack item, int x, int y) {
-      if (!item.func_190926_b()) {
-         if (item.func_77973_b() != null) {
-            FontRenderer font = item.func_77973_b().getFontRenderer(item);
+      if (!item.isEmpty()) {
+         if (item.getItem() != null) {
+            FontRenderer font = item.getItem().getFontRenderer(item);
             if (font == null) {
-               font = this.field_146289_q;
+               font = this.fontRenderer;
             }
 
-            GlStateManager.func_179126_j();
-            GlStateManager.func_179140_f();
-            this.field_146296_j.func_180450_b(item, x, y);
-            this.field_146296_j.func_180453_a(font, item, x, y, (String)null);
-            this.field_73735_i = 0.0F;
-            this.field_146296_j.field_77023_b = 0.0F;
+            GL11.glEnable(2929);
+            GL11.glEnable(2896);
+            this.itemRender.renderItemAndEffectIntoGUI(item, x, y);
+            this.itemRender.renderItemOverlayIntoGUI(font, item, x, y, null);
+            this.zLevel = 0.0F;
+            this.itemRender.zLevel = 0.0F;
          }
       }
    }
 
    public void drawIngredient(Ingredient ingredient, int x, int y) {
-      if (ingredient != Ingredient.field_193370_a) {
-         ItemStack[] itemstacks = ingredient.func_193365_a();
-         int index = MathHelper.func_76141_d(this.time / 20.0F) % itemstacks.length;
+      if (ingredient != Ingredient.EMPTY) {
+         ItemStack[] itemstacks = ingredient.getMatchingStacks();
+         int index = MathHelper.floor(this.time / 20.0F) % itemstacks.length;
          this.drawItemStack(itemstacks[index], x, y);
       }
-
    }
 
    public void drawString(String s, int x, int y, int color) {
-      this.func_73731_b(this.field_146289_q, s, x, y, color);
+      this.drawString(this.fontRenderer, s, x, y, color);
    }
 
    public void drawCenteredString(String s, int x, int y, int color) {
-      this.func_73732_a(this.field_146289_q, s, x, y, color);
+      this.drawCenteredString(this.fontRenderer, s, x, y, color);
    }
 
    public int getStringWidth(String s) {
-      return this.field_146289_q.func_78256_a(s);
+      return this.fontRenderer.getStringWidth(s);
    }
 
-   public void func_73863_a(int mouseX, int mouseY, float partialTicks) {
+   public void drawScreen(int mouseX, int mouseY, float partialTicks) {
       this.time += partialTicks;
-      super.func_73863_a(mouseX, mouseY, partialTicks);
+      super.drawScreen(mouseX, mouseY, partialTicks);
    }
 
    public float getAnimationTime() {

@@ -6,7 +6,6 @@ import com.norwood.mcheli.MCH_Key;
 import com.norwood.mcheli.MCH_PacketIndOpenScreen;
 import com.norwood.mcheli.wrapper.W_Network;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.input.Keyboard;
 
@@ -38,6 +37,7 @@ public abstract class MCH_AircraftClientTickHandler extends MCH_ClientTickHandle
       this.updateKeybind(config);
    }
 
+   @Override
    public void updateKeybind(MCH_Config config) {
       this.KeyUp = new MCH_Key(MCH_Config.KeyUp.prmInt);
       this.KeyDown = new MCH_Key(MCH_Config.KeyDown.prmInt);
@@ -64,10 +64,9 @@ public abstract class MCH_AircraftClientTickHandler extends MCH_ClientTickHandle
    }
 
    public boolean commonPlayerControl(EntityPlayer player, MCH_EntityAircraft ac, boolean isPilot, MCH_PacketPlayerControlBase pc) {
-      MCH_PacketSeatPlayerControl psc;
       if (Keyboard.isKeyDown(MCH_Config.KeyFreeLook.prmInt)) {
          if (this.KeyGUI.isKeyDown() || this.KeyExtra.isKeyDown()) {
-            psc = new MCH_PacketSeatPlayerControl();
+            MCH_PacketSeatPlayerControl psc = new MCH_PacketSeatPlayerControl();
             if (isPilot) {
                psc.switchSeat = (byte)(this.KeyGUI.isKeyDown() ? 1 : 2);
             } else {
@@ -79,7 +78,7 @@ public abstract class MCH_AircraftClientTickHandler extends MCH_ClientTickHandle
             return false;
          }
       } else if (!isPilot && ac.getSeatNum() > 1) {
-         psc = new MCH_PacketSeatPlayerControl();
+         MCH_PacketSeatPlayerControl psc = new MCH_PacketSeatPlayerControl();
          if (this.KeyGUI.isKeyDown()) {
             psc.switchSeat = 1;
             W_Network.sendToServer(psc);
@@ -121,7 +120,7 @@ public abstract class MCH_AircraftClientTickHandler extends MCH_ClientTickHandle
          }
       }
 
-      if (this.KeyUnmount.isKeyDown() && !ac.isDestroyed() && ac.func_70302_i_() > 0 && !isPilot) {
+      if (this.KeyUnmount.isKeyDown() && !ac.isDestroyed() && ac.getSizeInventory() > 0 && !isPilot) {
          MCH_PacketIndOpenScreen.send(3);
       }
 
@@ -141,7 +140,7 @@ public abstract class MCH_AircraftClientTickHandler extends MCH_ClientTickHandle
                send = true;
             }
          } else if (this.KeyDownFromRack.isKeyDown()) {
-            if (ac.func_184187_bx() != null) {
+            if (ac.getRidingEntity() != null) {
                pc.isUnmount = 3;
                send = true;
             } else if (ac.canDownFromRack()) {
@@ -179,10 +178,10 @@ public abstract class MCH_AircraftClientTickHandler extends MCH_ClientTickHandle
             send |= this.KeyBrake.isKeyDown();
             pc.throttleDown = ac.throttleDown = false;
             pc.throttleUp = ac.throttleUp = false;
-            double dx = ac.posX - ac.field_70169_q;
-            double dz = ac.posZ - ac.field_70166_s;
+            double dx = ac.posX - ac.prevPosX;
+            double dz = ac.posZ - ac.prevPosZ;
             double dist = dx * dx + dz * dz;
-            if (ac.getCurrentThrottle() <= 0.03D && dist < 0.01D) {
+            if (ac.getCurrentThrottle() <= 0.03 && dist < 0.01) {
                pc.moveRight = ac.moveRight = false;
                pc.moveLeft = ac.moveLeft = false;
             }
@@ -191,11 +190,8 @@ public abstract class MCH_AircraftClientTickHandler extends MCH_ClientTickHandle
          } else {
             send |= this.KeyBrake.isKeyUp();
             MCH_Key[] dKey = new MCH_Key[]{this.KeyUp, this.KeyDown, this.KeyRight, this.KeyLeft};
-            MCH_Key[] var15 = dKey;
-            int var8 = dKey.length;
 
-            for(int var9 = 0; var9 < var8; ++var9) {
-               MCH_Key k = var15[var9];
+            for (MCH_Key k : dKey) {
                if (k.isKeyDown() || k.isKeyUp()) {
                   send = true;
                   break;
@@ -223,13 +219,13 @@ public abstract class MCH_AircraftClientTickHandler extends MCH_ClientTickHandle
          if (!this.KeySwitchWeapon1.isKeyDown() && !this.KeySwitchWeapon2.isKeyDown() && getMouseWheel() == 0) {
             if (this.KeySwWeaponMode.isKeyDown()) {
                ac.switchCurrentWeaponMode(player);
-            } else if (this.KeyUseWeapon.isKeyPress() && ac.useCurrentWeapon((Entity)player)) {
+            } else if (this.KeyUseWeapon.isKeyPress() && ac.useCurrentWeapon(player)) {
                pc.useWeapon = true;
                pc.useWeaponOption1 = ac.getCurrentWeapon(player).getLastUsedOptionParameter1();
                pc.useWeaponOption2 = ac.getCurrentWeapon(player).getLastUsedOptionParameter2();
-               pc.useWeaponPosX = ac.field_70169_q;
-               pc.useWeaponPosY = ac.field_70167_r;
-               pc.useWeaponPosZ = ac.field_70166_s;
+               pc.useWeaponPosX = ac.prevPosX;
+               pc.useWeaponPosY = ac.prevPosY;
+               pc.useWeaponPosZ = ac.prevPosZ;
                send = true;
             }
          } else {
@@ -245,6 +241,6 @@ public abstract class MCH_AircraftClientTickHandler extends MCH_ClientTickHandle
          }
       }
 
-      return send || player.field_70173_aa % 100 == 0;
+      return send || player.ticksExisted % 100 == 0;
    }
 }

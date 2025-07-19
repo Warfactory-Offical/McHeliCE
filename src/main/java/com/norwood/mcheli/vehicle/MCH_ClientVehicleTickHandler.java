@@ -24,13 +24,32 @@ public class MCH_ClientVehicleTickHandler extends MCH_AircraftClientTickHandler 
       this.updateKeybind(config);
    }
 
+   @Override
    public void updateKeybind(MCH_Config config) {
       super.updateKeybind(config);
       this.KeySwitchMode = new MCH_Key(MCH_Config.KeySwitchMode.prmInt);
       this.KeySwitchHovering = new MCH_Key(MCH_Config.KeySwitchHovering.prmInt);
       this.KeyZoom = new MCH_Key(MCH_Config.KeyZoom.prmInt);
       this.KeyExtra = new MCH_Key(MCH_Config.KeyExtra.prmInt);
-      this.Keys = new MCH_Key[]{this.KeyUp, this.KeyDown, this.KeyRight, this.KeyLeft, this.KeySwitchMode, this.KeySwitchHovering, this.KeyUseWeapon, this.KeySwWeaponMode, this.KeySwitchWeapon1, this.KeySwitchWeapon2, this.KeyZoom, this.KeyCameraMode, this.KeyUnmount, this.KeyUnmountForce, this.KeyFlare, this.KeyExtra, this.KeyGUI};
+      this.Keys = new MCH_Key[]{
+         this.KeyUp,
+         this.KeyDown,
+         this.KeyRight,
+         this.KeyLeft,
+         this.KeySwitchMode,
+         this.KeySwitchHovering,
+         this.KeyUseWeapon,
+         this.KeySwWeaponMode,
+         this.KeySwitchWeapon1,
+         this.KeySwitchWeapon2,
+         this.KeyZoom,
+         this.KeyCameraMode,
+         this.KeyUnmount,
+         this.KeyUnmountForce,
+         this.KeyFlare,
+         this.KeyExtra,
+         this.KeyGUI
+      };
    }
 
    protected void update(EntityPlayer player, MCH_EntityVehicle vehicle, MCH_VehicleInfo info) {
@@ -38,16 +57,13 @@ public class MCH_ClientVehicleTickHandler extends MCH_AircraftClientTickHandler 
          setRotLimitPitch(info.minRotationPitch, info.maxRotationPitch, player);
       }
 
-      vehicle.updateCameraRotate(player.field_70177_z, player.field_70125_A);
+      vehicle.updateCameraRotate(player.rotationYaw, player.rotationPitch);
       vehicle.updateRadar(5);
    }
 
+   @Override
    protected void onTick(boolean inGUI) {
-      MCH_Key[] var2 = this.Keys;
-      int var3 = var2.length;
-
-      for(int var4 = 0; var4 < var3; ++var4) {
-         MCH_Key k = var2[var4];
+      for (MCH_Key k : this.Keys) {
          k.update();
       }
 
@@ -56,10 +72,10 @@ public class MCH_ClientVehicleTickHandler extends MCH_AircraftClientTickHandler 
       MCH_EntityVehicle vehicle = null;
       boolean isPilot = true;
       if (player != null) {
-         if (player.func_184187_bx() instanceof MCH_EntityVehicle) {
-            vehicle = (MCH_EntityVehicle)player.func_184187_bx();
-         } else if (player.func_184187_bx() instanceof MCH_EntitySeat) {
-            MCH_EntitySeat seat = (MCH_EntitySeat)player.func_184187_bx();
+         if (player.getRidingEntity() instanceof MCH_EntityVehicle) {
+            vehicle = (MCH_EntityVehicle)player.getRidingEntity();
+         } else if (player.getRidingEntity() instanceof MCH_EntitySeat) {
+            MCH_EntitySeat seat = (MCH_EntitySeat)player.getRidingEntity();
             if (seat.getParent() instanceof MCH_EntityVehicle) {
                isPilot = false;
                vehicle = (MCH_EntityVehicle)seat.getParent();
@@ -68,7 +84,7 @@ public class MCH_ClientVehicleTickHandler extends MCH_AircraftClientTickHandler 
       }
 
       if (vehicle != null && vehicle.getAcInfo() != null) {
-         MCH_Lib.disableFirstPersonItemRender(player.func_184614_ca());
+         MCH_Lib.disableFirstPersonItemRender(player.getHeldItemMainhand());
          this.update(player, vehicle, vehicle.getVehicleInfo());
          MCH_ViewEntityDummy viewEntityDummy = MCH_ViewEntityDummy.getInstance(this.mc.world);
          viewEntityDummy.update(vehicle.camera);
@@ -93,7 +109,6 @@ public class MCH_ClientVehicleTickHandler extends MCH_AircraftClientTickHandler 
          MCH_Lib.enableFirstPersonItemRender();
          MCH_Lib.setRenderViewEntity(player);
       }
-
    }
 
    protected void playerControlInGUI(EntityPlayer player, MCH_EntityVehicle vehicle, boolean isPilot) {
@@ -137,6 +152,5 @@ public class MCH_ClientVehicleTickHandler extends MCH_AircraftClientTickHandler 
       if (send) {
          W_Network.sendToServer(pc);
       }
-
    }
 }

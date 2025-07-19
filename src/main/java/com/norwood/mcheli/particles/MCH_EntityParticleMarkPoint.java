@@ -19,59 +19,59 @@ public class MCH_EntityParticleMarkPoint extends MCH_EntityParticleBase implemen
    final Team team;
 
    public MCH_EntityParticleMarkPoint(World par1World, double x, double y, double z, Team team) {
-      super(par1World, x, y, z, 0.0D, 0.0D, 0.0D);
+      super(par1World, x, y, z, 0.0, 0.0, 0.0);
       this.setParticleMaxAge(30);
       this.team = team;
    }
 
-   public void func_189213_a() {
-      this.field_187123_c = this.posX;
-      this.field_187124_d = this.posY;
-      this.field_187125_e = this.posZ;
+   public void onUpdate() {
+      this.prevPosX = this.posX;
+      this.prevPosY = this.posY;
+      this.prevPosZ = this.posZ;
       EntityPlayer player = Minecraft.getMinecraft().player;
       if (player == null) {
-         this.func_187112_i();
+         this.setExpired();
       } else if (player.getTeam() == null && this.team != null) {
-         this.func_187112_i();
-      } else if (player.getTeam() != null && !player.func_184194_a(this.team)) {
-         this.func_187112_i();
+         this.setExpired();
+      } else if (player.getTeam() != null && !player.isOnScoreboardTeam(this.team)) {
+         this.setExpired();
       }
-
    }
 
-   public void func_187112_i() {
-      super.func_187112_i();
+   public void setExpired() {
+      super.setExpired();
       MCH_Lib.DbgLog(true, "MCH_EntityParticleMarkPoint.setExpired : " + this);
    }
 
-   public int func_70537_b() {
+   @Override
+   public int getFXLayer() {
       return 3;
    }
 
-   public void func_180434_a(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
+   public void renderParticle(BufferBuilder buffer, Entity entityIn, float par2, float par3, float par4, float par5, float par6, float par7) {
       GL11.glPushMatrix();
       Minecraft mc = Minecraft.getMinecraft();
       EntityPlayer player = mc.player;
       if (player != null) {
-         double ix = field_70556_an;
-         double iy = field_70554_ao;
-         double iz = field_70555_ap;
-         if (mc.field_71474_y.field_74320_O > 0 && entityIn != null) {
-            double dist = (double)W_Reflection.getThirdPersonDistance();
-            float yaw = mc.field_71474_y.field_74320_O != 2 ? -entityIn.field_70177_z : -entityIn.field_70177_z;
-            float pitch = mc.field_71474_y.field_74320_O != 2 ? -entityIn.field_70125_A : -entityIn.field_70125_A;
-            Vec3d v = MCH_Lib.RotVec3(0.0D, 0.0D, -dist, yaw, pitch);
-            if (mc.field_71474_y.field_74320_O == 2) {
+         double ix = interpPosX;
+         double iy = interpPosY;
+         double iz = interpPosZ;
+         if (mc.gameSettings.thirdPersonView > 0 && entityIn != null) {
+            double dist = W_Reflection.getThirdPersonDistance();
+            float yaw = mc.gameSettings.thirdPersonView != 2 ? -entityIn.rotationYaw : -entityIn.rotationYaw;
+            float pitch = mc.gameSettings.thirdPersonView != 2 ? -entityIn.rotationPitch : -entityIn.rotationPitch;
+            Vec3d v = MCH_Lib.RotVec3(0.0, 0.0, -dist, yaw, pitch);
+            if (mc.gameSettings.thirdPersonView == 2) {
                v = new Vec3d(-v.x, -v.y, -v.z);
             }
 
-            Vec3d vs = new Vec3d(entityIn.posX, entityIn.posY + (double)entityIn.func_70047_e(), entityIn.posZ);
-            RayTraceResult mop = entityIn.world.func_72933_a(vs.func_72441_c(0.0D, 0.0D, 0.0D), vs.func_72441_c(v.x, v.y, v.z));
+            Vec3d vs = new Vec3d(entityIn.posX, entityIn.posY + entityIn.getEyeHeight(), entityIn.posZ);
+            RayTraceResult mop = entityIn.world.rayTraceBlocks(vs.add(0.0, 0.0, 0.0), vs.add(v.x, v.y, v.z));
             double block_dist = dist;
-            if (mop != null && mop.field_72313_a == Type.BLOCK) {
-               block_dist = vs.func_72438_d(mop.field_72307_f) - 0.4D;
-               if (block_dist < 0.0D) {
-                  block_dist = 0.0D;
+            if (mop != null && mop.typeOfHit == Type.BLOCK) {
+               block_dist = vs.distanceTo(mop.hitVec) - 0.4;
+               if (block_dist < 0.0) {
+                  block_dist = 0.0;
                }
             }
 
@@ -81,12 +81,12 @@ public class MCH_EntityParticleMarkPoint extends MCH_EntityParticleBase implemen
             iz += v.z * (block_dist / dist);
          }
 
-         double px = (double)((float)(this.field_187123_c + (this.posX - this.field_187123_c) * (double)partialTicks - ix));
-         double py = (double)((float)(this.field_187124_d + (this.posY - this.field_187124_d) * (double)partialTicks - iy));
-         double pz = (double)((float)(this.field_187125_e + (this.posZ - this.field_187125_e) * (double)partialTicks - iz));
-         double scale = Math.sqrt(px * px + py * py + pz * pz) / 100.0D;
-         if (scale < 1.0D) {
-            scale = 1.0D;
+         double px = (float)(this.prevPosX + (this.posX - this.prevPosX) * par2 - ix);
+         double py = (float)(this.prevPosY + (this.posY - this.prevPosY) * par2 - iy);
+         double pz = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * par2 - iz);
+         double scale = Math.sqrt(px * px + py * py + pz * pz) / 10.0;
+         if (scale < 1.0) {
+            scale = 1.0;
          }
 
          MCH_GuiTargetMarker.addMarkEntityPos(100, this, px / scale, py / scale, pz / scale, false);
@@ -94,14 +94,17 @@ public class MCH_EntityParticleMarkPoint extends MCH_EntityParticleBase implemen
       }
    }
 
+   @Override
    public double getX() {
       return this.posX;
    }
 
+   @Override
    public double getY() {
       return this.posY;
    }
 
+   @Override
    public double getZ() {
       return this.posZ;
    }

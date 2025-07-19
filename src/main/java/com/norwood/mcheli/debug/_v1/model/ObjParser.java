@@ -20,10 +20,10 @@ public class ObjParser {
    private static Pattern groupObjectPattern = Pattern.compile("([go]( [-\\$\\w\\d]+) *\\n)|([go]( [-\\$\\w\\d]+) *$)");
 
    public static ObjModel parse(InputStream inputStream) throws DebugException {
-      List<_Vertex> vertices = new ArrayList();
-      List<_TextureCoord> textureCoordinates = new ArrayList();
-      List<_Vertex> vertexNormals = new ArrayList();
-      List<_GroupObject> groupObjects = new ArrayList();
+      List<_Vertex> vertices = new ArrayList<>();
+      List<_TextureCoord> textureCoordinates = new ArrayList<>();
+      List<_Vertex> vertexNormals = new ArrayList<>();
+      List<_GroupObject> groupObjects = new ArrayList<>();
       _GroupObject.Builder group = null;
       int vertexNum = 0;
       int faceNum = 0;
@@ -31,21 +31,21 @@ public class ObjParser {
       String currentLine = null;
       int lineCount = 0;
 
+      ObjModel var31;
       try {
          reader = new BufferedReader(new InputStreamReader(inputStream));
 
-         while((currentLine = reader.readLine()) != null) {
-            ++lineCount;
+         while ((currentLine = reader.readLine()) != null) {
+            lineCount++;
             currentLine = currentLine.replaceAll("\\s+", " ").trim();
             if (!currentLine.startsWith("#") && currentLine.length() != 0) {
-               _Vertex vertex;
                if (currentLine.startsWith("v ")) {
-                  vertex = parseVertex(currentLine, lineCount);
+                  _Vertex vertex = parseVertex(currentLine, lineCount);
                   if (vertex != null) {
                      vertices.add(vertex);
                   }
                } else if (currentLine.startsWith("vn ")) {
-                  vertex = parseVertexNormal(currentLine, lineCount);
+                  _Vertex vertex = parseVertexNormal(currentLine, lineCount);
                   if (vertex != null) {
                      vertexNormals.add(vertex);
                   }
@@ -75,8 +75,7 @@ public class ObjParser {
          }
 
          groupObjects.add(group.build());
-         ObjModel var28 = new ObjModel(groupObjects, vertexNum, faceNum);
-         return var28;
+         var31 = new ObjModel(groupObjects, vertexNum, faceNum);
       } catch (IOException var23) {
          throw new DebugException("IO Exception reading model format", var23);
       } finally {
@@ -89,8 +88,9 @@ public class ObjParser {
             inputStream.close();
          } catch (IOException var21) {
          }
-
       }
+
+      return var31;
    }
 
    private static _Vertex parseVertex(String line, int lineCount) throws DebugException {
@@ -103,7 +103,7 @@ public class ObjParser {
             if (tokens.length == 2) {
                return new _Vertex(Float.parseFloat(tokens[0]), Float.parseFloat(tokens[1]));
             } else {
-               return (_Vertex)(tokens.length == 3 ? new _Vertex(Float.parseFloat(tokens[0]), Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2])) : vertex);
+               return tokens.length == 3 ? new _Vertex(Float.parseFloat(tokens[0]), Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2])) : vertex;
             }
          } catch (NumberFormatException var5) {
             throw new DebugException(String.format("Number formatting error at line %d", lineCount), var5);
@@ -120,7 +120,7 @@ public class ObjParser {
          String[] tokens = line.split(" ");
 
          try {
-            return (_Vertex)(tokens.length == 3 ? new _Vertex(Float.parseFloat(tokens[0]), Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2])) : vertexNormal);
+            return tokens.length == 3 ? new _Vertex(Float.parseFloat(tokens[0]), Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2])) : vertexNormal;
          } catch (NumberFormatException var5) {
             throw new DebugException(String.format("Number formatting error at line %d", lineCount), var5);
          }
@@ -139,7 +139,9 @@ public class ObjParser {
             if (tokens.length == 2) {
                return new _TextureCoord(Float.parseFloat(tokens[0]), 1.0F - Float.parseFloat(tokens[1]));
             } else {
-               return (_TextureCoord)(tokens.length == 3 ? new _TextureCoord(Float.parseFloat(tokens[0]), 1.0F - Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2])) : textureCoordinate);
+               return tokens.length == 3
+                  ? new _TextureCoord(Float.parseFloat(tokens[0]), 1.0F - Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2]))
+                  : textureCoordinate;
             }
          } catch (NumberFormatException var5) {
             throw new DebugException(String.format("Number formatting error at line %d", lineCount), var5);
@@ -161,32 +163,31 @@ public class ObjParser {
          _Vertex[] verts = new _Vertex[tokens.length];
          _TextureCoord[] texCoords = new _TextureCoord[tokens.length];
          _Vertex[] normals = new _Vertex[tokens.length];
-         int i;
          if (isValidFace_V_VT_VN_Line(line)) {
-            for(i = 0; i < tokens.length; ++i) {
+            for (int i = 0; i < tokens.length; i++) {
                subTokens = tokens[i].split("/");
                verticesID[i] = Integer.parseInt(subTokens[0]) - 1;
-               verts[i] = (_Vertex)vertices.get(Integer.parseInt(subTokens[0]) - 1);
-               texCoords[i] = (_TextureCoord)textureCoordinates.get(Integer.parseInt(subTokens[1]) - 1);
-               normals[i] = (_Vertex)vertexNormals.get(Integer.parseInt(subTokens[2]) - 1);
+               verts[i] = vertices.get(Integer.parseInt(subTokens[0]) - 1);
+               texCoords[i] = textureCoordinates.get(Integer.parseInt(subTokens[1]) - 1);
+               normals[i] = vertexNormals.get(Integer.parseInt(subTokens[2]) - 1);
             }
 
             face = new _Face(verticesID, verts, normals, texCoords);
          } else if (isValidFace_V_VT_Line(line)) {
-            for(i = 0; i < tokens.length; ++i) {
+            for (int i = 0; i < tokens.length; i++) {
                subTokens = tokens[i].split("/");
                verticesID[i] = Integer.parseInt(subTokens[0]) - 1;
-               verts[i] = (_Vertex)vertices.get(Integer.parseInt(subTokens[0]) - 1);
-               texCoords[i] = (_TextureCoord)textureCoordinates.get(Integer.parseInt(subTokens[1]) - 1);
+               verts[i] = vertices.get(Integer.parseInt(subTokens[0]) - 1);
+               texCoords[i] = textureCoordinates.get(Integer.parseInt(subTokens[1]) - 1);
             }
 
             face = new _Face(verticesID, verts, new _Vertex[0], texCoords);
          } else if (isValidFace_V_VN_Line(line)) {
-            for(i = 0; i < tokens.length; ++i) {
+            for (int i = 0; i < tokens.length; i++) {
                subTokens = tokens[i].split("//");
                verticesID[i] = Integer.parseInt(subTokens[0]) - 1;
-               verts[i] = (_Vertex)vertices.get(Integer.parseInt(subTokens[0]) - 1);
-               normals[i] = (_Vertex)vertexNormals.get(Integer.parseInt(subTokens[2]) - 1);
+               verts[i] = vertices.get(Integer.parseInt(subTokens[0]) - 1);
+               normals[i] = vertexNormals.get(Integer.parseInt(subTokens[2]) - 1);
             }
 
             face = new _Face(verticesID, verts, normals, new _TextureCoord[0]);
@@ -195,9 +196,9 @@ public class ObjParser {
                throw new DebugException("Error parsing entry ('" + line + "', line " + lineCount + ") in file - Incorrect format");
             }
 
-            for(i = 0; i < tokens.length; ++i) {
+            for (int i = 0; i < tokens.length; i++) {
                verticesID[i] = Integer.parseInt(tokens[0]) - 1;
-               verts[i] = (_Vertex)vertices.get(Integer.parseInt(tokens[0]) - 1);
+               verts[i] = vertices.get(Integer.parseInt(tokens[0]) - 1);
             }
 
             face = new _Face(verticesID, verts, new _Vertex[0], new _TextureCoord[0]);

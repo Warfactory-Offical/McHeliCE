@@ -15,43 +15,43 @@ public class W_GuiButton extends GuiButton {
 
    public void addHoverString(String s) {
       if (this.hoverStringList == null) {
-         this.hoverStringList = new ArrayList();
+         this.hoverStringList = new ArrayList<>();
       }
 
       this.hoverStringList.add(s);
    }
 
    public boolean isVisible() {
-      return this.field_146125_m;
+      return this.visible;
    }
 
    public void setVisible(boolean b) {
-      this.field_146125_m = b;
+      this.visible = b;
    }
 
    public static void setVisible(GuiButton button, boolean b) {
-      button.field_146125_m = b;
+      button.visible = b;
    }
 
    public void enableBlend() {
       GL11.glEnable(3042);
-      OpenGlHelper.func_148821_a(770, 771, 1, 0);
+      OpenGlHelper.glBlendFunc(770, 771, 1, 0);
       GL11.glBlendFunc(770, 771);
    }
 
    public boolean isOnMouseOver() {
-      return this.field_146123_n;
+      return this.hovered;
    }
 
    public void setOnMouseOver(boolean b) {
-      this.field_146123_n = b;
+      this.hovered = b;
    }
 
    public int getWidth() {
-      return this.field_146120_f;
+      return this.width;
    }
 
    public int getHeight() {
-      return this.field_146121_g;
+      return this.height;
    }
 }

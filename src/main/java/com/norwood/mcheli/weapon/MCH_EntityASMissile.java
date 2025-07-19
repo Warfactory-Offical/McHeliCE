@@ -13,36 +13,41 @@ public class MCH_EntityASMissile extends MCH_EntityBaseBullet {
 
    public MCH_EntityASMissile(World par1World) {
       super(par1World);
-      this.targetPosX = 0.0D;
-      this.targetPosY = 0.0D;
-      this.targetPosZ = 0.0D;
+      this.targetPosX = 0.0;
+      this.targetPosY = 0.0;
+      this.targetPosZ = 0.0;
    }
 
-   public MCH_EntityASMissile(World par1World, double posX, double posY, double posZ, double targetX, double targetY, double targetZ, float yaw, float pitch, double acceleration) {
+   public MCH_EntityASMissile(
+      World par1World, double posX, double posY, double posZ, double targetX, double targetY, double targetZ, float yaw, float pitch, double acceleration
+   ) {
       super(par1World, posX, posY, posZ, targetX, targetY, targetZ, yaw, pitch, acceleration);
    }
 
+   @Override
    public float getGravity() {
       return this.getBomblet() == 1 ? -0.03F : super.getGravity();
    }
 
+   @Override
    public float getGravityInWater() {
       return this.getBomblet() == 1 ? -0.03F : super.getGravityInWater();
    }
 
-   public void func_70071_h_() {
-      super.func_70071_h_();
+   @Override
+   public void onUpdate() {
+      super.onUpdate();
       if (this.getInfo() != null && !this.getInfo().disableSmoke && this.getBomblet() == 0) {
          this.spawnParticle(this.getInfo().trajectoryParticleName, 3, 10.0F * this.getInfo().smokeSize * 0.5F);
       }
 
       if (this.getInfo() != null && !this.world.isRemote && this.isBomblet != 1) {
          Block block = W_WorldFunc.getBlock(this.world, (int)this.targetPosX, (int)this.targetPosY, (int)this.targetPosZ);
-         if (block != null && block.func_149703_v()) {
-            double dist = this.func_70011_f(this.targetPosX, this.targetPosY, this.targetPosZ);
-            if (dist < (double)this.getInfo().proximityFuseDist) {
+         if (block != null && block.isCollidable()) {
+            double dist = this.getDistance(this.targetPosX, this.targetPosY, this.targetPosZ);
+            if (dist < this.getInfo().proximityFuseDist) {
                if (this.getInfo().bomblet > 0) {
-                  for(int i = 0; i < this.getInfo().bomblet; ++i) {
+                  for (int i = 0; i < this.getInfo().bomblet; i++) {
                      this.sprinkleBomblet();
                   }
                } else {
@@ -50,60 +55,57 @@ public class MCH_EntityASMissile extends MCH_EntityBaseBullet {
                   this.onImpact(mop, 1.0F);
                }
 
-               this.func_70106_y();
-            } else {
-               double up;
-               double x;
-               double y;
-               double z;
-               if ((double)this.getGravity() == 0.0D) {
-                  up = 0.0D;
-                  if (this.getCountOnUpdate() < 10) {
-                     up = 20.0D;
-                  }
-
-                  x = this.targetPosX - this.posX;
-                  y = this.targetPosY + up - this.posY;
-                  z = this.targetPosZ - this.posZ;
-                  double d = (double)MathHelper.func_76133_a(x * x + y * y + z * z);
-                  this.field_70159_w = x * this.acceleration / d;
-                  this.field_70181_x = y * this.acceleration / d;
-                  this.field_70179_y = z * this.acceleration / d;
-               } else {
-                  up = this.targetPosX - this.posX;
-                  x = this.targetPosY - this.posY;
-                  x *= 0.3D;
-                  y = this.targetPosZ - this.posZ;
-                  z = (double)MathHelper.func_76133_a(up * up + x * x + y * y);
-                  this.field_70159_w = up * this.acceleration / z;
-                  this.field_70179_y = y * this.acceleration / z;
+               this.setDead();
+            } else if (this.getGravity() == 0.0) {
+               double up = 0.0;
+               if (this.getCountOnUpdate() < 10) {
+                  up = 20.0;
                }
+
+               double x = this.targetPosX - this.posX;
+               double y = this.targetPosY + up - this.posY;
+               double z = this.targetPosZ - this.posZ;
+               double d = MathHelper.sqrt(x * x + y * y + z * z);
+               this.motionX = x * this.acceleration / d;
+               this.motionY = y * this.acceleration / d;
+               this.motionZ = z * this.acceleration / d;
+            } else {
+               double x = this.targetPosX - this.posX;
+               double y = this.targetPosY - this.posY;
+               y *= 0.3;
+               double z = this.targetPosZ - this.posZ;
+               double d = MathHelper.sqrt(x * x + y * y + z * z);
+               this.motionX = x * this.acceleration / d;
+               this.motionZ = z * this.acceleration / d;
             }
          }
       }
 
-      double a = (double)((float)Math.atan2(this.field_70179_y, this.field_70159_w));
-      this.field_70177_z = (float)(a * 180.0D / 3.141592653589793D) - 90.0F;
-      double r = Math.sqrt(this.field_70159_w * this.field_70159_w + this.field_70179_y * this.field_70179_y);
-      this.field_70125_A = -((float)(Math.atan2(this.field_70181_x, r) * 180.0D / 3.141592653589793D));
+      double a = (float)Math.atan2(this.motionZ, this.motionX);
+      this.rotationYaw = (float)(a * 180.0 / Math.PI) - 90.0F;
+      double r = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+      this.rotationPitch = -((float)(Math.atan2(this.motionY, r) * 180.0 / Math.PI));
       this.onUpdateBomblet();
    }
 
+   @Override
    public void sprinkleBomblet() {
       if (!this.world.isRemote) {
-         MCH_EntityASMissile e = new MCH_EntityASMissile(this.world, this.posX, this.posY, this.posZ, this.field_70159_w, this.field_70181_x, this.field_70179_y, (float)this.field_70146_Z.nextInt(360), 0.0F, this.acceleration);
+         MCH_EntityASMissile e = new MCH_EntityASMissile(
+            this.world, this.posX, this.posY, this.posZ, this.motionX, this.motionY, this.motionZ, this.rand.nextInt(360), 0.0F, this.acceleration
+         );
          e.setParameterFromWeapon(this, this.shootingAircraft, this.shootingEntity);
-         e.setName(this.func_70005_c_());
+         e.setName(this.getName());
          float RANDOM = this.getInfo().bombletDiff;
-         e.field_70159_w = this.field_70159_w * 0.5D + (double)((this.field_70146_Z.nextFloat() - 0.5F) * RANDOM);
-         e.field_70181_x = this.field_70181_x * 0.5D / 2.0D + (double)((this.field_70146_Z.nextFloat() - 0.5F) * RANDOM / 2.0F);
-         e.field_70179_y = this.field_70179_y * 0.5D + (double)((this.field_70146_Z.nextFloat() - 0.5F) * RANDOM);
+         e.motionX = this.motionX * 0.5 + (this.rand.nextFloat() - 0.5F) * RANDOM;
+         e.motionY = this.motionY * 0.5 / 2.0 + (this.rand.nextFloat() - 0.5F) * RANDOM / 2.0F;
+         e.motionZ = this.motionZ * 0.5 + (this.rand.nextFloat() - 0.5F) * RANDOM;
          e.setBomblet();
-         this.world.func_72838_d(e);
+         this.world.spawnEntity(e);
       }
-
    }
 
+   @Override
    public MCH_BulletModel getDefaultBulletModel() {
       return MCH_DefaultBulletModels.ASMissile;
    }

@@ -18,11 +18,7 @@ public enum ContentType {
    }
 
    public static boolean validateDirName(String dirName) {
-      ContentType[] var1 = values();
-      int var2 = var1.length;
-
-      for(int var3 = 0; var3 < var2; ++var3) {
-         ContentType type = var1[var3];
+      for (ContentType type : values()) {
          if (type.dirName.equals(dirName)) {
             return true;
          }

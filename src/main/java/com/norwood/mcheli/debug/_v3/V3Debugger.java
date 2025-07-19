@@ -8,11 +8,11 @@ import org.lwjgl.input.Keyboard;
 
 public class V3Debugger {
    public static final V3Debugger.Stater TOGGLE_I = new V3Debugger.Stater(24);
-   public static final V3Debugger.Numeric NUM_X = new V3Debugger.Numeric("TX", 203, 205, 0.0625D);
-   public static final V3Debugger.Numeric NUM_Y = new V3Debugger.Numeric("TY", 200, 208, 0.0625D);
-   public static final V3Debugger.Numeric ROT_X = new V3Debugger.Numeric("RX", 36, 37, 5.0D);
-   public static final V3Debugger.Numeric ROT_Y = new V3Debugger.Numeric("RY", 49, 50, 5.0D);
-   public static final V3Debugger.Numeric ROT_Z = new V3Debugger.Numeric("RZ", 22, 23, 5.0D);
+   public static final V3Debugger.Numeric NUM_X = new V3Debugger.Numeric("TX", 203, 205, 0.0625);
+   public static final V3Debugger.Numeric NUM_Y = new V3Debugger.Numeric("TY", 200, 208, 0.0625);
+   public static final V3Debugger.Numeric ROT_X = new V3Debugger.Numeric("RX", 36, 37, 5.0);
+   public static final V3Debugger.Numeric ROT_Y = new V3Debugger.Numeric("RY", 49, 50, 5.0);
+   public static final V3Debugger.Numeric ROT_Z = new V3Debugger.Numeric("RZ", 22, 23, 5.0);
    private static boolean tickOnce;
 
    static void onClient(ClientTickEvent event) {
@@ -20,7 +20,6 @@ public class V3Debugger {
          Arrays.fill(V3Debugger.KeyStater.tickChunk, false);
          tickOnce = false;
       }
-
    }
 
    public static boolean checkTick() {
@@ -34,61 +33,6 @@ public class V3Debugger {
 
    static void info(Object o) {
       MCH_Utils.logger().info(o);
-   }
-
-   public static class Numeric {
-      final V3Debugger.KeyStater incKey;
-      final V3Debugger.KeyStater decKey;
-      String name;
-      double num;
-      final double dif;
-
-      public Numeric(String name, int decKey, int incKey, double dif) {
-         this.name = name;
-         this.decKey = new V3Debugger.KeyStater(decKey);
-         this.incKey = new V3Debugger.KeyStater(incKey);
-         this.dif = dif;
-      }
-
-      public double value() {
-         if (this.incKey.press()) {
-            this.num += this.dif;
-            V3Debugger.info("Num " + this.name + ".value : " + this.num);
-         }
-
-         if (this.decKey.press()) {
-            this.num -= this.dif;
-            V3Debugger.info("Num " + this.name + ".value : " + this.num);
-         }
-
-         return this.num;
-      }
-
-      public float valueFloat() {
-         return (float)this.value();
-      }
-
-      public int valueInt() {
-         return (int)this.value();
-      }
-   }
-
-   public static class Stater {
-      final V3Debugger.KeyStater key;
-      boolean state;
-
-      public Stater(int key) {
-         this.key = new V3Debugger.KeyStater(key);
-      }
-
-      public boolean state() {
-         if (this.key.press()) {
-            this.state = !this.state;
-            V3Debugger.info("Key " + this.key.keydown() + ".state : " + this.state);
-         }
-
-         return this.state;
-      }
    }
 
    static class KeyStater {
@@ -120,6 +64,61 @@ public class V3Debugger {
 
       public String keyname() {
          return Keyboard.getKeyName(this.key);
+      }
+   }
+
+   public static class Numeric {
+      final V3Debugger.KeyStater incKey;
+      final V3Debugger.KeyStater decKey;
+      String name;
+      double num;
+      final double dif;
+
+      public Numeric(String name, int decKey, int incKey, double dif) {
+         this.name = name;
+         this.decKey = new V3Debugger.KeyStater(decKey);
+         this.incKey = new V3Debugger.KeyStater(incKey);
+         this.dif = dif;
+      }
+
+      public double value() {
+         if (this.incKey.press()) {
+            this.num = this.num + this.dif;
+            V3Debugger.info("Num " + this.name + ".value : " + this.num);
+         }
+
+         if (this.decKey.press()) {
+            this.num = this.num - this.dif;
+            V3Debugger.info("Num " + this.name + ".value : " + this.num);
+         }
+
+         return this.num;
+      }
+
+      public float valueFloat() {
+         return (float)this.value();
+      }
+
+      public int valueInt() {
+         return (int)this.value();
+      }
+   }
+
+   public static class Stater {
+      final V3Debugger.KeyStater key;
+      boolean state;
+
+      public Stater(int key) {
+         this.key = new V3Debugger.KeyStater(key);
+      }
+
+      public boolean state() {
+         if (this.key.press()) {
+            this.state = !this.state;
+            V3Debugger.info("Key " + this.key.keydown() + ".state : " + this.state);
+         }
+
+         return this.state;
       }
    }
 }

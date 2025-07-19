@@ -4,7 +4,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-/** @deprecated */
 @Deprecated
 @SideOnly(Side.CLIENT)
 public interface _IItemRenderer {
@@ -14,17 +13,6 @@ public interface _IItemRenderer {
 
    void renderItem(_IItemRenderer.ItemRenderType var1, ItemStack var2, Object... var3);
 
-   /** @deprecated */
-   @Deprecated
-   public static enum ItemRendererHelper {
-      ENTITY_ROTATION,
-      ENTITY_BOBBING,
-      EQUIPPED_BLOCK,
-      BLOCK_3D,
-      INVENTORY_BLOCK;
-   }
-
-   /** @deprecated */
    @Deprecated
    public static enum ItemRenderType {
       ENTITY,
@@ -32,5 +20,14 @@ public interface _IItemRenderer {
       EQUIPPED_FIRST_PERSON,
       INVENTORY,
       FIRST_PERSON_MAP;
+   }
+
+   @Deprecated
+   public static enum ItemRendererHelper {
+      ENTITY_ROTATION,
+      ENTITY_BOBBING,
+      EQUIPPED_BLOCK,
+      BLOCK_3D,
+      INVENTORY_BLOCK;
    }
 }

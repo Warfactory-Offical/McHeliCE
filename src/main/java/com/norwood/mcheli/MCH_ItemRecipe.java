@@ -3,7 +3,6 @@ package com.norwood.mcheli;
 import com.google.common.collect.Sets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.Nullable;
@@ -35,25 +34,26 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public class MCH_ItemRecipe implements MCH_IRecipeList {
    private static final MCH_ItemRecipe instance = new MCH_ItemRecipe();
-   private static List<IRecipe> commonItemRecipe = new ArrayList();
+   private static List<IRecipe> commonItemRecipe = new ArrayList<>();
 
    public static MCH_ItemRecipe getInstance() {
       return instance;
    }
 
+   @Override
    public int getRecipeListSize() {
       return commonItemRecipe.size();
    }
 
+   @Override
    public IRecipe getRecipe(int index) {
-      return (IRecipe)commonItemRecipe.get(index);
+      return commonItemRecipe.get(index);
    }
 
    private static void addRecipeList(IRecipe recipe) {
       if (recipe != null) {
          commonItemRecipe.add(recipe);
       }
-
    }
 
    private static void registerCommonItemRecipe(IForgeRegistry<IRecipe> registry) {
@@ -65,7 +65,7 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
       addRecipeList((IRecipe)registry.getValue(MCH_Utils.suffix("parachute")));
       addRecipeList((IRecipe)registry.getValue(MCH_Utils.suffix("container")));
 
-      for(int i = 0; i < MCH_MOD.itemUavStation.length; ++i) {
+      for (int i = 0; i < MCH_MOD.itemUavStation.length; i++) {
          addRecipeList((IRecipe)registry.getValue(MCH_Utils.suffix("uav_station" + (i > 0 ? "" + (i + 1) : ""))));
       }
 
@@ -83,41 +83,25 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
 
    public static void registerItemRecipe(IForgeRegistry<IRecipe> registry) {
       registerCommonItemRecipe(registry);
-      Iterator var1 = ContentRegistries.heli().values().iterator();
 
-      while(var1.hasNext()) {
-         MCH_HeliInfo info = (MCH_HeliInfo)var1.next();
+      for (MCH_HeliInfo info : ContentRegistries.heli().values()) {
          addRecipeAndRegisterList(info, info.item, MCH_HeliInfoManager.getInstance());
       }
 
-      var1 = ContentRegistries.plane().values().iterator();
-
-      while(var1.hasNext()) {
-         MCP_PlaneInfo info = (MCP_PlaneInfo)var1.next();
+      for (MCP_PlaneInfo info : ContentRegistries.plane().values()) {
          addRecipeAndRegisterList(info, info.item, MCP_PlaneInfoManager.getInstance());
       }
 
-      var1 = ContentRegistries.tank().values().iterator();
-
-      while(var1.hasNext()) {
-         MCH_TankInfo info = (MCH_TankInfo)var1.next();
+      for (MCH_TankInfo info : ContentRegistries.tank().values()) {
          addRecipeAndRegisterList(info, info.item, MCH_TankInfoManager.getInstance());
       }
 
-      var1 = ContentRegistries.vehicle().values().iterator();
-
-      while(var1.hasNext()) {
-         MCH_VehicleInfo info = (MCH_VehicleInfo)var1.next();
+      for (MCH_VehicleInfo info : ContentRegistries.vehicle().values()) {
          addRecipeAndRegisterList(info, info.item, MCH_VehicleInfoManager.getInstance());
       }
 
-      MCH_ThrowableInfo info;
-      for(var1 = ContentRegistries.throwable().values().iterator(); var1.hasNext(); info.recipeString = null) {
-         info = (MCH_ThrowableInfo)var1.next();
-         Iterator var3 = info.recipeString.iterator();
-
-         while(var3.hasNext()) {
-            String s = (String)var3.next();
+      for (MCH_ThrowableInfo info : ContentRegistries.throwable().values()) {
+         for (String s : info.recipeString) {
             if (s.length() >= 3) {
                IRecipe recipe = addRecipe(info.name, info.item, s, info.isShapedRecipe);
                if (recipe != null) {
@@ -126,17 +110,16 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
                }
             }
          }
-      }
 
+         info.recipeString = null;
+      }
    }
 
    private static <T extends MCH_AircraftInfo> void addRecipeAndRegisterList(MCH_AircraftInfo info, Item item, MCH_AircraftInfoManager<T> im) {
       int count = 0;
-      Iterator var4 = info.recipeString.iterator();
 
-      while(var4.hasNext()) {
-         String s = (String)var4.next();
-         ++count;
+      for (String s : info.recipeString) {
+         count++;
          if (s.length() >= 3) {
             IRecipe recipe = addRecipe(info.name, item, s, info.isShapedRecipe);
             if (recipe != null) {
@@ -160,7 +143,7 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
 
    @Nullable
    public static IRecipe addShapedRecipe(String name, Item item, String data) {
-      ArrayList<Object> rcp = new ArrayList();
+      ArrayList<Object> rcp = new ArrayList<>();
       String[] s = data.split("\\s*,\\s*");
       if (s.length < 3) {
          return null;
@@ -178,12 +161,12 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
          Set<Integer> needShortChars = Sets.newHashSet();
          int idx = start;
 
-         for(int i = start; i < 3 + start; ++i) {
+         for (int i = start; i < 3 + start; i++) {
             if (s[idx].length() > 0 && s[idx].charAt(0) == '"' && s[idx].charAt(s[idx].length() - 1) == '"') {
                String ingredientStr = s[idx].substring(1, s[idx].length() - 1);
                ingredientStr.toUpperCase().chars().forEach(needShortChars::add);
                rcp.add(s[idx].subSequence(1, s[idx].length() - 1));
-               ++idx;
+               idx++;
             }
          }
 
@@ -192,8 +175,7 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
          } else {
             boolean isChar = true;
 
-            int dmg;
-            for(boolean flag = false; idx < s.length; ++idx) {
+            for (boolean flag = false; idx < s.length; idx++) {
                if (s[idx].length() <= 0) {
                   return null;
                }
@@ -219,10 +201,9 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
                } else {
                   if (!flag) {
                      String nm = s[idx].trim().toLowerCase();
-                     dmg = 0;
+                     int dmg = 0;
                      if (idx + 1 < s.length && isNumber(s[idx + 1])) {
-                        ++idx;
-                        dmg = Integer.parseInt(s[idx]);
+                        dmg = Integer.parseInt(s[++idx]);
                      }
 
                      if (isNumber(nm)) {
@@ -240,8 +221,8 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
 
             Object[] recipe = new Object[rcp.size()];
 
-            for(dmg = 0; dmg < recipe.length; ++dmg) {
-               recipe[dmg] = rcp.get(dmg);
+            for (int ix = 0; ix < recipe.length; ix++) {
+               recipe[ix] = rcp.get(ix);
             }
 
             ShapedRecipes r;
@@ -252,10 +233,9 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
                return null;
             }
 
-            for(int i = 0; i < r.field_77574_d.size(); ++i) {
-               if (r.field_77574_d.get(i) != Ingredient.field_193370_a && Arrays.stream(((Ingredient)r.field_77574_d.get(i)).func_193365_a()).anyMatch((stack) -> {
-                  return stack.func_77973_b() == null;
-               })) {
+            for (int ix = 0; ix < r.recipeItems.size(); ix++) {
+               if (r.recipeItems.get(ix) != Ingredient.EMPTY
+                  && Arrays.stream(((Ingredient)r.recipeItems.get(ix)).getMatchingStacks()).anyMatch(stack -> stack.getItem() == null)) {
                   throw new RuntimeException("Error: Invalid ShapedRecipes! " + item + " : " + data);
                }
             }
@@ -267,7 +247,7 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
 
    @Nullable
    public static IRecipe addShapelessRecipe(String name, Item item, String data) {
-      ArrayList<Object> rcp = new ArrayList();
+      ArrayList<Object> rcp = new ArrayList<>();
       String[] s = data.split("\\s*,\\s*");
       if (s.length < 1) {
          return null;
@@ -278,17 +258,15 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
             createNum = 1;
          }
 
-         int dmg;
-         for(int idx = start; idx < s.length; ++idx) {
+         for (int idx = start; idx < s.length; idx++) {
             if (s[idx].length() <= 0) {
                return null;
             }
 
             String nm = s[idx].trim().toLowerCase();
-            dmg = 0;
+            int dmg = 0;
             if (idx + 1 < s.length && isNumber(s[idx + 1])) {
-               ++idx;
-               dmg = Integer.parseInt(s[idx]);
+               dmg = Integer.parseInt(s[++idx]);
             }
 
             if (isNumber(nm)) {
@@ -313,17 +291,15 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
 
          Object[] recipe = new Object[rcp.size()];
 
-         for(int i = 0; i < recipe.length; ++i) {
+         for (int i = 0; i < recipe.length; i++) {
             recipe[i] = rcp.get(i);
          }
 
          ShapelessRecipes r = getShapelessRecipe(new ItemStack(item, createNum), recipe);
 
-         for(dmg = 0; dmg < r.field_77579_b.size(); ++dmg) {
-            Ingredient ingredient = (Ingredient)r.field_77579_b.get(dmg);
-            if (Arrays.stream(ingredient.func_193365_a()).anyMatch((stack) -> {
-               return stack.func_77973_b() == null;
-            })) {
+         for (int i = 0; i < r.recipeItems.size(); i++) {
+            Ingredient ingredient = (Ingredient)r.recipeItems.get(i);
+            if (Arrays.stream(ingredient.getMatchingStacks()).anyMatch(stack -> stack.getItem() == null)) {
                throw new RuntimeException("Error: Invalid ShapelessRecipes! " + item + " : " + data);
             }
          }
@@ -334,22 +310,19 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
    }
 
    public static ShapelessRecipes getShapelessRecipe(ItemStack par1ItemStack, Object... par2ArrayOfObj) {
-      NonNullList<Ingredient> list = NonNullList.func_191196_a();
-      Object[] aobject = par2ArrayOfObj;
-      int i = par2ArrayOfObj.length;
+      NonNullList<Ingredient> list = NonNullList.create();
 
-      for(int j = 0; j < i; ++j) {
-         Object object1 = aobject[j];
+      for (Object object1 : par2ArrayOfObj) {
          if (object1 instanceof ItemStack) {
-            list.add(Ingredient.func_193369_a(new ItemStack[]{((ItemStack)object1).func_77946_l()}));
+            list.add(Ingredient.fromStacks(new ItemStack[]{((ItemStack)object1).copy()}));
          } else if (object1 instanceof Item) {
-            list.add(Ingredient.func_193369_a(new ItemStack[]{new ItemStack((Item)object1)}));
+            list.add(Ingredient.fromStacks(new ItemStack[]{new ItemStack((Item)object1)}));
          } else {
             if (!(object1 instanceof Block)) {
                throw new RuntimeException("Invalid shapeless recipy!");
             }
 
-            list.add(Ingredient.func_193369_a(new ItemStack[]{new ItemStack((Block)object1)}));
+            list.add(Ingredient.fromStacks(new ItemStack[]{new ItemStack((Block)object1)}));
          }
       }
 
@@ -359,11 +332,8 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
    public static boolean isNumber(@Nullable String s) {
       if (s != null && !s.isEmpty()) {
          byte[] buf = s.getBytes();
-         byte[] var2 = buf;
-         int var3 = buf.length;
 
-         for(int var4 = 0; var4 < var3; ++var4) {
-            byte b = var2[var4];
+         for (byte b : buf) {
             if (b < 48 || b > 57) {
                return false;
             }

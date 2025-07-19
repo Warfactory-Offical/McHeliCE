@@ -7,8 +7,8 @@ import net.minecraft.item.ItemStack;
 
 public class PooledModelParameters {
    private static EntityLivingBase heldItemUser;
-   private static ItemStack rendererTargetItem;
-   private static TransformType transformType;
+   private static ItemStack rendererTargetItem = ItemStack.EMPTY;
+   private static TransformType transformType = TransformType.NONE;
 
    static void setItemAndUser(ItemStack itemstack, @Nullable EntityLivingBase user) {
       rendererTargetItem = itemstack;
@@ -30,10 +30,5 @@ public class PooledModelParameters {
 
    public static TransformType getTransformType() {
       return transformType;
-   }
-
-   static {
-      rendererTargetItem = ItemStack.field_190927_a;
-      transformType = TransformType.NONE;
    }
 }

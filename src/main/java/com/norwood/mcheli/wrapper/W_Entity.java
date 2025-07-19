@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class W_Entity extends Entity {
-   protected double _renderDistanceWeight = 1.0D;
+   protected double _renderDistanceWeight = 1.0;
 
    public W_Entity(World par1World) {
       super(par1World);
@@ -42,34 +42,34 @@ public abstract class W_Entity extends Entity {
       return i1 == i2;
    }
 
-   public EntityItem func_145778_a(Item item, int par2, float par3) {
-      return this.func_70099_a(new ItemStack(item, par2, 0), par3);
+   public EntityItem dropItemWithOffset(Item item, int par2, float par3) {
+      return this.entityDropItem(new ItemStack(item, par2, 0), par3);
    }
 
    public String getEntityName() {
-      return super.getName();
+      return super.getEntityString();
    }
 
    public boolean attackEntityFrom(DamageSource par1DamageSource, int par2) {
-      return this.func_70097_a(par1DamageSource, (float)par2);
+      return this.attackEntityFrom(par1DamageSource, (float)par2);
    }
 
-   public boolean func_70097_a(DamageSource par1DamageSource, float par2) {
+   public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
       return false;
    }
 
    public static boolean attackEntityFrom(Entity entity, DamageSource ds, float par2) {
-      return entity.func_70097_a(ds, par2);
+      return entity.attackEntityFrom(ds, par2);
    }
 
-   public void func_85029_a(CrashReportCategory par1CrashReportCategory) {
-      super.func_85029_a(par1CrashReportCategory);
+   public void addEntityCrashInfo(CrashReportCategory par1CrashReportCategory) {
+      super.addEntityCrashInfo(par1CrashReportCategory);
    }
 
    public static float getBlockExplosionResistance(Entity entity, Explosion par1Explosion, World par2World, int par3, int par4, int par5, Block par6Block) {
       if (par6Block != null) {
          try {
-            return entity.func_180428_a(par1Explosion, par2World, new BlockPos(par3, par4, par5), par6Block.func_176223_P());
+            return entity.getExplosionResistance(par1Explosion, par2World, new BlockPos(par3, par4, par5), par6Block.getDefaultState());
          } catch (Exception var8) {
             var8.printStackTrace();
          }
@@ -79,46 +79,43 @@ public abstract class W_Entity extends Entity {
    }
 
    public static boolean shouldExplodeBlock(Entity entity, Explosion par1Explosion, World par2World, int par3, int par4, int par5, int par6, float par7) {
-      return entity.func_174816_a(par1Explosion, par2World, new BlockPos(par3, par4, par5), W_Block.getBlockById(par6).func_176223_P(), par7);
+      return entity.canExplosionDestroyBlock(par1Explosion, par2World, new BlockPos(par3, par4, par5), W_Block.getBlockById(par6).getDefaultState(), par7);
    }
 
    public static PotionEffect getActivePotionEffect(Entity entity, Potion par1Potion) {
-      return entity instanceof EntityLivingBase ? ((EntityLivingBase)entity).func_70660_b(par1Potion) : null;
+      return entity instanceof EntityLivingBase ? ((EntityLivingBase)entity).getActivePotionEffect(par1Potion) : null;
    }
 
    public static void removePotionEffectClient(Entity entity, Potion potion) {
       if (entity instanceof EntityLivingBase) {
-         ((EntityLivingBase)entity).func_184589_d(potion);
+         ((EntityLivingBase)entity).removePotionEffect(potion);
       }
-
    }
 
    public static void removePotionEffect(Entity entity, Potion potion) {
       if (entity instanceof EntityLivingBase) {
-         ((EntityLivingBase)entity).func_184589_d(potion);
+         ((EntityLivingBase)entity).removePotionEffect(potion);
       }
-
    }
 
    public static void addPotionEffect(Entity entity, PotionEffect pe) {
       if (entity instanceof EntityLivingBase) {
          ((EntityLivingBase)entity).addPotionEffect(pe);
       }
-
    }
 
-   protected void func_145775_I() {
-      super.func_145775_I();
+   protected void doBlockCollisions() {
+      super.doBlockCollisions();
    }
 
    @SideOnly(Side.CLIENT)
-   public boolean func_70112_a(double distance) {
-      double d0 = this.func_174813_aQ().func_72320_b();
+   public boolean isInRangeToRenderDist(double distance) {
+      double d0 = this.getEntityBoundingBox().getAverageEdgeLength();
       if (Double.isNaN(d0)) {
-         d0 = 1.0D;
+         d0 = 1.0;
       }
 
-      d0 = d0 * 64.0D * this._renderDistanceWeight;
+      d0 = d0 * 64.0 * this._renderDistanceWeight;
       return distance < d0 * d0;
    }
 }

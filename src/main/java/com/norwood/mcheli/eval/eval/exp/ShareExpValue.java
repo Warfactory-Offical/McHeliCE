@@ -22,35 +22,35 @@ public class ShareExpValue extends Expression {
       if (this.var == null) {
          this.var = new MapVariable();
       }
-
    }
 
    public void initOper() {
       if (this.oper == null) {
          this.oper = new JavaExOperator();
       }
-
    }
 
    public void initFunc() {
       if (this.func == null) {
          this.func = new InvokeFunction();
       }
-
    }
 
+   @Override
    public long evalLong() {
       this.initVar();
       this.initFunc();
       return this.ae.evalLong();
    }
 
+   @Override
    public double evalDouble() {
       this.initVar();
       this.initFunc();
       return this.ae.evalDouble();
    }
 
+   @Override
    public Object eval() {
       this.initVar();
       this.initOper();
@@ -58,24 +58,26 @@ public class ShareExpValue extends Expression {
       return this.ae.evalObject();
    }
 
+   @Override
    public void optimizeLong(Variable var) {
-      this.optimize(var, (Replace)(new OptimizeLong()));
+      this.optimize(var, new OptimizeLong());
    }
 
+   @Override
    public void optimizeDouble(Variable var) {
-      this.optimize(var, (Replace)(new OptimizeDouble()));
+      this.optimize(var, new OptimizeDouble());
    }
 
+   @Override
    public void optimize(Variable var, Operator oper) {
       Operator bak = this.oper;
       this.oper = oper;
 
       try {
-         this.optimize(var, (Replace)(new OptimizeObject()));
+         this.optimize(var, new OptimizeObject());
       } finally {
          this.oper = bak;
       }
-
    }
 
    protected void optimize(Variable var, Replace repl) {
@@ -84,7 +86,7 @@ public class ShareExpValue extends Expression {
          var = new MapVariable();
       }
 
-      this.var = (Variable)var;
+      this.var = var;
       this.repl = repl;
 
       try {
@@ -92,9 +94,9 @@ public class ShareExpValue extends Expression {
       } finally {
          this.var = bak;
       }
-
    }
 
+   @Override
    public void search(Search srch) {
       if (srch == null) {
          throw new NullPointerException();
@@ -104,6 +106,7 @@ public class ShareExpValue extends Expression {
       }
    }
 
+   @Override
    public void refactorName(Refactor ref) {
       if (ref == null) {
          throw new NullPointerException();
@@ -113,6 +116,7 @@ public class ShareExpValue extends Expression {
       }
    }
 
+   @Override
    public void refactorFunc(Refactor ref, Rule rule) {
       if (ref == null) {
          throw new NullPointerException();
@@ -122,6 +126,7 @@ public class ShareExpValue extends Expression {
       }
    }
 
+   @Override
    public boolean same(Expression obj) {
       if (!(obj instanceof ShareExpValue)) {
          return false;
@@ -131,6 +136,7 @@ public class ShareExpValue extends Expression {
       }
    }
 
+   @Override
    public Expression dup() {
       ShareExpValue n = new ShareExpValue();
       n.ae = this.ae.dup(n);

@@ -26,9 +26,8 @@ public abstract class MCH_ClientTickHandlerBase {
       playerRotMaxPitch = max;
       playerRotLimitPitch = true;
       if (player != null) {
-         player.field_70125_A = MCH_Lib.RNG(player.field_70125_A, playerRotMinPitch, playerRotMaxPitch);
+         player.rotationPitch = MCH_Lib.RNG(player.rotationPitch, playerRotMinPitch, playerRotMaxPitch);
       }
-
    }
 
    public static void setRotLimitYaw(float min, float max, Entity e) {
@@ -36,15 +35,14 @@ public abstract class MCH_ClientTickHandlerBase {
       playerRotMaxYaw = max;
       playerRotLimitYaw = true;
       if (e != null) {
-         if (e.field_70125_A < playerRotMinPitch) {
-            e.field_70125_A = playerRotMinPitch;
-            e.field_70127_C = playerRotMinPitch;
-         } else if (e.field_70125_A > playerRotMaxPitch) {
-            e.field_70125_A = playerRotMaxPitch;
-            e.field_70127_C = playerRotMaxPitch;
+         if (e.rotationPitch < playerRotMinPitch) {
+            e.rotationPitch = playerRotMinPitch;
+            e.prevRotationPitch = playerRotMinPitch;
+         } else if (e.rotationPitch > playerRotMaxPitch) {
+            e.rotationPitch = playerRotMaxPitch;
+            e.prevRotationPitch = playerRotMaxPitch;
          }
       }
-
    }
 
    public static void initRotLimit() {
@@ -59,19 +57,18 @@ public abstract class MCH_ClientTickHandlerBase {
    public static void applyRotLimit(Entity e) {
       if (e != null) {
          if (playerRotLimitPitch) {
-            if (e.field_70125_A < playerRotMinPitch) {
-               e.field_70125_A = playerRotMinPitch;
-               e.field_70127_C = playerRotMinPitch;
-            } else if (e.field_70125_A > playerRotMaxPitch) {
-               e.field_70125_A = playerRotMaxPitch;
-               e.field_70127_C = playerRotMaxPitch;
+            if (e.rotationPitch < playerRotMinPitch) {
+               e.rotationPitch = playerRotMinPitch;
+               e.prevRotationPitch = playerRotMinPitch;
+            } else if (e.rotationPitch > playerRotMaxPitch) {
+               e.rotationPitch = playerRotMaxPitch;
+               e.prevRotationPitch = playerRotMaxPitch;
             }
          }
 
          if (!playerRotLimitYaw) {
          }
       }
-
    }
 
    public MCH_ClientTickHandlerBase(Minecraft minecraft) {

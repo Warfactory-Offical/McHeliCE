@@ -11,30 +11,30 @@ public class MCH_DummyCommandSender implements ICommandSender {
    public static MCH_DummyCommandSender instance = new MCH_DummyCommandSender();
 
    public static void execCommand(String s) {
-      ICommandManager icommandmanager = MCH_Utils.getServer().func_71187_D();
-      icommandmanager.func_71556_a(instance, s);
+      ICommandManager icommandmanager = MCH_Utils.getServer().getCommandManager();
+      icommandmanager.executeCommand(instance, s);
    }
 
-   public String func_70005_c_() {
+   public String getName() {
       return "";
    }
 
-   public ITextComponent func_145748_c_() {
+   public ITextComponent getDisplayName() {
       return null;
    }
 
-   public void func_145747_a(ITextComponent component) {
+   public void sendMessage(ITextComponent component) {
    }
 
-   public boolean func_70003_b(int permLevel, String commandName) {
+   public boolean canUseCommand(int permLevel, String commandName) {
       return true;
    }
 
-   public World func_130014_f_() {
+   public World getEntityWorld() {
       return null;
    }
 
-   public MinecraftServer func_184102_h() {
+   public MinecraftServer getServer() {
       return MCH_Utils.getServer();
    }
 }

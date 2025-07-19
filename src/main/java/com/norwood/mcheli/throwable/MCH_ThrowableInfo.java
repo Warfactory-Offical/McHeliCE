@@ -51,13 +51,13 @@ public class MCH_ThrowableInfo extends MCH_BaseInfo implements IItemContent {
 
    public MCH_ThrowableInfo(AddonResourceLocation location, String path) {
       super(location, path);
-      this.name = location.func_110623_a();
-      this.displayName = location.func_110623_a();
-      this.displayNameLang = new HashMap();
+      this.name = location.getPath();
+      this.displayName = location.getPath();
+      this.displayNameLang = new HashMap<>();
       this.itemID = 0;
       this.item = null;
-      this.recipeString = new ArrayList();
-      this.recipe = new ArrayList();
+      this.recipeString = new ArrayList<>();
+      this.recipe = new ArrayList<>();
       this.isShapedRecipe = true;
       this.power = 0;
       this.acceleration = 1.0F;
@@ -88,6 +88,7 @@ public class MCH_ThrowableInfo extends MCH_BaseInfo implements IItemContent {
       this.smokeColor = new MCH_Color();
    }
 
+   @Override
    public boolean validate() throws Exception {
       this.timeFuse *= 20;
       this.aliveTime *= 20;
@@ -95,88 +96,86 @@ public class MCH_ThrowableInfo extends MCH_BaseInfo implements IItemContent {
       return super.validate();
    }
 
+   @Override
    public Item getItem() {
       return this.item;
    }
 
+   @Override
    public void loadItemData(String item, String data) {
       if (item.compareTo("displayname") == 0) {
          this.displayName = data;
-      } else {
-         String[] s;
-         if (item.compareTo("adddisplayname") == 0) {
-            s = data.split("\\s*,\\s*");
-            if (s != null && s.length == 2) {
-               this.displayNameLang.put(s[0].trim(), s[1].trim());
-            }
-         } else if (item.compareTo("itemid") == 0) {
-            this.itemID = this.toInt(data, 0, 65535);
-         } else if (item.compareTo("addrecipe") != 0 && item.compareTo("addshapelessrecipe") != 0) {
-            if (item.compareTo("power") == 0) {
-               this.power = this.toInt(data);
-            } else if (item.compareTo("acceleration") == 0) {
-               this.acceleration = this.toFloat(data, 0.0F, 100.0F);
-            } else if (item.compareTo("accelerationinwater") == 0) {
-               this.accelerationInWater = this.toFloat(data, 0.0F, 100.0F);
-            } else if (item.equalsIgnoreCase("DispenseAcceleration")) {
-               this.dispenseAcceleration = this.toFloat(data, 0.0F, 1000.0F);
-            } else if (item.compareTo("explosion") == 0) {
-               this.explosion = this.toInt(data, 0, 50);
-            } else if (item.equalsIgnoreCase("DelayFuse")) {
-               this.delayFuse = this.toInt(data, 0, 100000);
-            } else if (item.equalsIgnoreCase("Bound")) {
-               this.bound = this.toFloat(data, 0.0F, 100000.0F);
-            } else if (item.equalsIgnoreCase("TimeFuse")) {
-               this.timeFuse = this.toInt(data, 0, 100000);
-            } else if (item.compareTo("flaming") == 0) {
-               this.flaming = this.toBool(data);
-            } else if (item.equalsIgnoreCase("StackSize")) {
-               this.stackSize = this.toInt(data, 1, 64);
-            } else if (item.compareTo("soundvolume") == 0) {
-               this.soundVolume = this.toFloat(data, 0.0F, 1000.0F);
-            } else if (item.compareTo("soundpitch") == 0) {
-               this.soundPitch = this.toFloat(data, 0.0F, 1.0F);
-            } else if (item.compareTo("proximityfusedist") == 0) {
-               this.proximityFuseDist = this.toFloat(data, 0.0F, 20.0F);
-            } else if (item.compareTo("accuracy") == 0) {
-               this.accuracy = this.toFloat(data, 0.0F, 1000.0F);
-            } else if (item.equalsIgnoreCase("aliveTime")) {
-               this.aliveTime = this.toInt(data, 0, 1000000);
-            } else if (item.compareTo("bomblet") == 0) {
-               this.bomblet = this.toInt(data, 0, 1000);
-            } else if (item.equalsIgnoreCase("BombletDiff")) {
-               this.bombletDiff = this.toFloat(data, 0.0F, 1000.0F);
-            } else if (item.equalsIgnoreCase("SmokeSize")) {
-               this.smokeSize = this.toFloat(data, 0.0F, 1000.0F);
-            } else if (item.equalsIgnoreCase("SmokeNum")) {
-               this.smokeNum = this.toInt(data, 0, 1000);
-            } else if (item.equalsIgnoreCase("SmokeVelocityVertical")) {
-               this.smokeVelocityVertical = this.toFloat(data, -100.0F, 100.0F);
-            } else if (item.equalsIgnoreCase("SmokeVelocityHorizontal")) {
-               this.smokeVelocityHorizontal = this.toFloat(data, 0.0F, 1000.0F);
-            } else if (item.compareTo("gravity") == 0) {
-               this.gravity = this.toFloat(data, -50.0F, 50.0F);
-            } else if (item.equalsIgnoreCase("gravityInWater")) {
-               this.gravityInWater = this.toFloat(data, -50.0F, 50.0F);
-            } else if (item.compareTo("particle") == 0) {
-               this.particleName = data.toLowerCase().trim();
-               if (this.particleName.equalsIgnoreCase("none")) {
-                  this.particleName = "";
-               }
-            } else if (item.equalsIgnoreCase("DisableSmoke")) {
-               this.disableSmoke = this.toBool(data);
-            } else if (item.equalsIgnoreCase("SmokeColor")) {
-               s = data.split("\\s*,\\s*");
-               if (s.length >= 3) {
-                  this.smokeColor = new MCH_Color(1.0F, 0.003921569F * (float)this.toInt(s[0], 0, 255), 0.003921569F * (float)this.toInt(s[1], 0, 255), 0.003921569F * (float)this.toInt(s[2], 0, 255));
-               }
-            }
-         } else {
-            this.isShapedRecipe = item.compareTo("addrecipe") == 0;
-            this.recipeString.add(data.toUpperCase());
+      } else if (item.compareTo("adddisplayname") == 0) {
+         String[] s = data.split("\\s*,\\s*");
+         if (s != null && s.length == 2) {
+            this.displayNameLang.put(s[0].trim(), s[1].trim());
+         }
+      } else if (item.compareTo("itemid") == 0) {
+         this.itemID = this.toInt(data, 0, 65535);
+      } else if (item.compareTo("addrecipe") == 0 || item.compareTo("addshapelessrecipe") == 0) {
+         this.isShapedRecipe = item.compareTo("addrecipe") == 0;
+         this.recipeString.add(data.toUpperCase());
+      } else if (item.compareTo("power") == 0) {
+         this.power = this.toInt(data);
+      } else if (item.compareTo("acceleration") == 0) {
+         this.acceleration = this.toFloat(data, 0.0F, 100.0F);
+      } else if (item.compareTo("accelerationinwater") == 0) {
+         this.accelerationInWater = this.toFloat(data, 0.0F, 100.0F);
+      } else if (item.equalsIgnoreCase("DispenseAcceleration")) {
+         this.dispenseAcceleration = this.toFloat(data, 0.0F, 1000.0F);
+      } else if (item.compareTo("explosion") == 0) {
+         this.explosion = this.toInt(data, 0, 50);
+      } else if (item.equalsIgnoreCase("DelayFuse")) {
+         this.delayFuse = this.toInt(data, 0, 100000);
+      } else if (item.equalsIgnoreCase("Bound")) {
+         this.bound = this.toFloat(data, 0.0F, 100000.0F);
+      } else if (item.equalsIgnoreCase("TimeFuse")) {
+         this.timeFuse = this.toInt(data, 0, 100000);
+      } else if (item.compareTo("flaming") == 0) {
+         this.flaming = this.toBool(data);
+      } else if (item.equalsIgnoreCase("StackSize")) {
+         this.stackSize = this.toInt(data, 1, 64);
+      } else if (item.compareTo("soundvolume") == 0) {
+         this.soundVolume = this.toFloat(data, 0.0F, 1000.0F);
+      } else if (item.compareTo("soundpitch") == 0) {
+         this.soundPitch = this.toFloat(data, 0.0F, 1.0F);
+      } else if (item.compareTo("proximityfusedist") == 0) {
+         this.proximityFuseDist = this.toFloat(data, 0.0F, 20.0F);
+      } else if (item.compareTo("accuracy") == 0) {
+         this.accuracy = this.toFloat(data, 0.0F, 1000.0F);
+      } else if (item.equalsIgnoreCase("aliveTime")) {
+         this.aliveTime = this.toInt(data, 0, 1000000);
+      } else if (item.compareTo("bomblet") == 0) {
+         this.bomblet = this.toInt(data, 0, 1000);
+      } else if (item.equalsIgnoreCase("BombletDiff")) {
+         this.bombletDiff = this.toFloat(data, 0.0F, 1000.0F);
+      } else if (item.equalsIgnoreCase("SmokeSize")) {
+         this.smokeSize = this.toFloat(data, 0.0F, 1000.0F);
+      } else if (item.equalsIgnoreCase("SmokeNum")) {
+         this.smokeNum = this.toInt(data, 0, 1000);
+      } else if (item.equalsIgnoreCase("SmokeVelocityVertical")) {
+         this.smokeVelocityVertical = this.toFloat(data, -100.0F, 100.0F);
+      } else if (item.equalsIgnoreCase("SmokeVelocityHorizontal")) {
+         this.smokeVelocityHorizontal = this.toFloat(data, 0.0F, 1000.0F);
+      } else if (item.compareTo("gravity") == 0) {
+         this.gravity = this.toFloat(data, -50.0F, 50.0F);
+      } else if (item.equalsIgnoreCase("gravityInWater")) {
+         this.gravityInWater = this.toFloat(data, -50.0F, 50.0F);
+      } else if (item.compareTo("particle") == 0) {
+         this.particleName = data.toLowerCase().trim();
+         if (this.particleName.equalsIgnoreCase("none")) {
+            this.particleName = "";
+         }
+      } else if (item.equalsIgnoreCase("DisableSmoke")) {
+         this.disableSmoke = this.toBool(data);
+      } else if (item.equalsIgnoreCase("SmokeColor")) {
+         String[] s = data.split("\\s*,\\s*");
+         if (s.length >= 3) {
+            this.smokeColor = new MCH_Color(
+               1.0F, 0.003921569F * this.toInt(s[0], 0, 255), 0.003921569F * this.toInt(s[1], 0, 255), 0.003921569F * this.toInt(s[2], 0, 255)
+            );
          }
       }
-
    }
 
    public class RoundItem {

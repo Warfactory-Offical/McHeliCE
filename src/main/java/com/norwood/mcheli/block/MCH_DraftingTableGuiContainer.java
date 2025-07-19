@@ -31,76 +31,73 @@ public class MCH_DraftingTableGuiContainer extends Container {
       this.posY = posY;
       this.posZ = posZ;
 
-      int x;
-      for(x = 0; x < 3; ++x) {
-         for(int x = 0; x < 9; ++x) {
-            this.func_75146_a(new Slot(player.field_71071_by, 9 + x + x * 9, 30 + x * 18, 140 + x * 18));
+      for (int y = 0; y < 3; y++) {
+         for (int x = 0; x < 9; x++) {
+            this.addSlotToContainer(new Slot(player.inventory, 9 + x + y * 9, 30 + x * 18, 140 + y * 18));
          }
       }
 
-      for(x = 0; x < 9; ++x) {
-         this.func_75146_a(new Slot(player.field_71071_by, x, 30 + x * 18, 198));
+      for (int x = 0; x < 9; x++) {
+         this.addSlotToContainer(new Slot(player.inventory, x, 30 + x * 18, 198));
       }
 
-      this.outputSlotIndex = this.field_75153_a.size();
+      this.outputSlotIndex = this.inventoryItemStacks.size();
       Slot a = new Slot(this.outputSlot, this.outputSlotIndex, 178, 90) {
-         public boolean func_75214_a(ItemStack stack) {
+         public boolean isItemValid(ItemStack stack) {
             return false;
          }
       };
-      this.func_75146_a(a);
+      this.addSlotToContainer(a);
       MCH_Lib.DbgLog(player.world, "MCH_DraftingTableGuiContainer.MCH_DraftingTableGuiContainer");
    }
 
-   public void func_75142_b() {
-      super.func_75142_b();
+   public void detectAndSendChanges() {
+      super.detectAndSendChanges();
    }
 
-   public boolean func_75145_c(EntityPlayer player) {
+   public boolean canInteractWith(EntityPlayer player) {
       Block block = W_WorldFunc.getBlock(player.world, this.posX, this.posY, this.posZ);
-      if (!W_Block.isEqual(block, MCH_MOD.blockDraftingTable) && !W_Block.isEqual(block, MCH_MOD.blockDraftingTableLit)) {
-         return false;
-      } else {
-         return player.func_70092_e((double)this.posX, (double)this.posY, (double)this.posZ) <= 144.0D;
-      }
+      return !W_Block.isEqual(block, MCH_MOD.blockDraftingTable) && !W_Block.isEqual(block, MCH_MOD.blockDraftingTableLit)
+         ? false
+         : player.getDistanceSq(this.posX, this.posY, this.posZ) <= 144.0;
    }
 
-   public ItemStack func_82846_b(EntityPlayer player, int slotIndex) {
-      ItemStack itemstack = ItemStack.field_190927_a;
-      Slot slot = (Slot)this.field_75151_b.get(slotIndex);
-      if (slot != null && slot.func_75216_d()) {
-         ItemStack itemstack1 = slot.func_75211_c();
-         itemstack = itemstack1.func_77946_l();
+   public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
+      ItemStack itemstack = ItemStack.EMPTY;
+      Slot slot = (Slot)this.inventorySlots.get(slotIndex);
+      if (slot != null && slot.getHasStack()) {
+         ItemStack itemstack1 = slot.getStack();
+         itemstack = itemstack1.copy();
          if (slotIndex != this.outputSlotIndex) {
-            return ItemStack.field_190927_a;
+            return ItemStack.EMPTY;
          }
 
-         if (!this.func_75135_a(itemstack1, 0, 36, true)) {
-            return ItemStack.field_190927_a;
+         if (!this.mergeItemStack(itemstack1, 0, 36, true)) {
+            return ItemStack.EMPTY;
          }
 
-         slot.func_75220_a(itemstack1, itemstack);
-         if (itemstack1.func_190916_E() == 0) {
-            slot.func_75215_d(ItemStack.field_190927_a);
+         slot.onSlotChange(itemstack1, itemstack);
+         if (itemstack1.getCount() == 0) {
+            slot.putStack(ItemStack.EMPTY);
          } else {
-            slot.func_75218_e();
+            slot.onSlotChanged();
          }
 
-         if (itemstack1.func_190916_E() == itemstack.func_190916_E()) {
-            return ItemStack.field_190927_a;
+         if (itemstack1.getCount() == itemstack.getCount()) {
+            return ItemStack.EMPTY;
          }
 
-         slot.func_190901_a(player, itemstack1);
+         slot.onTake(player, itemstack1);
       }
 
       return itemstack;
    }
 
-   public void func_75134_a(EntityPlayer player) {
-      super.func_75134_a(player);
+   public void onContainerClosed(EntityPlayer player) {
+      super.onContainerClosed(player);
       if (!player.world.isRemote) {
-         ItemStack itemstack = this.func_75139_a(this.outputSlotIndex).func_75211_c();
-         if (!itemstack.func_190926_b()) {
+         ItemStack itemstack = this.getSlot(this.outputSlotIndex).getStack();
+         if (!itemstack.isEmpty()) {
             W_EntityPlayer.dropPlayerItemWithRandomChoice(player, itemstack, false, false);
          }
       }
@@ -109,8 +106,8 @@ public class MCH_DraftingTableGuiContainer extends Container {
    }
 
    public void createRecipeItem(@Nullable IRecipe recipe) {
-      boolean isCreativeMode = this.player.field_71075_bZ.field_75098_d;
-      if (this.func_75139_a(this.outputSlotIndex).func_75216_d() && !isCreativeMode) {
+      boolean isCreativeMode = this.player.capabilities.isCreativeMode;
+      if (this.getSlot(this.outputSlotIndex).getHasStack() && !isCreativeMode) {
          MCH_Lib.DbgLog(this.player.world, "MCH_DraftingTableGuiContainer.createRecipeItem:OutputSlot is not empty");
       } else if (recipe == null) {
          MCH_Lib.DbgLog(this.player.world, "Error:MCH_DraftingTableGuiContainer.createRecipeItem:recipe is null : ");
@@ -121,7 +118,7 @@ public class MCH_DraftingTableGuiContainer extends Container {
                MCH_Recipes.consumeInventory(this.player, recipe);
             }
 
-            this.func_75139_a(this.outputSlotIndex).func_75215_d(recipe.func_77571_b().func_77946_l());
+            this.getSlot(this.outputSlotIndex).putStack(recipe.getRecipeOutput().copy());
             result = true;
          }
 
@@ -130,8 +127,8 @@ public class MCH_DraftingTableGuiContainer extends Container {
    }
 
    public int searchRecipeFromList(MCH_IRecipeList list, ItemStack item) {
-      for(int i = 0; i < list.getRecipeListSize(); ++i) {
-         if (list.getRecipe(i).func_77571_b().func_77969_a(item)) {
+      for (int i = 0; i < list.getRecipeListSize(); i++) {
+         if (list.getRecipe(i).getRecipeOutput().isItemEqual(item)) {
             return i;
          }
       }

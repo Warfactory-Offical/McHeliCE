@@ -12,9 +12,9 @@ public class MCH_Queue<T> {
          filterLength = 1;
       }
 
-      this.list = new ArrayList();
+      this.list = new ArrayList<>();
 
-      for(int i = 0; i < filterLength; ++i) {
+      for (int i = 0; i < filterLength; i++) {
          this.list.add(initVal);
       }
 
@@ -22,16 +22,15 @@ public class MCH_Queue<T> {
    }
 
    public void clear(T clearVal) {
-      for(int i = 0; i < this.size(); ++i) {
+      for (int i = 0; i < this.size(); i++) {
          this.list.set(i, clearVal);
       }
-
    }
 
    public void put(T t) {
       this.list.set(this.current, t);
-      ++this.current;
-      this.current %= this.size();
+      this.current++;
+      this.current = this.current % this.size();
    }
 
    private int getIndex(int offset) {

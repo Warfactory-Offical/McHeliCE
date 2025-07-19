@@ -18,14 +18,14 @@ public class MCH_ItemLightWeaponBase extends W_Item {
 
    public MCH_ItemLightWeaponBase(int par1, MCH_ItemLightWeaponBullet bullet) {
       super(par1);
-      this.func_77656_e(10);
-      this.func_77625_d(1);
+      this.setMaxDamage(10);
+      this.setMaxStackSize(1);
       this.bullet = bullet;
    }
 
    public static String getName(ItemStack itemStack) {
-      if (!itemStack.func_190926_b() && itemStack.func_77973_b() instanceof MCH_ItemLightWeaponBase) {
-         String name = itemStack.func_77977_a();
+      if (!itemStack.isEmpty() && itemStack.getItem() instanceof MCH_ItemLightWeaponBase) {
+         String name = itemStack.getTranslationKey();
          int li = name.lastIndexOf(":");
          if (li >= 0) {
             name = name.substring(li + 1);
@@ -38,38 +38,33 @@ public class MCH_ItemLightWeaponBase extends W_Item {
    }
 
    public static boolean isHeld(@Nullable EntityPlayer player) {
-      ItemStack is = player != null ? player.func_184614_ca() : ItemStack.field_190927_a;
-      if (!is.func_190926_b() && is.func_77973_b() instanceof MCH_ItemLightWeaponBase) {
-         return player.func_184612_cw() > 10;
-      } else {
-         return false;
-      }
+      ItemStack is = player != null ? player.getHeldItemMainhand() : ItemStack.EMPTY;
+      return !is.isEmpty() && is.getItem() instanceof MCH_ItemLightWeaponBase ? player.getItemInUseMaxCount() > 10 : false;
    }
 
    public void onUsingTick(ItemStack stack, EntityLivingBase player, int count) {
-      PotionEffect pe = player.func_70660_b(MobEffects.field_76439_r);
-      if (pe != null && pe.func_76459_b() < 220) {
-         player.addPotionEffect(new PotionEffect(MobEffects.field_76439_r, 250, 0, false, false));
+      PotionEffect pe = player.getActivePotionEffect(MobEffects.NIGHT_VISION);
+      if (pe != null && pe.getDuration() < 220) {
+         player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 250, 0, false, false));
       }
-
    }
 
    public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack) {
       return true;
    }
 
-   public EnumAction func_77661_b(ItemStack par1ItemStack) {
+   public EnumAction getItemUseAction(ItemStack par1ItemStack) {
       return EnumAction.BOW;
    }
 
-   public int func_77626_a(ItemStack par1ItemStack) {
+   public int getMaxItemUseDuration(ItemStack par1ItemStack) {
       return 72000;
    }
 
-   public ActionResult<ItemStack> func_77659_a(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-      ItemStack itemstack = playerIn.func_184586_b(handIn);
-      if (!itemstack.func_190926_b()) {
-         playerIn.func_184598_c(handIn);
+   public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+      ItemStack itemstack = playerIn.getHeldItem(handIn);
+      if (!itemstack.isEmpty()) {
+         playerIn.setActiveHand(handIn);
       }
 
       return ActionResult.newResult(EnumActionResult.SUCCESS, itemstack);

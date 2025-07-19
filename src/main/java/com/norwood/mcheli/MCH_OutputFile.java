@@ -39,7 +39,6 @@ public class MCH_OutputFile {
       if (this.pw != null && s != null) {
          this.pw.println(s);
       }
-
    }
 
    public void close() {

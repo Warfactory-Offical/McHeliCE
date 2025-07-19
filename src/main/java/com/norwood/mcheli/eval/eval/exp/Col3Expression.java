@@ -28,7 +28,6 @@ public abstract class Col3Expression extends AbstractExpression {
       if (from.exp3 != null) {
          this.exp3 = from.exp3.dup(s);
       }
-
    }
 
    public final void setExpression(AbstractExpression x, AbstractExpression y, AbstractExpression z) {
@@ -37,14 +36,17 @@ public abstract class Col3Expression extends AbstractExpression {
       this.exp3 = z;
    }
 
+   @Override
    protected final int getCols() {
       return 3;
    }
 
+   @Override
    protected int getFirstPos() {
       return this.exp1.getFirstPos();
    }
 
+   @Override
    protected void search() {
       this.share.srch.search(this);
       if (!this.share.srch.end()) {
@@ -73,6 +75,7 @@ public abstract class Col3Expression extends AbstractExpression {
       }
    }
 
+   @Override
    protected AbstractExpression replace() {
       this.exp1 = this.exp1.replace();
       this.exp2 = this.exp2.replace();
@@ -80,6 +83,7 @@ public abstract class Col3Expression extends AbstractExpression {
       return this.share.repl.replace3(this);
    }
 
+   @Override
    protected AbstractExpression replaceVar() {
       this.exp1 = this.exp1.replace();
       this.exp2 = this.exp2.replaceVar();
@@ -87,6 +91,7 @@ public abstract class Col3Expression extends AbstractExpression {
       return this.share.repl.replaceVar3(this);
    }
 
+   @Override
    public boolean equals(Object obj) {
       if (obj instanceof Col3Expression) {
          Col3Expression e = (Col3Expression)obj;
@@ -98,14 +103,16 @@ public abstract class Col3Expression extends AbstractExpression {
       return false;
    }
 
+   @Override
    public int hashCode() {
       return this.getClass().hashCode() ^ this.exp1.hashCode() ^ this.exp2.hashCode() * 2 ^ this.exp3.hashCode() * 3;
    }
 
+   @Override
    public void dump(int n) {
       StringBuffer sb = new StringBuffer();
 
-      for(int i = 0; i < n; ++i) {
+      for (int i = 0; i < n; i++) {
          sb.append(' ');
       }
 
@@ -116,6 +123,7 @@ public abstract class Col3Expression extends AbstractExpression {
       this.exp3.dump(n + 1);
    }
 
+   @Override
    public String toString() {
       StringBuffer sb = new StringBuffer();
       if (this.exp1.getPriority() > this.prio && this.exp1.getCols() < 2) {

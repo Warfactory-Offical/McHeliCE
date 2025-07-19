@@ -25,7 +25,7 @@ public class MCH_MissileDetector {
    public void update() {
       if (this.ac.haveFlare()) {
          if (this.alertCount > 0) {
-            --this.alertCount;
+            this.alertCount--;
          }
 
          boolean isLocked = this.ac.getEntityData().getBoolean("Tracking");
@@ -37,7 +37,7 @@ public class MCH_MissileDetector {
             if (this.alertCount == 0) {
                this.alertCount = 10;
                if (this.ac != null && this.ac.haveFlare() && !this.ac.isDestroyed()) {
-                  for(int i = 0; i < 2; ++i) {
+                  for (int i = 0; i < 2; i++) {
                      Entity entity = this.ac.getEntityBySeatId(i);
                      if (entity instanceof EntityPlayerMP) {
                         MCH_PacketNotifyLock.sendToPlayer((EntityPlayerMP)entity);
@@ -70,19 +70,18 @@ public class MCH_MissileDetector {
                   }
                }
             }
-
          }
       }
    }
 
    public boolean destroyMissile() {
-      List<MCH_EntityBaseBullet> list = this.world.func_72872_a(MCH_EntityBaseBullet.class, this.ac.func_174813_aQ().func_72314_b(60.0D, 60.0D, 60.0D));
+      List<MCH_EntityBaseBullet> list = this.world.getEntitiesWithinAABB(MCH_EntityBaseBullet.class, this.ac.getEntityBoundingBox().grow(60.0, 60.0, 60.0));
       if (list != null) {
-         for(int i = 0; i < list.size(); ++i) {
-            MCH_EntityBaseBullet msl = (MCH_EntityBaseBullet)list.get(i);
+         for (int i = 0; i < list.size(); i++) {
+            MCH_EntityBaseBullet msl = list.get(i);
             if (msl.targetEntity != null && (this.ac.isMountedEntity(msl.targetEntity) || msl.targetEntity.equals(this.ac))) {
                msl.targetEntity = null;
-               msl.func_70106_y();
+               msl.setDead();
             }
          }
       }
@@ -91,10 +90,10 @@ public class MCH_MissileDetector {
    }
 
    public boolean isLockedByMissile() {
-      List<MCH_EntityBaseBullet> list = this.world.func_72872_a(MCH_EntityBaseBullet.class, this.ac.func_174813_aQ().func_72314_b(60.0D, 60.0D, 60.0D));
+      List<MCH_EntityBaseBullet> list = this.world.getEntitiesWithinAABB(MCH_EntityBaseBullet.class, this.ac.getEntityBoundingBox().grow(60.0, 60.0, 60.0));
       if (list != null) {
-         for(int i = 0; i < list.size(); ++i) {
-            MCH_EntityBaseBullet msl = (MCH_EntityBaseBullet)list.get(i);
+         for (int i = 0; i < list.size(); i++) {
+            MCH_EntityBaseBullet msl = list.get(i);
             if (msl.targetEntity != null && (this.ac.isMountedEntity(msl.targetEntity) || msl.targetEntity.equals(this.ac))) {
                return true;
             }

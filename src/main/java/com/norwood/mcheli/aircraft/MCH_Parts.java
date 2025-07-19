@@ -25,7 +25,7 @@ public class MCH_Parts {
 
    public MCH_Parts(Entity parent, int shiftBit, DataParameter<Integer> dataKey, String name) {
       this.parent = parent;
-      this.dataManager = parent.func_184212_Q();
+      this.dataManager = parent.getDataManager();
       this.shift = shiftBit;
       this.dataKey = dataKey;
       this.status = (this.getDataWatcherValue() & 1 << this.shift) != 0;
@@ -33,7 +33,7 @@ public class MCH_Parts {
    }
 
    public int getDataWatcherValue() {
-      return (Integer)this.dataManager.func_187225_a(this.dataKey);
+      return (Integer)this.dataManager.get(this.dataKey);
    }
 
    public void setStatusServer(boolean stat) {
@@ -53,16 +53,15 @@ public class MCH_Parts {
 
          this.update();
       }
-
    }
 
    protected void updateDataWatcher(boolean stat) {
       int currentStatus = this.getDataWatcherValue();
       int mask = 1 << this.shift;
       if (!stat) {
-         this.dataManager.func_187227_b(this.dataKey, currentStatus & ~mask);
+         this.dataManager.set(this.dataKey, currentStatus & ~mask);
       } else {
-         this.dataManager.func_187227_b(this.dataKey, currentStatus | mask);
+         this.dataManager.set(this.dataKey, currentStatus | mask);
       }
 
       this.status = stat;
@@ -84,25 +83,23 @@ public class MCH_Parts {
       if (this.parent.world.isRemote) {
          this.status = (statFromDataWatcher & 1 << this.shift) != 0;
       }
-
    }
 
    public void update() {
       this.prevRotation = this.rotation;
       if (this.getStatus()) {
          if (this.rotation < this.rotationMax) {
-            this.rotation += this.rotationInv;
+            this.rotation = this.rotation + this.rotationInv;
             if (this.rotation >= this.rotationMax) {
                this.playSound(this.soundEndSwichOn);
             }
          }
       } else if (this.rotation > 0.0F) {
-         this.rotation -= this.rotationInv;
+         this.rotation = this.rotation - this.rotationInv;
          if (this.rotation <= 0.0F) {
             this.playSound(this.soundEndSwichOff);
          }
       }
-
    }
 
    public void forceSwitch(boolean onoff) {
@@ -118,7 +115,6 @@ public class MCH_Parts {
       if (!snd.name.isEmpty() && !this.parent.world.isRemote) {
          W_WorldFunc.MOD_playSoundAtEntity(this.parent, snd.name, snd.volume, snd.pitch);
       }
-
    }
 
    public class Sound {

@@ -14,21 +14,23 @@ public class MCH_WeaponMachineGun2 extends MCH_WeaponBase {
       this.numMode = 2;
    }
 
+   @Override
    public void modifyParameters() {
       if (this.explosionPower == 0) {
          this.numMode = 0;
       }
-
    }
 
+   @Override
    public String getName() {
       return super.getName() + (this.getCurrentMode() == 0 ? "" : " [HE]");
    }
 
+   @Override
    public boolean shot(MCH_WeaponParam prm) {
       if (!this.worldObj.isRemote) {
-         Vec3d v = MCH_Lib.RotVec3(0.0D, 0.0D, 1.0D, -prm.rotYaw, -prm.rotPitch, -prm.rotRoll);
-         MCH_EntityBullet e = new MCH_EntityBullet(this.worldObj, prm.posX, prm.posY, prm.posZ, v.x, v.y, v.z, prm.rotYaw, prm.rotPitch, (double)this.acceleration);
+         Vec3d v = MCH_Lib.RotVec3(0.0, 0.0, 1.0, -prm.rotYaw, -prm.rotPitch, -prm.rotRoll);
+         MCH_EntityBullet e = new MCH_EntityBullet(this.worldObj, prm.posX, prm.posY, prm.posZ, v.x, v.y, v.z, prm.rotYaw, prm.rotPitch, this.acceleration);
          e.setName(this.name);
          e.setParameterFromWeapon(this, prm.entity, prm.user);
          if (this.getInfo().modeNum < 2) {
@@ -37,10 +39,10 @@ public class MCH_WeaponMachineGun2 extends MCH_WeaponBase {
             e.explosionPower = prm.option1 == 0 ? -this.explosionPower : this.explosionPower;
          }
 
-         e.posX += e.field_70159_w * 0.5D;
-         e.posY += e.field_70181_x * 0.5D;
-         e.posZ += e.field_70179_y * 0.5D;
-         this.worldObj.func_72838_d(e);
+         e.posX = e.posX + e.motionX * 0.5;
+         e.posY = e.posY + e.motionY * 0.5;
+         e.posZ = e.posZ + e.motionZ * 0.5;
+         this.worldObj.spawnEntity(e);
          this.playSound(prm.entity);
       } else {
          this.optionParameter1 = this.getCurrentMode();

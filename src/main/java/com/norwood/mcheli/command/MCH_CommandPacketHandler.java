@@ -14,9 +14,7 @@ public class MCH_CommandPacketHandler {
       if (player != null && player.world.isRemote) {
          MCH_PacketTitle req = new MCH_PacketTitle();
          req.readData(data);
-         scheduler.func_152344_a(() -> {
-            MCH_MOD.proxy.printChatMessage(req.chatComponent, req.showTime, req.position);
-         });
+         scheduler.addScheduledTask(() -> MCH_MOD.proxy.printChatMessage(req.chatComponent, req.showTime, req.position));
       }
    }
 
@@ -25,12 +23,11 @@ public class MCH_CommandPacketHandler {
       if (player != null && !player.world.isRemote) {
          MCH_PacketCommandSave req = new MCH_PacketCommandSave();
          req.readData(data);
-         scheduler.func_152344_a(() -> {
+         scheduler.addScheduledTask(() -> {
             MCH_EntityAircraft ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
             if (ac != null) {
                ac.setCommand(req.str, player);
             }
-
          });
       }
    }

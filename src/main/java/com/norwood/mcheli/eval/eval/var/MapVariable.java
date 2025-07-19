@@ -9,7 +9,7 @@ public class MapVariable implements Variable {
    protected Map<Object, Object> map;
 
    public MapVariable() {
-      this(new HashMap());
+      this(new HashMap<>());
    }
 
    public MapVariable(Map<Object, Object> varMap) {
@@ -24,30 +24,37 @@ public class MapVariable implements Variable {
       return this.map;
    }
 
+   @Override
    public void setValue(Object name, Object obj) {
       this.map.put(name, obj);
    }
 
+   @Override
    public Object getObject(Object name) {
       return this.map.get(name);
    }
 
+   @Override
    public long evalLong(Object val) {
       return ((Number)val).longValue();
    }
 
+   @Override
    public double evalDouble(Object val) {
       return ((Number)val).doubleValue();
    }
 
+   @Override
    public Object getObject(Object array, int index) {
       return Array.get(array, index);
    }
 
+   @Override
    public void setValue(Object array, int index, Object val) {
       Array.set(array, index, val);
    }
 
+   @Override
    public Object getObject(Object obj, String field) {
       try {
          Class<?> c = obj.getClass();
@@ -60,6 +67,7 @@ public class MapVariable implements Variable {
       }
    }
 
+   @Override
    public void setValue(Object obj, String field, Object val) {
       try {
          Class<?> c = obj.getClass();

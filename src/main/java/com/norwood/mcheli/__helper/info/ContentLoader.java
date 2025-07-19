@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -44,11 +43,8 @@ public abstract class ContentLoader {
 
    public Multimap<ContentType, ContentLoader.ContentEntry> load() {
       Multimap<ContentType, ContentLoader.ContentEntry> map = LinkedHashMultimap.create();
-      List<ContentLoader.ContentEntry> list = this.getEntries();
-      Iterator var3 = list.iterator();
 
-      while(var3.hasNext()) {
-         ContentLoader.ContentEntry entry = (ContentLoader.ContentEntry)var3.next();
+      for (ContentLoader.ContentEntry entry : this.getEntries()) {
          map.put(entry.getType(), entry);
       }
 
@@ -61,11 +57,8 @@ public abstract class ContentLoader {
 
    public <TYPE extends IContentData> List<TYPE> reloadAndParse(Class<TYPE> clazz, List<TYPE> oldContents, IContentFactory factory) {
       List<TYPE> list = Lists.newLinkedList();
-      Iterator var5 = oldContents.iterator();
 
-      while(var5.hasNext()) {
-         IContentData oldContent = (IContentData)var5.next();
-
+      for (TYPE oldContent : oldContents) {
          try {
             ContentLoader.ContentEntry entry = this.makeEntry(oldContent.getContentPath(), factory, true);
             IContentData content = entry.parse();
@@ -106,27 +99,9 @@ public abstract class ContentLoader {
 
    protected ContentLoader.ContentEntry makeEntry(String filepath, @Nullable IContentFactory factory, boolean reload) throws IOException {
       List<String> lines = null;
-      BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(this.getInputStreamByName(filepath), StandardCharsets.UTF_8));
-      Throwable var6 = null;
 
-      try {
-         lines = (List)bufferedreader.lines().collect(Collectors.toList());
-      } catch (Throwable var15) {
-         var6 = var15;
-         throw var15;
-      } finally {
-         if (bufferedreader != null) {
-            if (var6 != null) {
-               try {
-                  bufferedreader.close();
-               } catch (Throwable var14) {
-                  var6.addSuppressed(var14);
-               }
-            } else {
-               bufferedreader.close();
-            }
-         }
-
+      try (BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(this.getInputStreamByName(filepath), StandardCharsets.UTF_8))) {
+         lines = bufferedreader.lines().collect(Collectors.toList());
       }
 
       return new ContentLoader.ContentEntry(filepath, this.domain, factory, lines, reload);
@@ -164,15 +139,14 @@ public abstract class ContentLoader {
                }
             }
 
-            IContentData var10 = content;
-            return var10;
+            return content;
          } catch (Exception var8) {
             String msg = "An error occurred while file loading ";
             if (var8 instanceof ContentParseException) {
                msg = msg + "at line:" + ((ContentParseException)var8).getLineNo() + ".";
             }
 
-            MCH_Logger.get().error(msg + " file:{}, domain:{}", location.func_110623_a(), this.domain, var8);
+            MCH_Logger.get().error(msg + " file:{}, domain:{}", location.getPath(), this.domain, var8);
             var4 = null;
          } finally {
             MCH_MOD.proxy.onParseFinishFile(location);
@@ -183,11 +157,6 @@ public abstract class ContentLoader {
 
       public ContentType getType() {
          return this.factory.getType();
-      }
-
-      // $FF: synthetic method
-      ContentEntry(String x0, String x1, IContentFactory x2, List x3, boolean x4, Object x5) {
-         this(x0, x1, x2, x3, x4);
       }
    }
 }

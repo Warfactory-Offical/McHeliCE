@@ -6,7 +6,6 @@ import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.particles.MCH_ParticleParam;
 import com.norwood.mcheli.particles.MCH_ParticlesUtil;
 import com.norwood.mcheli.wrapper.W_McClient;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -45,7 +44,6 @@ public class MCH_Flare {
          FLARE_DATA[8] = FLARE_DATA[1];
          FLARE_DATA[9] = FLARE_DATA[1];
       }
-
    }
 
    public boolean isInPreparation() {
@@ -67,17 +65,18 @@ public class MCH_Flare {
             return;
          }
 
-         double x = (this.aircraft.posX - this.aircraft.field_70169_q) / (double)num;
-         double y = (this.aircraft.posY - this.aircraft.field_70167_r) / (double)num;
-         double z = (this.aircraft.posZ - this.aircraft.field_70166_s) / (double)num;
+         double x = (this.aircraft.posX - this.aircraft.prevPosX) / num;
+         double y = (this.aircraft.posY - this.aircraft.prevPosY) / num;
+         double z = (this.aircraft.posZ - this.aircraft.prevPosZ) / num;
 
-         for(int i = 0; i < num; ++i) {
-            MCH_ParticleParam prm = new MCH_ParticleParam(this.worldObj, "smoke", this.aircraft.field_70169_q + x * (double)i, this.aircraft.field_70167_r + y * (double)i, this.aircraft.field_70166_s + z * (double)i);
+         for (int i = 0; i < num; i++) {
+            MCH_ParticleParam prm = new MCH_ParticleParam(
+               this.worldObj, "smoke", this.aircraft.prevPosX + x * i, this.aircraft.prevPosY + y * i, this.aircraft.prevPosZ + z * i
+            );
             prm.size = size + this.rand.nextFloat();
             MCH_ParticlesUtil.spawnParticle(prm);
          }
       }
-
    }
 
    public boolean use(int type) {
@@ -107,101 +106,107 @@ public class MCH_Flare {
 
    public void update() {
       int type = this.getFlareType();
-      if (this.aircraft != null && !this.aircraft.field_70128_L && type > 0 && type <= FLARE_DATA.length) {
+      if (this.aircraft != null && !this.aircraft.isDead && type > 0 && type <= FLARE_DATA.length) {
          if (this.tick > 0) {
-            --this.tick;
+            this.tick--;
          }
 
          if (!this.worldObj.isRemote && this.tick > 0 && this.tick % FLARE_DATA[type].interval == 0 && this.numFlare < FLARE_DATA[type].numFlareMax) {
             Vec3d v = this.aircraft.getAcInfo().flare.pos;
-            v = this.aircraft.getTransformedPosition(v.x, v.y, v.z, this.aircraft.field_70169_q, this.aircraft.field_70167_r, this.aircraft.field_70166_s);
+            v = this.aircraft.getTransformedPosition(v.x, v.y, v.z, this.aircraft.prevPosX, this.aircraft.prevPosY, this.aircraft.prevPosZ);
             this.spawnFlare(v);
          }
 
          if (!this.isUsing() && this.aircraft.getEntityData().getBoolean("FlareUsing")) {
             this.aircraft.getEntityData().setBoolean("FlareUsing", false);
          }
-
       }
    }
 
    private void spawnFlare(Vec3d v) {
-      ++this.numFlare;
+      this.numFlare++;
       int type = this.getFlareType();
       int num = FLARE_DATA[type].num;
-      double x = v.x - this.aircraft.field_70159_w * 2.0D;
-      double y = v.y - this.aircraft.field_70181_x * 2.0D - 1.0D;
-      double z = v.z - this.aircraft.field_70179_y * 2.0D;
-      this.worldObj.func_184133_a((EntityPlayer)null, new BlockPos(x, y, z), SoundEvents.field_187646_bt, SoundCategory.BLOCKS, 0.5F, 2.6F + (this.worldObj.field_73012_v.nextFloat() - this.worldObj.field_73012_v.nextFloat()) * 0.8F);
+      double x = v.x - this.aircraft.motionX * 2.0;
+      double y = v.y - this.aircraft.motionY * 2.0 - 1.0;
+      double z = v.z - this.aircraft.motionZ * 2.0;
+      this.worldObj
+         .playSound(
+            null,
+            new BlockPos(x, y, z),
+            SoundEvents.BLOCK_FIRE_EXTINGUISH,
+            SoundCategory.BLOCKS,
+            0.5F,
+            2.6F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.8F
+         );
 
-      for(int i = 0; i < num; ++i) {
-         x = v.x - this.aircraft.field_70159_w * 2.0D;
-         y = v.y - this.aircraft.field_70181_x * 2.0D - 1.0D;
-         z = v.z - this.aircraft.field_70179_y * 2.0D;
-         double tx = 0.0D;
-         double ty = this.aircraft.field_70181_x;
-         double tz = 0.0D;
+      for (int i = 0; i < num; i++) {
+         x = v.x - this.aircraft.motionX * 2.0;
+         y = v.y - this.aircraft.motionY * 2.0 - 1.0;
+         z = v.z - this.aircraft.motionZ * 2.0;
+         double tx = 0.0;
+         double ty = this.aircraft.motionY;
+         double tz = 0.0;
          int fuseCount = 0;
-         double r = (double)this.aircraft.field_70177_z;
+         double r = this.aircraft.rotationYaw;
          if (type == 1) {
-            tx = (double)MathHelper.func_76126_a(this.rand.nextFloat() * 360.0F);
-            tz = (double)MathHelper.func_76134_b(this.rand.nextFloat() * 360.0F);
+            tx = MathHelper.sin(this.rand.nextFloat() * 360.0F);
+            tz = MathHelper.cos(this.rand.nextFloat() * 360.0F);
          } else if (type != 2 && type != 3) {
             if (type == 4) {
-               r *= 0.017453292519943295D;
-               tx = -Math.sin(r) + ((double)this.rand.nextFloat() - 0.5D) * 1.3D;
-               tz = Math.cos(r) + ((double)this.rand.nextFloat() - 0.5D) * 1.3D;
+               r *= Math.PI / 180.0;
+               tx = -Math.sin(r) + (this.rand.nextFloat() - 0.5) * 1.3;
+               tz = Math.cos(r) + (this.rand.nextFloat() - 0.5) * 1.3;
             } else if (type == 5) {
-               r *= 0.017453292519943295D;
-               tx = -Math.sin(r) + ((double)this.rand.nextFloat() - 0.5D) * 0.9D;
-               tz = Math.cos(r) + ((double)this.rand.nextFloat() - 0.5D) * 0.9D;
-               tx *= 0.3D;
-               tz *= 0.3D;
+               r *= Math.PI / 180.0;
+               tx = -Math.sin(r) + (this.rand.nextFloat() - 0.5) * 0.9;
+               tz = Math.cos(r) + (this.rand.nextFloat() - 0.5) * 0.9;
+               tx *= 0.3;
+               tz *= 0.3;
             }
          } else {
             if (i == 0) {
-               r += 90.0D;
+               r += 90.0;
             }
 
             if (i == 1) {
-               r -= 90.0D;
+               r -= 90.0;
             }
 
             if (i == 2) {
-               r += 180.0D;
+               r += 180.0;
             }
 
-            r *= 0.017453292519943295D;
-            tx = -Math.sin(r) + ((double)this.rand.nextFloat() - 0.5D) * 0.6D;
-            tz = Math.cos(r) + ((double)this.rand.nextFloat() - 0.5D) * 0.6D;
+            r *= Math.PI / 180.0;
+            tx = -Math.sin(r) + (this.rand.nextFloat() - 0.5) * 0.6;
+            tz = Math.cos(r) + (this.rand.nextFloat() - 0.5) * 0.6;
          }
 
-         tx += this.aircraft.field_70159_w;
-         ty += this.aircraft.field_70181_x / 2.0D;
-         tz += this.aircraft.field_70179_y;
+         tx += this.aircraft.motionX;
+         ty += this.aircraft.motionY / 2.0;
+         tz += this.aircraft.motionZ;
          if (type == 10) {
-            r += (double)(360 / num / 2 + i * (360 / num));
-            r *= 0.017453292519943295D;
-            tx = -Math.sin(r) * 2.0D;
-            tz = Math.cos(r) * 2.0D;
-            ty = 0.7D;
-            y += 2.0D;
+            r += 360 / num / 2 + i * (360 / num);
+            r *= Math.PI / 180.0;
+            tx = -Math.sin(r) * 2.0;
+            tz = Math.cos(r) * 2.0;
+            ty = 0.7;
+            y += 2.0;
             fuseCount = 10;
          }
 
-         MCH_EntityFlare e = new MCH_EntityFlare(this.worldObj, x, y, z, tx * 0.5D, ty * 0.5D, tz * 0.5D, 6.0F, fuseCount);
-         e.field_70125_A = this.rand.nextFloat() * 360.0F;
-         e.field_70177_z = this.rand.nextFloat() * 360.0F;
-         e.field_70127_C = this.rand.nextFloat() * 360.0F;
-         e.field_70126_B = this.rand.nextFloat() * 360.0F;
+         MCH_EntityFlare e = new MCH_EntityFlare(this.worldObj, x, y, z, tx * 0.5, ty * 0.5, tz * 0.5, 6.0F, fuseCount);
+         e.rotationPitch = this.rand.nextFloat() * 360.0F;
+         e.rotationYaw = this.rand.nextFloat() * 360.0F;
+         e.prevRotationPitch = this.rand.nextFloat() * 360.0F;
+         e.prevRotationYaw = this.rand.nextFloat() * 360.0F;
          if (type == 4) {
-            e.gravity *= 0.6D;
-            e.airResistance = 0.995D;
+            e.gravity *= 0.6;
+            e.airResistance = 0.995;
          }
 
-         this.worldObj.func_72838_d(e);
+         this.worldObj.spawnEntity(e);
       }
-
    }
 
    class FlareParam {

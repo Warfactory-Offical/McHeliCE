@@ -32,20 +32,18 @@ public abstract class MCH_AircraftCommonGui extends MCH_Gui {
             }
 
             if (seatId < info.hudList.size()) {
-               MCH_Hud hud = (MCH_Hud)info.hudList.get(seatId);
+               MCH_Hud hud = info.hudList.get(seatId);
                if (hud != null) {
                   hud.draw(ac, player, this.smoothCamPartialTicks);
                }
             }
          }
-
       }
    }
 
    public void drawDebugtInfo(MCH_EntityAircraft ac) {
       if (MCH_Config.DebugLog) {
       }
-
    }
 
    public void drawNightVisionNoise() {
@@ -55,7 +53,7 @@ public abstract class MCH_AircraftCommonGui extends MCH_Gui {
       int dstBlend = GL11.glGetInteger(3040);
       GL11.glBlendFunc(1, 1);
       W_McClient.MOD_bindTexture("textures/gui/alpha.png");
-      this.drawTexturedModalRectRotate(0.0D, 0.0D, (double)this.field_146294_l, (double)this.field_146295_m, (double)this.rand.nextInt(256), (double)this.rand.nextInt(256), 256.0D, 256.0D, 0.0F);
+      this.drawTexturedModalRectRotate(0.0, 0.0, this.width, this.height, this.rand.nextInt(256), this.rand.nextInt(256), 256.0, 256.0, 0.0F);
       GL11.glBlendFunc(srcBlend, dstBlend);
       GL11.glDisable(3042);
    }
@@ -68,13 +66,29 @@ public abstract class MCH_AircraftCommonGui extends MCH_Gui {
          int IVY = 10;
          int SZX = 5;
          int SZY = 5;
-         double[] ls = new double[]{(double)(cx - IVX), (double)(cy - IVY), (double)(cx - SZX), (double)(cy - SZY), (double)(cx - IVX), (double)(cy + IVY), (double)(cx - SZX), (double)(cy + SZY), (double)(cx + IVX), (double)(cy - IVY), (double)(cx + SZX), (double)(cy - SZY), (double)(cx + IVX), (double)(cy + IVY), (double)(cx + SZX), (double)(cy + SZY)};
+         double[] ls = new double[]{
+            cx - IVX,
+            cy - IVY,
+            cx - SZX,
+            cy - SZY,
+            cx - IVX,
+            cy + IVY,
+            cx - SZX,
+            cy + SZY,
+            cx + IVX,
+            cy - IVY,
+            cx + SZX,
+            cy - SZY,
+            cx + IVX,
+            cy + IVY,
+            cx + SZX,
+            cy + SZY
+         };
          color = MCH_Config.hitMarkColorRGB;
          int alpha = hs * (256 / hsMax);
-         color |= (int)(MCH_Config.hitMarkColorAlpha * (float)alpha) << 24;
+         color |= (int)(MCH_Config.hitMarkColorAlpha * alpha) << 24;
          this.drawLine(ls, color);
       }
-
    }
 
    public void drawHitBullet(MCH_EntityAircraft ac, int color, int seatID) {
@@ -88,14 +102,14 @@ public abstract class MCH_AircraftCommonGui extends MCH_Gui {
       int dstBlend = GL11.glGetInteger(3040);
       GL11.glBlendFunc(1, 1);
       W_McClient.MOD_bindTexture("textures/gui/noise.png");
-      this.drawTexturedModalRectRotate(0.0D, 0.0D, (double)this.field_146294_l, (double)this.field_146295_m, (double)this.rand.nextInt(256), (double)this.rand.nextInt(256), 256.0D, 256.0D, 0.0F);
+      this.drawTexturedModalRectRotate(0.0, 0.0, this.width, this.height, this.rand.nextInt(256), this.rand.nextInt(256), 256.0, 256.0, 0.0F);
       GL11.glBlendFunc(srcBlend, dstBlend);
       GL11.glDisable(3042);
    }
 
    public void drawKeyBind(MCH_EntityAircraft ac, MCH_AircraftInfo info, EntityPlayer player, int seatID, int RX, int LX, int colorActive, int colorInactive) {
       String msg = "";
-      int c = false;
+      int c = 0;
       if (seatID == 0 && ac.canPutToRack()) {
          msg = "PutRack : " + MCH_KeyName.getDescOrName(MCH_Config.KeyPutToRack.prmInt);
          this.drawString(msg, LX, this.centerY - 10, colorActive);
@@ -111,12 +125,11 @@ public abstract class MCH_AircraftCommonGui extends MCH_Gui {
          this.drawString(msg, LX, this.centerY + 10, colorActive);
       }
 
-      if (seatID == 0 && ac.func_184187_bx() != null) {
+      if (seatID == 0 && ac.getRidingEntity() != null) {
          msg = "DismountRack : " + MCH_KeyName.getDescOrName(MCH_Config.KeyDownFromRack.prmInt);
          this.drawString(msg, LX, this.centerY + 10, colorActive);
       }
 
-      int c;
       if (seatID > 0 && ac.getSeatNum() > 1 || Keyboard.isKeyDown(MCH_Config.KeyFreeLook.prmInt)) {
          c = seatID == 0 ? 'Ｐ' : colorActive;
          String sk = seatID == 0 ? MCH_KeyName.getDescOrName(MCH_Config.KeyFreeLook.prmInt) + " + " : "";
@@ -126,7 +139,12 @@ public abstract class MCH_AircraftCommonGui extends MCH_Gui {
          this.drawString(msg, RX, this.centerY - 60, c);
       }
 
-      msg = "Gunner " + (ac.getGunnerStatus() ? "ON" : "OFF") + " : " + MCH_KeyName.getDescOrName(MCH_Config.KeyFreeLook.prmInt) + " + " + MCH_KeyName.getDescOrName(MCH_Config.KeyCameraMode.prmInt);
+      msg = "Gunner "
+         + (ac.getGunnerStatus() ? "ON" : "OFF")
+         + " : "
+         + MCH_KeyName.getDescOrName(MCH_Config.KeyFreeLook.prmInt)
+         + " + "
+         + MCH_KeyName.getDescOrName(MCH_Config.KeyCameraMode.prmInt);
       this.drawString(msg, LX, this.centerY - 40, colorActive);
       if (seatID >= 0 && seatID <= 1 && ac.haveFlare()) {
          c = ac.isFlarePreparation() ? colorInactive : colorActive;
@@ -181,11 +199,5 @@ public abstract class MCH_AircraftCommonGui extends MCH_Gui {
          msg = "FreeLook : " + MCH_KeyName.getDescOrName(MCH_Config.KeyFreeLook.prmInt);
          this.drawString(msg, LX, this.centerY - 20, colorActive);
       }
-
-      if (seatID > 1 && info.haveRepellingHook() && ac.canRepelling(player)) {
-         msg = "Use Repelling Drop : " + MCH_KeyName.getDescOrName(MCH_Config.KeySwitchHovering.prmInt);
-         this.drawString(msg, LX, this.centerY - 90, colorActive);
-      }
-
    }
 }

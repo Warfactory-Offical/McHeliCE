@@ -9,22 +9,24 @@ public class DecBeforeExpression extends Col1Expression {
       super(from, s);
    }
 
+   @Override
    public AbstractExpression dup(ShareExpValue s) {
       return new DecBeforeExpression(this, s);
    }
 
+   @Override
    protected long operateLong(long val) {
-      --val;
-      this.exp.let(val, this.pos);
+      this.exp.let(--val, this.pos);
       return val;
    }
 
+   @Override
    protected double operateDouble(double val) {
-      --val;
-      this.exp.let(val, this.pos);
+      this.exp.let(--val, this.pos);
       return val;
    }
 
+   @Override
    public Object evalObject() {
       Object val = this.exp.evalObject();
       val = this.share.oper.inc(val, -1);
@@ -32,6 +34,7 @@ public class DecBeforeExpression extends Col1Expression {
       return val;
    }
 
+   @Override
    protected AbstractExpression replace() {
       this.exp = this.exp.replaceVar();
       return this.share.repl.replaceVar1(this);

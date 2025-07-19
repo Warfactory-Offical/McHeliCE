@@ -8,15 +8,18 @@ public abstract class Col1AfterExpression extends Col1Expression {
       super(from, s);
    }
 
+   @Override
    protected AbstractExpression replace() {
       this.exp = this.exp.replaceVar();
       return this.share.repl.replaceVar1(this);
    }
 
+   @Override
    protected AbstractExpression replaceVar() {
       return this.replace();
    }
 
+   @Override
    public String toString() {
       if (this.exp == null) {
          return this.getOperator();

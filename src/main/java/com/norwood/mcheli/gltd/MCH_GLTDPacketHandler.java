@@ -10,16 +10,16 @@ import net.minecraftforge.fml.relauncher.Side;
 public class MCH_GLTDPacketHandler {
    @HandleSide({Side.SERVER})
    public static void onPacket_GLTDPlayerControl(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-      if (player.func_184187_bx() instanceof MCH_EntityGLTD) {
+      if (player.getRidingEntity() instanceof MCH_EntityGLTD) {
          if (!player.world.isRemote) {
             MCH_PacketGLTDPlayerControl pc = new MCH_PacketGLTDPlayerControl();
             pc.readData(data);
-            scheduler.func_152344_a(() -> {
-               MCH_EntityGLTD gltd = (MCH_EntityGLTD)player.func_184187_bx();
+            scheduler.addScheduledTask(() -> {
+               MCH_EntityGLTD gltd = (MCH_EntityGLTD)player.getRidingEntity();
                if (pc.unmount) {
                   Entity riddenByEntity = gltd.getRiddenByEntity();
                   if (riddenByEntity != null) {
-                     riddenByEntity.func_184210_p();
+                     riddenByEntity.dismountRidingEntity();
                   }
                } else {
                   if (pc.switchCameraMode >= 0) {
@@ -34,7 +34,6 @@ public class MCH_GLTDPacketHandler {
                      gltd.useCurrentWeapon(pc.useWeaponOption1, pc.useWeaponOption2);
                   }
                }
-
             });
          }
       }

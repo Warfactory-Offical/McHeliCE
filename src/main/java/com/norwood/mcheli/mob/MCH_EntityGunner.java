@@ -36,44 +36,31 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ITeleporter;
 
 public class MCH_EntityGunner extends EntityLivingBase {
-   private static final DataParameter<String> TEAM_NAME;
-   public boolean isCreative;
-   public String ownerUUID;
-   public int targetType;
-   public int despawnCount;
-   public int switchTargetCount;
-   public Entity targetEntity;
-   public double targetPrevPosX;
-   public double targetPrevPosY;
-   public double targetPrevPosZ;
-   public boolean waitCooldown;
-   public int idleCount;
-   public int idleRotation;
+   private static final DataParameter<String> TEAM_NAME = EntityDataManager.createKey(MCH_EntityGunner.class, DataSerializers.STRING);
+   public boolean isCreative = false;
+   public String ownerUUID = "";
+   public int targetType = 0;
+   public int despawnCount = 0;
+   public int switchTargetCount = 0;
+   public Entity targetEntity = null;
+   public double targetPrevPosX = 0.0;
+   public double targetPrevPosY = 0.0;
+   public double targetPrevPosZ = 0.0;
+   public boolean waitCooldown = false;
+   public int idleCount = 0;
+   public int idleRotation = 0;
 
    public MCH_EntityGunner(World world) {
       super(world);
-      this.isCreative = false;
-      this.ownerUUID = "";
-      this.targetType = 0;
-      this.despawnCount = 0;
-      this.switchTargetCount = 0;
-      this.targetEntity = null;
-      this.targetPrevPosX = 0.0D;
-      this.targetPrevPosY = 0.0D;
-      this.targetPrevPosZ = 0.0D;
-      this.waitCooldown = false;
-      this.idleCount = 0;
-      this.idleRotation = 0;
    }
 
    public MCH_EntityGunner(World world, double x, double y, double z) {
       this(world);
-      this.func_70107_b(x, y, z);
+      this.setPosition(x, y, z);
    }
 
    protected void entityInit() {
@@ -82,52 +69,47 @@ public class MCH_EntityGunner extends EntityLivingBase {
    }
 
    public String getTeamName() {
-      return (String)this.dataManager.func_187225_a(TEAM_NAME);
+      return (String)this.dataManager.get(TEAM_NAME);
    }
 
    public void setTeamName(String name) {
-      this.dataManager.func_187227_b(TEAM_NAME, name);
+      this.dataManager.set(TEAM_NAME, name);
    }
 
    public Team getTeam() {
-      return this.world.func_96441_U().func_96508_e(this.getTeamName());
+      return this.world.getScoreboard().getTeam(this.getTeamName());
    }
 
-   public boolean func_184191_r(Entity entityIn) {
-      return super.func_184191_r(entityIn);
+   public boolean isOnSameTeam(Entity entityIn) {
+      return super.isOnSameTeam(entityIn);
    }
 
-   public ITextComponent func_145748_c_() {
+   public ITextComponent getDisplayName() {
       Team team = this.getTeam();
-      if (team != null) {
-         String name = MCH_MOD.isTodaySep01() ? "'s EMB4" : " Gunner";
-         return new TextComponentString(ScorePlayerTeam.func_96667_a(team, team.func_96661_b() + name));
-      } else {
-         return new TextComponentString("");
-      }
+      return team != null ? new TextComponentString(ScorePlayerTeam.formatPlayerName(team, team.getName() + " Gunner")) : new TextComponentString("");
    }
 
    public boolean func_180431_b(DamageSource source) {
       return this.isCreative;
    }
 
-   public void func_70645_a(DamageSource source) {
-      super.func_70645_a(source);
+   public void onDeath(DamageSource source) {
+      super.onDeath(source);
    }
 
    public boolean func_184230_a(EntityPlayer player, EnumHand hand) {
       if (this.world.isRemote) {
          return false;
-      } else if (this.func_184187_bx() == null) {
+      } else if (this.getRidingEntity() == null) {
          return false;
-      } else if (player.field_71075_bZ.field_75098_d) {
+      } else if (player.capabilities.isCreativeMode) {
          this.removeFromAircraft(player);
          return true;
       } else if (this.isCreative) {
-         player.func_145747_a(new TextComponentString("Creative mode only."));
+         player.sendMessage(new TextComponentString("Creative mode only."));
          return false;
-      } else if (this.getTeam() != null && !this.func_184191_r(player)) {
-         player.func_145747_a(new TextComponentString("You are other team."));
+      } else if (this.getTeam() != null && !this.isOnSameTeam(player)) {
+         player.sendMessage(new TextComponentString("You are other team."));
          return false;
       } else {
          this.removeFromAircraft(player);
@@ -138,12 +120,12 @@ public class MCH_EntityGunner extends EntityLivingBase {
    public void removeFromAircraft(EntityPlayer player) {
       if (!this.world.isRemote) {
          W_WorldFunc.MOD_playSoundAtEntity(player, "wrench", 1.0F, 1.0F);
-         this.func_70106_y();
+         this.setDead();
          MCH_EntityAircraft ac = null;
-         if (this.func_184187_bx() instanceof MCH_EntityAircraft) {
-            ac = (MCH_EntityAircraft)this.func_184187_bx();
-         } else if (this.func_184187_bx() instanceof MCH_EntitySeat) {
-            ac = ((MCH_EntitySeat)this.func_184187_bx()).getParent();
+         if (this.getRidingEntity() instanceof MCH_EntityAircraft) {
+            ac = (MCH_EntityAircraft)this.getRidingEntity();
+         } else if (this.getRidingEntity() instanceof MCH_EntitySeat) {
+            ac = ((MCH_EntitySeat)this.getRidingEntity()).getParent();
          }
 
          String name = "";
@@ -151,63 +133,70 @@ public class MCH_EntityGunner extends EntityLivingBase {
             name = " on " + ac.getAcInfo().displayName + " seat " + (ac.getSeatIdByEntity(this) + 1);
          }
 
-         String playerName = ScorePlayerTeam.func_96667_a(player.getTeam(), player.func_145748_c_().func_150254_d());
-         if (MCH_MOD.isTodaySep01()) {
-            player.func_145747_a(new TextComponentTranslation("chat.type.text", new Object[]{"EMB4", new TextComponentString("Bye " + playerName + "! Good vehicle" + name)}));
-         } else {
-            player.func_145747_a(new TextComponentString("Remove gunner" + name + " by " + playerName + "."));
-         }
-
-         this.func_184210_p();
+         player.sendMessage(
+            new TextComponentString(
+               "Remove gunner" + name + " by " + ScorePlayerTeam.formatPlayerName(player.getTeam(), player.getDisplayName().getFormattedText()) + "."
+            )
+         );
+         this.dismountRidingEntity();
       }
-
    }
 
-   public void func_70071_h_() {
-      super.func_70071_h_();
-      if (!this.world.isRemote && !this.field_70128_L) {
-         if (this.func_184187_bx() != null && this.func_184187_bx().field_70128_L) {
-            this.func_184210_p();
+   public void onUpdate() {
+      super.onUpdate();
+      if (!this.world.isRemote && !this.isDead) {
+         if (this.getRidingEntity() != null && this.getRidingEntity().isDead) {
+            this.dismountRidingEntity();
          }
 
-         if (this.func_184187_bx() instanceof MCH_EntityAircraft) {
-            this.shotTarget((MCH_EntityAircraft)this.func_184187_bx());
-         } else if (this.func_184187_bx() instanceof MCH_EntitySeat && ((MCH_EntitySeat)this.func_184187_bx()).getParent() != null) {
-            this.shotTarget(((MCH_EntitySeat)this.func_184187_bx()).getParent());
+         if (this.getRidingEntity() instanceof MCH_EntityAircraft) {
+            this.shotTarget((MCH_EntityAircraft)this.getRidingEntity());
+         } else if (this.getRidingEntity() instanceof MCH_EntitySeat && ((MCH_EntitySeat)this.getRidingEntity()).getParent() != null) {
+            this.shotTarget(((MCH_EntitySeat)this.getRidingEntity()).getParent());
          } else if (this.despawnCount < 20) {
-            ++this.despawnCount;
-         } else if (this.func_184187_bx() == null || this.field_70173_aa > 100) {
-            this.func_70106_y();
+            this.despawnCount++;
+         } else if (this.getRidingEntity() == null || this.ticksExisted > 100) {
+            this.setDead();
          }
 
          if (this.targetEntity == null) {
             if (this.idleCount == 0) {
-               this.idleCount = (3 + this.field_70146_Z.nextInt(5)) * 20;
-               this.idleRotation = this.field_70146_Z.nextInt(5) - 2;
+               this.idleCount = (3 + this.rand.nextInt(5)) * 20;
+               this.idleRotation = this.rand.nextInt(5) - 2;
             }
 
-            this.field_70177_z += (float)this.idleRotation / 2.0F;
+            this.rotationYaw = this.rotationYaw + this.idleRotation / 2.0F;
          } else {
             this.idleCount = 60;
          }
       }
 
       if (this.switchTargetCount > 0) {
-         --this.switchTargetCount;
+         this.switchTargetCount--;
       }
 
       if (this.idleCount > 0) {
-         --this.idleCount;
+         this.idleCount--;
       }
-
    }
 
    public boolean canAttackEntity(EntityLivingBase entity, MCH_EntityAircraft ac, MCH_WeaponSet ws) {
       boolean ret = false;
       if (this.targetType == 0) {
-         ret = entity != this && !(entity instanceof EntityEnderman) && !entity.field_70128_L && !this.func_184191_r(entity) && entity.func_110143_aJ() > 0.0F && !ac.isMountedEntity(entity);
+         ret = entity != this
+            && !(entity instanceof EntityEnderman)
+            && !entity.isDead
+            && !this.isOnSameTeam(entity)
+            && entity.getHealth() > 0.0F
+            && !ac.isMountedEntity(entity);
       } else {
-         ret = entity != this && !((EntityPlayer)entity).field_71075_bZ.field_75098_d && !entity.field_70128_L && !this.getTeamName().isEmpty() && !this.func_184191_r(entity) && entity.func_110143_aJ() > 0.0F && !ac.isMountedEntity(entity);
+         ret = entity != this
+            && !((EntityPlayer)entity).capabilities.isCreativeMode
+            && !entity.isDead
+            && !this.getTeamName().isEmpty()
+            && !this.isOnSameTeam(entity)
+            && entity.getHealth() > 0.0F
+            && !ac.isMountedEntity(entity);
       }
 
       if (ret && ws.getCurrentWeapon().getGuidanceSystem() != null) {
@@ -223,7 +212,9 @@ public class MCH_EntityGunner extends EntityLivingBase {
             MCH_WeaponSet ws = ac.getCurrentWeapon(this);
             if (ws != null && ws.getInfo() != null && ws.getCurrentWeapon() != null) {
                MCH_WeaponBase cw = ws.getCurrentWeapon();
-               if (this.targetEntity != null && (this.targetEntity.field_70128_L || ((EntityLivingBase)this.targetEntity).func_110143_aJ() <= 0.0F) && this.switchTargetCount > 20) {
+               if (this.targetEntity != null
+                  && (this.targetEntity.isDead || ((EntityLivingBase)this.targetEntity).getHealth() <= 0.0F)
+                  && this.switchTargetCount > 20) {
                   this.switchTargetCount = 20;
                }
 
@@ -231,22 +222,24 @@ public class MCH_EntityGunner extends EntityLivingBase {
                if (this.targetEntity == null && this.switchTargetCount <= 0 || this.switchTargetCount <= 0) {
                   this.switchTargetCount = 20;
                   EntityLivingBase nextTarget = null;
-                  List list;
-                  int i;
-                  int rv;
+                  List<? extends EntityLivingBase> list;
                   if (this.targetType == 0) {
-                     i = MCH_Config.RangeOfGunner_VsMonster_Horizontal.prmInt;
-                     rv = MCH_Config.RangeOfGunner_VsMonster_Vertical.prmInt;
-                     list = this.world.func_175647_a(EntityLivingBase.class, this.func_174813_aQ().func_72314_b((double)i, (double)rv, (double)i), IMob.field_82192_a);
+                     int rh = MCH_Config.RangeOfGunner_VsMonster_Horizontal.prmInt;
+                     int rv = MCH_Config.RangeOfGunner_VsMonster_Vertical.prmInt;
+                     list = this.world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(rh, rv, rh), IMob.MOB_SELECTOR);
                   } else {
-                     i = MCH_Config.RangeOfGunner_VsPlayer_Horizontal.prmInt;
-                     rv = MCH_Config.RangeOfGunner_VsPlayer_Vertical.prmInt;
-                     list = this.world.func_72872_a(EntityPlayer.class, this.func_174813_aQ().func_72314_b((double)i, (double)rv, (double)i));
+                     int rh = MCH_Config.RangeOfGunner_VsPlayer_Horizontal.prmInt;
+                     int rv = MCH_Config.RangeOfGunner_VsPlayer_Vertical.prmInt;
+                     list = this.world.getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(rh, rv, rh));
                   }
 
-                  for(i = 0; i < list.size(); ++i) {
-                     EntityLivingBase entity = (EntityLivingBase)list.get(i);
-                     if (this.canAttackEntity(entity, ac, ws) && this.checkPitch(entity, ac, pos) && (nextTarget == null || this.func_70032_d(entity) < this.func_70032_d(nextTarget)) && this.func_70685_l(entity) && this.isInAttackable(entity, ac, ws, pos)) {
+                  for (int i = 0; i < list.size(); i++) {
+                     EntityLivingBase entity = list.get(i);
+                     if (this.canAttackEntity(entity, ac, ws)
+                        && this.checkPitch(entity, ac, pos)
+                        && (nextTarget == null || this.getDistance(entity) < this.getDistance(nextTarget))
+                        && this.canEntityBeSeen(entity)
+                        && this.isInAttackable(entity, ac, ws, pos)) {
                         nextTarget = entity;
                         this.switchTargetCount = 60;
                      }
@@ -267,31 +260,31 @@ public class MCH_EntityGunner extends EntityLivingBase {
                      rotSpeed = ac.getAcInfo().cameraRotationSpeed / 10.0F;
                   }
 
-                  this.field_70125_A = MathHelper.func_76142_g(this.field_70125_A);
-                  this.field_70177_z = MathHelper.func_76142_g(this.field_70177_z);
-                  double dist = (double)this.func_70032_d(this.targetEntity);
-                  double tick = 1.0D;
-                  if (dist >= 10.0D && ws.getInfo().acceleration > 1.0F) {
-                     tick = dist / (double)ws.getInfo().acceleration;
+                  this.rotationPitch = MathHelper.wrapDegrees(this.rotationPitch);
+                  this.rotationYaw = MathHelper.wrapDegrees(this.rotationYaw);
+                  double dist = this.getDistance(this.targetEntity);
+                  double tick = 1.0;
+                  if (dist >= 10.0 && ws.getInfo().acceleration > 1.0F) {
+                     tick = dist / ws.getInfo().acceleration;
                   }
 
-                  if (this.targetEntity.func_184187_bx() instanceof MCH_EntitySeat || this.targetEntity.func_184187_bx() instanceof MCH_EntityAircraft) {
-                     tick -= (double)MCH_Config.HitBoxDelayTick.prmInt;
+                  if (this.targetEntity.getRidingEntity() instanceof MCH_EntitySeat || this.targetEntity.getRidingEntity() instanceof MCH_EntityAircraft) {
+                     tick -= MCH_Config.HitBoxDelayTick.prmInt;
                   }
 
                   double dx = (this.targetEntity.posX - this.targetPrevPosX) * tick;
-                  double dy = (this.targetEntity.posY - this.targetPrevPosY) * tick + (double)this.targetEntity.field_70131_O * this.field_70146_Z.nextDouble();
+                  double dy = (this.targetEntity.posY - this.targetPrevPosY) * tick + this.targetEntity.height * this.rand.nextDouble();
                   double dz = (this.targetEntity.posZ - this.targetPrevPosZ) * tick;
                   double d0 = this.targetEntity.posX + dx - pos.x;
                   double d1 = this.targetEntity.posY + dy - pos.y;
                   double d2 = this.targetEntity.posZ + dz - pos.z;
-                  double d3 = (double)MathHelper.func_76133_a(d0 * d0 + d2 * d2);
-                  float yaw = MathHelper.func_76142_g((float)(Math.atan2(d2, d0) * 180.0D / 3.141592653589793D) - 90.0F);
-                  float pitch = (float)(-(Math.atan2(d1, d3) * 180.0D / 3.141592653589793D));
-                  if (Math.abs(this.field_70125_A - pitch) < rotSpeed && Math.abs(this.field_70177_z - yaw) < rotSpeed) {
+                  double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
+                  float yaw = MathHelper.wrapDegrees((float)(Math.atan2(d2, d0) * 180.0 / Math.PI) - 90.0F);
+                  float pitch = (float)(-(Math.atan2(d1, d3) * 180.0 / Math.PI));
+                  if (Math.abs(this.rotationPitch - pitch) < rotSpeed && Math.abs(this.rotationYaw - yaw) < rotSpeed) {
                      float r = ac.isPilot(this) ? 0.1F : 0.5F;
-                     this.field_70125_A = pitch + (this.field_70146_Z.nextFloat() - 0.5F) * r - cw.fixRotationPitch;
-                     this.field_70177_z = yaw + (this.field_70146_Z.nextFloat() - 0.5F) * r;
+                     this.rotationPitch = pitch + (this.rand.nextFloat() - 0.5F) * r - cw.fixRotationPitch;
+                     this.rotationYaw = yaw + (this.rand.nextFloat() - 0.5F) * r;
                      if (!this.waitCooldown || ws.currentHeat <= 0 || ws.getInfo().maxHeatCount <= 0) {
                         this.waitCooldown = false;
                         MCH_WeaponParam prm = new MCH_WeaponParam();
@@ -305,26 +298,25 @@ public class MCH_EntityGunner extends EntityLivingBase {
                      }
                   }
 
-                  if (Math.abs(pitch - this.field_70125_A) >= rotSpeed) {
-                     this.field_70125_A += pitch > this.field_70125_A ? rotSpeed : -rotSpeed;
+                  if (Math.abs(pitch - this.rotationPitch) >= rotSpeed) {
+                     this.rotationPitch = this.rotationPitch + (pitch > this.rotationPitch ? rotSpeed : -rotSpeed);
                   }
 
-                  if (Math.abs(yaw - this.field_70177_z) >= rotSpeed) {
-                     if (Math.abs(yaw - this.field_70177_z) <= 180.0F) {
-                        this.field_70177_z += yaw > this.field_70177_z ? rotSpeed : -rotSpeed;
+                  if (Math.abs(yaw - this.rotationYaw) >= rotSpeed) {
+                     if (Math.abs(yaw - this.rotationYaw) <= 180.0F) {
+                        this.rotationYaw = this.rotationYaw + (yaw > this.rotationYaw ? rotSpeed : -rotSpeed);
                      } else {
-                        this.field_70177_z += yaw > this.field_70177_z ? -rotSpeed : rotSpeed;
+                        this.rotationYaw = this.rotationYaw + (yaw > this.rotationYaw ? -rotSpeed : rotSpeed);
                      }
                   }
 
-                  this.field_70759_as = this.field_70177_z;
+                  this.rotationYawHead = this.rotationYaw;
                   this.targetPrevPosX = this.targetEntity.posX;
                   this.targetPrevPosY = this.targetEntity.posY;
                   this.targetPrevPosZ = this.targetEntity.posZ;
                } else {
-                  this.field_70125_A *= 0.95F;
+                  this.rotationPitch *= 0.95F;
                }
-
             }
          }
       }
@@ -335,8 +327,8 @@ public class MCH_EntityGunner extends EntityLivingBase {
          double d0 = entity.posX - pos.x;
          double d1 = entity.posY - pos.y;
          double d2 = entity.posZ - pos.z;
-         double d3 = (double)MathHelper.func_76133_a(d0 * d0 + d2 * d2);
-         float pitch = (float)(-(Math.atan2(d1, d3) * 180.0D / 3.141592653589793D));
+         double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
+         float pitch = (float)(-(Math.atan2(d1, d3) * 180.0 / Math.PI));
          MCH_AircraftInfo ai = ac.getAcInfo();
          if (ac instanceof MCH_EntityVehicle && ac.isPilot(this) && Math.abs(ai.minRotationPitch) + Math.abs(ai.maxRotationPitch) > 0.0F) {
             if (pitch < ai.minRotationPitch) {
@@ -369,7 +361,9 @@ public class MCH_EntityGunner extends EntityLivingBase {
 
    public Vec3d getGunnerWeaponPos(MCH_EntityAircraft ac, MCH_WeaponSet ws) {
       MCH_SeatInfo seatInfo = ac.getSeatInfo(this);
-      return (seatInfo == null || !seatInfo.rotSeat) && !(ac instanceof MCH_EntityVehicle) ? ac.getTransformedPosition(ws.getCurrentWeapon().position) : ac.calcOnTurretPos(ws.getCurrentWeapon().position).func_72441_c(ac.posX, ac.posY, ac.posZ);
+      return (seatInfo == null || !seatInfo.rotSeat) && !(ac instanceof MCH_EntityVehicle)
+         ? ac.getTransformedPosition(ws.getCurrentWeapon().position)
+         : ac.calcOnTurretPos(ws.getCurrentWeapon().position).add(ac.posX, ac.posY, ac.posZ);
    }
 
    private boolean isInAttackable(EntityLivingBase entity, MCH_EntityAircraft ac, MCH_WeaponSet ws, Vec3d pos) {
@@ -381,14 +375,14 @@ public class MCH_EntityGunner extends EntityLivingBase {
                return true;
             } else {
                MCH_AircraftInfo.Weapon wi = ac.getAcInfo().getWeaponById(ac.getCurrentWeaponID(this));
-               Vec3d v1 = new Vec3d(0.0D, 0.0D, 1.0D);
+               Vec3d v1 = new Vec3d(0.0, 0.0, 1.0);
                float yaw = -ac.getRotYaw() + (wi.maxYaw + wi.minYaw) / 2.0F - wi.defaultYaw;
-               v1 = v1.func_178785_b(yaw * 3.1415927F / 180.0F);
-               Vec3d v2 = (new Vec3d(entity.posX - pos.x, 0.0D, entity.posZ - pos.z)).normalize();
-               double dot = v1.func_72430_b(v2);
+               v1 = v1.rotateYaw(yaw * (float) Math.PI / 180.0F);
+               Vec3d v2 = new Vec3d(entity.posX - pos.x, 0.0, entity.posZ - pos.z).normalize();
+               double dot = v1.dotProduct(v2);
                double rad = Math.acos(dot);
-               double deg = rad * 180.0D / 3.141592653589793D;
-               return deg < (double)(Math.abs(wi.maxYaw - wi.minYaw) / 2.0F);
+               double deg = rad * 180.0 / Math.PI;
+               return deg < Math.abs(wi.maxYaw - wi.minYaw) / 2.0F;
             }
          } catch (Exception var15) {
             return false;
@@ -398,27 +392,29 @@ public class MCH_EntityGunner extends EntityLivingBase {
 
    @Nullable
    public MCH_EntityAircraft getAc() {
-      if (this.func_184187_bx() == null) {
+      if (this.getRidingEntity() == null) {
          return null;
       } else {
-         return this.func_184187_bx() instanceof MCH_EntityAircraft ? (MCH_EntityAircraft)this.func_184187_bx() : (this.func_184187_bx() instanceof MCH_EntitySeat ? ((MCH_EntitySeat)this.func_184187_bx()).getParent() : null);
+         return this.getRidingEntity() instanceof MCH_EntityAircraft
+            ? (MCH_EntityAircraft)this.getRidingEntity()
+            : (this.getRidingEntity() instanceof MCH_EntitySeat ? ((MCH_EntitySeat)this.getRidingEntity()).getParent() : null);
       }
    }
 
-   public void func_70014_b(NBTTagCompound nbt) {
-      super.func_70014_b(nbt);
+   public void writeEntityToNBT(NBTTagCompound nbt) {
+      super.writeEntityToNBT(nbt);
       nbt.setBoolean("Creative", this.isCreative);
       nbt.setString("OwnerUUID", this.ownerUUID);
       nbt.setString("TeamName", this.getTeamName());
       nbt.setInteger("TargetType", this.targetType);
    }
 
-   public void func_70037_a(NBTTagCompound nbt) {
-      super.func_70037_a(nbt);
+   public void readEntityFromNBT(NBTTagCompound nbt) {
+      super.readEntityFromNBT(nbt);
       this.isCreative = nbt.getBoolean("Creative");
-      this.ownerUUID = nbt.func_74779_i("OwnerUUID");
-      this.setTeamName(nbt.func_74779_i("TeamName"));
-      this.targetType = nbt.func_74762_e("TargetType");
+      this.ownerUUID = nbt.getString("OwnerUUID");
+      this.setTeamName(nbt.getString("TeamName"));
+      this.targetType = nbt.getInteger("TargetType");
    }
 
    @Nullable
@@ -426,43 +422,39 @@ public class MCH_EntityGunner extends EntityLivingBase {
       return null;
    }
 
-   public void func_70106_y() {
-      if (!this.world.isRemote && !this.field_70128_L && !this.isCreative) {
+   public void setDead() {
+      if (!this.world.isRemote && !this.isDead && !this.isCreative) {
          if (this.targetType == 0) {
-            this.func_145779_a(MCH_MOD.itemSpawnGunnerVsMonster, 1);
+            this.dropItem(MCH_MOD.itemSpawnGunnerVsMonster, 1);
          } else {
-            this.func_145779_a(MCH_MOD.itemSpawnGunnerVsPlayer, 1);
+            this.dropItem(MCH_MOD.itemSpawnGunnerVsPlayer, 1);
          }
       }
 
-      super.func_70106_y();
+      super.setDead();
       MCH_Lib.DbgLog(this.world, "MCH_EntityGunner.setDead type=%d :" + this.toString(), this.targetType);
    }
 
-   public boolean func_70097_a(DamageSource ds, float amount) {
-      if (ds == DamageSource.field_76380_i) {
-         this.func_70106_y();
+   public boolean attackEntityFrom(DamageSource ds, float amount) {
+      if (ds == DamageSource.OUT_OF_WORLD) {
+         this.setDead();
       }
 
-      return super.func_70097_a(ds, amount);
+      return super.attackEntityFrom(ds, amount);
    }
 
-   public ItemStack func_184582_a(EntityEquipmentSlot slotIn) {
-      return ItemStack.field_190927_a;
+   public ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn) {
+      return ItemStack.EMPTY;
    }
 
-   public void func_184201_a(EntityEquipmentSlot slotIn, ItemStack stack) {
+   public void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack) {
    }
 
-   public Iterable<ItemStack> func_184193_aE() {
+   public Iterable<ItemStack> getArmorInventoryList() {
       return Collections.emptyList();
    }
 
-   public EnumHandSide func_184591_cq() {
+   public EnumHandSide getPrimaryHand() {
       return EnumHandSide.RIGHT;
-   }
-
-   static {
-      TEAM_NAME = EntityDataManager.createKey(MCH_EntityGunner.class, DataSerializers.STRING);
    }
 }

@@ -14,9 +14,9 @@ public class MCH_WeaponTargetingPod extends MCH_WeaponBase {
       if (w.isRemote) {
          this.interval -= 10;
       }
-
    }
 
+   @Override
    public boolean shot(MCH_WeaponParam prm) {
       if (!this.worldObj.isRemote) {
          MCH_WeaponInfo info = this.getInfo();
@@ -26,7 +26,9 @@ public class MCH_WeaponTargetingPod extends MCH_WeaponBase {
             } else {
                this.playSound(prm.user, "ng");
             }
-         } else if (MCH_Multiplay.spotEntity((EntityLivingBase)prm.user, (MCH_EntityAircraft)prm.entity, prm.posX, prm.posY, prm.posZ, info.target, info.length, info.markTime, info.angle)) {
+         } else if (MCH_Multiplay.spotEntity(
+            (EntityLivingBase)prm.user, (MCH_EntityAircraft)prm.entity, prm.posX, prm.posY, prm.posZ, info.target, info.length, info.markTime, info.angle
+         )) {
             this.playSound(prm.entity);
          } else {
             this.playSound(prm.entity, "ng");

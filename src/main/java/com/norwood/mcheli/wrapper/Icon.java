@@ -1,6 +1,5 @@
 package com.norwood.mcheli.wrapper;
 
-/** @deprecated */
 @Deprecated
 public class Icon {
    public int getIconWidth() {

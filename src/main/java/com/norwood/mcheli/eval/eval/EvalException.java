@@ -26,15 +26,14 @@ public class EvalException extends RuntimeException {
    protected int msg_code;
    protected String[] msg_opt;
    protected String string;
-   protected int pos;
+   protected int pos = -1;
    protected String word;
 
    public EvalException(int msg, Lex lex) {
-      this(msg, (String[])null, lex);
+      this(msg, null, lex);
    }
 
    public EvalException(int msg, String[] opt, Lex lex) {
-      this.pos = -1;
       this.msg_code = msg;
       this.msg_opt = opt;
       if (lex != null) {
@@ -42,11 +41,11 @@ public class EvalException extends RuntimeException {
          this.pos = lex.getPos();
          this.word = lex.getWord();
       }
-
    }
 
    public EvalException(int msg, String word, String string, int pos, Throwable e) {
-      for(this.pos = -1; e != null && e.getClass() == RuntimeException.class && e.getCause() != null; e = e.getCause()) {
+      while (e != null && e.getClass() == RuntimeException.class && e.getCause() != null) {
+         e = e.getCause();
       }
 
       if (e != null) {
@@ -80,47 +79,47 @@ public class EvalException extends RuntimeException {
    }
 
    public static String getErrCodeMessage(int code) {
-      switch(code) {
-      case 1001:
-         return "演算子「%0」が在りません。";
-      case 1002:
-         return "演算子の文法エラーです。";
-      case 1003:
-         return "未対応の識別子です。";
-      case 1004:
-         return "式の解釈の途中で文字列が終了しています。";
-      case 1005:
-         return "式の解釈が終わりましたが文字列が残っています。";
-      case 1101:
-         return "関数として使用できません。";
-      case 2001:
-         return "禁止されているメソッドを呼び出しました。";
-      case 2002:
-         return "変数として使用できません。";
-      case 2003:
-         return "数値として使用できません。";
-      case 2004:
-         return "代入できません。";
-      case 2101:
-         return "変数の値が取得できません。";
-      case 2102:
-         return "変数に代入できません。";
-      case 2103:
-         return "変数が未定義です。";
-      case 2104:
-         return "オブジェクトが未定義です。";
-      case 2201:
-         return "配列の値が取得できません。";
-      case 2202:
-         return "配列に代入できません。";
-      case 2301:
-         return "フィールドの値が取得できません。";
-      case 2302:
-         return "フィールドに代入できません。";
-      case 2401:
-         return "関数の呼び出しに失敗しました。";
-      default:
-         return "エラーが発生しました。";
+      switch (code) {
+         case 1001:
+            return "演算子「%0」が在りません。";
+         case 1002:
+            return "演算子の文法エラーです。";
+         case 1003:
+            return "未対応の識別子です。";
+         case 1004:
+            return "式の解釈の途中で文字列が終了しています。";
+         case 1005:
+            return "式の解釈が終わりましたが文字列が残っています。";
+         case 1101:
+            return "関数として使用できません。";
+         case 2001:
+            return "禁止されているメソッドを呼び出しました。";
+         case 2002:
+            return "変数として使用できません。";
+         case 2003:
+            return "数値として使用できません。";
+         case 2004:
+            return "代入できません。";
+         case 2101:
+            return "変数の値が取得できません。";
+         case 2102:
+            return "変数に代入できません。";
+         case 2103:
+            return "変数が未定義です。";
+         case 2104:
+            return "オブジェクトが未定義です。";
+         case 2201:
+            return "配列の値が取得できません。";
+         case 2202:
+            return "配列に代入できません。";
+         case 2301:
+            return "フィールドの値が取得できません。";
+         case 2302:
+            return "フィールドに代入できません。";
+         case 2401:
+            return "関数の呼び出しに失敗しました。";
+         default:
+            return "エラーが発生しました。";
       }
    }
 
@@ -154,6 +153,7 @@ public class EvalException extends RuntimeException {
       return fmt.toString();
    }
 
+   @Override
    public String toString() {
       String msg = getErrCodeMessage(this.msg_code);
       String fmt = this.getDefaultFormat(msg);
@@ -164,7 +164,7 @@ public class EvalException extends RuntimeException {
       StringBuffer sb = new StringBuffer(256);
       int len = fmt.length();
 
-      for(int i = 0; i < len; ++i) {
+      for (int i = 0; i < len; i++) {
          char c = fmt.charAt(i);
          if (c != '%') {
             sb.append(c);
@@ -174,45 +174,44 @@ public class EvalException extends RuntimeException {
                break;
             }
 
-            ++i;
-            c = fmt.charAt(i);
-            switch(c) {
-            case '%':
-               sb.append('%');
-               break;
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
-               int n = c - 48;
-               if (this.msg_opt != null && n < this.msg_opt.length) {
-                  sb.append(this.msg_opt[n]);
-               }
-               break;
-            case 'c':
-               sb.append(this.msg_code);
-               break;
-            case 'e':
-               sb.append(this.getCause());
-               break;
-            case 'p':
-               sb.append(this.pos);
-               break;
-            case 's':
-               sb.append(this.string);
-               break;
-            case 'w':
-               sb.append(this.word);
-               break;
-            default:
-               sb.append('%');
-               sb.append(c);
+            c = fmt.charAt(++i);
+            switch (c) {
+               case '%':
+                  sb.append('%');
+                  break;
+               case '0':
+               case '1':
+               case '2':
+               case '3':
+               case '4':
+               case '5':
+               case '6':
+               case '7':
+               case '8':
+               case '9':
+                  int n = c - '0';
+                  if (this.msg_opt != null && n < this.msg_opt.length) {
+                     sb.append(this.msg_opt[n]);
+                  }
+                  break;
+               case 'c':
+                  sb.append(this.msg_code);
+                  break;
+               case 'e':
+                  sb.append(this.getCause());
+                  break;
+               case 'p':
+                  sb.append(this.pos);
+                  break;
+               case 's':
+                  sb.append(this.string);
+                  break;
+               case 'w':
+                  sb.append(this.word);
+                  break;
+               default:
+                  sb.append('%');
+                  sb.append(c);
             }
          }
       }

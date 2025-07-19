@@ -15,15 +15,15 @@ public class MqoModel implements DebugInfoObject {
       this.faceNum = faces;
    }
 
+   @Override
    public String toString() {
       return "MqoModel[verts:" + this.vertexNum + ", face:" + this.faceNum + ", obj:" + this.groupObjects + "]";
    }
 
+   @Override
    public void printInfo(PrintStreamWrapper stream) {
       stream.push("Mqo Model Info:");
-      this.groupObjects.forEach((g) -> {
-         g.printInfo(stream);
-      });
+      this.groupObjects.forEach(g -> g.printInfo(stream));
       stream.pop();
       stream.println();
    }

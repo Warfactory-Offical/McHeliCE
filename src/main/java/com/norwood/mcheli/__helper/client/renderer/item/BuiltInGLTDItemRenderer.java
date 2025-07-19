@@ -11,10 +11,12 @@ import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class BuiltInGLTDItemRenderer implements IItemModelRenderer {
+   @Override
    public boolean shouldRenderer(ItemStack itemStack, TransformType transformType) {
       return IItemModelRenderer.isFirstPerson(transformType) || IItemModelRenderer.isThirdPerson(transformType) || transformType == TransformType.GROUND;
    }
 
+   @Override
    public void renderItem(ItemStack itemStack, EntityLivingBase entityLivingBase, TransformType transformType, float partialTicks) {
       GL11.glPushMatrix();
       GL11.glEnable(2884);

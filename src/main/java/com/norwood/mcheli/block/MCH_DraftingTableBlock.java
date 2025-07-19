@@ -32,39 +32,46 @@ public class MCH_DraftingTableBlock extends W_BlockContainer implements ITileEnt
    private final boolean isLighting;
 
    public MCH_DraftingTableBlock(int blockId, boolean isOn) {
-      super(blockId, Material.field_151573_f);
-      this.func_180632_j(this.field_176227_L.func_177621_b().func_177226_a(DIRECTION8, EnumDirection8.NORTH));
-      this.func_149672_a(SoundType.field_185852_e);
-      this.func_149711_c(0.2F);
+      super(blockId, Material.IRON);
+      this.setDefaultState(this.blockState.getBaseState().withProperty(DIRECTION8, EnumDirection8.NORTH));
+      this.setSoundType(SoundType.METAL);
+      this.setHardness(0.2F);
       this.isLighting = isOn;
       if (isOn) {
-         this.func_149715_a(1.0F);
+         this.setLightLevel(1.0F);
       }
-
    }
 
-   public boolean func_180639_a(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float par7, float par8, float par9) {
+   public boolean onBlockActivated(
+      World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float par7, float par8, float par9
+   ) {
       if (!world.isRemote) {
-         if (!player.func_70093_af()) {
-            MCH_Lib.DbgLog(player.world, "MCH_DraftingTableGui.MCH_DraftingTableGui OPEN GUI (%d, %d, %d)", pos.func_177958_n(), pos.func_177956_o(), pos.func_177952_p());
-            player.openGui(MCH_MOD.instance, 4, world, pos.func_177958_n(), pos.func_177956_o(), pos.func_177952_p());
+         if (!player.isSneaking()) {
+            MCH_Lib.DbgLog(
+               player.world,
+               "MCH_DraftingTableGui.MCH_DraftingTableGui OPEN GUI (%d, %d, %d)",
+               pos.getX(),
+               pos.getY(),
+               pos.getZ()
+            );
+            player.openGui(MCH_MOD.instance, 4, world, pos.getX(), pos.getY(), pos.getZ());
          } else {
-            EnumDirection8 dir = (EnumDirection8)state.func_177229_b(DIRECTION8);
+            EnumDirection8 dir = (EnumDirection8)state.getValue(DIRECTION8);
             MCH_Lib.DbgLog(world, "MCH_DraftingTableBlock.onBlockActivated:yaw=%d Light %s", (int)dir.getAngle(), this.isLighting ? "OFF->ON" : "ON->OFF");
             if (this.isLighting) {
-               world.func_180501_a(pos, MCH_MOD.blockDraftingTable.func_176223_P().func_177226_a(DIRECTION8, dir), 2);
+               world.setBlockState(pos, MCH_MOD.blockDraftingTable.getDefaultState().withProperty(DIRECTION8, dir), 2);
             } else {
-               world.func_180501_a(pos, MCH_MOD.blockDraftingTableLit.func_176223_P().func_177226_a(DIRECTION8, dir), 2);
+               world.setBlockState(pos, MCH_MOD.blockDraftingTableLit.getDefaultState().withProperty(DIRECTION8, dir), 2);
             }
 
-            world.func_184133_a((EntityPlayer)null, pos, SoundEvents.field_187909_gi, SoundCategory.BLOCKS, 0.3F, 0.5F);
+            world.playSound(null, pos, SoundEvents.UI_BUTTON_CLICK, SoundCategory.BLOCKS, 0.3F, 0.5F);
          }
       }
 
       return true;
    }
 
-   public TileEntity func_149915_a(World world, int a) {
+   public TileEntity createNewTileEntity(World world, int a) {
       return new MCH_DraftingTableTileEntity();
    }
 
@@ -97,18 +104,18 @@ public class MCH_DraftingTableBlock extends W_BlockContainer implements ITileEnt
    }
 
    public IBlockState func_180642_a(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-      return this.func_176223_P().func_177226_a(DIRECTION8, EnumDirection8.fromAngle(MCH_Lib.getRotate360((double)placer.field_70177_z)));
+      return this.getDefaultState().withProperty(DIRECTION8, EnumDirection8.fromAngle(MCH_Lib.getRotate360(placer.rotationYaw)));
    }
 
    public void func_180633_a(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack itemStack) {
-      float pyaw = (float)MCH_Lib.getRotate360((double)entity.field_70177_z);
+      float pyaw = (float)MCH_Lib.getRotate360(entity.rotationYaw);
       pyaw += 22.5F;
       int yaw = (int)(pyaw / 45.0F);
       if (yaw < 0) {
          yaw = yaw % 8 + 8;
       }
 
-      world.func_180501_a(pos, state.func_177226_a(DIRECTION8, EnumDirection8.fromAngle(MCH_Lib.getRotate360((double)entity.field_70177_z))), 2);
+      world.setBlockState(pos, state.withProperty(DIRECTION8, EnumDirection8.fromAngle(MCH_Lib.getRotate360(entity.rotationYaw))), 2);
       MCH_Lib.DbgLog(world, "MCH_DraftingTableBlock.onBlockPlacedBy:yaw=%d", yaw);
    }
 
@@ -129,11 +136,11 @@ public class MCH_DraftingTableBlock extends W_BlockContainer implements ITileEnt
    }
 
    public int func_176201_c(IBlockState state) {
-      return ((EnumDirection8)state.func_177229_b(DIRECTION8)).getIndex();
+      return ((EnumDirection8)state.getValue(DIRECTION8)).getIndex();
    }
 
    public IBlockState func_176203_a(int meta) {
-      return this.func_176223_P().func_177226_a(DIRECTION8, EnumDirection8.getFront(meta));
+      return this.getDefaultState().withProperty(DIRECTION8, EnumDirection8.getFront(meta));
    }
 
    protected BlockStateContainer func_180661_e() {

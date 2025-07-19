@@ -13,28 +13,28 @@ public abstract class MCH_EntityParticleBase extends W_EntityFX {
 
    public MCH_EntityParticleBase(World par1World, double x, double y, double z, double mx, double my, double mz) {
       super(par1World, x, y, z, mx, my, mz);
-      this.field_187129_i = mx;
-      this.field_187130_j = my;
-      this.field_187131_k = mz;
+      this.motionX = mx;
+      this.motionY = my;
+      this.motionZ = mz;
       this.isEffectedWind = false;
-      this.particleMaxScale = this.field_70544_f;
+      this.particleMaxScale = this.particleScale;
    }
 
    public MCH_EntityParticleBase setParticleScale(float scale) {
-      this.field_70544_f = scale;
+      this.particleScale = scale;
       return this;
    }
 
    public void setParticleMaxAge(int age) {
-      this.field_70547_e = age;
+      this.particleMaxAge = age;
    }
 
-   public void func_70536_a(int par1) {
-      this.field_94054_b = par1 % 8;
-      this.field_94055_c = par1 / 8;
+   public void setParticleTextureIndex(int par1) {
+      this.particleTextureIndexX = par1 % 8;
+      this.particleTextureIndexY = par1 / 8;
    }
 
-   public int func_70537_b() {
+   public int getFXLayer() {
       return 2;
    }
 }

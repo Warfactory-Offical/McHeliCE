@@ -12,22 +12,27 @@ public abstract class WordExpression extends AbstractExpression {
       this.word = from.word;
    }
 
+   @Override
    protected String getWord() {
       return this.word;
    }
 
+   @Override
    protected void setWord(String word) {
       this.word = word;
    }
 
+   @Override
    protected int getCols() {
       return 0;
    }
 
+   @Override
    protected int getFirstPos() {
       return this.pos;
    }
 
+   @Override
    protected void search() {
       this.share.srch.search(this);
       if (!this.share.srch.end()) {
@@ -35,14 +40,17 @@ public abstract class WordExpression extends AbstractExpression {
       }
    }
 
+   @Override
    protected AbstractExpression replace() {
       return this.share.repl.replace0(this);
    }
 
+   @Override
    protected AbstractExpression replaceVar() {
       return this.share.repl.replaceVar0(this);
    }
 
+   @Override
    public boolean equals(Object obj) {
       if (obj instanceof WordExpression) {
          WordExpression e = (WordExpression)obj;
@@ -54,14 +62,16 @@ public abstract class WordExpression extends AbstractExpression {
       return false;
    }
 
+   @Override
    public int hashCode() {
       return this.word.hashCode();
    }
 
+   @Override
    public void dump(int n) {
       StringBuffer sb = new StringBuffer();
 
-      for(int i = 0; i < n; ++i) {
+      for (int i = 0; i < n; i++) {
          sb.append(' ');
       }
 
@@ -69,6 +79,7 @@ public abstract class WordExpression extends AbstractExpression {
       System.out.println(sb.toString());
    }
 
+   @Override
    public String toString() {
       return this.word;
    }

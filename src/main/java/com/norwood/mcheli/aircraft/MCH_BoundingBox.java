@@ -15,7 +15,7 @@ public class MCH_BoundingBox {
    public final float width;
    public final float height;
    public Vec3d rotatedOffset;
-   public List<Vec3d> pos = new ArrayList();
+   public List<Vec3d> pos = new ArrayList<>();
    public final float damegeFactor;
 
    public MCH_BoundingBox(double x, double y, double z, float w, float h, float df) {
@@ -25,17 +25,16 @@ public class MCH_BoundingBox {
       this.width = w;
       this.height = h;
       this.damegeFactor = df;
-      this.boundingBox = new AxisAlignedBB(x - (double)(w / 2.0F), y - (double)(h / 2.0F), z - (double)(w / 2.0F), x + (double)(w / 2.0F), y + (double)(h / 2.0F), z + (double)(w / 2.0F));
-      this.updatePosition(0.0D, 0.0D, 0.0D, 0.0F, 0.0F, 0.0F);
+      this.boundingBox = new AxisAlignedBB(x - w / 2.0F, y - h / 2.0F, z - w / 2.0F, x + w / 2.0F, y + h / 2.0F, z + w / 2.0F);
+      this.updatePosition(0.0, 0.0, 0.0, 0.0F, 0.0F, 0.0F);
    }
 
    public void add(double x, double y, double z) {
       this.pos.add(0, new Vec3d(x, y, z));
 
-      while(this.pos.size() > MCH_Config.HitBoxDelayTick.prmInt + 2) {
+      while (this.pos.size() > MCH_Config.HitBoxDelayTick.prmInt + 2) {
          this.pos.remove(MCH_Config.HitBoxDelayTick.prmInt + 2);
       }
-
    }
 
    public MCH_BoundingBox copy() {
@@ -47,14 +46,14 @@ public class MCH_BoundingBox {
       this.rotatedOffset = MCH_Lib.RotVec3(v, -yaw, -pitch, -roll);
       this.add(posX + this.rotatedOffset.x, posY + this.rotatedOffset.y, posZ + this.rotatedOffset.z);
       int index = MCH_Config.HitBoxDelayTick.prmInt;
-      Vec3d cp = index + 0 < this.pos.size() ? (Vec3d)this.pos.get(index + 0) : (Vec3d)this.pos.get(this.pos.size() - 1);
-      Vec3d pp = index + 1 < this.pos.size() ? (Vec3d)this.pos.get(index + 1) : (Vec3d)this.pos.get(this.pos.size() - 1);
-      double sx = ((double)this.width + Math.abs(cp.x - pp.x)) / 2.0D;
-      double sy = ((double)this.height + Math.abs(cp.y - pp.y)) / 2.0D;
-      double sz = ((double)this.width + Math.abs(cp.z - pp.z)) / 2.0D;
-      double x = (cp.x + pp.x) / 2.0D;
-      double y = (cp.y + pp.y) / 2.0D;
-      double z = (cp.z + pp.z) / 2.0D;
+      Vec3d cp = index + 0 < this.pos.size() ? this.pos.get(index + 0) : this.pos.get(this.pos.size() - 1);
+      Vec3d pp = index + 1 < this.pos.size() ? this.pos.get(index + 1) : this.pos.get(this.pos.size() - 1);
+      double sx = (this.width + Math.abs(cp.x - pp.x)) / 2.0;
+      double sy = (this.height + Math.abs(cp.y - pp.y)) / 2.0;
+      double sz = (this.width + Math.abs(cp.z - pp.z)) / 2.0;
+      double x = (cp.x + pp.x) / 2.0;
+      double y = (cp.y + pp.y) / 2.0;
+      double z = (cp.z + pp.z) / 2.0;
       this.boundingBox = new AxisAlignedBB(x - sx, y - sy, z - sz, x + sx, y + sy, z + sz);
    }
 

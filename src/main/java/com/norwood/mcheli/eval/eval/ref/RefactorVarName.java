@@ -14,6 +14,7 @@ public class RefactorVarName extends RefactorAdapter {
       }
    }
 
+   @Override
    public String getNewName(Object target, String name) {
       if (!name.equals(this.oldName)) {
          return null;

@@ -10,7 +10,7 @@ public class MCH_ContainerScoreboard extends Container {
       this.thePlayer = player;
    }
 
-   public boolean func_75145_c(EntityPlayer player) {
+   public boolean canInteractWith(EntityPlayer player) {
       return true;
    }
 }

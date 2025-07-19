@@ -19,16 +19,18 @@ public class MCH_GuiVehicle extends MCH_AircraftCommonGui {
       super(minecraft);
    }
 
+   @Override
    public boolean isDrawGui(EntityPlayer player) {
-      return player.func_184187_bx() != null && player.func_184187_bx() instanceof MCH_EntityVehicle;
+      return player.getRidingEntity() != null && player.getRidingEntity() instanceof MCH_EntityVehicle;
    }
 
+   @Override
    public void drawGui(EntityPlayer player, boolean isThirdPersonView) {
-      if (player.func_184187_bx() != null && player.func_184187_bx() instanceof MCH_EntityVehicle) {
-         MCH_EntityVehicle vehicle = (MCH_EntityVehicle)player.func_184187_bx();
+      if (player.getRidingEntity() != null && player.getRidingEntity() instanceof MCH_EntityVehicle) {
+         MCH_EntityVehicle vehicle = (MCH_EntityVehicle)player.getRidingEntity();
          if (!vehicle.isDestroyed()) {
             int seatID = vehicle.getSeatIdByEntity(player);
-            GL11.glLineWidth((float)scaleFactor);
+            GL11.glLineWidth(scaleFactor);
             if (vehicle.getCameraMode(player) == 1) {
                this.drawNightVisionNoise();
             }
@@ -62,14 +64,19 @@ public class MCH_GuiVehicle extends MCH_AircraftCommonGui {
                this.drawString(msg, RX, this.centerY - 50, c);
             }
 
-            String msg = "Gunner " + (vehicle.getGunnerStatus() ? "ON" : "OFF") + " : " + MCH_KeyName.getDescOrName(MCH_Config.KeyFreeLook.prmInt) + " + " + MCH_KeyName.getDescOrName(MCH_Config.KeyCameraMode.prmInt);
+            String msg = "Gunner "
+               + (vehicle.getGunnerStatus() ? "ON" : "OFF")
+               + " : "
+               + MCH_KeyName.getDescOrName(MCH_Config.KeyFreeLook.prmInt)
+               + " + "
+               + MCH_KeyName.getDescOrName(MCH_Config.KeyCameraMode.prmInt);
             this.drawString(msg, LX, this.centerY - 40, colorActive);
-            if (vehicle.func_70302_i_() <= 0 || vehicle.getTowChainEntity() != null && !vehicle.getTowChainEntity().field_70128_L) {
+            if (vehicle.getSizeInventory() <= 0 || vehicle.getTowChainEntity() != null && !vehicle.getTowChainEntity().isDead) {
                msg = "Drop  : " + MCH_KeyName.getDescOrName(MCH_Config.KeyExtra.prmInt);
                this.drawString(msg, RX, this.centerY - 30, colorActive);
             }
 
-            if (vehicle.canZoom()) {
+            if (vehicle.camera.getCameraZoom() > 1.0F) {
                msg = "Zoom : " + MCH_KeyName.getDescOrName(MCH_Config.KeyZoom.prmInt);
                this.drawString(msg, LX, this.centerY - 80, colorActive);
             }
@@ -96,7 +103,6 @@ public class MCH_GuiVehicle extends MCH_AircraftCommonGui {
                msg = "Dismount : " + MCH_KeyName.getDescOrName(MCH_Config.KeyUnmount.prmInt);
                this.drawString(msg, LX, this.centerY - 40, colorActive);
             }
-
          }
       }
    }

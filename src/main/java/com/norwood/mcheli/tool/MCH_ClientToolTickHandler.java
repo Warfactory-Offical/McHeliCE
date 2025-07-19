@@ -22,6 +22,7 @@ public class MCH_ClientToolTickHandler extends MCH_ClientTickHandlerBase {
       this.updateKeybind(config);
    }
 
+   @Override
    public void updateKeybind(MCH_Config config) {
       this.KeyUseItem = new MCH_Key(MCH_Config.KeyAttack.prmInt);
       this.KeyZoomIn = new MCH_Key(MCH_Config.KeyZoom.prmInt);
@@ -30,12 +31,9 @@ public class MCH_ClientToolTickHandler extends MCH_ClientTickHandlerBase {
       this.Keys = new MCH_Key[]{this.KeyUseItem, this.KeyZoomIn, this.KeyZoomOut, this.KeySwitchMode};
    }
 
+   @Override
    protected void onTick(boolean inGUI) {
-      MCH_Key[] var2 = this.Keys;
-      int var3 = var2.length;
-
-      for(int var4 = 0; var4 < var3; ++var4) {
-         MCH_Key k = var2[var4];
+      for (MCH_Key k : this.Keys) {
          k.update();
       }
 
@@ -45,25 +43,25 @@ public class MCH_ClientToolTickHandler extends MCH_ClientTickHandlerBase {
 
    private void onTick_ItemRangeFinder(boolean inGUI, EntityPlayer player) {
       if (MCH_ItemRangeFinder.rangeFinderUseCooldown > 0) {
-         --MCH_ItemRangeFinder.rangeFinderUseCooldown;
+         MCH_ItemRangeFinder.rangeFinderUseCooldown--;
       }
 
-      ItemStack itemStack = ItemStack.field_190927_a;
+      ItemStack itemStack = ItemStack.EMPTY;
       if (player != null) {
-         itemStack = player.func_184614_ca();
-         if (!itemStack.func_190926_b() && itemStack.func_77973_b() instanceof MCH_ItemRangeFinder) {
-            boolean usingItem = player.func_184612_cw() > 8 && MCH_ItemRangeFinder.canUse(player);
+         itemStack = player.getHeldItemMainhand();
+         if (!itemStack.isEmpty() && itemStack.getItem() instanceof MCH_ItemRangeFinder) {
+            boolean usingItem = player.getItemInUseMaxCount() > 8 && MCH_ItemRangeFinder.canUse(player);
             if (!MCH_ItemRangeFinder.continueUsingItem && usingItem) {
                MCH_ItemRangeFinder.onStartUseItem();
             }
 
             if (usingItem) {
                if (this.KeyUseItem.isKeyDown()) {
-                  ((MCH_ItemRangeFinder)itemStack.func_77973_b()).spotEntity(player, itemStack);
+                  ((MCH_ItemRangeFinder)itemStack.getItem()).spotEntity(player, itemStack);
                }
 
                if (this.KeyZoomIn.isKeyPress() && MCH_ItemRangeFinder.zoom < 10.0F) {
-                  MCH_ItemRangeFinder.zoom += MCH_ItemRangeFinder.zoom / 10.0F;
+                  MCH_ItemRangeFinder.zoom = MCH_ItemRangeFinder.zoom + MCH_ItemRangeFinder.zoom / 10.0F;
                   if (MCH_ItemRangeFinder.zoom > 10.0F) {
                      MCH_ItemRangeFinder.zoom = 10.0F;
                   }
@@ -73,7 +71,7 @@ public class MCH_ClientToolTickHandler extends MCH_ClientTickHandlerBase {
                }
 
                if (this.KeyZoomOut.isKeyPress() && MCH_ItemRangeFinder.zoom > 1.2F) {
-                  MCH_ItemRangeFinder.zoom -= MCH_ItemRangeFinder.zoom / 10.0F;
+                  MCH_ItemRangeFinder.zoom = MCH_ItemRangeFinder.zoom - MCH_ItemRangeFinder.zoom / 10.0F;
                   if (MCH_ItemRangeFinder.zoom < 1.2F) {
                      MCH_ItemRangeFinder.zoom = 1.2F;
                   }
@@ -85,7 +83,7 @@ public class MCH_ClientToolTickHandler extends MCH_ClientTickHandlerBase {
                if (this.KeySwitchMode.isKeyDown()) {
                   W_McClient.MOD_playSoundFX("lockon", 1.0F, 0.9F);
                   MCH_ItemRangeFinder.mode = (MCH_ItemRangeFinder.mode + 1) % 3;
-                  if (this.mc.func_71356_B() && MCH_ItemRangeFinder.mode == 0) {
+                  if (this.mc.isSingleplayer() && MCH_ItemRangeFinder.mode == 0) {
                      MCH_ItemRangeFinder.mode = 1;
                   }
                }
@@ -93,26 +91,24 @@ public class MCH_ClientToolTickHandler extends MCH_ClientTickHandlerBase {
          }
       }
 
-      if (MCH_ItemRangeFinder.continueUsingItem && (itemStack.func_190926_b() || !(itemStack.func_77973_b() instanceof MCH_ItemRangeFinder))) {
+      if (MCH_ItemRangeFinder.continueUsingItem && (itemStack.isEmpty() || !(itemStack.getItem() instanceof MCH_ItemRangeFinder))) {
          MCH_ItemRangeFinder.onStopUseItem();
       }
-
    }
 
    private void onTick_ItemWrench(boolean inGUI, EntityPlayer player) {
       if (player != null) {
-         ItemStack itemStack = player.func_184614_ca();
-         if (!itemStack.func_190926_b() && itemStack.func_77973_b() instanceof MCH_ItemWrench) {
-            int maxdm = itemStack.func_77958_k();
-            int dm = itemStack.func_77960_j();
+         ItemStack itemStack = player.getHeldItemMainhand();
+         if (!itemStack.isEmpty() && itemStack.getItem() instanceof MCH_ItemWrench) {
+            int maxdm = itemStack.getMaxDamage();
+            int dm = itemStack.getMetadata();
             if (dm <= maxdm) {
                ItemStack renderItemstack = W_Reflection.getItemRendererMainHand();
-               if (renderItemstack.func_190926_b() || itemStack.func_77973_b() == renderItemstack.func_77973_b()) {
-                  W_Reflection.setItemRendererMainHand(player.field_71071_by.func_70448_g());
+               if (renderItemstack.isEmpty() || itemStack.getItem() == renderItemstack.getItem()) {
+                  W_Reflection.setItemRendererMainHand(player.inventory.getCurrentItem());
                }
             }
          }
-
       }
    }
 }

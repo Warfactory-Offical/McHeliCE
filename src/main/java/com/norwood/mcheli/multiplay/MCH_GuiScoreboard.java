@@ -2,7 +2,6 @@ package com.norwood.mcheli.multiplay;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import com.norwood.mcheli.wrapper.W_GuiButton;
 import com.norwood.mcheli.wrapper.W_GuiContainer;
@@ -25,54 +24,45 @@ public class MCH_GuiScoreboard extends W_GuiContainer implements MCH_IGuiScorebo
       this.thePlayer = player;
    }
 
-   public void func_73866_w_() {
+   public void initGui() {
       Keyboard.enableRepeatEvents(true);
-      super.func_73866_w_();
-      this.field_146292_n.clear();
-      this.field_146293_o.clear();
-      this.field_147003_i = 0;
-      this.field_147009_r = 0;
-      this.listScreen = new HashMap();
+      super.initGui();
+      this.buttonList.clear();
+      this.labelList.clear();
+      this.guiLeft = 0;
+      this.guiTop = 0;
+      this.listScreen = new HashMap<>();
       this.listScreen.put(MCH_GuiScoreboard_Base.SCREEN_ID.MAIN, new MCH_GuiScoreboard_Main(this, this.thePlayer));
       this.listScreen.put(MCH_GuiScoreboard_Base.SCREEN_ID.CREATE_TEAM, new MCH_GuiScoreboard_CreateTeam(this, this.thePlayer));
-      Iterator var1 = this.listScreen.values().iterator();
 
-      while(var1.hasNext()) {
-         MCH_GuiScoreboard_Base s = (MCH_GuiScoreboard_Base)var1.next();
-         s.initGui(this.field_146292_n, this);
+      for (MCH_GuiScoreboard_Base s : this.listScreen.values()) {
+         s.initGui(this.buttonList, this);
       }
 
-      this.lastTeamNum = this.field_146297_k.world.func_96441_U().func_96525_g().size();
+      this.lastTeamNum = this.mc.world.getScoreboard().getTeams().size();
       this.switchScreen(MCH_GuiScoreboard_Base.SCREEN_ID.MAIN);
    }
 
-   public void func_73876_c() {
-      super.func_73876_c();
-      int nowTeamNum = this.field_146297_k.world.func_96441_U().func_96525_g().size();
+   public void updateScreen() {
+      super.updateScreen();
+      int nowTeamNum = this.mc.world.getScoreboard().getTeams().size();
       if (this.lastTeamNum != nowTeamNum) {
          this.lastTeamNum = nowTeamNum;
-         this.func_73866_w_();
+         this.initGui();
       }
 
-      Iterator var2 = this.listScreen.values().iterator();
-
-      while(var2.hasNext()) {
-         MCH_GuiScoreboard_Base s = (MCH_GuiScoreboard_Base)var2.next();
-
+      for (MCH_GuiScoreboard_Base s : this.listScreen.values()) {
          try {
-            s.updateScreenButtons(this.field_146292_n);
-            s.func_73876_c();
+            s.updateScreenButtons(this.buttonList);
+            s.updateScreen();
          } catch (Exception var5) {
          }
       }
-
    }
 
+   @Override
    public void switchScreen(MCH_GuiScoreboard_Base.SCREEN_ID id) {
-      Iterator var2 = this.listScreen.values().iterator();
-
-      while(var2.hasNext()) {
-         MCH_GuiScoreboard_Base b = (MCH_GuiScoreboard_Base)var2.next();
+      for (MCH_GuiScoreboard_Base b : this.listScreen.values()) {
          b.leaveScreen();
       }
 
@@ -81,44 +71,38 @@ public class MCH_GuiScoreboard extends W_GuiContainer implements MCH_IGuiScorebo
    }
 
    private MCH_GuiScoreboard_Base getCurrentScreen() {
-      return (MCH_GuiScoreboard_Base)this.listScreen.get(this.screenID);
+      return this.listScreen.get(this.screenID);
    }
 
    public static void setVisible(Object g, boolean v) {
       if (g instanceof GuiButton) {
-         ((GuiButton)g).field_146125_m = v;
+         ((GuiButton)g).visible = v;
       }
 
       if (g instanceof GuiTextField) {
-         ((GuiTextField)g).func_146189_e(v);
+         ((GuiTextField)g).setVisible(v);
       }
-
    }
 
-   protected void func_73869_a(char c, int code) throws IOException {
+   protected void keyTyped(char c, int code) throws IOException {
       this.getCurrentScreen().keyTypedScreen(c, code);
    }
 
-   protected void func_73864_a(int mouseX, int mouseY, int mouseButton) throws IOException {
+   protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
       try {
-         Iterator var4 = this.listScreen.values().iterator();
-
-         while(var4.hasNext()) {
-            MCH_GuiScoreboard_Base s = (MCH_GuiScoreboard_Base)var4.next();
+         for (MCH_GuiScoreboard_Base s : this.listScreen.values()) {
             s.mouseClickedScreen(mouseX, mouseY, mouseButton);
          }
 
-         super.func_73864_a(mouseX, mouseY, mouseButton);
+         super.mouseClicked(mouseX, mouseY, mouseButton);
       } catch (Exception var6) {
       }
-
    }
 
-   protected void func_146284_a(GuiButton btn) throws IOException {
-      if (btn != null && btn.field_146124_l) {
+   protected void actionPerformed(GuiButton btn) throws IOException {
+      if (btn != null && btn.enabled) {
          this.getCurrentScreen().actionPerformedScreen(btn);
       }
-
    }
 
    public void func_146276_q_() {
@@ -130,39 +114,33 @@ public class MCH_GuiScoreboard extends W_GuiContainer implements MCH_IGuiScorebo
       GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
    }
 
-   protected void func_146979_b(int x, int y) {
+   protected void drawGuiContainerForegroundLayer(int x, int y) {
       this.getCurrentScreen().drawGuiContainerForegroundLayerScreen(x, y);
-      Iterator var3 = this.field_146292_n.iterator();
 
-      while(var3.hasNext()) {
-         Object o = var3.next();
+      for (Object o : this.buttonList) {
          if (o instanceof W_GuiButton) {
             W_GuiButton btn = (W_GuiButton)o;
             if (btn.isOnMouseOver() && btn.hoverStringList != null) {
-               this.drawHoveringText(btn.hoverStringList, x, y, this.field_146289_q);
+               this.drawHoveringText(btn.hoverStringList, x, y, this.fontRenderer);
                break;
             }
          }
       }
-
    }
 
    public static void drawList(Minecraft mc, FontRenderer fontRendererObj, boolean mng) {
       MCH_GuiScoreboard_Base.drawList(mc, fontRendererObj, mng);
    }
 
-   protected void func_146976_a(float par1, int par2, int par3) {
-      this.getCurrentScreen().func_146976_a(par1, par2, par3);
+   protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
+      this.getCurrentScreen().drawGuiContainerBackgroundLayer(par1, par2, par3);
    }
 
-   public void func_146280_a(Minecraft mc, int width, int height) {
-      super.func_146280_a(mc, width, height);
-      Iterator var4 = this.listScreen.values().iterator();
+   public void setWorldAndResolution(Minecraft mc, int width, int height) {
+      super.setWorldAndResolution(mc, width, height);
 
-      while(var4.hasNext()) {
-         MCH_GuiScoreboard_Base s = (MCH_GuiScoreboard_Base)var4.next();
-         s.func_146280_a(mc, width, height);
+      for (MCH_GuiScoreboard_Base s : this.listScreen.values()) {
+         s.setWorldAndResolution(mc, width, height);
       }
-
    }
 }

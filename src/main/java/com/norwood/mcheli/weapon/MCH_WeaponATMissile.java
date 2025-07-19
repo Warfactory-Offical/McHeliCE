@@ -22,10 +22,12 @@ public class MCH_WeaponATMissile extends MCH_WeaponEntitySeeker {
       this.guidanceSystem.ridableOnly = wi.ridableOnly;
    }
 
+   @Override
    public boolean isCooldownCountReloadTime() {
       return true;
    }
 
+   @Override
    public String getName() {
       String opt = "";
       if (this.getCurrentMode() == 1) {
@@ -35,10 +37,12 @@ public class MCH_WeaponATMissile extends MCH_WeaponEntitySeeker {
       return super.getName() + opt;
    }
 
+   @Override
    public void update(int countWait) {
       super.update(countWait);
    }
 
+   @Override
    public boolean shot(MCH_WeaponParam prm) {
       return this.worldObj.isRemote ? this.shotClient(prm.entity, prm.user) : this.shotServer(prm);
    }
@@ -56,19 +60,19 @@ public class MCH_WeaponATMissile extends MCH_WeaponEntitySeeker {
 
    protected boolean shotServer(MCH_WeaponParam prm) {
       Entity tgtEnt = null;
-      tgtEnt = prm.user.world.func_73045_a(prm.option1);
-      if (tgtEnt != null && !tgtEnt.field_70128_L) {
-         float yaw = prm.user.field_70177_z + this.fixRotationYaw;
-         float pitch = prm.entity.field_70125_A + this.fixRotationPitch;
-         double tX = (double)(-MathHelper.func_76126_a(yaw / 180.0F * 3.1415927F) * MathHelper.func_76134_b(pitch / 180.0F * 3.1415927F));
-         double tZ = (double)(MathHelper.func_76134_b(yaw / 180.0F * 3.1415927F) * MathHelper.func_76134_b(pitch / 180.0F * 3.1415927F));
-         double tY = (double)(-MathHelper.func_76126_a(pitch / 180.0F * 3.1415927F));
-         MCH_EntityATMissile e = new MCH_EntityATMissile(this.worldObj, prm.posX, prm.posY, prm.posZ, tX, tY, tZ, yaw, pitch, (double)this.acceleration);
+      tgtEnt = prm.user.world.getEntityByID(prm.option1);
+      if (tgtEnt != null && !tgtEnt.isDead) {
+         float yaw = prm.user.rotationYaw + this.fixRotationYaw;
+         float pitch = prm.entity.rotationPitch + this.fixRotationPitch;
+         double tX = -MathHelper.sin(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI);
+         double tZ = MathHelper.cos(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI);
+         double tY = -MathHelper.sin(pitch / 180.0F * (float) Math.PI);
+         MCH_EntityATMissile e = new MCH_EntityATMissile(this.worldObj, prm.posX, prm.posY, prm.posZ, tX, tY, tZ, yaw, pitch, this.acceleration);
          e.setName(this.name);
          e.setParameterFromWeapon(this, prm.entity, prm.user);
          e.setTargetEntity(tgtEnt);
          e.guidanceType = prm.option2;
-         this.worldObj.func_72838_d(e);
+         this.worldObj.spawnEntity(e);
          this.playSound(prm.entity);
          return true;
       } else {

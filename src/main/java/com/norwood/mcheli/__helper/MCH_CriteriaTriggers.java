@@ -12,12 +12,12 @@ public class MCH_CriteriaTriggers {
    public static final MCH_SimpleTrigger VILLAGER_HURT_BULLET = create("villager_hurt_bullet");
 
    public static void registerTriggers() {
-      CriteriaTriggers.func_192118_a(PUT_AIRCRAFT);
-      CriteriaTriggers.func_192118_a(SUPPLY_AMMO);
-      CriteriaTriggers.func_192118_a(SUPPLY_FUEL);
-      CriteriaTriggers.func_192118_a(RELIEF_SUPPLIES);
-      CriteriaTriggers.func_192118_a(RIDING_VALKYRIES);
-      CriteriaTriggers.func_192118_a(VILLAGER_HURT_BULLET);
+      CriteriaTriggers.register(PUT_AIRCRAFT);
+      CriteriaTriggers.register(SUPPLY_AMMO);
+      CriteriaTriggers.register(SUPPLY_FUEL);
+      CriteriaTriggers.register(RELIEF_SUPPLIES);
+      CriteriaTriggers.register(RIDING_VALKYRIES);
+      CriteriaTriggers.register(VILLAGER_HURT_BULLET);
    }
 
    private static MCH_SimpleTrigger create(String shortName) {

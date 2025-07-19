@@ -25,50 +25,50 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class MCH_Lib {
-   private static HashMap<String, Material> mapMaterial = new HashMap();
+   private static HashMap<String, Material> mapMaterial = new HashMap<>();
    public static final String[] AZIMUTH_8 = new String[]{"S", "SW", "W", "NW", "N", "NE", "E", "SE"};
-   public static final int AZIMUTH_8_ANG;
+   public static final int AZIMUTH_8_ANG = 360 / AZIMUTH_8.length;
 
    public static void init() {
       mapMaterial.clear();
-      mapMaterial.put("air", Material.field_151579_a);
-      mapMaterial.put("grass", Material.field_151577_b);
-      mapMaterial.put("ground", Material.field_151578_c);
-      mapMaterial.put("wood", Material.field_151575_d);
-      mapMaterial.put("rock", Material.field_151576_e);
-      mapMaterial.put("iron", Material.field_151573_f);
-      mapMaterial.put("anvil", Material.field_151574_g);
-      mapMaterial.put("water", Material.field_151586_h);
-      mapMaterial.put("lava", Material.field_151587_i);
-      mapMaterial.put("leaves", Material.field_151584_j);
-      mapMaterial.put("plants", Material.field_151585_k);
-      mapMaterial.put("vine", Material.field_151582_l);
-      mapMaterial.put("sponge", Material.field_151583_m);
-      mapMaterial.put("cloth", Material.field_151580_n);
-      mapMaterial.put("fire", Material.field_151581_o);
-      mapMaterial.put("sand", Material.field_151595_p);
-      mapMaterial.put("circuits", Material.field_151594_q);
-      mapMaterial.put("carpet", Material.field_151593_r);
-      mapMaterial.put("glass", Material.field_151592_s);
-      mapMaterial.put("redstoneLight", Material.field_151591_t);
-      mapMaterial.put("tnt", Material.field_151590_u);
-      mapMaterial.put("coral", Material.field_151589_v);
-      mapMaterial.put("ice", Material.field_151588_w);
-      mapMaterial.put("packedIce", Material.field_151598_x);
-      mapMaterial.put("snow", Material.field_151597_y);
-      mapMaterial.put("craftedSnow", Material.field_151596_z);
-      mapMaterial.put("cactus", Material.field_151570_A);
-      mapMaterial.put("clay", Material.field_151571_B);
-      mapMaterial.put("gourd", Material.field_151572_C);
-      mapMaterial.put("dragonEgg", Material.field_151566_D);
-      mapMaterial.put("portal", Material.field_151567_E);
-      mapMaterial.put("cake", Material.field_151568_F);
-      mapMaterial.put("web", Material.field_151569_G);
-      mapMaterial.put("piston", Material.field_76233_E);
+      mapMaterial.put("air", Material.AIR);
+      mapMaterial.put("grass", Material.GRASS);
+      mapMaterial.put("ground", Material.GROUND);
+      mapMaterial.put("wood", Material.WOOD);
+      mapMaterial.put("rock", Material.ROCK);
+      mapMaterial.put("iron", Material.IRON);
+      mapMaterial.put("anvil", Material.ANVIL);
+      mapMaterial.put("water", Material.WATER);
+      mapMaterial.put("lava", Material.LAVA);
+      mapMaterial.put("leaves", Material.LEAVES);
+      mapMaterial.put("plants", Material.PLANTS);
+      mapMaterial.put("vine", Material.VINE);
+      mapMaterial.put("sponge", Material.SPONGE);
+      mapMaterial.put("cloth", Material.CLOTH);
+      mapMaterial.put("fire", Material.FIRE);
+      mapMaterial.put("sand", Material.SAND);
+      mapMaterial.put("circuits", Material.CIRCUITS);
+      mapMaterial.put("carpet", Material.CARPET);
+      mapMaterial.put("glass", Material.GLASS);
+      mapMaterial.put("redstoneLight", Material.REDSTONE_LIGHT);
+      mapMaterial.put("tnt", Material.TNT);
+      mapMaterial.put("coral", Material.CORAL);
+      mapMaterial.put("ice", Material.ICE);
+      mapMaterial.put("packedIce", Material.PACKED_ICE);
+      mapMaterial.put("snow", Material.SNOW);
+      mapMaterial.put("craftedSnow", Material.CRAFTED_SNOW);
+      mapMaterial.put("cactus", Material.CACTUS);
+      mapMaterial.put("clay", Material.CLAY);
+      mapMaterial.put("gourd", Material.GOURD);
+      mapMaterial.put("dragonEgg", Material.DRAGON_EGG);
+      mapMaterial.put("portal", Material.PORTAL);
+      mapMaterial.put("cake", Material.CAKE);
+      mapMaterial.put("web", Material.WEB);
+      mapMaterial.put("piston", Material.PISTON);
    }
 
    public static Material getMaterialFromName(String name) {
-      return mapMaterial.containsKey(name) ? (Material)mapMaterial.get(name) : null;
+      return mapMaterial.containsKey(name) ? mapMaterial.get(name) : null;
    }
 
    public static Vec3d calculateFaceNormal(Vec3d[] vertices) {
@@ -78,7 +78,7 @@ public class MCH_Lib {
    }
 
    public static double parseDouble(String s) {
-      return s == null ? 0.0D : Double.parseDouble(s.replace(',', '.'));
+      return s == null ? 0.0 : Double.parseDouble(s.replace(',', '.'));
    }
 
    public static float RNG(float a, float min, float max) {
@@ -106,10 +106,10 @@ public class MCH_Lib {
    public static double getRotateDiff(double base, double target) {
       base = getRotate360(base);
       target = getRotate360(target);
-      if (target - base < -180.0D) {
-         target += 360.0D;
-      } else if (target - base > 180.0D) {
-         base += 360.0D;
+      if (target - base < -180.0) {
+         target += 360.0;
+      } else if (target - base > 180.0) {
+         base += 360.0;
       }
 
       return target - base;
@@ -120,63 +120,66 @@ public class MCH_Lib {
       double length_B = Math.sqrt(cx * cx + cz * cz);
       double cos_sita = (tx * cx + tz * cz) / (length_A * length_B);
       double sita = Math.acos(cos_sita);
-      return (float)(sita * 180.0D / 3.141592653589793D);
+      return (float)(sita * 180.0 / Math.PI);
    }
 
    public static void applyEntityHurtResistantTimeConfig(Entity entity) {
       if (entity instanceof EntityLivingBase) {
          EntityLivingBase elb = (EntityLivingBase)entity;
-         double h_time = MCH_Config.HurtResistantTime.prmDouble * (double)elb.field_70172_ad;
-         elb.field_70172_ad = (int)h_time;
+         double h_time = MCH_Config.HurtResistantTime.prmDouble * elb.hurtResistantTime;
+         elb.hurtResistantTime = (int)h_time;
       }
-
    }
 
    public static int round(double d) {
-      return (int)(d + 0.5D);
+      return (int)(d + 0.5);
    }
 
    public static Vec3d Rot2Vec3(float yaw, float pitch) {
-      return new Vec3d((double)(-MathHelper.func_76126_a(yaw / 180.0F * 3.1415927F) * MathHelper.func_76134_b(pitch / 180.0F * 3.1415927F)), (double)(-MathHelper.func_76126_a(pitch / 180.0F * 3.1415927F)), (double)(MathHelper.func_76134_b(yaw / 180.0F * 3.1415927F) * MathHelper.func_76134_b(pitch / 180.0F * 3.1415927F)));
+      return new Vec3d(
+         -MathHelper.sin(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI),
+         -MathHelper.sin(pitch / 180.0F * (float) Math.PI),
+         MathHelper.cos(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI)
+      );
    }
 
    public static Vec3d RotVec3(double x, double y, double z, float yaw, float pitch) {
       Vec3d v = new Vec3d(x, y, z);
-      v = v.func_178789_a(pitch / 180.0F * 3.1415927F);
-      v = v.func_178785_b(yaw / 180.0F * 3.1415927F);
-      return v;
+      v = v.rotatePitch(pitch / 180.0F * (float) Math.PI);
+      return v.rotateYaw(yaw / 180.0F * (float) Math.PI);
    }
 
    public static Vec3d RotVec3(double x, double y, double z, float yaw, float pitch, float roll) {
       Vec3d v = new Vec3d(x, y, z);
-      v = W_Vec3.rotateRoll(roll / 180.0F * 3.1415927F, v);
-      v = v.func_178789_a(pitch / 180.0F * 3.1415927F);
-      v = v.func_178785_b(yaw / 180.0F * 3.1415927F);
-      return v;
+      v = W_Vec3.rotateRoll(roll / 180.0F * (float) Math.PI, v);
+      v = v.rotatePitch(pitch / 180.0F * (float) Math.PI);
+      return v.rotateYaw(yaw / 180.0F * (float) Math.PI);
    }
 
    public static Vec3d RotVec3(Vec3d vin, float yaw, float pitch) {
       Vec3d v = new Vec3d(vin.x, vin.y, vin.z);
-      v = v.func_178789_a(pitch / 180.0F * 3.1415927F);
-      v = v.func_178785_b(yaw / 180.0F * 3.1415927F);
-      return v;
+      v = v.rotatePitch(pitch / 180.0F * (float) Math.PI);
+      return v.rotateYaw(yaw / 180.0F * (float) Math.PI);
    }
 
    public static Vec3d RotVec3(Vec3d vin, float yaw, float pitch, float roll) {
       Vec3d v = new Vec3d(vin.x, vin.y, vin.z);
-      v = W_Vec3.rotateRoll(roll / 180.0F * 3.1415927F, v);
-      v = v.func_178789_a(pitch / 180.0F * 3.1415927F);
-      v = v.func_178785_b(yaw / 180.0F * 3.1415927F);
-      return v;
+      v = W_Vec3.rotateRoll(roll / 180.0F * (float) Math.PI, v);
+      v = v.rotatePitch(pitch / 180.0F * (float) Math.PI);
+      return v.rotateYaw(yaw / 180.0F * (float) Math.PI);
    }
 
    public static Vec3d _Rot2Vec3(float yaw, float pitch, float roll) {
-      return new Vec3d((double)(-MathHelper.func_76126_a(yaw / 180.0F * 3.1415927F) * MathHelper.func_76134_b(pitch / 180.0F * 3.1415927F)), (double)(-MathHelper.func_76126_a(pitch / 180.0F * 3.1415927F)), (double)(MathHelper.func_76134_b(yaw / 180.0F * 3.1415927F) * MathHelper.func_76134_b(pitch / 180.0F * 3.1415927F)));
+      return new Vec3d(
+         -MathHelper.sin(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI),
+         -MathHelper.sin(pitch / 180.0F * (float) Math.PI),
+         MathHelper.cos(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI)
+      );
    }
 
    public static double getRotate360(double r) {
-      r %= 360.0D;
-      return r >= 0.0D ? r : r + 360.0D;
+      r %= 360.0;
+      return r >= 0.0 ? r : r + 360.0;
    }
 
    public static void Log(String format, Object... data) {
@@ -190,7 +193,6 @@ public class MCH_Lib {
       } else {
          Log("[UnknownWorld]" + format, data);
       }
-
    }
 
    public static void Log(Entity entity, String format, Object... data) {
@@ -199,7 +201,6 @@ public class MCH_Lib {
       } else {
          Log((World)null, format, data);
       }
-
    }
 
    public static void DbgLog(boolean isRemote, String format, Object... data) {
@@ -213,7 +214,6 @@ public class MCH_Lib {
             System.out.println(String.format(format, data));
          }
       }
-
    }
 
    public static void DbgLog(World w, String format, Object... data) {
@@ -236,27 +236,25 @@ public class MCH_Lib {
    }
 
    public static void rotatePoints(double[] points, float r) {
-      r = r / 180.0F * 3.1415927F;
+      r = r / 180.0F * (float) Math.PI;
 
-      for(int i = 0; i + 1 < points.length; i += 2) {
+      for (int i = 0; i + 1 < points.length; i += 2) {
          double x = points[i + 0];
          double y = points[i + 1];
-         points[i + 0] = x * (double)MathHelper.func_76134_b(r) - y * (double)MathHelper.func_76126_a(r);
-         points[i + 1] = x * (double)MathHelper.func_76126_a(r) + y * (double)MathHelper.func_76134_b(r);
+         points[i + 0] = x * MathHelper.cos(r) - y * MathHelper.sin(r);
+         points[i + 1] = x * MathHelper.sin(r) + y * MathHelper.cos(r);
       }
-
    }
 
    public static void rotatePoints(ArrayList<MCH_Vector2> points, float r) {
-      r = r / 180.0F * 3.1415927F;
+      r = r / 180.0F * (float) Math.PI;
 
-      for(int i = 0; i + 1 < points.size(); i += 2) {
-         double x = ((MCH_Vector2)points.get(i + 0)).x;
-         double y = ((MCH_Vector2)points.get(i + 0)).y;
-         ((MCH_Vector2)points.get(i + 0)).x = x * (double)MathHelper.func_76134_b(r) - y * (double)MathHelper.func_76126_a(r);
-         ((MCH_Vector2)points.get(i + 0)).y = x * (double)MathHelper.func_76126_a(r) + y * (double)MathHelper.func_76134_b(r);
+      for (int i = 0; i + 1 < points.size(); i += 2) {
+         double x = points.get(i + 0).x;
+         double y = points.get(i + 0).y;
+         points.get(i + 0).x = x * MathHelper.cos(r) - y * MathHelper.sin(r);
+         points.get(i + 0).y = x * MathHelper.sin(r) + y * MathHelper.cos(r);
       }
-
    }
 
    public static String[] listupFileNames(String path) {
@@ -269,11 +267,7 @@ public class MCH_Lib {
       if (y <= 0) {
          return false;
       } else {
-         int[][] var5 = offset;
-         int var6 = offset.length;
-
-         for(int var7 = 0; var7 < var6; ++var7) {
-            int[] o = var5[var7];
+         for (int[] o : offset) {
             if (W_WorldFunc.isBlockWater(w, x + o[0], y + o[1], z + o[2])) {
                return true;
             }
@@ -285,7 +279,7 @@ public class MCH_Lib {
 
    public static int getBlockIdY(World w, double posX, double posY, double posZ, int size, int lenY, boolean canColliableOnly) {
       Block block = getBlockY(w, posX, posY, posZ, size, lenY, canColliableOnly);
-      return block == null ? 0 : W_Block.func_149682_b(block);
+      return block == null ? 0 : W_Block.getIdFromBlock(block);
    }
 
    public static int getBlockIdY(Entity entity, int size, int lenY) {
@@ -294,7 +288,7 @@ public class MCH_Lib {
 
    public static int getBlockIdY(Entity entity, int size, int lenY, boolean canColliableOnly) {
       Block block = getBlockY(entity, size, lenY, canColliableOnly);
-      return block == null ? 0 : W_Block.func_149682_b(block);
+      return block == null ? 0 : W_Block.getIdFromBlock(block);
    }
 
    public static Block getBlockY(Entity entity, int size, int lenY, boolean canColliableOnly) {
@@ -307,28 +301,28 @@ public class MCH_Lib {
 
    public static Block getBlockY(World world, double posX, double posY, double posZ, int size, int lenY, boolean canColliableOnly) {
       if (lenY == 0) {
-         return W_Blocks.field_150350_a;
+         return W_Blocks.AIR;
       } else {
-         int px = (int)(posX + 0.5D);
-         int py = (int)(posY + 0.5D);
-         int pz = (int)(posZ + 0.5D);
+         int px = (int)(posX + 0.5);
+         int py = (int)(posY + 0.5);
+         int pz = (int)(posZ + 0.5);
          int cntY = lenY > 0 ? lenY : -lenY;
 
-         for(int y = 0; y < cntY; ++y) {
+         for (int y = 0; y < cntY; y++) {
             if (py + y < 0 || py + y > 255) {
-               return W_Blocks.field_150350_a;
+               return W_Blocks.AIR;
             }
 
-            for(int x = -size / 2; x <= size / 2; ++x) {
-               for(int z = -size / 2; z <= size / 2; ++z) {
-                  IBlockState iblockstate = world.func_180495_p(new BlockPos(px + x, py + (lenY > 0 ? y : -y), pz + z));
+            for (int x = -size / 2; x <= size / 2; x++) {
+               for (int z = -size / 2; z <= size / 2; z++) {
+                  IBlockState iblockstate = world.getBlockState(new BlockPos(px + x, py + (lenY > 0 ? y : -y), pz + z));
                   Block block = W_WorldFunc.getBlock(world, px + x, py + (lenY > 0 ? y : -y), pz + z);
-                  if (block != null && block != W_Blocks.field_150350_a) {
+                  if (block != null && block != W_Blocks.AIR) {
                      if (!canColliableOnly) {
                         return block;
                      }
 
-                     if (block.func_176209_a(iblockstate, true)) {
+                     if (block.canCollideCheck(iblockstate, true)) {
                         return block;
                      }
                   }
@@ -336,7 +330,7 @@ public class MCH_Lib {
             }
          }
 
-         return W_Blocks.field_150350_a;
+         return W_Blocks.AIR;
       }
    }
 
@@ -345,60 +339,58 @@ public class MCH_Lib {
    }
 
    public static Vec3d getYawPitchFromVec(double x, double y, double z) {
-      double p = (double)MathHelper.func_76133_a(x * x + z * z);
-      float yaw = (float)(Math.atan2(z, x) * 180.0D / 3.141592653589793D);
-      float roll = (float)(Math.atan2(y, p) * 180.0D / 3.141592653589793D);
-      return new Vec3d(0.0D, (double)yaw, (double)roll);
+      double p = MathHelper.sqrt(x * x + z * z);
+      float yaw = (float)(Math.atan2(z, x) * 180.0 / Math.PI);
+      float roll = (float)(Math.atan2(y, p) * 180.0 / Math.PI);
+      return new Vec3d(0.0, yaw, roll);
    }
 
    public static float getAlpha(int argb) {
-      return (float)(argb >> 24) / 255.0F;
+      return (argb >> 24) / 255.0F;
    }
 
    public static float getRed(int argb) {
-      return (float)(argb >> 16 & 255) / 255.0F;
+      return (argb >> 16 & 0xFF) / 255.0F;
    }
 
    public static float getGreen(int argb) {
-      return (float)(argb >> 8 & 255) / 255.0F;
+      return (argb >> 8 & 0xFF) / 255.0F;
    }
 
    public static float getBlue(int argb) {
-      return (float)(argb & 255) / 255.0F;
+      return (argb & 0xFF) / 255.0F;
    }
 
    public static void enableFirstPersonItemRender() {
-      switch(MCH_Config.DisableItemRender.prmInt) {
-      case 1:
-      default:
-         break;
-      case 2:
-         MCH_ItemRendererDummy.disableDummyItemRenderer();
-         break;
-      case 3:
-         W_Reflection.restoreCameraZoom();
+      switch (MCH_Config.DisableItemRender.prmInt) {
+         case 1:
+         default:
+            break;
+         case 2:
+            MCH_ItemRendererDummy.disableDummyItemRenderer();
+            break;
+         case 3:
+            W_Reflection.restoreCameraZoom();
       }
-
    }
 
    public static void disableFirstPersonItemRender(ItemStack itemStack) {
-      if (!itemStack.func_190926_b() || !(itemStack.func_77973_b() instanceof ItemMapBase) || W_McClient.getRenderEntity() instanceof MCH_ViewEntityDummy) {
+      if (!itemStack.isEmpty() || !(itemStack.getItem() instanceof ItemMapBase) || W_McClient.getRenderEntity() instanceof MCH_ViewEntityDummy) {
          disableFirstPersonItemRender();
       }
    }
 
    public static void disableFirstPersonItemRender() {
-      switch(MCH_Config.DisableItemRender.prmInt) {
-      case 1:
-         W_Reflection.setItemRendererMainHand(new ItemStack(MCH_MOD.invisibleItem));
-         break;
-      case 2:
-         MCH_ItemRendererDummy.enableDummyItemRenderer();
-         break;
-      case 3:
-         W_Reflection.setCameraZoom(1.01F);
+      switch (MCH_Config.DisableItemRender.prmInt) {
+         case 1:
+            W_Reflection.setItemRendererMainHand(new ItemStack(MCH_MOD.invisibleItem));
+            break;
+         case 2:
+            MCH_ItemRendererDummy.enableDummyItemRenderer();
+            break;
+         case 3:
+            W_Reflection.setCameraZoom(1.01F);
       }
-
    }
 
    public static Entity getClientPlayer() {
@@ -409,11 +401,6 @@ public class MCH_Lib {
       if (MCH_Config.ReplaceRenderViewEntity.prmBool) {
          W_McClient.setRenderEntity(entity);
       }
-
-   }
-
-   public static Entity getRenderViewEntity() {
-      return W_McClient.getRenderEntity();
    }
 
    public static boolean isFlansModEntity(Entity entity) {
@@ -421,11 +408,13 @@ public class MCH_Lib {
          return false;
       } else {
          String className = entity.getClass().getName();
-         return entity != null && (className.indexOf("EntityVehicle") >= 0 || className.indexOf("EntityPlane") >= 0 || className.indexOf("EntityMecha") >= 0 || className.indexOf("EntityAAGun") >= 0);
+         return entity != null
+            && (
+               className.indexOf("EntityVehicle") >= 0
+                  || className.indexOf("EntityPlane") >= 0
+                  || className.indexOf("EntityMecha") >= 0
+                  || className.indexOf("EntityAAGun") >= 0
+            );
       }
-   }
-
-   static {
-      AZIMUTH_8_ANG = 360 / AZIMUTH_8.length;
    }
 }

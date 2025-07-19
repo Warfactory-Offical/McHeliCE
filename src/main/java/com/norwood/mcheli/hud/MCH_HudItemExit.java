@@ -5,6 +5,7 @@ public class MCH_HudItemExit extends MCH_HudItem {
       super(fileLine);
    }
 
+   @Override
    public void execute() {
       this.parent.exit = true;
    }

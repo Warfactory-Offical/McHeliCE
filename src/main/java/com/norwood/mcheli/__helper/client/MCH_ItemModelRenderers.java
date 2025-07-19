@@ -1,7 +1,6 @@
 package com.norwood.mcheli.__helper.client;
 
 import com.google.common.collect.Maps;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.annotation.Nullable;
@@ -33,14 +32,14 @@ public class MCH_ItemModelRenderers {
 
    @SubscribeEvent
    static void onModelRegistryEvent(ModelRegistryEvent event) {
-      registerModelLocation(Item.func_150898_a(MCH_MOD.blockDraftingTable));
+      registerModelLocation(Item.getItemFromBlock(MCH_MOD.blockDraftingTable));
       ModelLoader.setCustomStateMapper(MCH_MOD.blockDraftingTable, new IStateMapper() {
-         public Map<IBlockState, ModelResourceLocation> func_178130_a(Block blockIn) {
+         public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn) {
             return Maps.newHashMap();
          }
       });
       ModelLoader.setCustomStateMapper(MCH_MOD.blockDraftingTableLit, new IStateMapper() {
-         public Map<IBlockState, ModelResourceLocation> func_178130_a(Block blockIn) {
+         public Map<IBlockState, ModelResourceLocation> putStateModelLocations(Block blockIn) {
             return Maps.newHashMap();
          }
       });
@@ -54,7 +53,7 @@ public class MCH_ItemModelRenderers {
       registerModelLocation(MCH_MOD.itemParachute);
       registerModelLocation(MCH_MOD.itemContainer);
 
-      for(int i = 0; i < MCH_MOD.itemUavStation.length; ++i) {
+      for (int i = 0; i < MCH_MOD.itemUavStation.length; i++) {
          registerModelLocation(MCH_MOD.itemUavStation[i]);
       }
 
@@ -72,16 +71,12 @@ public class MCH_ItemModelRenderers {
 
    @SubscribeEvent
    static void onBakedModelEvent(ModelBakeEvent event) {
-      Iterator var1 = renderers.entrySet().iterator();
-
-      while(var1.hasNext()) {
-         Entry<ModelResourceLocation, IItemModelRenderer> entry = (Entry)var1.next();
-         IBakedModel bakedmodel = (IBakedModel)event.getModelRegistry().func_82594_a(entry.getKey());
+      for (Entry<ModelResourceLocation, IItemModelRenderer> entry : renderers.entrySet()) {
+         IBakedModel bakedmodel = (IBakedModel)event.getModelRegistry().getObject(entry.getKey());
          if (bakedmodel != null) {
-            event.getModelRegistry().func_82595_a(entry.getKey(), new MCH_BakedModel(bakedmodel, (IItemModelRenderer)entry.getValue()));
+            event.getModelRegistry().putObject(entry.getKey(), new MCH_BakedModel(bakedmodel, entry.getValue()));
          }
       }
-
    }
 
    public static void registerRenderer(Item item, IItemModelRenderer renderer) {
@@ -107,6 +102,6 @@ public class MCH_ItemModelRenderers {
 
    @Nullable
    public static IItemModelRenderer getRenderer(Item item) {
-      return (IItemModelRenderer)renderers.get(getInventoryModel(item));
+      return renderers.get(getInventoryModel(item));
    }
 }

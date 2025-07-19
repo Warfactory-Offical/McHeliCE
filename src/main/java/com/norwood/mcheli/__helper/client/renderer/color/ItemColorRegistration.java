@@ -16,6 +16,8 @@ public class ItemColorRegistration {
    @SubscribeEvent
    static void onRegisterItemColor(Item event) {
       ItemColors itemColors = event.getItemColors();
-      itemColors.func_186730_a(MCH_ItemSpawnGunner::getColorFromItemStack, new net.minecraft.item.Item[]{MCH_MOD.itemSpawnGunnerVsMonster, MCH_MOD.itemSpawnGunnerVsPlayer});
+      itemColors.registerItemColorHandler(
+         MCH_ItemSpawnGunner::getColorFromItemStack, new net.minecraft.item.Item[]{MCH_MOD.itemSpawnGunnerVsMonster, MCH_MOD.itemSpawnGunnerVsPlayer}
+      );
    }
 }

@@ -13,10 +13,12 @@ public class MCH_PacketStatusResponse extends MCH_Packet {
    public byte seatNum = -1;
    public byte[] weaponIDs = new byte[]{-1};
 
+   @Override
    public int getMessageID() {
       return 268439649;
    }
 
+   @Override
    public void readData(ByteArrayDataInput data) {
       try {
          this.entityID_AC = data.readInt();
@@ -24,23 +26,23 @@ public class MCH_PacketStatusResponse extends MCH_Packet {
          if (this.seatNum > 0) {
             this.weaponIDs = new byte[this.seatNum];
 
-            for(int i = 0; i < this.seatNum; ++i) {
+            for (int i = 0; i < this.seatNum; i++) {
                this.weaponIDs[i] = data.readByte();
             }
          }
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       try {
          dos.writeInt(this.entityID_AC);
          if (this.seatNum > 0 && this.weaponIDs != null && this.weaponIDs.length == this.seatNum) {
             dos.writeByte(this.seatNum);
 
-            for(int i = 0; i < this.seatNum; ++i) {
+            for (int i = 0; i < this.seatNum; i++) {
                dos.writeByte(this.weaponIDs[i]);
             }
          } else {
@@ -49,7 +51,6 @@ public class MCH_PacketStatusResponse extends MCH_Packet {
       } catch (IOException var3) {
          var3.printStackTrace();
       }
-
    }
 
    public static void sendStatus(MCH_EntityAircraft ac, EntityPlayer player) {
@@ -65,13 +66,12 @@ public class MCH_PacketStatusResponse extends MCH_Packet {
          if (this.seatNum > 0) {
             this.weaponIDs = new byte[this.seatNum];
 
-            for(int i = 0; i < this.seatNum; ++i) {
+            for (int i = 0; i < this.seatNum; i++) {
                this.weaponIDs[i] = (byte)ac.getWeaponIDBySeatID(i);
             }
          } else {
             this.weaponIDs = new byte[]{-1};
          }
-
       }
    }
 }

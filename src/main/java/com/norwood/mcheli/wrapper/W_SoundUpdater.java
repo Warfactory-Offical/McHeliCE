@@ -10,7 +10,7 @@ public class W_SoundUpdater {
    protected W_Sound es;
 
    public W_SoundUpdater(Minecraft minecraft, Entity entity) {
-      this.theSoundHnadler = minecraft.func_147118_V();
+      this.theSoundHnadler = minecraft.getSoundHandler();
    }
 
    public void initEntitySound(String name) {
@@ -25,54 +25,47 @@ public class W_SoundUpdater {
    public void playEntitySound(String name, Entity entity, float volume, float pitch, boolean par5) {
       if (this.isValidSound()) {
          this.es.setSoundParam(entity, volume, pitch);
-         this.theSoundHnadler.func_147682_a(this.es);
+         this.theSoundHnadler.playSound(this.es);
       }
-
    }
 
    public void stopEntitySound(Entity entity) {
       if (this.isValidSound()) {
-         this.theSoundHnadler.func_147683_b(this.es);
+         this.theSoundHnadler.stopSound(this.es);
       }
-
    }
 
    public boolean isEntitySoundPlaying(Entity entity) {
-      return this.isValidSound() ? this.theSoundHnadler.func_147692_c(this.es) : false;
+      return this.isValidSound() ? this.theSoundHnadler.isSoundPlaying(this.es) : false;
    }
 
    public void setEntitySoundPitch(Entity entity, float pitch) {
       if (this.isValidSound()) {
          this.es.setPitch(pitch);
       }
-
    }
 
    public void setEntitySoundVolume(Entity entity, float volume) {
       if (this.isValidSound()) {
          this.es.setVolume(volume);
       }
-
    }
 
    public void updateSoundLocation(Entity entity) {
       if (this.isValidSound()) {
          this.es.setPosition(entity);
       }
-
    }
 
    public void updateSoundLocation(double x, double y, double z) {
       if (this.isValidSound()) {
          this.es.setPosition(x, y, z);
       }
-
    }
 
    public void _updateSoundLocation(Entity entityListener, Entity entity) {
       if (this.isValidSound()) {
          this.es.setPosition(entity);
       }
-
    }
 }

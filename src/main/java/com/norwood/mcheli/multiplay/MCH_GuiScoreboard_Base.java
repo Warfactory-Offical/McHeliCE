@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import com.norwood.mcheli.wrapper.W_GuiContainer;
 import com.norwood.mcheli.wrapper.W_ScaledResolution;
@@ -45,60 +44,54 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
    public MCH_GuiScoreboard_Base(MCH_IGuiScoreboard switcher, EntityPlayer player) {
       super(new MCH_ContainerScoreboard(player));
       this.screen_switcher = switcher;
-      this.field_146297_k = Minecraft.getMinecraft();
+      this.mc = Minecraft.getMinecraft();
    }
 
-   public void func_73866_w_() {
+   public void initGui() {
    }
 
    public void initGui(List<GuiButton> buttonList, GuiScreen parents) {
-      this.listGui = new ArrayList();
-      this.field_146297_k = Minecraft.getMinecraft();
-      this.field_146289_q = this.field_146297_k.field_71466_p;
-      this.field_146294_l = parents.field_146294_l;
-      this.field_146295_m = parents.field_146295_m;
-      this.func_73866_w_();
-      Iterator var3 = this.listGui.iterator();
+      this.listGui = new ArrayList<>();
+      this.mc = Minecraft.getMinecraft();
+      this.fontRenderer = this.mc.fontRenderer;
+      this.width = parents.width;
+      this.height = parents.height;
+      this.initGui();
 
-      while(var3.hasNext()) {
-         Gui b = (Gui)var3.next();
+      for (Gui b : this.listGui) {
          if (b instanceof GuiButton) {
             buttonList.add((GuiButton)b);
          }
       }
 
-      this.field_146292_n.clear();
+      this.buttonList.clear();
    }
 
    public static void setVisible(Object g, boolean v) {
       if (g instanceof GuiButton) {
-         ((GuiButton)g).field_146125_m = v;
+         ((GuiButton)g).visible = v;
       }
 
       if (g instanceof GuiTextField) {
-         ((GuiTextField)g).func_146189_e(v);
+         ((GuiTextField)g).setVisible(v);
       }
-
    }
 
    public void updateScreenButtons(List<GuiButton> list) {
    }
 
-   protected void func_146976_a(float partialTicks, int mouseX, int mouseY) {
+   protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
    }
 
    public int getTeamNum() {
-      return this.field_146297_k.world.func_96441_U().func_96525_g().size();
+      return this.mc.world.getScoreboard().getTeams().size();
    }
 
    protected void acviveScreen() {
    }
 
    public void onSwitchScreen() {
-      Iterator var1 = this.listGui.iterator();
-
-      while(var1.hasNext()) {
-         Object b = var1.next();
+      for (Object b : this.listGui) {
          setVisible(b, true);
       }
 
@@ -106,42 +99,37 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
    }
 
    public void leaveScreen() {
-      Iterator var1 = this.listGui.iterator();
-
-      while(var1.hasNext()) {
-         Object b = var1.next();
+      for (Object b : this.listGui) {
          setVisible(b, false);
       }
-
    }
 
    public void keyTypedScreen(char c, int code) throws IOException {
-      this.func_73869_a(c, code);
+      this.keyTyped(c, code);
    }
 
    public void mouseClickedScreen(int mouseX, int mouseY, int mouseButton) throws IOException {
       try {
-         this.func_73864_a(mouseX, mouseY, mouseButton);
+         this.mouseClicked(mouseX, mouseY, mouseButton);
       } catch (Exception var7) {
          if (mouseButton == 0) {
-            for(int l = 0; l < this.field_146292_n.size(); ++l) {
-               GuiButton guibutton = (GuiButton)this.field_146292_n.get(l);
-               if (guibutton.func_146116_c(this.field_146297_k, mouseX, mouseY)) {
-                  guibutton.func_146113_a(this.field_146297_k.func_147118_V());
-                  this.func_146284_a(guibutton);
+            for (int l = 0; l < this.buttonList.size(); l++) {
+               GuiButton guibutton = (GuiButton)this.buttonList.get(l);
+               if (guibutton.mousePressed(this.mc, mouseX, mouseY)) {
+                  guibutton.playPressSound(this.mc.getSoundHandler());
+                  this.actionPerformed(guibutton);
                }
             }
          }
       }
-
    }
 
    public void drawGuiContainerForegroundLayerScreen(int param1, int param2) {
-      this.func_146979_b(param1, param2);
+      this.drawGuiContainerForegroundLayer(param1, param2);
    }
 
    protected void actionPerformedScreen(GuiButton btn) throws IOException {
-      this.func_146284_a(btn);
+      this.actionPerformed(btn);
    }
 
    public void switchScreen(MCH_GuiScoreboard_Base.SCREEN_ID id) {
@@ -149,9 +137,9 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
    }
 
    public static int getScoreboradWidth(Minecraft mc) {
-      ScaledResolution scaledresolution = new W_ScaledResolution(mc, mc.field_71443_c, mc.field_71440_d);
-      int ScaledWidth = scaledresolution.func_78326_a() - 40;
-      int width = ScaledWidth * 3 / 4 / (mc.world.func_96441_U().func_96525_g().size() + 1);
+      ScaledResolution scaledresolution = new W_ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+      int ScaledWidth = scaledresolution.getScaledWidth() - 40;
+      int width = ScaledWidth * 3 / 4 / (mc.world.getScoreboard().getTeams().size() + 1);
       if (width > 150) {
          width = 150;
       }
@@ -160,18 +148,16 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
    }
 
    public static int getScoreBoardLeft(Minecraft mc, int teamNum, int teamIndex) {
-      ScaledResolution scaledresolution = new W_ScaledResolution(mc, mc.field_71443_c, mc.field_71440_d);
-      int ScaledWidth = scaledresolution.func_78326_a();
-      return (int)((double)(ScaledWidth / 2) + (double)(getScoreboradWidth(mc) + 10) * ((double)(-teamNum) / 2.0D + (double)teamIndex));
+      ScaledResolution scaledresolution = new W_ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+      int ScaledWidth = scaledresolution.getScaledWidth();
+      return (int)(ScaledWidth / 2 + (getScoreboradWidth(mc) + 10) * (-teamNum / 2.0 + teamIndex));
    }
 
    public static void drawList(Minecraft mc, FontRenderer fontRendererObj, boolean mng) {
-      ArrayList<ScorePlayerTeam> teamList = new ArrayList();
-      teamList.add((Object)null);
-      Iterator var4 = mc.world.func_96441_U().func_96525_g().iterator();
+      ArrayList<ScorePlayerTeam> teamList = new ArrayList<>();
+      teamList.add(null);
 
-      while(var4.hasNext()) {
-         Object team = var4.next();
+      for (Object team : mc.world.getScoreboard().getTeams()) {
          teamList.add((ScorePlayerTeam)team);
       }
 
@@ -182,78 +168,76 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
             } else if (o1 == null) {
                return -1;
             } else {
-               return o2 == null ? 1 : o1.func_96661_b().compareTo(o2.func_96661_b());
+               return o2 == null ? 1 : o1.getName().compareTo(o2.getName());
             }
          }
       });
 
-      for(int i = 0; i < teamList.size(); ++i) {
+      for (int i = 0; i < teamList.size(); i++) {
          if (mng) {
-            drawPlayersList(mc, fontRendererObj, (ScorePlayerTeam)teamList.get(i), 1 + i, 1 + teamList.size());
+            drawPlayersList(mc, fontRendererObj, teamList.get(i), 1 + i, 1 + teamList.size());
          } else {
-            drawPlayersList(mc, fontRendererObj, (ScorePlayerTeam)teamList.get(i), i, teamList.size());
+            drawPlayersList(mc, fontRendererObj, teamList.get(i), i, teamList.size());
          }
       }
-
    }
 
    public static void drawPlayersList(Minecraft mc, FontRenderer fontRendererObj, ScorePlayerTeam team, int teamIndex, int teamNum) {
-      ScaledResolution scaledresolution = new W_ScaledResolution(mc, mc.field_71443_c, mc.field_71440_d);
-      int ScaledHeight = scaledresolution.func_78328_b();
-      ScoreObjective scoreobjective = mc.world.func_96441_U().func_96539_a(0);
-      NetHandlerPlayClient nethandlerplayclient = mc.player.field_71174_a;
-      List<NetworkPlayerInfo> list = Lists.newArrayList(nethandlerplayclient.func_175106_d());
+      ScaledResolution scaledresolution = new W_ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+      int ScaledHeight = scaledresolution.getScaledHeight();
+      ScoreObjective scoreobjective = mc.world.getScoreboard().getObjectiveInDisplaySlot(0);
+      NetHandlerPlayClient nethandlerplayclient = mc.player.connection;
+      List<NetworkPlayerInfo> list = Lists.newArrayList(nethandlerplayclient.getPlayerInfoMap());
       int MaxPlayers = (list.size() / 5 + 1) * 5;
       MaxPlayers = MaxPlayers < 10 ? 10 : MaxPlayers;
-      if (MaxPlayers > nethandlerplayclient.field_147304_c) {
-         MaxPlayers = nethandlerplayclient.field_147304_c;
+      if (MaxPlayers > nethandlerplayclient.currentServerMaxPlayers) {
+         MaxPlayers = nethandlerplayclient.currentServerMaxPlayers;
       }
 
       int width = getScoreboradWidth(mc);
       int listLeft = getScoreBoardLeft(mc, teamNum, teamIndex);
       int listTop = ScaledHeight / 2 - (MaxPlayers * 9 + 10) / 2;
-      func_73734_a(listLeft - 1, listTop - 1 - 18, listLeft + width, listTop + 9 * MaxPlayers, Integer.MIN_VALUE);
-      String teamName = ScorePlayerTeam.func_96667_a(team, team == null ? "No team" : team.func_96661_b());
-      int teamNameX = listLeft + width / 2 - fontRendererObj.func_78256_a(teamName) / 2;
-      fontRendererObj.func_175063_a(teamName, (float)teamNameX, (float)(listTop - 18), -1);
-      String ff_onoff = "FriendlyFire : " + (team == null ? "ON" : (team.func_96665_g() ? "ON" : "OFF"));
-      int ff_onoffX = listLeft + width / 2 - fontRendererObj.func_78256_a(ff_onoff) / 2;
-      fontRendererObj.func_175063_a(ff_onoff, (float)ff_onoffX, (float)(listTop - 9), -1);
+      drawRect(listLeft - 1, listTop - 1 - 18, listLeft + width, listTop + 9 * MaxPlayers, Integer.MIN_VALUE);
+      String teamName = ScorePlayerTeam.formatPlayerName(team, team == null ? "No team" : team.getName());
+      int teamNameX = listLeft + width / 2 - fontRendererObj.getStringWidth(teamName) / 2;
+      fontRendererObj.drawStringWithShadow(teamName, teamNameX, listTop - 18, -1);
+      String ff_onoff = "FriendlyFire : " + (team == null ? "ON" : (team.getAllowFriendlyFire() ? "ON" : "OFF"));
+      int ff_onoffX = listLeft + width / 2 - fontRendererObj.getStringWidth(ff_onoff) / 2;
+      fontRendererObj.drawStringWithShadow(ff_onoff, ff_onoffX, listTop - 9, -1);
       int drawY = 0;
 
-      for(int i = 0; i < MaxPlayers; ++i) {
+      for (int i = 0; i < MaxPlayers; i++) {
          int y = listTop + drawY * 9;
          int rectY = listTop + i * 9;
-         func_73734_a(listLeft, rectY, listLeft + width - 1, rectY + 8, 553648127);
+         drawRect(listLeft, rectY, listLeft + width - 1, rectY + 8, 553648127);
          GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
          GL11.glEnable(3008);
          if (i < list.size()) {
-            NetworkPlayerInfo guiplayerinfo = (NetworkPlayerInfo)list.get(i);
-            String playerName = guiplayerinfo.func_178845_a().getName();
-            ScorePlayerTeam steam = mc.world.func_96441_U().func_96509_i(playerName);
-            if (steam == null && team == null || steam != null && team != null && steam.func_142054_a(team)) {
-               ++drawY;
-               fontRendererObj.func_175063_a(playerName, (float)listLeft, (float)y, -1);
+            NetworkPlayerInfo guiplayerinfo = list.get(i);
+            String playerName = guiplayerinfo.getGameProfile().getName();
+            ScorePlayerTeam steam = mc.world.getScoreboard().getPlayersTeam(playerName);
+            if (steam == null && team == null || steam != null && team != null && steam.isSameTeam(team)) {
+               drawY++;
+               fontRendererObj.drawStringWithShadow(playerName, listLeft, y, -1);
                if (scoreobjective != null) {
-                  int j4 = listLeft + fontRendererObj.func_78256_a(playerName) + 5;
+                  int j4 = listLeft + fontRendererObj.getStringWidth(playerName) + 5;
                   int k4 = listLeft + width - 12 - 5;
                   if (k4 - j4 > 5) {
-                     Score score = scoreobjective.func_96682_a().func_96529_a(guiplayerinfo.func_178845_a().getName(), scoreobjective);
-                     String s1 = TextFormatting.YELLOW + "" + score.func_96652_c();
-                     fontRendererObj.func_175063_a(s1, (float)(k4 - fontRendererObj.func_78256_a(s1)), (float)y, 16777215);
+                     Score score = scoreobjective.getScoreboard().getOrCreateScore(guiplayerinfo.getGameProfile().getName(), scoreobjective);
+                     String s1 = TextFormatting.YELLOW + "" + score.getScorePoints();
+                     fontRendererObj.drawStringWithShadow(s1, k4 - fontRendererObj.getStringWidth(s1), y, 16777215);
                   }
                }
 
-               drawResponseTime(listLeft + width - 12, y, guiplayerinfo.func_178853_c());
+               drawResponseTime(listLeft + width - 12, y, guiplayerinfo.getResponseTime());
             }
          }
       }
-
    }
 
    public static void drawResponseTime(int x, int y, int responseTime) {
       GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-      Minecraft.getMinecraft().func_110434_K().func_110577_a(field_110324_m);
+      Minecraft.getMinecraft().getTextureManager().bindTexture(ICONS);
       byte b2;
       if (responseTime < 0) {
          b2 = 5;
@@ -269,17 +253,17 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
          b2 = 4;
       }
 
-      static_drawTexturedModalRect(x, y, 0, 176 + b2 * 8, 10, 8, 0.0D);
+      static_drawTexturedModalRect(x, y, 0, 176 + b2 * 8, 10, 8, 0.0);
    }
 
    public static void static_drawTexturedModalRect(int x, int y, int x2, int y2, int x3, int y3, double zLevel) {
       Tessellator tessellator = Tessellator.getInstance();
       BufferBuilder builder = tessellator.getBuffer();
       builder.begin(7, DefaultVertexFormats.POSITION_TEX);
-      builder.pos((double)(x + 0), (double)(y + y3), zLevel).func_187315_a((double)((float)(x2 + 0) * 0.00390625F), (double)((float)(y2 + y3) * 0.00390625F)).func_181675_d();
-      builder.pos((double)(x + x3), (double)(y + y3), zLevel).func_187315_a((double)((float)(x2 + x3) * 0.00390625F), (double)((float)(y2 + y3) * 0.00390625F)).func_181675_d();
-      builder.pos((double)(x + x3), (double)(y + 0), zLevel).func_187315_a((double)((float)(x2 + x3) * 0.00390625F), (double)((float)(y2 + 0) * 0.00390625F)).func_181675_d();
-      builder.pos((double)(x + 0), (double)(y + 0), zLevel).func_187315_a((double)((float)(x2 + 0) * 0.00390625F), (double)((float)(y2 + 0) * 0.00390625F)).func_181675_d();
+      builder.pos(x + 0, y + y3, zLevel).tex((x2 + 0) * 0.00390625F, (y2 + y3) * 0.00390625F).endVertex();
+      builder.pos(x + x3, y + y3, zLevel).tex((x2 + x3) * 0.00390625F, (y2 + y3) * 0.00390625F).endVertex();
+      builder.pos(x + x3, y + 0, zLevel).tex((x2 + x3) * 0.00390625F, (y2 + 0) * 0.00390625F).endVertex();
+      builder.pos(x + 0, y + 0, zLevel).tex((x2 + 0) * 0.00390625F, (y2 + 0) * 0.00390625F).endVertex();
       tessellator.draw();
    }
 

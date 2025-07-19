@@ -14,6 +14,7 @@ public class RefactorFuncName extends RefactorAdapter {
       }
    }
 
+   @Override
    public String getNewFuncName(Object target, String name) {
       if (!name.equals(this.oldName)) {
          return null;

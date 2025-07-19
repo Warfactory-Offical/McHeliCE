@@ -11,10 +11,12 @@ public class MCH_PacketIndClient extends MCH_Packet {
    public int CmdID = -1;
    public String CmdStr;
 
+   @Override
    public int getMessageID() {
       return 268438032;
    }
 
+   @Override
    public void readData(ByteArrayDataInput data) {
       try {
          this.CmdID = data.readInt();
@@ -22,9 +24,9 @@ public class MCH_PacketIndClient extends MCH_Packet {
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       try {
          dos.writeInt(this.CmdID);
@@ -32,7 +34,6 @@ public class MCH_PacketIndClient extends MCH_Packet {
       } catch (IOException var3) {
          var3.printStackTrace();
       }
-
    }
 
    public static void send(EntityPlayer player, int cmd_id, String str) {

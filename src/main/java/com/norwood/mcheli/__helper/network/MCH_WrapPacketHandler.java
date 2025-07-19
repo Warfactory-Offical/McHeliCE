@@ -17,7 +17,7 @@ public class MCH_WrapPacketHandler implements IMessageHandler<MCH_WrapPacketData
                W_NetworkRegistry.packetHandler.onPacket(data, (EntityPlayer)MCH_Lib.getClientPlayer(), ctx);
             }
          } else {
-            W_NetworkRegistry.packetHandler.onPacket(data, ctx.getServerHandler().field_147369_b, ctx);
+            W_NetworkRegistry.packetHandler.onPacket(data, ctx.getServerHandler().player, ctx);
          }
       } catch (Exception var4) {
          var4.printStackTrace();

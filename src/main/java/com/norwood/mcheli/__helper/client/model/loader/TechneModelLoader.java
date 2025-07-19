@@ -15,31 +15,35 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TechneModelLoader implements _IModelCustomLoader, IVertexModelLoader {
    private static final String[] types = new String[]{"tcn"};
 
+   @Override
    public String getType() {
       return "Techne model";
    }
 
+   @Override
    public String[] getSuffixes() {
       return types;
    }
 
-   /** @deprecated */
    @Deprecated
+   @Override
    public _IModelCustom loadInstance(ResourceLocation resource) throws _ModelFormatException {
       throw new UnsupportedOperationException("Techne model is unsupported. file:" + resource);
    }
 
-   /** @deprecated */
    @Deprecated
+   @Override
    public _IModelCustom loadInstance(String resourceName, URL resource) throws _ModelFormatException {
       throw new UnsupportedOperationException("Techne model is unsupported. file:" + resource);
    }
 
+   @Override
    public String getExtension() {
       return "tcn";
    }
 
    @Nullable
+   @Override
    public _IModelCustom load(IResourceManager resourceManager, ResourceLocation location) throws IOException, _ModelFormatException {
       return null;
    }

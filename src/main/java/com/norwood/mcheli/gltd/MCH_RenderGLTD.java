@@ -23,30 +23,30 @@ public class MCH_RenderGLTD extends W_Render<MCH_EntityGLTD> {
 
    public MCH_RenderGLTD(RenderManager renderManager) {
       super(renderManager);
-      this.field_76989_e = 0.5F;
+      this.shadowSize = 0.5F;
    }
 
    public void doRender(MCH_EntityGLTD entity, double posX, double posY, double posZ, float par8, float tickTime) {
       GL11.glPushMatrix();
-      GL11.glTranslated(posX, posY + 0.25D, posZ);
-      this.setCommonRenderParam(true, entity.func_70070_b());
+      GL11.glTranslated(posX, posY + 0.25, posZ);
+      this.setCommonRenderParam(true, entity.getBrightnessForRender());
       this.bindTexture("textures/gltd.png");
       Minecraft mc = Minecraft.getMinecraft();
       boolean isNotRenderHead = false;
       if (entity.getRiddenByEntity() != null) {
          entity.isUsedPlayer = true;
-         entity.renderRotaionYaw = entity.getRiddenByEntity().field_70177_z;
-         entity.renderRotaionPitch = entity.getRiddenByEntity().field_70125_A;
-         isNotRenderHead = mc.field_71474_y.field_74320_O == 0 && W_Lib.isClientPlayer(entity.getRiddenByEntity());
+         entity.renderRotaionYaw = entity.getRiddenByEntity().rotationYaw;
+         entity.renderRotaionPitch = entity.getRiddenByEntity().rotationPitch;
+         isNotRenderHead = mc.gameSettings.thirdPersonView == 0 && W_Lib.isClientPlayer(entity.getRiddenByEntity());
       }
 
       if (entity.isUsedPlayer) {
          GL11.glPushMatrix();
-         GL11.glRotatef(-entity.field_70177_z, 0.0F, 1.0F, 0.0F);
+         GL11.glRotatef(-entity.rotationYaw, 0.0F, 1.0F, 0.0F);
          model.renderPart("$body");
          GL11.glPopMatrix();
       } else {
-         GL11.glRotatef(-entity.field_70177_z, 0.0F, 1.0F, 0.0F);
+         GL11.glRotatef(-entity.rotationYaw, 0.0F, 1.0F, 0.0F);
          model.renderPart("$body");
       }
 
@@ -64,7 +64,7 @@ public class MCH_RenderGLTD extends W_Render<MCH_EntityGLTD> {
       GL11.glTranslatef(0.0F, 0.45F, 0.0F);
       this.restoreCommonRenderParam();
       GL11.glDisable(2896);
-      Vec3d[] v = new Vec3d[]{new Vec3d(0.0D, 0.2D, 0.0D), new Vec3d(0.0D, 0.2D, 100.0D)};
+      Vec3d[] v = new Vec3d[]{new Vec3d(0.0, 0.2, 0.0), new Vec3d(0.0, 0.2, 100.0)};
       int a = rand.nextInt(64);
       MCH_RenderLib.drawLine(v, 1619066752 | a << 24);
       GL11.glEnable(2896);

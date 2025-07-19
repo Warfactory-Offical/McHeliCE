@@ -38,7 +38,7 @@ public class MCH_WrapperItemLayerModel implements IModel {
    }
 
    public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-      ItemCameraTransforms transforms = this.raw.func_181682_g();
+      ItemCameraTransforms transforms = this.raw.getAllTransforms();
       Map<TransformType, TRSRTransformation> tMap = Maps.newEnumMap(TransformType.class);
       tMap.putAll(PerspectiveMapWrapper.getTransforms(transforms));
       tMap.putAll(PerspectiveMapWrapper.getTransforms(state));

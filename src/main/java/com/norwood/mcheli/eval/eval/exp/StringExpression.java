@@ -26,6 +26,7 @@ public class StringExpression extends WordExpression {
       super(from, s);
    }
 
+   @Override
    public AbstractExpression dup(ShareExpValue s) {
       return new StringExpression(this, s);
    }
@@ -39,6 +40,7 @@ public class StringExpression extends WordExpression {
       return n;
    }
 
+   @Override
    public long evalLong() {
       try {
          return NumberUtil.parseLong(this.word);
@@ -55,22 +57,25 @@ public class StringExpression extends WordExpression {
       }
    }
 
+   @Override
    public double evalDouble() {
       try {
          return Double.parseDouble(this.word);
       } catch (Exception var4) {
          try {
-            return (double)NumberUtil.parseLong(this.word);
+            return NumberUtil.parseLong(this.word);
          } catch (Exception var3) {
             throw new EvalException(2003, this.word, this.string, this.pos, var4);
          }
       }
    }
 
+   @Override
    public Object evalObject() {
       return this.word;
    }
 
+   @Override
    public boolean equals(Object obj) {
       if (obj instanceof StringExpression) {
          StringExpression e = (StringExpression)obj;
@@ -80,10 +85,12 @@ public class StringExpression extends WordExpression {
       }
    }
 
+   @Override
    public int hashCode() {
       return this.word.hashCode();
    }
 
+   @Override
    public String toString() {
       StringBuffer sb = new StringBuffer();
       sb.append(this.getOperator());

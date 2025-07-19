@@ -1,7 +1,6 @@
 package com.norwood.mcheli.hud;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
@@ -38,8 +37,8 @@ public abstract class MCH_HudItem extends Gui {
    public static Minecraft mc;
    public static EntityPlayer player;
    public static MCH_EntityAircraft ac;
-   protected static double centerX = 0.0D;
-   protected static double centerY = 0.0D;
+   protected static double centerX = 0.0;
+   protected static double centerY = 0.0;
    public static double width;
    public static double height;
    protected static Random rand = new Random();
@@ -74,7 +73,7 @@ public abstract class MCH_HudItem extends Gui {
 
    public MCH_HudItem(int fileLine) {
       this.fileLine = fileLine;
-      this.field_73735_i = -110.0F;
+      this.zLevel = -110.0F;
    }
 
    public abstract void execute();
@@ -111,60 +110,72 @@ public abstract class MCH_HudItem extends Gui {
    }
 
    public void drawCenteredString(String s, int x, int y, int color) {
-      this.func_73732_a(mc.field_71466_p, s, x, y, color);
+      this.drawCenteredString(mc.fontRenderer, s, x, y, color);
    }
 
    public void drawString(String s, int x, int y, int color) {
-      this.func_73731_b(mc.field_71466_p, s, x, y, color);
+      this.drawString(mc.fontRenderer, s, x, y, color);
    }
 
-   public void drawTexture(String name, double left, double top, double width, double height, double uLeft, double vTop, double uWidth, double vHeight, float rot, int textureWidth, int textureHeight) {
+   public void drawTexture(
+      String name,
+      double left,
+      double top,
+      double width,
+      double height,
+      double uLeft,
+      double vTop,
+      double uWidth,
+      double vHeight,
+      float rot,
+      int textureWidth,
+      int textureHeight
+   ) {
       W_McClient.MOD_bindTexture("textures/gui/" + name + ".png");
       GL11.glPushMatrix();
-      GL11.glTranslated(left + width / 2.0D, top + height / 2.0D, 0.0D);
+      GL11.glTranslated(left + width / 2.0, top + height / 2.0, 0.0);
       GL11.glRotatef(rot, 0.0F, 0.0F, 1.0F);
-      float fx = (float)(1.0D / (double)textureWidth);
-      float fy = (float)(1.0D / (double)textureHeight);
+      float fx = (float)(1.0 / textureWidth);
+      float fy = (float)(1.0 / textureHeight);
       Tessellator tessellator = Tessellator.getInstance();
       BufferBuilder builder = tessellator.getBuffer();
       builder.begin(7, DefaultVertexFormats.POSITION_TEX);
-      builder.pos(-width / 2.0D, height / 2.0D, (double)this.field_73735_i).func_187315_a(uLeft * (double)fx, (vTop + vHeight) * (double)fy).func_181675_d();
-      builder.pos(width / 2.0D, height / 2.0D, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)fx, (vTop + vHeight) * (double)fy).func_181675_d();
-      builder.pos(width / 2.0D, -height / 2.0D, (double)this.field_73735_i).func_187315_a((uLeft + uWidth) * (double)fx, vTop * (double)fy).func_181675_d();
-      builder.pos(-width / 2.0D, -height / 2.0D, (double)this.field_73735_i).func_187315_a(uLeft * (double)fx, vTop * (double)fy).func_181675_d();
+      builder.pos(-width / 2.0, height / 2.0, this.zLevel).tex(uLeft * fx, (vTop + vHeight) * fy).endVertex();
+      builder.pos(width / 2.0, height / 2.0, this.zLevel).tex((uLeft + uWidth) * fx, (vTop + vHeight) * fy).endVertex();
+      builder.pos(width / 2.0, -height / 2.0, this.zLevel).tex((uLeft + uWidth) * fx, vTop * fy).endVertex();
+      builder.pos(-width / 2.0, -height / 2.0, this.zLevel).tex(uLeft * fx, vTop * fy).endVertex();
       tessellator.draw();
       GL11.glPopMatrix();
    }
 
    public static void drawRect(double par0, double par1, double par2, double par3, int par4) {
-      double j1;
       if (par0 < par2) {
-         j1 = par0;
+         double j1 = par0;
          par0 = par2;
          par2 = j1;
       }
 
       if (par1 < par3) {
-         j1 = par1;
+         double j1 = par1;
          par1 = par3;
          par3 = j1;
       }
 
-      float f3 = (float)(par4 >> 24 & 255) / 255.0F;
-      float f = (float)(par4 >> 16 & 255) / 255.0F;
-      float f1 = (float)(par4 >> 8 & 255) / 255.0F;
-      float f2 = (float)(par4 & 255) / 255.0F;
+      float f3 = (par4 >> 24 & 0xFF) / 255.0F;
+      float f = (par4 >> 16 & 0xFF) / 255.0F;
+      float f1 = (par4 >> 8 & 0xFF) / 255.0F;
+      float f2 = (par4 & 0xFF) / 255.0F;
       Tessellator tessellator = Tessellator.getInstance();
       BufferBuilder builder = tessellator.getBuffer();
       GL11.glEnable(3042);
       GL11.glDisable(3553);
       W_OpenGlHelper.glBlendFunc(770, 771, 1, 0);
       GL11.glColor4f(f, f1, f2, f3);
-      builder.begin(7, DefaultVertexFormats.field_181705_e);
-      builder.pos(par0, par3, 0.0D).func_181675_d();
-      builder.pos(par2, par3, 0.0D).func_181675_d();
-      builder.pos(par2, par1, 0.0D).func_181675_d();
-      builder.pos(par0, par1, 0.0D).func_181675_d();
+      builder.begin(7, DefaultVertexFormats.POSITION);
+      builder.pos(par0, par3, 0.0).endVertex();
+      builder.pos(par2, par3, 0.0).endVertex();
+      builder.pos(par2, par1, 0.0).endVertex();
+      builder.pos(par0, par1, 0.0).endVertex();
       tessellator.draw();
       GL11.glEnable(3553);
       GL11.glDisable(3042);
@@ -179,13 +190,13 @@ public abstract class MCH_HudItem extends Gui {
       GL11.glEnable(3042);
       GL11.glDisable(3553);
       GL11.glBlendFunc(770, 771);
-      GL11.glColor4ub((byte)(color >> 16 & 255), (byte)(color >> 8 & 255), (byte)(color >> 0 & 255), (byte)(color >> 24 & 255));
+      GL11.glColor4ub((byte)(color >> 16 & 0xFF), (byte)(color >> 8 & 0xFF), (byte)(color >> 0 & 0xFF), (byte)(color >> 24 & 0xFF));
       Tessellator tessellator = Tessellator.getInstance();
       BufferBuilder builder = tessellator.getBuffer();
-      builder.begin(mode, DefaultVertexFormats.field_181705_e);
+      builder.begin(mode, DefaultVertexFormats.POSITION);
 
-      for(int i = 0; i < line.length; i += 2) {
-         builder.pos(line[i + 0], line[i + 1], (double)this.field_73735_i).func_181675_d();
+      for (int i = 0; i < line.length; i += 2) {
+         builder.pos(line[i + 0], line[i + 1], this.zLevel).endVertex();
       }
 
       tessellator.draw();
@@ -208,14 +219,14 @@ public abstract class MCH_HudItem extends Gui {
       GL11.glEnable(3042);
       GL11.glDisable(3553);
       GL11.glBlendFunc(770, 771);
-      GL11.glColor4ub((byte)(color >> 16 & 255), (byte)(color >> 8 & 255), (byte)(color >> 0 & 255), (byte)(color >> 24 & 255));
-      GL11.glPointSize((float)pointWidth);
+      GL11.glColor4ub((byte)(color >> 16 & 0xFF), (byte)(color >> 8 & 0xFF), (byte)(color >> 0 & 0xFF), (byte)(color >> 24 & 0xFF));
+      GL11.glPointSize(pointWidth);
       Tessellator tessellator = Tessellator.getInstance();
       BufferBuilder builder = tessellator.getBuffer();
-      builder.begin(0, DefaultVertexFormats.field_181705_e);
+      builder.begin(0, DefaultVertexFormats.POSITION);
 
-      for(int i = 0; i < points.size(); i += 2) {
-         builder.pos((Double)points.get(i), (Double)points.get(i + 1), 0.0D).func_181675_d();
+      for (int i = 0; i < points.size(); i += 2) {
+         builder.pos(points.get(i), points.get(i + 1), 0.0).endVertex();
       }
 
       tessellator.draw();
@@ -223,12 +234,12 @@ public abstract class MCH_HudItem extends Gui {
       GL11.glDisable(3042);
       GL11.glPopMatrix();
       GL11.glColor4b((byte)-1, (byte)-1, (byte)-1, (byte)-1);
-      GL11.glPointSize((float)prevWidth);
+      GL11.glPointSize(prevWidth);
    }
 
    public static void updateVarMap(MCH_EntityAircraft ac, MCH_WeaponSet ws) {
       if (varMap == null) {
-         varMap = new LinkedHashMap();
+         varMap = new LinkedHashMap<>();
       }
 
       updateVarMapItem("color", getColor());
@@ -236,44 +247,44 @@ public abstract class MCH_HudItem extends Gui {
       updateVarMapItem("center_y", centerY);
       updateVarMapItem("width", width);
       updateVarMapItem("height", height);
-      updateVarMapItem("time", (double)(player.world.func_72820_D() % 24000L));
-      updateVarMapItem("test_mode", MCH_Config.TestMode.prmBool ? 1.0D : 0.0D);
-      updateVarMapItem("plyr_yaw", (double)MathHelper.func_76142_g(player.field_70177_z));
-      updateVarMapItem("plyr_pitch", (double)player.field_70125_A);
-      updateVarMapItem("yaw", (double)MathHelper.func_76142_g(ac.getRotYaw()));
-      updateVarMapItem("pitch", (double)ac.getRotPitch());
-      updateVarMapItem("roll", (double)MathHelper.func_76142_g(ac.getRotRoll()));
-      updateVarMapItem("altitude", (double)Altitude);
+      updateVarMapItem("time", player.world.getWorldTime() % 24000L);
+      updateVarMapItem("test_mode", MCH_Config.TestMode.prmBool ? 1.0 : 0.0);
+      updateVarMapItem("plyr_yaw", MathHelper.wrapDegrees(player.rotationYaw));
+      updateVarMapItem("plyr_pitch", player.rotationPitch);
+      updateVarMapItem("yaw", MathHelper.wrapDegrees(ac.getRotYaw()));
+      updateVarMapItem("pitch", ac.getRotPitch());
+      updateVarMapItem("roll", MathHelper.wrapDegrees(ac.getRotRoll()));
+      updateVarMapItem("altitude", Altitude);
       updateVarMapItem("sea_alt", getSeaAltitude(ac));
-      updateVarMapItem("have_radar", ac.isEntityRadarMounted() ? 1.0D : 0.0D);
-      updateVarMapItem("radar_rot", (double)getRadarRot(ac));
-      updateVarMapItem("hp", (double)ac.getHP());
-      updateVarMapItem("max_hp", (double)ac.getMaxHP());
-      updateVarMapItem("hp_rto", ac.getMaxHP() > 0 ? (double)ac.getHP() / (double)ac.getMaxHP() : 0.0D);
+      updateVarMapItem("have_radar", ac.isEntityRadarMounted() ? 1.0 : 0.0);
+      updateVarMapItem("radar_rot", getRadarRot(ac));
+      updateVarMapItem("hp", ac.getHP());
+      updateVarMapItem("max_hp", ac.getMaxHP());
+      updateVarMapItem("hp_rto", ac.getMaxHP() > 0 ? (double)ac.getHP() / ac.getMaxHP() : 0.0);
       updateVarMapItem("throttle", ac.getCurrentThrottle());
       updateVarMapItem("pos_x", ac.posX);
       updateVarMapItem("pos_y", ac.posY);
       updateVarMapItem("pos_z", ac.posZ);
-      updateVarMapItem("motion_x", ac.field_70159_w);
-      updateVarMapItem("motion_y", ac.field_70181_x);
-      updateVarMapItem("motion_z", ac.field_70179_y);
-      updateVarMapItem("speed", Math.sqrt(ac.field_70159_w * ac.field_70159_w + ac.field_70181_x * ac.field_70181_x + ac.field_70179_y * ac.field_70179_y));
-      updateVarMapItem("fuel", (double)ac.getFuelP());
-      updateVarMapItem("low_fuel", (double)isLowFuel(ac));
+      updateVarMapItem("motion_x", ac.motionX);
+      updateVarMapItem("motion_y", ac.motionY);
+      updateVarMapItem("motion_z", ac.motionZ);
+      updateVarMapItem("speed", Math.sqrt(ac.motionX * ac.motionX + ac.motionY * ac.motionY + ac.motionZ * ac.motionZ));
+      updateVarMapItem("fuel", ac.getFuelP());
+      updateVarMapItem("low_fuel", isLowFuel(ac));
       updateVarMapItem("stick_x", StickX);
       updateVarMapItem("stick_y", StickY);
       updateVarMap_Weapon(ws);
-      updateVarMapItem("vtol_stat", (double)getVtolStat(ac));
-      updateVarMapItem("free_look", (double)getFreeLook(ac, player));
-      updateVarMapItem("gunner_mode", ac.getIsGunnerMode(player) ? 1.0D : 0.0D);
-      updateVarMapItem("cam_mode", (double)ac.getCameraMode(player));
-      updateVarMapItem("cam_zoom", (double)ac.camera.getCameraZoom());
-      updateVarMapItem("auto_pilot", (double)getAutoPilot(ac, player));
-      updateVarMapItem("have_flare", ac.haveFlare() ? 1.0D : 0.0D);
-      updateVarMapItem("can_flare", ac.canUseFlare() ? 1.0D : 0.0D);
-      updateVarMapItem("inventory", (double)ac.func_70302_i_());
-      updateVarMapItem("hovering", ac instanceof MCH_EntityHeli && ac.isHoveringMode() ? 1.0D : 0.0D);
-      updateVarMapItem("is_uav", ac.isUAV() ? 1.0D : 0.0D);
+      updateVarMapItem("vtol_stat", getVtolStat(ac));
+      updateVarMapItem("free_look", getFreeLook(ac, player));
+      updateVarMapItem("gunner_mode", ac.getIsGunnerMode(player) ? 1.0 : 0.0);
+      updateVarMapItem("cam_mode", ac.getCameraMode(player));
+      updateVarMapItem("cam_zoom", ac.camera.getCameraZoom());
+      updateVarMapItem("auto_pilot", getAutoPilot(ac, player));
+      updateVarMapItem("have_flare", ac.haveFlare() ? 1.0 : 0.0);
+      updateVarMapItem("can_flare", ac.canUseFlare() ? 1.0 : 0.0);
+      updateVarMapItem("inventory", ac.getSizeInventory());
+      updateVarMapItem("hovering", ac instanceof MCH_EntityHeli && ac.isHoveringMode() ? 1.0 : 0.0);
+      updateVarMapItem("is_uav", ac.isUAV() ? 1.0 : 0.0);
       updateVarMapItem("uav_fs", getUAV_Fs(ac));
    }
 
@@ -284,30 +295,27 @@ public abstract class MCH_HudItem extends Gui {
    public static void drawVarMap() {
       if (MCH_Config.TestMode.prmBool) {
          int i = 0;
-         int x = (int)(-300.0D + centerX);
-         int y = (int)(-100.0D + centerY);
-         Iterator var3 = varMap.keySet().iterator();
+         int x = (int)(-300.0 + centerX);
+         int y = (int)(-100.0 + centerY);
 
-         while(var3.hasNext()) {
-            Object keyObj = var3.next();
+         for (Object keyObj : varMap.keySet()) {
             String key = (String)keyObj;
             dummy.drawString(key, x, y, 52992);
             Double d = (Double)varMap.get(key);
             String fmt = key.equalsIgnoreCase("color") ? String.format(": 0x%08X", d.intValue()) : String.format(": %.2f", d);
             dummy.drawString(fmt, x + 50, y, 52992);
-            ++i;
+            i++;
             y += 8;
             if (i == varMap.size() / 2) {
-               x = (int)(200.0D + centerX);
-               y = (int)(-100.0D + centerY);
+               x = (int)(200.0 + centerX);
+               y = (int)(-100.0 + centerY);
             }
          }
       }
-
    }
 
    private static double getUAV_Fs(MCH_EntityAircraft ac) {
-      double uav_fs = 0.0D;
+      double uav_fs = 0.0;
       if (ac.isUAV() && ac.getUavStation() != null) {
          double dx = ac.posX - ac.getUavStation().posX;
          double dz = ac.posZ - ac.getUavStation().posZ;
@@ -316,7 +324,7 @@ public abstract class MCH_HudItem extends Gui {
             dist = 120.0F;
          }
 
-         uav_fs = (double)(1.0F - dist / 120.0F);
+         uav_fs = 1.0F - dist / 120.0F;
       }
 
       return uav_fs;
@@ -324,10 +332,10 @@ public abstract class MCH_HudItem extends Gui {
 
    private static void updateVarMap_Weapon(MCH_WeaponSet ws) {
       int reloading = 0;
-      double wpn_heat = 0.0D;
+      double wpn_heat = 0.0;
       int is_heat_wpn = 0;
       int sight_type = 0;
-      double lock = 0.0D;
+      double lock = 0.0;
       float rel_time = 0.0F;
       int display_mortar_dist = 0;
       if (ws != null) {
@@ -341,7 +349,7 @@ public abstract class MCH_HudItem extends Gui {
          reloading = ws.isInPreparation() ? 1 : 0;
          display_mortar_dist = wi.displayMortarDistance ? 1 : 0;
          if (wi.delay > wi.reloadTime) {
-            rel_time = (float)ws.countWait / (float)(wi.delay > 0 ? wi.delay : 1);
+            rel_time = (float)ws.countWait / (wi.delay > 0 ? wi.delay : 1);
             if (rel_time < 0.0F) {
                rel_time = -rel_time;
             }
@@ -350,18 +358,18 @@ public abstract class MCH_HudItem extends Gui {
                rel_time = 1.0F;
             }
          } else {
-            rel_time = (float)ws.countReloadWait / (float)(wi.reloadTime > 0 ? wi.reloadTime : 1);
+            rel_time = (float)ws.countReloadWait / (wi.reloadTime > 0 ? wi.reloadTime : 1);
          }
 
          if (wi.maxHeatCount > 0) {
-            double hpp = (double)ws.currentHeat / (double)wi.maxHeatCount;
-            wpn_heat = hpp > 1.0D ? 1.0D : hpp;
+            double hpp = (double)ws.currentHeat / wi.maxHeatCount;
+            wpn_heat = hpp > 1.0 ? 1.0 : hpp;
          }
 
          int cntLockMax = wb.getLockCountMax();
          MCH_SightType sight = wb.getSightType();
          if (sight == MCH_SightType.LOCK && cntLockMax > 0) {
-            lock = (double)wb.getLockCount() / (double)cntLockMax;
+            lock = (double)wb.getLockCount() / cntLockMax;
             sight_type = 2;
          }
 
@@ -370,14 +378,14 @@ public abstract class MCH_HudItem extends Gui {
          }
       }
 
-      updateVarMapItem("reloading", (double)reloading);
-      updateVarMapItem("reload_time", (double)rel_time);
+      updateVarMapItem("reloading", reloading);
+      updateVarMapItem("reload_time", rel_time);
       updateVarMapItem("wpn_heat", wpn_heat);
-      updateVarMapItem("is_heat_wpn", (double)is_heat_wpn);
-      updateVarMapItem("sight_type", (double)sight_type);
+      updateVarMapItem("is_heat_wpn", is_heat_wpn);
+      updateVarMapItem("sight_type", sight_type);
       updateVarMapItem("lock", lock);
-      updateVarMapItem("dsp_mt_dist", (double)display_mortar_dist);
-      updateVarMapItem("mt_dist", (double)MortarDist);
+      updateVarMapItem("dsp_mt_dist", display_mortar_dist);
+      updateVarMapItem("mt_dist", MortarDist);
    }
 
    public static int isLowFuel(MCH_EntityAircraft ac) {
@@ -386,7 +394,7 @@ public abstract class MCH_HudItem extends Gui {
          countFuelWarn = 280;
       }
 
-      --countFuelWarn;
+      countFuelWarn--;
       if (countFuelWarn < 160 && ac.getMaxFuel() > 0 && ac.getFuelP() < 0.1F && !ac.isInfinityFuel(player, false)) {
          is_low_fuel = 1;
       }
@@ -395,18 +403,18 @@ public abstract class MCH_HudItem extends Gui {
    }
 
    public static double getSeaAltitude(MCH_EntityAircraft ac) {
-      double a = ac.posY - ac.world.func_72919_O();
-      return a >= 0.0D ? a : 0.0D;
+      double a = ac.posY - ac.world.getHorizon();
+      return a >= 0.0 ? a : 0.0;
    }
 
    public static float getRadarRot(MCH_EntityAircraft ac) {
-      float rot = (float)ac.getRadarRotate();
+      float rot = ac.getRadarRotate();
       float prevRot = prevRadarRot;
       if (rot < prevRot) {
          rot += 360.0F;
       }
 
-      prevRadarRot = (float)ac.getRadarRotate();
+      prevRadarRot = ac.getRadarRotate();
       return MCH_Lib.smooth(rot, prevRot, partialTicks);
    }
 
@@ -423,16 +431,16 @@ public abstract class MCH_HudItem extends Gui {
    }
 
    public static double getColor() {
-      long l = (long)colorSetting;
+      long l = colorSetting;
       l &= -1L;
-      return (double)l;
+      return l;
    }
 
    private static void updateStick() {
       StickX_LPF.put((float)(MCH_ClientCommonTickHandler.getCurrentStickX() / MCH_ClientCommonTickHandler.getMaxStickLength()));
       StickY_LPF.put((float)(-MCH_ClientCommonTickHandler.getCurrentStickY() / MCH_ClientCommonTickHandler.getMaxStickLength()));
-      StickX = (double)StickX_LPF.getAvg();
-      StickY = (double)StickY_LPF.getAvg();
+      StickX = StickX_LPF.getAvg();
+      StickY = StickY_LPF.getAvg();
    }
 
    private static void updateRadar(MCH_EntityAircraft ac) {
@@ -447,12 +455,12 @@ public abstract class MCH_HudItem extends Gui {
             heliY = 256;
          }
 
-         for(int i = 0; i < 256 && heliY - i > 0; ++i) {
+         for (int i = 0; i < 256 && heliY - i > 0; i++) {
             int id = W_WorldFunc.getBlockId(ac.world, (int)ac.posX, heliY - i, (int)ac.posZ);
             if (id != 0) {
                Altitude = i;
-               if (!(ac.posY <= 256.0D)) {
-                  Altitude = (int)((double)Altitude + (ac.posY - 256.0D));
+               if (!(ac.posY <= 256.0)) {
+                  Altitude = (int)(Altitude + (ac.posY - 256.0));
                }
                break;
             }
@@ -460,9 +468,8 @@ public abstract class MCH_HudItem extends Gui {
 
          altitudeUpdateCount = 30;
       } else {
-         --altitudeUpdateCount;
+         altitudeUpdateCount--;
       }
-
    }
 
    public static void updateWeapon(MCH_EntityAircraft ac, MCH_WeaponSet ws) {
@@ -486,8 +493,8 @@ public abstract class MCH_HudItem extends Gui {
             }
 
             if (wi.delay > wi.reloadTime) {
-               ReloadSec = ws.countWait >= 0 ? (float)ws.countWait : (float)(-ws.countWait);
-               ReloadPer = (float)ws.countWait / (float)(wi.delay > 0 ? wi.delay : 1);
+               ReloadSec = ws.countWait >= 0 ? ws.countWait : -ws.countWait;
+               ReloadPer = (float)ws.countWait / (wi.delay > 0 ? wi.delay : 1);
                if (ReloadPer < 0.0F) {
                   ReloadPer = -ReloadPer;
                }
@@ -496,8 +503,8 @@ public abstract class MCH_HudItem extends Gui {
                   ReloadPer = 1.0F;
                }
             } else {
-               ReloadSec = (float)ws.countReloadWait;
-               ReloadPer = (float)ws.countReloadWait / (float)(wi.reloadTime > 0 ? wi.reloadTime : 1);
+               ReloadSec = ws.countReloadWait;
+               ReloadPer = (float)ws.countReloadWait / (wi.reloadTime > 0 ? wi.reloadTime : 1);
             }
 
             ReloadSec /= 20.0F;
@@ -510,11 +517,10 @@ public abstract class MCH_HudItem extends Gui {
       if (ac.isUAV() && ac.getUavStation() != null) {
          double dx = ac.posX - ac.getUavStation().posX;
          double dz = ac.posZ - ac.getUavStation().posZ;
-         UAV_Dist = (double)((float)Math.sqrt(dx * dx + dz * dz));
+         UAV_Dist = (float)Math.sqrt(dx * dx + dz * dz);
       } else {
-         UAV_Dist = 0.0D;
+         UAV_Dist = 0.0;
       }
-
    }
 
    private static void updateTvMissile(MCH_EntityAircraft ac) {
@@ -528,11 +534,10 @@ public abstract class MCH_HudItem extends Gui {
          double dz = tvmissile.posZ - ac.posZ;
          TVM_Diff = Math.sqrt(dx * dx + dy * dy + dz * dz);
       } else {
-         TVM_PosX = 0.0D;
-         TVM_PosY = 0.0D;
-         TVM_PosZ = 0.0D;
-         TVM_Diff = 0.0D;
+         TVM_PosX = 0.0;
+         TVM_PosY = 0.0;
+         TVM_PosZ = 0.0;
+         TVM_Diff = 0.0;
       }
-
    }
 }

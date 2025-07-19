@@ -17,10 +17,12 @@ public class MCH_PacketNotifyAmmoNum extends MCH_Packet {
    public short[] ammo = new short[0];
    public short[] restAmmo = new short[0];
 
+   @Override
    public int getMessageID() {
       return 268439604;
    }
 
+   @Override
    public void readData(ByteArrayDataInput data) {
       try {
          this.entityID_Ac = data.readInt();
@@ -30,7 +32,7 @@ public class MCH_PacketNotifyAmmoNum extends MCH_Packet {
             this.ammo = new short[this.num];
             this.restAmmo = new short[this.num];
 
-            for(int i = 0; i < this.num; ++i) {
+            for (int i = 0; i < this.num; i++) {
                this.ammo[i] = data.readShort();
                this.restAmmo[i] = data.readShort();
             }
@@ -42,9 +44,9 @@ public class MCH_PacketNotifyAmmoNum extends MCH_Packet {
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       try {
          dos.writeInt(this.entityID_Ac);
@@ -52,7 +54,7 @@ public class MCH_PacketNotifyAmmoNum extends MCH_Packet {
          if (this.all) {
             dos.writeByte(this.num);
 
-            for(int i = 0; i < this.num; ++i) {
+            for (int i = 0; i < this.num; i++) {
                dos.writeShort(this.ammo[i]);
                dos.writeShort(this.restAmmo[i]);
             }
@@ -64,7 +66,6 @@ public class MCH_PacketNotifyAmmoNum extends MCH_Packet {
       } catch (IOException var3) {
          var3.printStackTrace();
       }
-
    }
 
    public static void sendAllAmmoNum(MCH_EntityAircraft ac, EntityPlayer target) {
@@ -75,7 +76,7 @@ public class MCH_PacketNotifyAmmoNum extends MCH_Packet {
       s.ammo = new short[s.num];
       s.restAmmo = new short[s.num];
 
-      for(int i = 0; i < s.num; ++i) {
+      for (int i = 0; i < s.num; i++) {
          s.ammo[i] = (short)ac.getWeapon(i).getAmmoNum();
          s.restAmmo[i] = (short)ac.getWeapon(i).getRestAllAmmoNum();
       }
@@ -99,7 +100,7 @@ public class MCH_PacketNotifyAmmoNum extends MCH_Packet {
 
    public static void send(MCH_PacketNotifyAmmoNum s, MCH_EntityAircraft ac, EntityPlayer target) {
       if (target == null) {
-         for(int i = 0; i < ac.getSeatNum() + 1; ++i) {
+         for (int i = 0; i < ac.getSeatNum() + 1; i++) {
             Entity e = ac.getEntityBySeatId(i);
             if (e instanceof EntityPlayer) {
                W_Network.sendToPlayer(s, (EntityPlayer)e);
@@ -108,6 +109,5 @@ public class MCH_PacketNotifyAmmoNum extends MCH_Packet {
       } else {
          W_Network.sendToPlayer(s, target);
       }
-
    }
 }

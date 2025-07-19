@@ -25,11 +25,10 @@ public class W_Sound extends MovingSound {
       if (entity != null) {
          this.setPosition(entity.posX, entity.posY, entity.posZ);
       }
-
    }
 
    public void setRepeat(boolean b) {
-      this.field_147659_g = b;
+      this.repeat = b;
    }
 
    public void setSoundParam(Entity e, float v, float p) {
@@ -43,23 +42,23 @@ public class W_Sound extends MovingSound {
    }
 
    public void setVolume(float v) {
-      this.field_147662_b = v;
+      this.volume = v;
    }
 
    public void setPitch(float p) {
-      this.field_147663_c = p;
+      this.pitch = p;
    }
 
    public void setPosition(double x, double y, double z) {
-      this.field_147660_d = (float)x;
-      this.field_147661_e = (float)y;
-      this.field_147658_f = (float)z;
+      this.xPosF = (float)x;
+      this.yPosF = (float)y;
+      this.zPosF = (float)z;
    }
 
    public void setPosition(Entity e) {
       this.setPosition(e.posX, e.posY, e.posZ);
    }
 
-   public void func_73660_a() {
+   public void update() {
    }
 }

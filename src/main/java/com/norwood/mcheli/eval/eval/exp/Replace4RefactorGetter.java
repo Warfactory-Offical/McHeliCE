@@ -15,7 +15,7 @@ public class Replace4RefactorGetter extends ReplaceAdapter {
    }
 
    protected AbstractExpression var(VariableExpression exp) {
-      String name = this.ref.getNewName((Object)null, exp.getWord());
+      String name = this.ref.getNewName(null, exp.getWord());
       return (AbstractExpression)(name == null ? exp : this.rule.parse(name, exp.share));
    }
 
@@ -36,10 +36,12 @@ public class Replace4RefactorGetter extends ReplaceAdapter {
       }
    }
 
+   @Override
    public AbstractExpression replace0(WordExpression exp) {
       return (AbstractExpression)(exp instanceof VariableExpression ? this.var((VariableExpression)exp) : exp);
    }
 
+   @Override
    public AbstractExpression replace2(Col2OpeExpression exp) {
       return (AbstractExpression)(exp instanceof FieldExpression ? this.field((FieldExpression)exp) : exp);
    }

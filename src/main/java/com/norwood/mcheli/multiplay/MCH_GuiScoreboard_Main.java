@@ -1,7 +1,6 @@
 package com.norwood.mcheli.multiplay;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import com.norwood.mcheli.MCH_ServerSettings;
 import com.norwood.mcheli.wrapper.W_GuiButton;
@@ -15,17 +14,18 @@ public class MCH_GuiScoreboard_Main extends MCH_GuiScoreboard_Base {
       super(switcher, player);
    }
 
-   public void func_73866_w_() {
-      super.func_73866_w_();
+   @Override
+   public void initGui() {
+      super.initGui();
       if (this.buttonSwitchPVP == null) {
-         this.field_147003_i = 0;
-         this.field_147009_r = 0;
-         int WIDTH = getScoreboradWidth(this.field_146297_k) * 3 / 4;
+         this.guiLeft = 0;
+         this.guiTop = 0;
+         int WIDTH = getScoreboradWidth(this.mc) * 3 / 4;
          if (WIDTH < 80) {
             WIDTH = 80;
          }
 
-         int LEFT = getScoreBoardLeft(this.field_146297_k, this.getTeamNum() + 1, 0) / 4;
+         int LEFT = getScoreBoardLeft(this.mc, this.getTeamNum() + 1, 0) / 4;
          this.buttonSwitchPVP = new W_GuiButton(1024, LEFT, 80, WIDTH, 20, "");
          this.listGui.add(this.buttonSwitchPVP);
          W_GuiButton btn = new W_GuiButton(256, LEFT, 100, WIDTH, 20, "Team shuffle");
@@ -41,53 +41,50 @@ public class MCH_GuiScoreboard_Main extends MCH_GuiScoreboard_Base {
       }
    }
 
-   protected void func_73869_a(char c, int code) throws IOException {
+   protected void keyTyped(char c, int code) throws IOException {
       if (code == 1) {
-         this.field_146297_k.player.func_71053_j();
+         this.mc.player.closeScreen();
       }
-
    }
 
+   @Override
    public void updateScreenButtons(List<GuiButton> list) {
-      Iterator var2 = list.iterator();
-
-      while(var2.hasNext()) {
-         Object o = var2.next();
+      for (Object o : list) {
          GuiButton button = (GuiButton)o;
-         if (button.field_146127_k == 1024) {
-            button.field_146126_j = "PVP : " + (MCH_ServerSettings.enablePVP ? "ON" : "OFF");
+         if (button.id == 1024) {
+            button.displayString = "PVP : " + (MCH_ServerSettings.enablePVP ? "ON" : "OFF");
          }
       }
-
    }
 
-   protected void func_146284_a(GuiButton btn) throws IOException {
-      if (btn != null && btn.field_146124_l) {
-         switch(btn.field_146127_k) {
-         case 256:
-            MCH_PacketIndMultiplayCommand.send(256, "");
-            break;
-         case 512:
-            this.switchScreen(MCH_GuiScoreboard_Base.SCREEN_ID.CREATE_TEAM);
-            break;
-         case 768:
-            MCH_PacketIndMultiplayCommand.send(512, "");
-            break;
-         case 1024:
-            MCH_PacketIndMultiplayCommand.send(1024, "");
-            break;
-         case 1280:
-            MCH_PacketIndMultiplayCommand.send(1280, "");
+   protected void actionPerformed(GuiButton btn) throws IOException {
+      if (btn != null && btn.enabled) {
+         switch (btn.id) {
+            case 256:
+               MCH_PacketIndMultiplayCommand.send(256, "");
+               break;
+            case 512:
+               this.switchScreen(MCH_GuiScoreboard_Base.SCREEN_ID.CREATE_TEAM);
+               break;
+            case 768:
+               MCH_PacketIndMultiplayCommand.send(512, "");
+               break;
+            case 1024:
+               MCH_PacketIndMultiplayCommand.send(1024, "");
+               break;
+            case 1280:
+               MCH_PacketIndMultiplayCommand.send(1280, "");
          }
       }
-
    }
 
+   @Override
    public void drawGuiContainerForegroundLayerScreen(int x, int y) {
       super.drawGuiContainerForegroundLayerScreen(x, y);
    }
 
-   protected void func_146976_a(float par1, int par2, int par3) {
-      drawList(this.field_146297_k, this.field_146289_q, true);
+   @Override
+   protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
+      drawList(this.mc, this.fontRenderer, true);
    }
 }

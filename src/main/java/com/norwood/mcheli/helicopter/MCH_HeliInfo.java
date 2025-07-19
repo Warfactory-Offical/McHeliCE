@@ -17,32 +17,38 @@ public class MCH_HeliInfo extends MCH_AircraftInfo {
       super(location, path);
       this.isEnableGunnerMode = false;
       this.isEnableFoldBlade = false;
-      this.rotorList = new ArrayList();
+      this.rotorList = new ArrayList<>();
       this.minRotationPitch = -20.0F;
       this.maxRotationPitch = 20.0F;
    }
 
+   @Override
    public boolean validate() throws Exception {
-      this.speed = (float)((double)this.speed * MCH_Config.AllHeliSpeed.prmDouble);
+      this.speed = (float)(this.speed * MCH_Config.AllHeliSpeed.prmDouble);
       return super.validate();
    }
 
+   @Override
    public float getDefaultSoundRange() {
       return 80.0F;
    }
 
+   @Override
    public float getDefaultRotorSpeed() {
       return 79.99F;
    }
 
+   @Override
    public int getDefaultMaxZoom() {
       return 8;
    }
 
+   @Override
    public Item getItem() {
       return this.item;
    }
 
+   @Override
    public String getDefaultHudName(int seatId) {
       if (seatId <= 0) {
          return "heli";
@@ -51,6 +57,7 @@ public class MCH_HeliInfo extends MCH_AircraftInfo {
       }
    }
 
+   @Override
    public void loadItemData(String item, String data) {
       super.loadItemData(item, data);
       if (item.compareTo("enablefoldblade") == 0) {
@@ -59,21 +66,36 @@ public class MCH_HeliInfo extends MCH_AircraftInfo {
          String[] s = data.split("\\s*,\\s*");
          if (s.length == 8 || s.length == 9) {
             boolean cfb = s.length == 9 && this.toBool(s[8]);
-            MCH_HeliInfo.Rotor e = new MCH_HeliInfo.Rotor(this, this.toInt(s[0]), this.toInt(s[1]), this.toFloat(s[2]), this.toFloat(s[3]), this.toFloat(s[4]), this.toFloat(s[5]), this.toFloat(s[6]), this.toFloat(s[7]), "blade" + this.rotorList.size(), cfb, item.compareTo("addrotorold") == 0);
+            MCH_HeliInfo.Rotor e = new MCH_HeliInfo.Rotor(
+               this,
+               this.toInt(s[0]),
+               this.toInt(s[1]),
+               this.toFloat(s[2]),
+               this.toFloat(s[3]),
+               this.toFloat(s[4]),
+               this.toFloat(s[5]),
+               this.toFloat(s[6]),
+               this.toFloat(s[7]),
+               "blade" + this.rotorList.size(),
+               cfb,
+               item.compareTo("addrotorold") == 0
+            );
             this.rotorList.add(e);
          }
       }
-
    }
 
+   @Override
    public String getDirectoryName() {
       return "helicopters";
    }
 
+   @Override
    public String getKindName() {
       return "helicopter";
    }
 
+   @Override
    public void onPostReload() {
       MCH_MOD.proxy.registerModelsHeli(this, true);
    }
@@ -84,7 +106,9 @@ public class MCH_HeliInfo extends MCH_AircraftInfo {
       public final boolean haveFoldFunc;
       public final boolean oldRenderMethod;
 
-      public Rotor(MCH_HeliInfo paramMCH_HeliInfo, int b, int br, float x, float y, float z, float rx, float ry, float rz, String model, boolean hf, boolean old) {
+      public Rotor(
+         MCH_HeliInfo paramMCH_HeliInfo, int b, int br, float x, float y, float z, float rx, float ry, float rz, String model, boolean hf, boolean old
+      ) {
          super(paramMCH_HeliInfo, x, y, z, rx, ry, rz, model);
          this.bladeNum = b;
          this.bladeRot = br;

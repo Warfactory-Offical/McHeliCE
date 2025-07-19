@@ -12,32 +12,31 @@ public class MCH_EntityTofu extends Entity {
 
    public MCH_EntityTofu(World world, double x, double y, double z) {
       this(world);
-      this.func_70107_b(x, y, z);
+      this.setPosition(x, y, z);
    }
 
    protected void entityInit() {
-      this.func_189654_d(true);
+      this.setNoGravity(true);
    }
 
-   public void func_70071_h_() {
-      super.func_70071_h_();
-      this.func_70091_d(MoverType.SELF, 1.0D, 0.0D, 0.0D);
-      if (!this.world.isRemote && this.field_70173_aa > 100) {
-         this.func_70106_y();
+   public void onUpdate() {
+      super.onUpdate();
+      this.move(MoverType.SELF, 1.0, 0.0, 0.0);
+      if (!this.world.isRemote && this.ticksExisted > 100) {
+         this.setDead();
       }
-
    }
 
-   public boolean func_70067_L() {
+   public boolean canBeCollidedWith() {
       return false;
    }
 
-   public void func_70108_f(Entity entityIn) {
+   public void applyEntityCollision(Entity entityIn) {
    }
 
-   protected void func_70037_a(NBTTagCompound compound) {
+   protected void readEntityFromNBT(NBTTagCompound compound) {
    }
 
-   protected void func_70014_b(NBTTagCompound compound) {
+   protected void writeEntityToNBT(NBTTagCompound compound) {
    }
 }

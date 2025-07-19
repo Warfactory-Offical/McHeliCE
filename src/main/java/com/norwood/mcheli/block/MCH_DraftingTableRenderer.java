@@ -28,10 +28,10 @@ public class MCH_DraftingTableRenderer extends TileEntitySpecialRenderer<MCH_Dra
    public void render(MCH_DraftingTableTileEntity tile, double posX, double posY, double posZ, float partialTicks, int destroyStage, float alpha) {
       GL11.glPushMatrix();
       GL11.glEnable(2884);
-      GL11.glTranslated(posX + 0.5D, posY, posZ + 0.5D);
+      GL11.glTranslated(posX + 0.5, posY, posZ + 0.5);
       float yaw = this.getYawAngle(tile);
       GL11.glRotatef(yaw, 0.0F, 1.0F, 0.0F);
-      RenderHelper.func_74519_b();
+      RenderHelper.enableStandardItemLighting();
       GL11.glColor4f(0.75F, 0.75F, 0.75F, 1.0F);
       GL11.glEnable(3042);
       int srcBlend = GL11.glGetInteger(3041);
@@ -50,24 +50,18 @@ public class MCH_DraftingTableRenderer extends TileEntitySpecialRenderer<MCH_Dra
    }
 
    private float getYawAngle(MCH_DraftingTableTileEntity tile) {
-      return tile.func_145830_o() ? (float)(-tile.func_145832_p()) * 45.0F + 180.0F : 0.0F;
+      return tile.hasWorld() ? -tile.getBlockMetadata() * 45.0F + 180.0F : 0.0F;
    }
 
    @SideOnly(Side.CLIENT)
    private static class DraftingTableStackRenderer extends TileEntityItemStackRenderer {
-      private MCH_DraftingTableTileEntity draftingTable;
+      private MCH_DraftingTableTileEntity draftingTable = new MCH_DraftingTableTileEntity();
 
       private DraftingTableStackRenderer() {
-         this.draftingTable = new MCH_DraftingTableTileEntity();
       }
 
-      public void func_192838_a(ItemStack p_192838_1_, float partialTicks) {
-         TileEntityRendererDispatcher.field_147556_a.func_192855_a(this.draftingTable, 0.0D, 0.0D, 0.0D, partialTicks, 0.0F);
-      }
-
-      // $FF: synthetic method
-      DraftingTableStackRenderer(Object x0) {
-         this();
+      public void renderByItem(ItemStack p_192838_1_, float partialTicks) {
+         TileEntityRendererDispatcher.instance.render(this.draftingTable, 0.0, 0.0, 0.0, partialTicks, 0.0F);
       }
    }
 }

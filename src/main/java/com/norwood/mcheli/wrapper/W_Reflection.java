@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class W_Reflection {
    public static RenderManager getRenderManager(Render<?> render) {
-      return render.func_177068_d();
+      return render.getRenderManager();
    }
 
    public static void restoreDefaultThirdPersonDistance() {
@@ -21,7 +21,7 @@ public class W_Reflection {
    }
 
    public static void setThirdPersonDistance(float dist) {
-      if (!((double)dist < 0.1D)) {
+      if (!(dist < 0.1)) {
          MCH_CameraManager.setThirdPeasonCameraDistance(dist);
       }
    }
@@ -41,15 +41,13 @@ public class W_Reflection {
    public static void setCameraZoom(float zoom) {
       try {
          Minecraft mc = Minecraft.getMinecraft();
-         ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, mc.field_71460_t, zoom, "field_78503_V");
+         ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, mc.entityRenderer, zoom, "field_78503_V");
          MCH_CameraManager.setCameraZoom(zoom);
       } catch (Exception var2) {
          var2.printStackTrace();
       }
-
    }
 
-   /** @deprecated */
    @Deprecated
    public static void setItemRenderer(ItemRenderer r) {
    }
@@ -57,15 +55,14 @@ public class W_Reflection {
    public static void setCreativeDigSpeed(int n) {
       try {
          Minecraft mc = Minecraft.getMinecraft();
-         ObfuscationReflectionHelper.setPrivateValue(PlayerControllerMP.class, mc.field_71442_b, n, "field_78781_i");
+         ObfuscationReflectionHelper.setPrivateValue(PlayerControllerMP.class, mc.playerController, n, "field_78781_i");
       } catch (Exception var2) {
          var2.printStackTrace();
       }
-
    }
 
    public static ItemRenderer getItemRenderer() {
-      return Minecraft.getMinecraft().field_71460_t.field_78516_c;
+      return Minecraft.getMinecraft().entityRenderer.itemRenderer;
    }
 
    public static void setItemRendererMainHand(ItemStack itemToRender) {
@@ -74,7 +71,6 @@ public class W_Reflection {
       } catch (Exception var2) {
          var2.printStackTrace();
       }
-
    }
 
    @Nonnull
@@ -83,7 +79,7 @@ public class W_Reflection {
          return (ItemStack)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, getItemRenderer(), "field_187467_d");
       } catch (Exception var1) {
          var1.printStackTrace();
-         return ItemStack.field_190927_a;
+         return ItemStack.EMPTY;
       }
    }
 
@@ -93,6 +89,5 @@ public class W_Reflection {
       } catch (Exception var2) {
          var2.printStackTrace();
       }
-
    }
 }

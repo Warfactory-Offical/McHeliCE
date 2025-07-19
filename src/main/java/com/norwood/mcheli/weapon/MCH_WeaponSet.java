@@ -32,15 +32,13 @@ public class MCH_WeaponSet {
    public int countReloadWait;
    protected int[] lastUsedCount;
    public int soundWait;
-   private int lastUsedOptionParameter1;
-   private int lastUsedOptionParameter2;
+   private int lastUsedOptionParameter1 = 0;
+   private int lastUsedOptionParameter2 = 0;
    public float rotBarrelSpd;
    public float rotBarrel;
    public float prevRotBarrel;
 
    public MCH_WeaponSet(MCH_WeaponBase[] weapon) {
-      this.lastUsedOptionParameter1 = 0;
-      this.lastUsedOptionParameter2 = 0;
       this.name = weapon[0].name;
       this.weapons = weapon;
       this.currentWeaponIndex = 0;
@@ -61,7 +59,7 @@ public class MCH_WeaponSet {
       this.prevRotBarrel = 0.0F;
       this.recoilBuf = new MCH_WeaponSet.Recoil[weapon.length];
 
-      for(int i = 0; i < this.recoilBuf.length; ++i) {
+      for (int i = 0; i < this.recoilBuf.length; i++) {
          this.recoilBuf[i] = new MCH_WeaponSet.Recoil(this, weapon[i].getInfo().recoilBufCount, weapon[i].getInfo().recoilBufCountSpeed);
       }
 
@@ -108,7 +106,6 @@ public class MCH_WeaponSet {
       if (this.getRestAllAmmoNum() + this.getAmmoNum() < m) {
          this.setRestAllAmmoNum(this.getRestAllAmmoNum() + this.getAmmoNum() + this.getInfo().suppliedNum);
       }
-
    }
 
    public boolean isInPreparation() {
@@ -143,7 +140,6 @@ public class MCH_WeaponSet {
             }
          }
       }
-
    }
 
    public void reloadMag() {
@@ -157,16 +153,12 @@ public class MCH_WeaponSet {
          this.setAmmoNum(this.getAmmoNum() + nAmmo);
          this.setRestAllAmmoNum(this.getRestAllAmmoNum() - nAmmo);
       }
-
    }
 
    public void switchMode() {
       boolean isChanged = false;
-      MCH_WeaponBase[] var2 = this.weapons;
-      int var3 = var2.length;
 
-      for(int var4 = 0; var4 < var3; ++var4) {
-         MCH_WeaponBase w = var2[var4];
+      for (MCH_WeaponBase w : this.weapons) {
          if (w != null) {
             isChanged = w.switchMode() || isChanged;
          }
@@ -186,7 +178,6 @@ public class MCH_WeaponSet {
             W_McClient.playSoundClick(1.0F, 1.0F);
          }
       }
-
    }
 
    public void onSwitchWeapon(boolean isRemote, boolean isCreative) {
@@ -207,7 +198,6 @@ public class MCH_WeaponSet {
       if (isCreative) {
          this.setAmmoNum(this.getAmmoNumMax());
       }
-
    }
 
    public boolean isUsed(int index) {
@@ -223,52 +213,47 @@ public class MCH_WeaponSet {
    public void update(Entity shooter, boolean isSelected, boolean isUsed) {
       if (this.getCurrentWeapon().getInfo() != null) {
          if (this.countReloadWait > 0) {
-            --this.countReloadWait;
+            this.countReloadWait--;
             if (this.countReloadWait == 0) {
                this.reloadMag();
             }
          }
 
-         for(int i = 0; i < this.lastUsedCount.length; ++i) {
+         for (int i = 0; i < this.lastUsedCount.length; i++) {
             if (this.lastUsedCount[i] > 0) {
-               int var10002;
                if (this.lastUsedCount[i] == 4) {
                   if (0 == this.getCurrentWeaponIndex() && this.canUse() && (this.getAmmoNum() > 0 || this.getAllAmmoNum() <= 0)) {
-                     var10002 = this.lastUsedCount[i]--;
+                     this.lastUsedCount[i]--;
                   }
                } else {
-                  var10002 = this.lastUsedCount[i]--;
+                  this.lastUsedCount[i]--;
                }
             }
          }
 
          if (this.currentHeat > 0) {
             if (this.currentHeat < this.getCurrentWeapon().getInfo().maxHeatCount) {
-               ++this.cooldownSpeed;
+               this.cooldownSpeed++;
             }
 
-            this.currentHeat -= this.cooldownSpeed / 20 + 1;
+            this.currentHeat = this.currentHeat - (this.cooldownSpeed / 20 + 1);
             if (this.currentHeat < 0) {
                this.currentHeat = 0;
             }
          }
 
          if (this.countWait > 0) {
-            --this.countWait;
+            this.countWait--;
          }
 
          if (this.countWait < 0) {
-            ++this.countWait;
+            this.countWait++;
          }
 
          this.prevRotationYaw = this.rotationYaw;
          this.prevRotationPitch = this.rotationPitch;
          if (this.weapons != null && this.weapons.length > 0) {
-            MCH_WeaponBase[] var8 = this.weapons;
-            int var5 = var8.length;
-
-            for(int var6 = 0; var6 < var5; ++var6) {
-               MCH_WeaponBase w = var8[var6];
+            for (MCH_WeaponBase w : this.weapons) {
                if (w != null) {
                   w.update(this.countWait);
                }
@@ -276,44 +261,53 @@ public class MCH_WeaponSet {
          }
 
          if (this.soundWait > 0) {
-            --this.soundWait;
+            this.soundWait--;
          }
 
          if (isUsed && this.rotBarrelSpd < 75.0F) {
-            this.rotBarrelSpd += (float)(25 + rand.nextInt(3));
+            this.rotBarrelSpd = this.rotBarrelSpd + (25 + rand.nextInt(3));
             if (this.rotBarrelSpd > 74.0F) {
                this.rotBarrelSpd = 74.0F;
             }
          }
 
          this.prevRotBarrel = this.rotBarrel;
-         this.rotBarrel += this.rotBarrelSpd;
+         this.rotBarrel = this.rotBarrel + this.rotBarrelSpd;
          if (this.rotBarrel >= 360.0F) {
             this.rotBarrel -= 360.0F;
             this.prevRotBarrel -= 360.0F;
          }
 
          if (this.rotBarrelSpd > 0.0F) {
-            --this.rotBarrelSpd;
+            this.rotBarrelSpd--;
             if (this.rotBarrelSpd < 0.0F) {
                this.rotBarrelSpd = 0.0F;
             }
          }
-
       }
    }
 
    public void updateWeapon(Entity shooter, boolean isUsed, int index) {
       MCH_WeaponBase crtWpn = this.getWeapon(index);
-      float rb;
       if (isUsed && shooter.world.isRemote && crtWpn != null && crtWpn.cartridge != null) {
          Vec3d v = crtWpn.getShotPos(shooter);
-         rb = shooter.field_70177_z;
-         float pitch = shooter.field_70125_A;
-         if (shooter instanceof MCH_EntityVehicle && shooter.func_184207_aI()) {
+         float yaw = shooter.rotationYaw;
+         float pitch = shooter.rotationPitch;
+         if (shooter instanceof MCH_EntityVehicle && shooter.isBeingRidden()) {
          }
 
-         MCH_EntityCartridge.spawnCartridge(shooter.world, crtWpn.cartridge, shooter.posX + v.x, shooter.posY + v.y, shooter.posZ + v.z, shooter.field_70159_w, shooter.field_70181_x, shooter.field_70179_y, rb + this.rotationYaw, pitch + this.rotationPitch);
+         MCH_EntityCartridge.spawnCartridge(
+            shooter.world,
+            crtWpn.cartridge,
+            shooter.posX + v.x,
+            shooter.posY + v.y,
+            shooter.posZ + v.z,
+            shooter.motionX,
+            shooter.motionY,
+            shooter.motionZ,
+            yaw + this.rotationYaw,
+            pitch + this.rotationPitch
+         );
       }
 
       if (index < this.recoilBuf.length) {
@@ -330,19 +324,18 @@ public class MCH_WeaponSet {
                r.recoilBuf = r.recoilBufCount == 2 ? 1.0F : 0.6F;
             } else {
                if (r.recoilBufCount > r.recoilBufCountMax / 2) {
-                  r.recoilBufCount -= r.recoilBufCountSpeed;
+                  r.recoilBufCount = r.recoilBufCount - r.recoilBufCountSpeed;
                }
 
-               rb = (float)(r.recoilBufCount / r.recoilBufCountMax);
-               r.recoilBuf = MathHelper.func_76126_a(rb * 3.1415927F);
+               float rb = r.recoilBufCount / r.recoilBufCountMax;
+               r.recoilBuf = MathHelper.sin(rb * (float) Math.PI);
             }
 
-            --r.recoilBufCount;
+            r.recoilBufCount--;
          } else {
             r.recoilBuf = 0.0F;
          }
       }
-
    }
 
    public boolean use(MCH_WeaponParam prm) {
@@ -351,21 +344,21 @@ public class MCH_WeaponSet {
          MCH_WeaponInfo info = crtWpn.getInfo();
          if ((this.getAmmoNumMax() <= 0 || this.getAmmoNum() > 0) && (info.maxHeatCount <= 0 || this.currentHeat < info.maxHeatCount)) {
             crtWpn.canPlaySound = this.soundWait == 0;
-            prm.rotYaw = prm.entity != null ? prm.entity.field_70177_z : 0.0F;
-            prm.rotPitch = prm.entity != null ? prm.entity.field_70125_A : 0.0F;
-            prm.rotYaw += this.rotationYaw + crtWpn.fixRotationYaw;
-            prm.rotPitch += this.rotationPitch + crtWpn.fixRotationPitch;
+            prm.rotYaw = prm.entity != null ? prm.entity.rotationYaw : 0.0F;
+            prm.rotPitch = prm.entity != null ? prm.entity.rotationPitch : 0.0F;
+            prm.rotYaw = prm.rotYaw + (this.rotationYaw + crtWpn.fixRotationYaw);
+            prm.rotPitch = prm.rotPitch + (this.rotationPitch + crtWpn.fixRotationPitch);
             if (info.accuracy > 0.0F) {
-               prm.rotYaw += (rand.nextFloat() - 0.5F) * info.accuracy;
-               prm.rotPitch += (rand.nextFloat() - 0.5F) * info.accuracy;
+               prm.rotYaw = prm.rotYaw + (rand.nextFloat() - 0.5F) * info.accuracy;
+               prm.rotPitch = prm.rotPitch + (rand.nextFloat() - 0.5F) * info.accuracy;
             }
 
-            prm.rotYaw = MathHelper.func_76142_g(prm.rotYaw);
-            prm.rotPitch = MathHelper.func_76142_g(prm.rotPitch);
+            prm.rotYaw = MathHelper.wrapDegrees(prm.rotYaw);
+            prm.rotPitch = MathHelper.wrapDegrees(prm.rotPitch);
             if (crtWpn.use(prm)) {
                if (info.maxHeatCount > 0) {
                   this.cooldownSpeed = 1;
-                  this.currentHeat += crtWpn.heatCount;
+                  this.currentHeat = this.currentHeat + crtWpn.heatCount;
                   if (this.currentHeat >= info.maxHeatCount) {
                      this.currentHeat += 30;
                   }
@@ -397,7 +390,7 @@ public class MCH_WeaponSet {
                   this.reload();
                   prm.reload = true;
                   if (prm.user instanceof MCH_EntityGunner) {
-                     this.countWait += (this.countWait >= 0 ? 1 : -1) * crtWpn.getReloadCount();
+                     this.countWait = this.countWait + (this.countWait >= 0 ? 1 : -1) * crtWpn.getReloadCount();
                   }
                }
 
@@ -424,7 +417,6 @@ public class MCH_WeaponSet {
             }
          }
       }
-
    }
 
    public int getLastUsedOptionParameter1() {
@@ -460,15 +452,15 @@ public class MCH_WeaponSet {
    }
 
    public double getLandInDistance(MCH_WeaponParam prm) {
-      double ret = -1.0D;
+      double ret = -1.0;
       MCH_WeaponBase crtWpn = this.getCurrentWeapon();
       if (crtWpn != null && crtWpn.getInfo() != null) {
-         prm.rotYaw = prm.entity != null ? prm.entity.field_70177_z : 0.0F;
-         prm.rotPitch = prm.entity != null ? prm.entity.field_70125_A : 0.0F;
-         prm.rotYaw += this.rotationYaw + crtWpn.fixRotationYaw;
-         prm.rotPitch += this.rotationPitch + crtWpn.fixRotationPitch;
-         prm.rotYaw = MathHelper.func_76142_g(prm.rotYaw);
-         prm.rotPitch = MathHelper.func_76142_g(prm.rotPitch);
+         prm.rotYaw = prm.entity != null ? prm.entity.rotationYaw : 0.0F;
+         prm.rotPitch = prm.entity != null ? prm.entity.rotationPitch : 0.0F;
+         prm.rotYaw = prm.rotYaw + (this.rotationYaw + crtWpn.fixRotationYaw);
+         prm.rotPitch = prm.rotPitch + (this.rotationPitch + crtWpn.fixRotationPitch);
+         prm.rotYaw = MathHelper.wrapDegrees(prm.rotYaw);
+         prm.rotPitch = MathHelper.wrapDegrees(prm.rotPitch);
          return crtWpn.getLandInDistance(prm);
       } else {
          return ret;

@@ -19,13 +19,14 @@ public class MCH_HudItemGraduation extends MCH_HudItem {
       this.type = type;
    }
 
+   @Override
    public void execute() {
       GL11.glPushMatrix();
       int x = (int)(centerX + calc(this.drawPosX));
       int y = (int)(centerY + calc(this.drawPosY));
-      GL11.glTranslated((double)x, (double)y, 0.0D);
+      GL11.glTranslated(x, y, 0.0);
       GL11.glRotatef((float)calc(this.drawRoll), 0.0F, 0.0F, 1.0F);
-      GL11.glTranslated((double)(-x), (double)(-y), 0.0D);
+      GL11.glTranslated(-x, -y, 0.0);
       if (this.type == 0) {
          this.drawCommonGraduationYaw(calc(this.drawRot), colorSetting, x, y);
       } else if (this.type == 1) {
@@ -45,28 +46,28 @@ public class MCH_HudItemGraduation extends MCH_HudItem {
       int end = this.type == 2 ? 5 : 4;
       int INT = this.type == 2 ? 1 : 2;
 
-      for(int i = start; i < end; ++i) {
+      for (int i = start; i < end; i++) {
          int pitch = -(-pitch_n - 10 + i * 5);
-         double p_rest = playerPitch % 5.0D;
+         double p_rest = playerPitch % 5.0;
          int x = pitch != 0 ? 50 : 100;
-         int y = posY + (int)((double)(-60 * INT) + p_rest * 6.0D * (double)INT + (double)(i * 30 * INT));
-         line[0] = (double)(posX - x);
-         line[1] = (double)(y + (pitch > 0 ? 2 : (pitch == 0 ? 0 : -2)));
-         line[2] = (double)(posX - 50);
-         line[3] = (double)y;
-         line[4] = (double)(posX + x);
+         int y = posY + (int)(-60 * INT + p_rest * 6.0 * INT + i * 30 * INT);
+         line[0] = posX - x;
+         line[1] = y + (pitch > 0 ? 2 : (pitch == 0 ? 0 : -2));
+         line[2] = posX - 50;
+         line[3] = y;
+         line[4] = posX + x;
          line[5] = line[1];
-         line[6] = (double)(posX + 50);
-         line[7] = (double)y;
+         line[6] = posX + 50;
+         line[7] = y;
          this.drawLine(line, color);
-         line[0] = (double)(posX - 50);
-         line[1] = (double)y;
-         line[2] = (double)(posX - 30);
-         line[3] = (double)y;
-         line[4] = (double)(posX + 50);
-         line[5] = (double)y;
-         line[6] = (double)(posX + 30);
-         line[7] = (double)y;
+         line[0] = posX - 50;
+         line[1] = y;
+         line[2] = posX - 30;
+         line[3] = y;
+         line[4] = posX + 50;
+         line[5] = y;
+         line[6] = posX + 30;
+         line[7] = y;
          if (pitch >= 0) {
             this.drawLine(line, color);
          } else {
@@ -78,41 +79,39 @@ public class MCH_HudItemGraduation extends MCH_HudItem {
             this.drawCenteredString("" + pitch, posX + 50 + 10, y - 4, color);
          }
       }
-
    }
 
    private void drawCommonGraduationPitch1(double playerPitch, int color, int posX, int posY) {
       int pitch = (int)playerPitch % 360;
-      int y = (int)(playerPitch * 10.0D % 10.0D);
+      int y = (int)(playerPitch * 10.0 % 10.0);
       if (y < 0) {
          y += 10;
       }
 
       int posX_L = posX - 100;
       int posX_R = posX + 100;
-      int linePosY = posY;
       posY -= 80;
       double[] line = new double[144];
-      int p = !(playerPitch >= 0.0D) && y != 0 ? pitch - 9 : pitch - 8;
+      int p = !(playerPitch >= 0.0) && y != 0 ? pitch - 9 : pitch - 8;
 
-      for(int i = 0; i < line.length / 8; ++p) {
+      for (int i = 0; i < line.length / 8; p++) {
          int olx = p % 3 == 0 ? 15 : 5;
          int ilx = 0;
-         line[i * 8 + 0] = (double)(posX_L - olx);
-         line[i * 8 + 1] = (double)(posY + i * 10 - y);
-         line[i * 8 + 2] = (double)(posX_L + ilx);
-         line[i * 8 + 3] = (double)(posY + i * 10 - y);
-         line[i * 8 + 4] = (double)(posX_R + olx);
-         line[i * 8 + 5] = (double)(posY + i * 10 - y);
-         line[i * 8 + 6] = (double)(posX_R - ilx);
-         line[i * 8 + 7] = (double)(posY + i * 10 - y);
-         ++i;
+         line[i * 8 + 0] = posX_L - olx;
+         line[i * 8 + 1] = posY + i * 10 - y;
+         line[i * 8 + 2] = posX_L + ilx;
+         line[i * 8 + 3] = posY + i * 10 - y;
+         line[i * 8 + 4] = posX_R + olx;
+         line[i * 8 + 5] = posY + i * 10 - y;
+         line[i * 8 + 6] = posX_R - ilx;
+         line[i * 8 + 7] = posY + i * 10 - y;
+         i++;
       }
 
       this.drawLine(line, color);
-      double[] verticalLine = new double[]{(double)(posX_L - 25), (double)(linePosY - 90), (double)posX_L, (double)(linePosY - 90), (double)posX_L, (double)(linePosY + 90), (double)(posX_L - 25), (double)(linePosY + 90)};
+      double[] verticalLine = new double[]{posX_L - 25, posY - 90, posX_L, posY - 90, posX_L, posY + 90, posX_L - 25, posY + 90};
       this.drawLine(verticalLine, color, 3);
-      verticalLine = new double[]{(double)(posX_R + 25), (double)(linePosY - 90), (double)posX_R, (double)(linePosY - 90), (double)posX_R, (double)(linePosY + 90), (double)(posX_R + 25), (double)(linePosY + 90)};
+      verticalLine = new double[]{posX_R + 25, posY - 90, posX_R, posY - 90, posX_R, posY + 90, posX_R + 25, posY + 90};
       this.drawLine(verticalLine, color, 3);
    }
 
@@ -120,15 +119,15 @@ public class MCH_HudItemGraduation extends MCH_HudItem {
       double yaw = MCH_Lib.getRotate360(playerYaw);
       posX -= 90;
       double[] line = new double[76];
-      int x = (int)(yaw * 10.0D) % 10;
+      int x = (int)(yaw * 10.0) % 10;
       int y = (int)yaw - 9;
 
-      for(int i = 0; i < line.length / 4; ++y) {
+      for (int i = 0; i < line.length / 4; y++) {
          int azPosX = posX + i * 10 - x;
-         line[i * 4 + 0] = (double)azPosX;
-         line[i * 4 + 1] = (double)posY;
-         line[i * 4 + 2] = (double)azPosX;
-         line[i * 4 + 3] = (double)(posY + (y % 3 == 0 ? 10 : (y % 45 == 0 ? 15 : 5)));
+         line[i * 4 + 0] = azPosX;
+         line[i * 4 + 1] = posY;
+         line[i * 4 + 2] = azPosX;
+         line[i * 4 + 3] = posY + (y % 3 == 0 ? 10 : (y % 45 == 0 ? 15 : 5));
          if (y % 45 == 0) {
             this.drawCenteredString(MCH_Lib.getAzimuthStr8(y), azPosX, posY - 10, -65536);
          } else if (y % 3 == 0) {
@@ -144,7 +143,7 @@ public class MCH_HudItemGraduation extends MCH_HudItem {
             this.drawCenteredString(String.format("%d", rot), azPosX, posY - 10, color);
          }
 
-         ++i;
+         i++;
       }
 
       this.drawLine(line, color);

@@ -12,22 +12,22 @@ public class MCH_DummyEntityPlayer extends W_EntityPlayer {
       super(worldIn, player);
    }
 
-   public void func_145747_a(ITextComponent var1) {
+   public void sendMessage(ITextComponent var1) {
    }
 
-   public boolean func_70003_b(int var1, String var2) {
+   public boolean canUseCommand(int var1, String var2) {
       return false;
    }
 
-   public Entity func_174793_f() {
-      return super.func_174793_f();
+   public Entity getCommandSenderEntity() {
+      return super.getCommandSenderEntity();
    }
 
-   public boolean func_175149_v() {
+   public boolean isSpectator() {
       return false;
    }
 
-   public boolean func_184812_l_() {
+   public boolean isCreative() {
       return false;
    }
 

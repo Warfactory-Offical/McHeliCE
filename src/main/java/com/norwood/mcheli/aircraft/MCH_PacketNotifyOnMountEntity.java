@@ -14,10 +14,12 @@ public class MCH_PacketNotifyOnMountEntity extends MCH_Packet {
    public int entityID_rider = -1;
    public int seatID = -1;
 
+   @Override
    public int getMessageID() {
       return 268439632;
    }
 
+   @Override
    public void readData(ByteArrayDataInput data) {
       try {
          this.entityID_Ac = data.readInt();
@@ -26,9 +28,9 @@ public class MCH_PacketNotifyOnMountEntity extends MCH_Packet {
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       try {
          dos.writeInt(this.entityID_Ac);
@@ -37,13 +39,12 @@ public class MCH_PacketNotifyOnMountEntity extends MCH_Packet {
       } catch (IOException var3) {
          var3.printStackTrace();
       }
-
    }
 
    public static void send(MCH_EntityAircraft ac, Entity rider, int seatId) {
       if (ac != null && rider != null) {
          Entity pilot = ac.getRiddenByEntity();
-         if (pilot instanceof EntityPlayer && !pilot.field_70128_L) {
+         if (pilot instanceof EntityPlayer && !pilot.isDead) {
             MCH_PacketNotifyOnMountEntity s = new MCH_PacketNotifyOnMountEntity();
             s.entityID_Ac = W_Entity.getEntityId(ac);
             s.entityID_rider = W_Entity.getEntityId(rider);

@@ -9,18 +9,22 @@ public class PowerExpression extends Col2Expression {
       super(from, s);
    }
 
+   @Override
    public AbstractExpression dup(ShareExpValue s) {
       return new PowerExpression(this, s);
    }
 
+   @Override
    protected long operateLong(long vl, long vr) {
-      return (long)Math.pow((double)vl, (double)vr);
+      return (long)Math.pow(vl, vr);
    }
 
+   @Override
    protected double operateDouble(double vl, double vr) {
       return Math.pow(vl, vr);
    }
 
+   @Override
    protected Object operateObject(Object vl, Object vr) {
       return this.share.oper.power(vl, vr);
    }

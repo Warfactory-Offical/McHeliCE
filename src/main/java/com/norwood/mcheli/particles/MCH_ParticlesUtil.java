@@ -26,7 +26,7 @@ public class MCH_ParticlesUtil {
    public static MCH_EntityParticleMarkPoint markPoint = null;
 
    public static void spawnParticleExplode(World w, double x, double y, double z, float size, float r, float g, float b, float a, int age) {
-      MCH_EntityParticleExplode epe = new MCH_EntityParticleExplode(w, x, y, z, (double)size, (double)age, 0.0D);
+      MCH_EntityParticleExplode epe = new MCH_EntityParticleExplode(w, x, y, z, size, age, 0.0);
       epe.setParticleMaxAge(age);
       epe.setRBGColorF(r, g, b);
       epe.setAlphaF(a);
@@ -38,15 +38,16 @@ public class MCH_ParticlesUtil {
       if (!name.isEmpty()) {
          DEF_spawnParticle(name.name, x, y, z, mx, my, mz, 20.0F, name.stateId);
       }
-
    }
 
-   public static boolean spawnParticleTileDust(World w, int blockX, int blockY, int blockZ, double x, double y, double z, double mx, double my, double mz, float scale) {
+   public static boolean spawnParticleTileDust(
+      World w, int blockX, int blockY, int blockZ, double x, double y, double z, double mx, double my, double mz, float scale
+   ) {
       boolean ret = false;
       int[][] offset = new int[][]{{0, 0, 0}, {0, 0, -1}, {0, 0, 1}, {1, 0, 0}, {-1, 0, 0}};
       int len = offset.length;
 
-      for(int i = 0; i < len; ++i) {
+      for (int i = 0; i < len; i++) {
          W_Particle.BlockParticleParam name = W_Particle.getParticleTileDustName(w, blockX + offset[i][0], blockY + offset[i][1], blockZ + offset[i][2]);
          if (!name.isEmpty()) {
             Particle e = DEF_spawnParticle(name.name, x, y, z, mx, my, mz, 20.0F, name.stateId);
@@ -71,15 +72,15 @@ public class MCH_ParticlesUtil {
 
    public static Particle doSpawnParticle(String type, double x, double y, double z, double mx, double my, double mz, int... params) {
       Minecraft mc = Minecraft.getMinecraft();
-      if (mc != null && mc.func_175606_aa() != null && mc.effectRenderer != null) {
-         int i = mc.field_71474_y.field_74362_aa;
-         if (i == 1 && mc.world.field_73012_v.nextInt(3) == 0) {
+      if (mc != null && mc.getRenderViewEntity() != null && mc.effectRenderer != null) {
+         int i = mc.gameSettings.particleSetting;
+         if (i == 1 && mc.world.rand.nextInt(3) == 0) {
             i = 2;
          }
 
-         double d6 = mc.func_175606_aa().posX - x;
-         double d7 = mc.func_175606_aa().posY - y;
-         double d8 = mc.func_175606_aa().posZ - z;
+         double d6 = mc.getRenderViewEntity().posX - x;
+         double d7 = mc.getRenderViewEntity().posY - y;
+         double d8 = mc.getRenderViewEntity().posZ - z;
          Particle entityfx = null;
          if (type.equalsIgnoreCase("hugeexplosion")) {
             entityfx = create(Factory::new, mc.world, x, y, z, mx, my, mz);
@@ -95,7 +96,7 @@ public class MCH_ParticlesUtil {
          if (entityfx != null) {
             return entityfx;
          } else {
-            double d9 = 300.0D;
+            double d9 = 300.0;
             if (d6 * d6 + d7 * d7 + d8 * d8 > d9 * d9) {
                return null;
             } else if (i > 1) {
@@ -185,36 +186,35 @@ public class MCH_ParticlesUtil {
       }
    }
 
-   public static void spawnParticle(MCH_ParticleParam particleParam) {
-      if (particleParam.world.isRemote) {
+   public static void spawnParticle(MCH_ParticleParam p) {
+      if (p.world.isRemote) {
          MCH_EntityParticleBase entityFX = null;
-         if (particleParam.name.equalsIgnoreCase("Splash")) {
-            entityFX = new MCH_EntityParticleSplash(particleParam.world, particleParam.posX, particleParam.posY, particleParam.posZ, particleParam.motionX, particleParam.motionY, particleParam.motionZ);
+         if (p.name.equalsIgnoreCase("Splash")) {
+            entityFX = new MCH_EntityParticleSplash(p.world, p.posX, p.posY, p.posZ, p.motionX, p.motionY, p.motionZ);
          } else {
-            entityFX = new MCH_EntityParticleSmoke(particleParam.world, particleParam.posX, particleParam.posY, particleParam.posZ, particleParam.motionX, particleParam.motionY, particleParam.motionZ);
+            entityFX = new MCH_EntityParticleSmoke(p.world, p.posX, p.posY, p.posZ, p.motionX, p.motionY, p.motionZ);
          }
 
-         ((MCH_EntityParticleBase)entityFX).setRBGColorF(particleParam.red, particleParam.green, particleParam.blue);
-         ((MCH_EntityParticleBase)entityFX).setAlphaF(particleParam.alpha);
-         if (particleParam.age > 0) {
-            ((MCH_EntityParticleBase)entityFX).setParticleMaxAge(particleParam.age);
+         entityFX.setRBGColorF(p.r, p.g, p.b);
+         entityFX.setAlphaF(p.a);
+         if (p.age > 0) {
+            entityFX.setParticleMaxAge(p.age);
          }
 
-         ((MCH_EntityParticleBase)entityFX).moutionYUpAge = particleParam.motionYUpAge;
-         ((MCH_EntityParticleBase)entityFX).gravity = particleParam.gravity;
-         ((MCH_EntityParticleBase)entityFX).isEffectedWind = particleParam.isEffectWind;
-         ((MCH_EntityParticleBase)entityFX).diffusible = particleParam.diffusible;
-         ((MCH_EntityParticleBase)entityFX).toWhite = particleParam.toWhite;
-         if (particleParam.diffusible) {
-            ((MCH_EntityParticleBase)entityFX).setParticleScale(particleParam.size * 0.2F);
-            ((MCH_EntityParticleBase)entityFX).particleMaxScale = particleParam.size * 2.0F;
+         entityFX.moutionYUpAge = p.motionYUpAge;
+         entityFX.gravity = p.gravity;
+         entityFX.isEffectedWind = p.isEffectWind;
+         entityFX.diffusible = p.diffusible;
+         entityFX.toWhite = p.toWhite;
+         if (p.diffusible) {
+            entityFX.setParticleScale(p.size * 0.2F);
+            entityFX.particleMaxScale = p.size * 2.0F;
          } else {
-            ((MCH_EntityParticleBase)entityFX).setParticleScale(particleParam.size);
+            entityFX.setParticleScale(p.size);
          }
 
-         FMLClientHandler.instance().getClient().effectRenderer.addEffect((Particle)entityFX);
+         FMLClientHandler.instance().getClient().effectRenderer.addEffect(entityFX);
       }
-
    }
 
    public static void spawnMarkPoint(EntityPlayer player, double x, double y, double z) {
@@ -225,13 +225,14 @@ public class MCH_ParticlesUtil {
 
    public static void clearMarkPoint() {
       if (markPoint != null) {
-         markPoint.func_187112_i();
+         markPoint.setExpired();
          markPoint = null;
       }
-
    }
 
-   private static Particle create(Supplier<IParticleFactory> factoryFunc, World world, double x, double y, double z, double mx, double my, double mz, int... param) {
-      return ((IParticleFactory)factoryFunc.get()).createParticle(-1, world, x, y, z, mx, my, mz, param);
+   private static Particle create(
+      Supplier<IParticleFactory> factoryFunc, World world, double x, double y, double z, double mx, double my, double mz, int... param
+   ) {
+      return factoryFunc.get().createParticle(-1, world, x, y, z, mx, my, mz, param);
    }
 }

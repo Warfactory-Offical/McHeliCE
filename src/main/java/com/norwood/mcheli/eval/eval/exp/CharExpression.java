@@ -25,6 +25,7 @@ public class CharExpression extends WordExpression {
       super(from, s);
    }
 
+   @Override
    public AbstractExpression dup(ShareExpValue s) {
       return new CharExpression(this, s);
    }
@@ -38,26 +39,30 @@ public class CharExpression extends WordExpression {
       return n;
    }
 
+   @Override
    public long evalLong() {
       try {
-         return (long)this.word.charAt(0);
+         return this.word.charAt(0);
       } catch (Exception var2) {
          throw new EvalException(2003, this.word, this.string, this.pos, var2);
       }
    }
 
+   @Override
    public double evalDouble() {
       try {
-         return (double)this.word.charAt(0);
+         return this.word.charAt(0);
       } catch (Exception var2) {
          throw new EvalException(2003, this.word, this.string, this.pos, var2);
       }
    }
 
+   @Override
    public Object evalObject() {
       return new Character(this.word.charAt(0));
    }
 
+   @Override
    public String toString() {
       StringBuffer sb = new StringBuffer();
       sb.append(this.getOperator());

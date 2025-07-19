@@ -13,10 +13,8 @@ public class JavaExOperator implements Operator {
          return true;
       } else if (x instanceof Byte) {
          return true;
-      } else if (x instanceof BigInteger) {
-         return true;
       } else {
-         return x instanceof BigDecimal;
+         return x instanceof BigInteger ? true : x instanceof BigDecimal;
       }
    }
 
@@ -25,11 +23,7 @@ public class JavaExOperator implements Operator {
    }
 
    boolean inDouble(Object x) {
-      if (x instanceof Double) {
-         return true;
-      } else {
-         return x instanceof Float;
-      }
+      return x instanceof Double ? true : x instanceof Float;
    }
 
    double d(Object x) {
@@ -40,13 +34,13 @@ public class JavaExOperator implements Operator {
       if (x instanceof Long) {
          return new Long(n);
       } else if (x instanceof Double) {
-         return new Double((double)n);
+         return new Double(n);
       } else if (x instanceof Integer) {
          return new Integer((int)n);
       } else if (x instanceof Short) {
-         return new Short((short)((int)n));
+         return new Short((short)n);
       } else if (x instanceof Byte) {
-         return new Byte((byte)((int)n));
+         return new Byte((byte)n);
       } else if (x instanceof Float) {
          return new Float((float)n);
       } else if (x instanceof BigInteger) {
@@ -59,38 +53,24 @@ public class JavaExOperator implements Operator {
    }
 
    Object n(long n, Object x, Object y) {
-      if (!(x instanceof Byte) && !(y instanceof Byte)) {
-         if (!(x instanceof Short) && !(y instanceof Short)) {
-            if (!(x instanceof Integer) && !(y instanceof Integer)) {
-               if (!(x instanceof Long) && !(y instanceof Long)) {
-                  if (!(x instanceof BigInteger) && !(y instanceof BigInteger)) {
-                     if (!(x instanceof BigDecimal) && !(y instanceof BigDecimal)) {
-                        if (!(x instanceof Float) && !(y instanceof Float)) {
-                           if (!(x instanceof Double) && !(y instanceof Double)) {
-                              return !(x instanceof String) && !(y instanceof String) ? new Long(n) : String.valueOf(n);
-                           } else {
-                              return new Double((double)n);
-                           }
-                        } else {
-                           return new Float((float)n);
-                        }
-                     } else {
-                        return BigDecimal.valueOf(n);
-                     }
-                  } else {
-                     return BigInteger.valueOf(n);
-                  }
-               } else {
-                  return new Long(n);
-               }
-            } else {
-               return new Integer((int)n);
-            }
-         } else {
-            return new Short((short)((int)n));
-         }
+      if (x instanceof Byte || y instanceof Byte) {
+         return new Byte((byte)n);
+      } else if (x instanceof Short || y instanceof Short) {
+         return new Short((short)n);
+      } else if (x instanceof Integer || y instanceof Integer) {
+         return new Integer((int)n);
+      } else if (x instanceof Long || y instanceof Long) {
+         return new Long(n);
+      } else if (x instanceof BigInteger || y instanceof BigInteger) {
+         return BigInteger.valueOf(n);
+      } else if (x instanceof BigDecimal || y instanceof BigDecimal) {
+         return BigDecimal.valueOf(n);
+      } else if (x instanceof Float || y instanceof Float) {
+         return new Float((float)n);
+      } else if (x instanceof Double || y instanceof Double) {
+         return new Double(n);
       } else {
-         return new Byte((byte)((int)n));
+         return !(x instanceof String) && !(y instanceof String) ? new Long(n) : String.valueOf(n);
       }
    }
 
@@ -103,14 +83,12 @@ public class JavaExOperator implements Operator {
    }
 
    Object n(double n, Object x, Object y) {
-      if (!(x instanceof Float) && !(y instanceof Float)) {
-         if (!(x instanceof Number) && !(y instanceof Number)) {
-            return !(x instanceof String) && !(y instanceof String) ? new Double(n) : String.valueOf(n);
-         } else {
-            return new Double(n);
-         }
-      } else {
+      if (x instanceof Float || y instanceof Float) {
          return new Float(n);
+      } else if (x instanceof Number || y instanceof Number) {
+         return new Double(n);
+      } else {
+         return !(x instanceof String) && !(y instanceof String) ? new Double(n) : String.valueOf(n);
       }
    }
 
@@ -123,10 +101,10 @@ public class JavaExOperator implements Operator {
    }
 
    Object nn(long n, Object x, Object y) {
-      if (!(x instanceof BigDecimal) && !(y instanceof BigDecimal)) {
-         return !(x instanceof BigInteger) && !(y instanceof BigInteger) ? new Long(n) : BigInteger.valueOf(n);
-      } else {
+      if (x instanceof BigDecimal || y instanceof BigDecimal) {
          return BigDecimal.valueOf(n);
+      } else {
+         return !(x instanceof BigInteger) && !(y instanceof BigInteger) ? new Long(n) : BigInteger.valueOf(n);
       }
    }
 
@@ -161,14 +139,17 @@ public class JavaExOperator implements Operator {
       return new RuntimeException("未定義二項演算：" + c1 + " , " + c2);
    }
 
+   @Override
    public Object power(Object x, Object y) {
       return x == null && y == null ? null : this.nn(Math.pow(this.d(x), this.d(y)), x, y);
    }
 
+   @Override
    public Object signPlus(Object x) {
       return x;
    }
 
+   @Override
    public Object signMinus(Object x) {
       if (x == null) {
          return null;
@@ -183,6 +164,7 @@ public class JavaExOperator implements Operator {
       }
    }
 
+   @Override
    public Object plus(Object x, Object y) {
       if (x == null && y == null) {
          return null;
@@ -190,17 +172,16 @@ public class JavaExOperator implements Operator {
          return this.nn(this.l(x) + this.l(y), x, y);
       } else if (this.inDouble(x) && this.inDouble(y)) {
          return this.nn(this.d(x) + this.d(y), x, y);
-      } else if (!(x instanceof String) && !(y instanceof String)) {
-         if (!(x instanceof Character) && !(y instanceof Character)) {
-            throw this.undefined(x, y);
-         } else {
-            return x + String.valueOf(y);
-         }
+      } else if (x instanceof String || y instanceof String) {
+         return x + String.valueOf(y);
+      } else if (!(x instanceof Character) && !(y instanceof Character)) {
+         throw this.undefined(x, y);
       } else {
          return x + String.valueOf(y);
       }
    }
 
+   @Override
    public Object minus(Object x, Object y) {
       if (x == null && y == null) {
          return null;
@@ -213,6 +194,7 @@ public class JavaExOperator implements Operator {
       }
    }
 
+   @Override
    public Object mult(Object x, Object y) {
       if (x == null && y == null) {
          return null;
@@ -239,7 +221,7 @@ public class JavaExOperator implements Operator {
          } else {
             StringBuffer sb = new StringBuffer(s.length() * ct);
 
-            for(int i = 0; i < ct; ++i) {
+            for (int i = 0; i < ct; i++) {
                sb.append(s);
             }
 
@@ -248,6 +230,7 @@ public class JavaExOperator implements Operator {
       }
    }
 
+   @Override
    public Object div(Object x, Object y) {
       if (x == null && y == null) {
          return null;
@@ -264,6 +247,7 @@ public class JavaExOperator implements Operator {
       }
    }
 
+   @Override
    public Object mod(Object x, Object y) {
       if (x == null && y == null) {
          return null;
@@ -276,6 +260,7 @@ public class JavaExOperator implements Operator {
       }
    }
 
+   @Override
    public Object bitNot(Object x) {
       if (x == null) {
          return null;
@@ -286,30 +271,33 @@ public class JavaExOperator implements Operator {
       }
    }
 
+   @Override
    public Object shiftLeft(Object x, Object y) {
       if (x == null && y == null) {
          return null;
       } else if (this.inLong(x) && this.inLong(y)) {
          return this.n(this.l(x) << (int)this.l(y), x);
       } else if (this.inDouble(x) && this.inDouble(y)) {
-         return this.n(this.d(x) * Math.pow(2.0D, this.d(y)), x);
+         return this.n(this.d(x) * Math.pow(2.0, this.d(y)), x);
       } else {
          throw this.undefined(x, y);
       }
    }
 
+   @Override
    public Object shiftRight(Object x, Object y) {
       if (x == null && y == null) {
          return null;
       } else if (this.inLong(x) && this.inLong(y)) {
          return this.n(this.l(x) >> (int)this.l(y), x);
       } else if (this.inDouble(x) && this.inDouble(y)) {
-         return this.n(this.d(x) / Math.pow(2.0D, this.d(y)), x);
+         return this.n(this.d(x) / Math.pow(2.0, this.d(y)), x);
       } else {
          throw this.undefined(x, y);
       }
    }
 
+   @Override
    public Object shiftRightLogical(Object x, Object y) {
       if (x == null && y == null) {
          return null;
@@ -323,16 +311,17 @@ public class JavaExOperator implements Operator {
          return this.n(this.l(x) >>> (int)this.l(y), x);
       } else if (this.inDouble(x) && y instanceof Number) {
          double t = this.d(x);
-         if (t < 0.0D) {
+         if (t < 0.0) {
             t = -t;
          }
 
-         return this.n(t / Math.pow(2.0D, this.d(y)), x);
+         return this.n(t / Math.pow(2.0, this.d(y)), x);
       } else {
          throw this.undefined(x, y);
       }
    }
 
+   @Override
    public Object bitAnd(Object x, Object y) {
       if (x == null && y == null) {
          return null;
@@ -343,6 +332,7 @@ public class JavaExOperator implements Operator {
       }
    }
 
+   @Override
    public Object bitOr(Object x, Object y) {
       if (x == null && y == null) {
          return null;
@@ -353,6 +343,7 @@ public class JavaExOperator implements Operator {
       }
    }
 
+   @Override
    public Object bitXor(Object x, Object y) {
       if (x == null && y == null) {
          return null;
@@ -363,6 +354,7 @@ public class JavaExOperator implements Operator {
       }
    }
 
+   @Override
    public Object not(Object x) {
       if (x == null) {
          return null;
@@ -391,10 +383,10 @@ public class JavaExOperator implements Operator {
          }
       } else if (x instanceof Number && y instanceof Number) {
          double n = this.d(x) - this.d(y);
-         if (n == 0.0D) {
+         if (n == 0.0) {
             return 0;
          } else {
-            return n < 0.0D ? -1 : 1;
+            return n < 0.0 ? -1 : 1;
          }
       } else {
          Class<?> xc = x.getClass();
@@ -411,49 +403,55 @@ public class JavaExOperator implements Operator {
       }
    }
 
+   @Override
    public Object equal(Object x, Object y) {
       return this.compare(x, y) == 0 ? Boolean.TRUE : Boolean.FALSE;
    }
 
+   @Override
    public Object notEqual(Object x, Object y) {
       return this.compare(x, y) != 0 ? Boolean.TRUE : Boolean.FALSE;
    }
 
+   @Override
    public Object lessThan(Object x, Object y) {
       return this.compare(x, y) < 0 ? Boolean.TRUE : Boolean.FALSE;
    }
 
+   @Override
    public Object lessEqual(Object x, Object y) {
       return this.compare(x, y) <= 0 ? Boolean.TRUE : Boolean.FALSE;
    }
 
+   @Override
    public Object greaterThan(Object x, Object y) {
       return this.compare(x, y) > 0 ? Boolean.TRUE : Boolean.FALSE;
    }
 
+   @Override
    public Object greaterEqual(Object x, Object y) {
       return this.compare(x, y) >= 0 ? Boolean.TRUE : Boolean.FALSE;
    }
 
+   @Override
    public boolean bool(Object x) {
       if (x == null) {
          return false;
       } else if (x instanceof Boolean) {
          return (Boolean)x;
-      } else if (x instanceof Number) {
-         return ((Number)x).longValue() != 0L;
       } else {
-         return Boolean.valueOf(x.toString());
+         return x instanceof Number ? ((Number)x).longValue() != 0L : Boolean.valueOf(x.toString());
       }
    }
 
+   @Override
    public Object inc(Object x, int inc) {
       if (x == null) {
          return null;
       } else if (this.inLong(x)) {
-         return this.n(this.l(x) + (long)inc, x);
+         return this.n(this.l(x) + inc, x);
       } else if (this.inDouble(x)) {
-         return this.n(this.d(x) + (double)inc, x);
+         return this.n(this.d(x) + inc, x);
       } else {
          throw this.undefined(x);
       }

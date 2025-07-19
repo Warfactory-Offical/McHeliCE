@@ -14,9 +14,9 @@ public abstract class MCH_PacketPlayerControlBase extends MCH_Packet {
    public boolean useWeapon = false;
    public int useWeaponOption1 = 0;
    public int useWeaponOption2 = 0;
-   public double useWeaponPosX = 0.0D;
-   public double useWeaponPosY = 0.0D;
-   public double useWeaponPosZ = 0.0D;
+   public double useWeaponPosX = 0.0;
+   public double useWeaponPosY = 0.0;
+   public double useWeaponPosZ = 0.0;
    public boolean throttleUp = false;
    public boolean throttleDown = false;
    public boolean moveLeft = false;
@@ -31,6 +31,7 @@ public abstract class MCH_PacketPlayerControlBase extends MCH_Packet {
    public boolean useBrake = false;
    public boolean switchGunnerStatus = false;
 
+   @Override
    public void readData(ByteArrayDataInput data) {
       try {
          short bf = data.readShort();
@@ -44,7 +45,7 @@ public abstract class MCH_PacketPlayerControlBase extends MCH_Packet {
          this.openGui = this.getBit(bf, 7);
          this.useBrake = this.getBit(bf, 8);
          this.switchGunnerStatus = this.getBit(bf, 9);
-         bf = (short)data.readByte();
+         bf = data.readByte();
          this.putDownRack = (byte)(bf >> 6 & 3);
          this.isUnmount = (byte)(bf >> 4 & 3);
          this.useFlareType = (byte)(bf >> 0 & 15);
@@ -58,7 +59,7 @@ public abstract class MCH_PacketPlayerControlBase extends MCH_Packet {
             this.useWeaponPosZ = data.readDouble();
          }
 
-         bf = (short)data.readByte();
+         bf = data.readByte();
          this.switchCameraMode = (byte)(bf >> 6 & 3);
          this.switchHatch = (byte)(bf >> 4 & 3);
          this.switchFreeLook = (byte)(bf >> 2 & 3);
@@ -66,13 +67,13 @@ public abstract class MCH_PacketPlayerControlBase extends MCH_Packet {
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       try {
          short bf = 0;
-         short bf = this.setBit(bf, 0, this.useWeapon);
+         bf = this.setBit(bf, 0, this.useWeapon);
          bf = this.setBit(bf, 1, this.throttleUp);
          bf = this.setBit(bf, 2, this.throttleDown);
          bf = this.setBit(bf, 3, this.moveLeft);
@@ -83,7 +84,7 @@ public abstract class MCH_PacketPlayerControlBase extends MCH_Packet {
          bf = this.setBit(bf, 8, this.useBrake);
          bf = this.setBit(bf, 9, this.switchGunnerStatus);
          dos.writeShort(bf);
-         bf = (short)((byte)((this.putDownRack & 3) << 6 | (this.isUnmount & 3) << 4 | this.useFlareType & 15));
+         bf = (byte)((this.putDownRack & 3) << 6 | (this.isUnmount & 3) << 4 | this.useFlareType & 15);
          dos.writeByte(bf);
          dos.writeByte(this.switchMode);
          dos.writeByte(this.switchWeapon);
@@ -95,11 +96,10 @@ public abstract class MCH_PacketPlayerControlBase extends MCH_Packet {
             dos.writeDouble(this.useWeaponPosZ);
          }
 
-         bf = (short)((byte)((this.switchCameraMode & 3) << 6 | (this.switchHatch & 3) << 4 | (this.switchFreeLook & 3) << 2 | (this.switchGear & 3) << 0));
+         bf = (byte)((this.switchCameraMode & 3) << 6 | (this.switchHatch & 3) << 4 | (this.switchFreeLook & 3) << 2 | (this.switchGear & 3) << 0);
          dos.writeByte(bf);
       } catch (IOException var3) {
          var3.printStackTrace();
       }
-
    }
 }

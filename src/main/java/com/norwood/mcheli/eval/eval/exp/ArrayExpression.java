@@ -12,10 +12,12 @@ public class ArrayExpression extends Col2OpeExpression {
       super(from, s);
    }
 
+   @Override
    public AbstractExpression dup(ShareExpValue s) {
       return new ArrayExpression(this, s);
    }
 
+   @Override
    public long evalLong() {
       try {
          return this.share.var.evalLong(this.getVariable());
@@ -26,6 +28,7 @@ public class ArrayExpression extends Col2OpeExpression {
       }
    }
 
+   @Override
    public double evalDouble() {
       try {
          return this.share.var.evalDouble(this.getVariable());
@@ -36,14 +39,16 @@ public class ArrayExpression extends Col2OpeExpression {
       }
    }
 
+   @Override
    public Object evalObject() {
       return this.getVariable();
    }
 
+   @Override
    protected Object getVariable() {
       Object obj = this.expl.getVariable();
       if (obj == null) {
-         throw new EvalException(2104, this.expl.toString(), this.string, this.pos, (Throwable)null);
+         throw new EvalException(2104, this.expl.toString(), this.string, this.pos, null);
       } else {
          int index = (int)this.expr.evalLong();
 
@@ -57,10 +62,11 @@ public class ArrayExpression extends Col2OpeExpression {
       }
    }
 
+   @Override
    protected void let(Object val, int pos) {
       Object obj = this.expl.getVariable();
       if (obj == null) {
-         throw new EvalException(2104, this.expl.toString(), this.string, pos, (Throwable)null);
+         throw new EvalException(2104, this.expl.toString(), this.string, pos, null);
       } else {
          int index = (int)this.expr.evalLong();
 
@@ -74,12 +80,14 @@ public class ArrayExpression extends Col2OpeExpression {
       }
    }
 
+   @Override
    protected AbstractExpression replaceVar() {
       this.expl = this.expl.replaceVar();
       this.expr = this.expr.replace();
       return this.share.repl.replaceVar2((Col2OpeExpression)this);
    }
 
+   @Override
    public String toString() {
       StringBuffer sb = new StringBuffer();
       sb.append(this.expl.toString());

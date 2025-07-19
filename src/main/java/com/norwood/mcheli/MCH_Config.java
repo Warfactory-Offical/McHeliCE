@@ -3,7 +3,6 @@ package com.norwood.mcheli;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import com.norwood.mcheli.helicopter.MCH_EntityHeli;
 import com.norwood.mcheli.plane.MCP_EntityPlane;
@@ -25,8 +24,8 @@ public class MCH_Config {
    public static int hitMarkColorRGB;
    public static float hitMarkColorAlpha;
    public static List<Block> bulletBreakableBlocks;
-   public static final List<Block> dummyBreakableBlocks = new ArrayList();
-   public static final List<Material> dummyBreakableMaterials = new ArrayList();
+   public static final List<Block> dummyBreakableBlocks = new ArrayList<>();
+   public static final List<Material> dummyBreakableMaterials = new ArrayList<>();
    public static List<Block> carNoBreakableBlocks;
    public static List<Block> carBreakableBlocks;
    public static List<Material> carBreakableMaterials;
@@ -183,13 +182,13 @@ public class MCH_Config {
       configFilePath = mcPath + cfgFile;
       DebugLog = false;
       configVer = "0.0.0";
-      bulletBreakableBlocks = new ArrayList();
-      carBreakableBlocks = new ArrayList();
-      carNoBreakableBlocks = new ArrayList();
-      carBreakableMaterials = new ArrayList();
-      tankBreakableBlocks = new ArrayList();
-      tankNoBreakableBlocks = new ArrayList();
-      tankBreakableMaterials = new ArrayList();
+      bulletBreakableBlocks = new ArrayList<>();
+      carBreakableBlocks = new ArrayList<>();
+      carNoBreakableBlocks = new ArrayList<>();
+      carBreakableMaterials = new ArrayList<>();
+      tankBreakableBlocks = new ArrayList<>();
+      tankNoBreakableBlocks = new ArrayList<>();
+      tankBreakableMaterials = new ArrayList<>();
       KeyUp = new MCH_ConfigPrm("KeyUp", 17);
       KeyDown = new MCH_ConfigPrm("KeyDown", 31);
       KeyRight = new MCH_ConfigPrm("KeyRight", 32);
@@ -215,20 +214,44 @@ public class MCH_Config {
       KeyDownFromRack = new MCH_ConfigPrm("KeyDownFromRack", 22);
       KeyScoreboard = new MCH_ConfigPrm("KeyScoreboard", 38);
       KeyMultiplayManager = new MCH_ConfigPrm("KeyMultiplayManager", 50);
-      KeyConfig = new MCH_ConfigPrm[]{KeyUp, KeyDown, KeyRight, KeyLeft, KeySwitchMode, KeySwitchHovering, KeySwitchWeapon1, KeySwitchWeapon2, KeySwWeaponMode, KeyZoom, KeyCameraMode, KeyUnmount, KeyFlare, KeyExtra, KeyCameraDistUp, KeyCameraDistDown, KeyFreeLook, KeyGUI, KeyGearUpDown, KeyPutToRack, KeyDownFromRack, KeyScoreboard, KeyMultiplayManager};
-      DamageVs = new ArrayList();
-      CommandPermission = new ArrayList();
-      CommandPermissionList = new ArrayList();
-      IgnoreBulletHitList = new ArrayList();
+      KeyConfig = new MCH_ConfigPrm[]{
+         KeyUp,
+         KeyDown,
+         KeyRight,
+         KeyLeft,
+         KeySwitchMode,
+         KeySwitchHovering,
+         KeySwitchWeapon1,
+         KeySwitchWeapon2,
+         KeySwWeaponMode,
+         KeyZoom,
+         KeyCameraMode,
+         KeyUnmount,
+         KeyFlare,
+         KeyExtra,
+         KeyCameraDistUp,
+         KeyCameraDistDown,
+         KeyFreeLook,
+         KeyGUI,
+         KeyGearUpDown,
+         KeyPutToRack,
+         KeyDownFromRack,
+         KeyScoreboard,
+         KeyMultiplayManager
+      };
+      DamageVs = new ArrayList<>();
+      CommandPermission = new ArrayList<>();
+      CommandPermissionList = new ArrayList<>();
+      IgnoreBulletHitList = new ArrayList<>();
       IgnoreBulletHitItem = new MCH_ConfigPrm("IgnoreBulletHit", "");
       TestMode = new MCH_ConfigPrm("TestMode", false);
-      __TextureAlpha = new MCH_ConfigPrm("__TextureAlphaDebug", 1.0D);
+      __TextureAlpha = new MCH_ConfigPrm("__TextureAlphaDebug", 1.0);
       EnableCommand = new MCH_ConfigPrm("EnableCommand", true);
       PlaceableOnSpongeOnly = new MCH_ConfigPrm("PlaceableOnSpongeOnly", false);
       HideKeybind = new MCH_ConfigPrm("HideKeybind", false);
       ItemDamage = new MCH_ConfigPrm("ItemDamage", true);
       ItemFuel = new MCH_ConfigPrm("ItemFuel", true);
-      AutoRepairHP = new MCH_ConfigPrm("AutoRepairHP", 0.5D);
+      AutoRepairHP = new MCH_ConfigPrm("AutoRepairHP", 0.5);
       Collision_DestroyBlock = new MCH_ConfigPrm("Collision_DestroyBlock", true);
       Explosion_DestroyBlock = new MCH_ConfigPrm("Explosion_DestroyBlock", true);
       Explosion_FlamingBlock = new MCH_ConfigPrm("Explosion_FlamingBlock", true);
@@ -238,7 +261,9 @@ public class MCH_Config {
       Collision_Tank_BreakableBlock = new MCH_ConfigPrm("Collision_Tank_BreakableBlock", "nether_brick_fence");
       Collision_Tank_BreakableBlock.validVer = "1.0.0";
       Collision_Tank_NoBreakableBlock = new MCH_ConfigPrm("Collision_Tank_NoBreakBlock", "torch, glowstone");
-      Collision_Tank_BreakableMaterial = new MCH_ConfigPrm("Collision_Tank_BreakableMaterial", "cactus, cake, carpet, circuits, glass, gourd, leaves, vine, wood, plants");
+      Collision_Tank_BreakableMaterial = new MCH_ConfigPrm(
+         "Collision_Tank_BreakableMaterial", "cactus, cake, carpet, circuits, glass, gourd, leaves, vine, wood, plants"
+      );
       Collision_EntityDamage = new MCH_ConfigPrm("Collision_EntityDamage", true);
       Collision_EntityTankDamage = new MCH_ConfigPrm("Collision_EntityTankDamage", false);
       LWeaponAutoFire = new MCH_ConfigPrm("LWeaponAutoFire", false);
@@ -252,8 +277,8 @@ public class MCH_Config {
       AutoThrottleDownTank = new MCH_ConfigPrm("AutoThrottleDownTank", false);
       DisableItemRender = new MCH_ConfigPrm("DisableItemRender", 1);
       DisableItemRender.desc = ";DisableItemRender = 0 ~ 3 (1 = Recommended)";
-      RenderDistanceWeight = new MCH_ConfigPrm("RenderDistanceWeight", 10.0D);
-      MobRenderDistanceWeight = new MCH_ConfigPrm("MobRenderDistanceWeight", 1.0D);
+      RenderDistanceWeight = new MCH_ConfigPrm("RenderDistanceWeight", 10.0);
+      MobRenderDistanceWeight = new MCH_ConfigPrm("MobRenderDistanceWeight", 1.0);
       CreativeTabIcon = new MCH_ConfigPrm("CreativeTabIconItem", "fuel");
       CreativeTabIconHeli = new MCH_ConfigPrm("CreativeTabIconHeli", "ah-64");
       CreativeTabIconPlane = new MCH_ConfigPrm("CreativeTabIconPlane", "f22a");
@@ -266,7 +291,9 @@ public class MCH_Config {
       HitMarkColor = new MCH_ConfigPrm("HitMarkColor", "255, 255, 0, 0");
       HitMarkColor.desc = ";HitMarkColor = Alpha, Red, Green, Blue";
       SmoothShading = new MCH_ConfigPrm("SmoothShading", true);
-      BulletBreakableBlock = new MCH_ConfigPrm("BulletBreakableBlocks", "glass_pane, stained_glass_pane, tallgrass, double_plant, yellow_flower, red_flower, vine, wheat, reeds, waterlily");
+      BulletBreakableBlock = new MCH_ConfigPrm(
+         "BulletBreakableBlocks", "glass_pane, stained_glass_pane, tallgrass, double_plant, yellow_flower, red_flower, vine, wheat, reeds, waterlily"
+      );
       BulletBreakableBlock.validVer = "0.10.4";
       EnableModEntityRender = new MCH_ConfigPrm("EnableModEntityRender", true);
       DisableRenderLivingSpecials = new MCH_ConfigPrm("DisableRenderLivingSpecials", true);
@@ -274,25 +301,25 @@ public class MCH_Config {
       DropItemInCreativeMode = new MCH_ConfigPrm("DropItemInCreativeMode", false);
       BreakableOnlyPickaxe = new MCH_ConfigPrm("BreakableOnlyPickaxe", false);
       InvertMouse = new MCH_ConfigPrm("InvertMouse", false);
-      MouseSensitivity = new MCH_ConfigPrm("MouseSensitivity", 10.0D);
+      MouseSensitivity = new MCH_ConfigPrm("MouseSensitivity", 10.0);
       MouseControlStickModeHeli = new MCH_ConfigPrm("MouseControlStickModeHeli", false);
       MouseControlStickModePlane = new MCH_ConfigPrm("MouseControlStickModePlane", false);
       MouseControlFlightSimMode = new MCH_ConfigPrm("MouseControlFlightSimMode", false);
       MouseControlFlightSimMode.desc = ";MouseControlFlightSimMode = true ( Yaw:key, Roll=mouse )";
       SwitchWeaponWithMouseWheel = new MCH_ConfigPrm("SwitchWeaponWithMouseWheel", true);
-      AllHeliSpeed = new MCH_ConfigPrm("AllHeliSpeed", 1.0D);
-      AllPlaneSpeed = new MCH_ConfigPrm("AllPlaneSpeed", 1.0D);
-      AllTankSpeed = new MCH_ConfigPrm("AllTankSpeed", 1.0D);
-      HurtResistantTime = new MCH_ConfigPrm("HurtResistantTime", 0.0D);
+      AllHeliSpeed = new MCH_ConfigPrm("AllHeliSpeed", 1.0);
+      AllPlaneSpeed = new MCH_ConfigPrm("AllPlaneSpeed", 1.0);
+      AllTankSpeed = new MCH_ConfigPrm("AllTankSpeed", 1.0);
+      HurtResistantTime = new MCH_ConfigPrm("HurtResistantTime", 0.0);
       DisplayHUDThirdPerson = new MCH_ConfigPrm("DisplayHUDThirdPerson", false);
       DisableCameraDistChange = new MCH_ConfigPrm("DisableThirdPersonCameraDistChange", false);
       EnableReplaceTextureManager = new MCH_ConfigPrm("EnableReplaceTextureManager", true);
       DisplayEntityMarker = new MCH_ConfigPrm("DisplayEntityMarker", true);
       DisplayMarkThroughWall = new MCH_ConfigPrm("DisplayMarkThroughWall", true);
-      EntityMarkerSize = new MCH_ConfigPrm("EntityMarkerSize", 10.0D);
-      BlockMarkerSize = new MCH_ConfigPrm("BlockMarkerSize", 10.0D);
+      EntityMarkerSize = new MCH_ConfigPrm("EntityMarkerSize", 10.0);
+      BlockMarkerSize = new MCH_ConfigPrm("BlockMarkerSize", 10.0);
       ReplaceRenderViewEntity = new MCH_ConfigPrm("ReplaceRenderViewEntity", true);
-      StingerLockRange = new MCH_ConfigPrm("StingerLockRange", 320.0D);
+      StingerLockRange = new MCH_ConfigPrm("StingerLockRange", 320.0);
       StingerLockRange.validVer = "1.0.0";
       DefaultExplosionParticle = new MCH_ConfigPrm("DefaultExplosionParticle", false);
       RangeFinderSpotDist = new MCH_ConfigPrm("RangeFinderSpotDist", 400);
@@ -328,7 +355,93 @@ public class MCH_Config {
       ItemID_StingerMissile = new MCH_ConfigPrm("ItemID_StingerMissile", 28901);
       BlockID_DraftingTableOFF = new MCH_ConfigPrm("BlockID_DraftingTable", 3450);
       BlockID_DraftingTableON = new MCH_ConfigPrm("BlockID_DraftingTableON", 3451);
-      General = new MCH_ConfigPrm[]{TestMode, __TextureAlpha, EnableCommand, null, PlaceableOnSpongeOnly, ItemDamage, ItemFuel, AutoRepairHP, Explosion_DestroyBlock, Explosion_FlamingBlock, BulletBreakableBlock, Collision_DestroyBlock, Collision_Car_BreakableBlock, Collision_Car_BreakableMaterial, Collision_Tank_BreakableBlock, Collision_Tank_BreakableMaterial, Collision_EntityDamage, Collision_EntityTankDamage, InfinityAmmo, InfinityFuel, DismountAll, MountMinecartHeli, MountMinecartPlane, MountMinecartVehicle, MountMinecartTank, PreventingBroken, DropItemInCreativeMode, BreakableOnlyPickaxe, AllHeliSpeed, AllPlaneSpeed, AllTankSpeed, HurtResistantTime, StingerLockRange, RangeFinderSpotDist, RangeFinderSpotTime, RangeFinderConsume, EnablePutRackInFlying, EnableDebugBoundingBox, DespawnCount, HitBoxDelayTick, EnableRotationLimit, PitchLimitMax, PitchLimitMin, RollLimit, RangeOfGunner_VsMonster_Horizontal, RangeOfGunner_VsMonster_Vertical, RangeOfGunner_VsPlayer_Horizontal, RangeOfGunner_VsPlayer_Vertical, FixVehicleAtPlacedPoint, KillPassengersWhenDestroyed, null, InvertMouse, MouseSensitivity, MouseControlStickModeHeli, MouseControlStickModePlane, MouseControlFlightSimMode, AutoThrottleDownHeli, AutoThrottleDownPlane, AutoThrottleDownTank, SwitchWeaponWithMouseWheel, LWeaponAutoFire, DisableItemRender, HideKeybind, RenderDistanceWeight, MobRenderDistanceWeight, CreativeTabIcon, CreativeTabIconHeli, CreativeTabIconPlane, CreativeTabIconTank, CreativeTabIconVehicle, DisableShader, DefaultExplosionParticle, AliveTimeOfCartridge, HitMarkColor, SmoothShading, EnableModEntityRender, DisableRenderLivingSpecials, DisplayHUDThirdPerson, DisableCameraDistChange, EnableReplaceTextureManager, DisplayEntityMarker, EntityMarkerSize, BlockMarkerSize, ReplaceRenderViewEntity, null};
+      General = new MCH_ConfigPrm[]{
+         TestMode,
+         __TextureAlpha,
+         EnableCommand,
+         null,
+         PlaceableOnSpongeOnly,
+         ItemDamage,
+         ItemFuel,
+         AutoRepairHP,
+         Explosion_DestroyBlock,
+         Explosion_FlamingBlock,
+         BulletBreakableBlock,
+         Collision_DestroyBlock,
+         Collision_Car_BreakableBlock,
+         Collision_Car_BreakableMaterial,
+         Collision_Tank_BreakableBlock,
+         Collision_Tank_BreakableMaterial,
+         Collision_EntityDamage,
+         Collision_EntityTankDamage,
+         InfinityAmmo,
+         InfinityFuel,
+         DismountAll,
+         MountMinecartHeli,
+         MountMinecartPlane,
+         MountMinecartVehicle,
+         MountMinecartTank,
+         PreventingBroken,
+         DropItemInCreativeMode,
+         BreakableOnlyPickaxe,
+         AllHeliSpeed,
+         AllPlaneSpeed,
+         AllTankSpeed,
+         HurtResistantTime,
+         StingerLockRange,
+         RangeFinderSpotDist,
+         RangeFinderSpotTime,
+         RangeFinderConsume,
+         EnablePutRackInFlying,
+         EnableDebugBoundingBox,
+         DespawnCount,
+         HitBoxDelayTick,
+         EnableRotationLimit,
+         PitchLimitMax,
+         PitchLimitMin,
+         RollLimit,
+         RangeOfGunner_VsMonster_Horizontal,
+         RangeOfGunner_VsMonster_Vertical,
+         RangeOfGunner_VsPlayer_Horizontal,
+         RangeOfGunner_VsPlayer_Vertical,
+         FixVehicleAtPlacedPoint,
+         KillPassengersWhenDestroyed,
+         null,
+         InvertMouse,
+         MouseSensitivity,
+         MouseControlStickModeHeli,
+         MouseControlStickModePlane,
+         MouseControlFlightSimMode,
+         AutoThrottleDownHeli,
+         AutoThrottleDownPlane,
+         AutoThrottleDownTank,
+         SwitchWeaponWithMouseWheel,
+         LWeaponAutoFire,
+         DisableItemRender,
+         HideKeybind,
+         RenderDistanceWeight,
+         MobRenderDistanceWeight,
+         CreativeTabIcon,
+         CreativeTabIconHeli,
+         CreativeTabIconPlane,
+         CreativeTabIconTank,
+         CreativeTabIconVehicle,
+         DisableShader,
+         DefaultExplosionParticle,
+         AliveTimeOfCartridge,
+         HitMarkColor,
+         SmoothShading,
+         EnableModEntityRender,
+         DisableRenderLivingSpecials,
+         DisplayHUDThirdPerson,
+         DisableCameraDistChange,
+         EnableReplaceTextureManager,
+         DisplayEntityMarker,
+         EntityMarkerSize,
+         BlockMarkerSize,
+         ReplaceRenderViewEntity,
+         null
+      };
       DamageVsEntity = new MCH_Config.DamageFactor(this, "DamageVsEntity");
       DamageVsLiving = new MCH_Config.DamageFactor(this, "DamageVsLiving");
       DamageVsPlayer = new MCH_Config.DamageFactor(this, "DamageVsPlayer");
@@ -340,51 +453,55 @@ public class MCH_Config {
       DamageTankByExternal = new MCH_Config.DamageFactor(this, "DamageMCHeliTankByExternal");
       DamageVehicleByExternal = new MCH_Config.DamageFactor(this, "DamageMCHeliVehicleByExternal");
       DamageOtherByExternal = new MCH_Config.DamageFactor(this, "DamageMCHeliOtherByExternal");
-      DamageFactorList = new MCH_Config.DamageFactor[]{DamageVsEntity, DamageVsLiving, DamageVsPlayer, DamageVsMCHeliAircraft, DamageVsMCHeliTank, DamageVsMCHeliVehicle, DamageVsMCHeliOther, DamageAircraftByExternal, DamageTankByExternal, DamageVehicleByExternal, DamageOtherByExternal};
+      DamageFactorList = new MCH_Config.DamageFactor[]{
+         DamageVsEntity,
+         DamageVsLiving,
+         DamageVsPlayer,
+         DamageVsMCHeliAircraft,
+         DamageVsMCHeliTank,
+         DamageVsMCHeliVehicle,
+         DamageVsMCHeliOther,
+         DamageAircraftByExternal,
+         DamageTankByExternal,
+         DamageVehicleByExternal,
+         DamageOtherByExternal
+      };
    }
 
    public void setBlockListFromString(List<Block> list, String str) {
       list.clear();
       String[] s = str.split("\\s*,\\s*");
-      String[] var4 = s;
-      int var5 = s.length;
 
-      for(int var6 = 0; var6 < var5; ++var6) {
-         String blockName = var4[var6];
+      for (String blockName : s) {
          Block b = W_Block.getBlockFromName(blockName);
          if (b != null) {
             list.add(b);
          }
       }
-
    }
 
    public void setMaterialListFromString(List<Material> list, String str) {
       list.clear();
       String[] s = str.split("\\s*,\\s*");
-      String[] var4 = s;
-      int var5 = s.length;
 
-      for(int var6 = 0; var6 < var5; ++var6) {
-         String name = var4[var6];
+      for (String name : s) {
          Material m = MCH_Lib.getMaterialFromName(name);
          if (m != null) {
             list.add(m);
          }
       }
-
    }
 
    public void correctionParameter() {
       String[] s = HitMarkColor.prmString.split("\\s*,\\s*");
       if (s.length == 4) {
-         hitMarkColorAlpha = (float)this.toInt255(s[0]) / 255.0F;
+         hitMarkColorAlpha = this.toInt255(s[0]) / 255.0F;
          hitMarkColorRGB = this.toInt255(s[1]) << 16 | this.toInt255(s[2]) << 8 | this.toInt255(s[3]);
       }
 
-      AllHeliSpeed.prmDouble = MCH_Lib.RNG(AllHeliSpeed.prmDouble, 0.0D, 1000.0D);
-      AllPlaneSpeed.prmDouble = MCH_Lib.RNG(AllPlaneSpeed.prmDouble, 0.0D, 1000.0D);
-      AllTankSpeed.prmDouble = MCH_Lib.RNG(AllTankSpeed.prmDouble, 0.0D, 1000.0D);
+      AllHeliSpeed.prmDouble = MCH_Lib.RNG(AllHeliSpeed.prmDouble, 0.0, 1000.0);
+      AllPlaneSpeed.prmDouble = MCH_Lib.RNG(AllPlaneSpeed.prmDouble, 0.0, 1000.0);
+      AllTankSpeed.prmDouble = MCH_Lib.RNG(AllTankSpeed.prmDouble, 0.0, 1000.0);
       this.setBlockListFromString(bulletBreakableBlocks, BulletBreakableBlock.prmString);
       this.setBlockListFromString(carBreakableBlocks, Collision_Car_BreakableBlock.prmString);
       this.setBlockListFromString(carNoBreakableBlocks, Collision_Car_NoBreakableBlock.prmString);
@@ -392,32 +509,29 @@ public class MCH_Config {
       this.setBlockListFromString(tankBreakableBlocks, Collision_Tank_BreakableBlock.prmString);
       this.setBlockListFromString(tankNoBreakableBlocks, Collision_Tank_NoBreakableBlock.prmString);
       this.setMaterialListFromString(tankBreakableMaterials, Collision_Tank_BreakableMaterial.prmString);
-      if (EntityMarkerSize.prmDouble < 0.0D) {
-         EntityMarkerSize.prmDouble = 0.0D;
+      if (EntityMarkerSize.prmDouble < 0.0) {
+         EntityMarkerSize.prmDouble = 0.0;
       }
 
-      if (BlockMarkerSize.prmDouble < 0.0D) {
-         BlockMarkerSize.prmDouble = 0.0D;
+      if (BlockMarkerSize.prmDouble < 0.0) {
+         BlockMarkerSize.prmDouble = 0.0;
       }
 
-      if (HurtResistantTime.prmDouble < 0.0D) {
-         HurtResistantTime.prmDouble = 0.0D;
+      if (HurtResistantTime.prmDouble < 0.0) {
+         HurtResistantTime.prmDouble = 0.0;
       }
 
-      if (HurtResistantTime.prmDouble > 10000.0D) {
-         HurtResistantTime.prmDouble = 10000.0D;
+      if (HurtResistantTime.prmDouble > 10000.0) {
+         HurtResistantTime.prmDouble = 10000.0;
       }
 
-      if (MobRenderDistanceWeight.prmDouble < 0.1D) {
-         MobRenderDistanceWeight.prmDouble = 0.1D;
-      } else if (MobRenderDistanceWeight.prmDouble > 10.0D) {
-         MobRenderDistanceWeight.prmDouble = 10.0D;
+      if (MobRenderDistanceWeight.prmDouble < 0.1) {
+         MobRenderDistanceWeight.prmDouble = 0.1;
+      } else if (MobRenderDistanceWeight.prmDouble > 10.0) {
+         MobRenderDistanceWeight.prmDouble = 10.0;
       }
 
-      Iterator var2 = CommandPermission.iterator();
-
-      while(var2.hasNext()) {
-         MCH_ConfigPrm p = (MCH_ConfigPrm)var2.next();
+      for (MCH_ConfigPrm p : CommandPermission) {
          MCH_Config.CommandPermission cpm = new MCH_Config.CommandPermission(this, p.prmString);
          if (!cpm.name.isEmpty()) {
             CommandPermissionList.add(cpm);
@@ -430,34 +544,22 @@ public class MCH_Config {
       }
 
       boolean isNoDamageVsSetting = DamageVs.size() <= 0;
-      Iterator var11 = DamageVs.iterator();
 
-      while(var11.hasNext()) {
-         MCH_ConfigPrm p = (MCH_ConfigPrm)var11.next();
-         MCH_Config.DamageFactor[] var5 = DamageFactorList;
-         int var6 = var5.length;
-
-         for(int var7 = 0; var7 < var6; ++var7) {
-            MCH_Config.DamageFactor df = var5[var7];
-            if (p.name.equals(df.itemName)) {
-               df.list.add(this.newDamageEntity(p.prmString));
+      for (MCH_ConfigPrm px : DamageVs) {
+         for (MCH_Config.DamageFactor df : DamageFactorList) {
+            if (px.name.equals(df.itemName)) {
+               df.list.add(this.newDamageEntity(px.prmString));
             }
          }
       }
 
-      MCH_Config.DamageFactor[] var12 = DamageFactorList;
-      int var14 = var12.length;
-
-      for(int var15 = 0; var15 < var14; ++var15) {
-         MCH_Config.DamageFactor df = var12[var15];
-         if (df.list.size() <= 0) {
-            DamageVs.add(new MCH_ConfigPrm(df.itemName, "1.0"));
+      for (MCH_Config.DamageFactor dfx : DamageFactorList) {
+         if (dfx.list.size() <= 0) {
+            DamageVs.add(new MCH_ConfigPrm(dfx.itemName, "1.0"));
          } else {
             boolean foundCommon = false;
-            Iterator var18 = df.list.iterator();
 
-            while(var18.hasNext()) {
-               MCH_Config.DamageEntity n = (MCH_Config.DamageEntity)var18.next();
+            for (MCH_Config.DamageEntity n : dfx.list) {
                if (n.name.isEmpty()) {
                   foundCommon = true;
                   break;
@@ -465,7 +567,7 @@ public class MCH_Config {
             }
 
             if (!foundCommon) {
-               DamageVs.add(new MCH_ConfigPrm(df.itemName, "1.0"));
+               DamageVs.add(new MCH_ConfigPrm(dfx.itemName, "1.0"));
             }
          }
       }
@@ -490,7 +592,6 @@ public class MCH_Config {
          DamageVs.add(new MCH_ConfigPrm("DamageMCHeliAircraftByExternal", "0.5, flansmod"));
          DamageVs.add(new MCH_ConfigPrm("DamageMCHeliVehicleByExternal", "0.5, flansmod"));
       }
-
    }
 
    public MCH_Config.DamageEntity newDamageEntity(String s) {
@@ -498,40 +599,34 @@ public class MCH_Config {
       if (splt.length == 1) {
          return new MCH_Config.DamageEntity(this, Double.parseDouble(splt[0]), "");
       } else {
-         return splt.length == 2 ? new MCH_Config.DamageEntity(this, Double.parseDouble(splt[0]), splt[1]) : new MCH_Config.DamageEntity(this, 1.0D, "");
+         return splt.length == 2 ? new MCH_Config.DamageEntity(this, Double.parseDouble(splt[0]), splt[1]) : new MCH_Config.DamageEntity(this, 1.0, "");
       }
    }
 
    public static float applyDamageByExternal(Entity target, DamageSource ds, float damage) {
-      List list;
-      if (!(target instanceof MCH_EntityHeli) && !(target instanceof MCP_EntityPlane)) {
-         if (target instanceof MCH_EntityTank) {
-            list = DamageTankByExternal.list;
-         } else if (target instanceof MCH_EntityVehicle) {
-            list = DamageVehicleByExternal.list;
-         } else {
-            list = DamageOtherByExternal.list;
-         }
-      } else {
+      List<MCH_Config.DamageEntity> list;
+      if (target instanceof MCH_EntityHeli || target instanceof MCP_EntityPlane) {
          list = DamageAircraftByExternal.list;
+      } else if (target instanceof MCH_EntityTank) {
+         list = DamageTankByExternal.list;
+      } else if (target instanceof MCH_EntityVehicle) {
+         list = DamageVehicleByExternal.list;
+      } else {
+         list = DamageOtherByExternal.list;
       }
 
-      Entity attacker = ds.func_76346_g();
-      Entity attackerSource = ds.func_76364_f();
-      Iterator var6 = list.iterator();
+      Entity attacker = ds.getTrueSource();
+      Entity attackerSource = ds.getImmediateSource();
 
-      while(true) {
-         MCH_Config.DamageEntity de;
-         do {
-            if (!var6.hasNext()) {
-               return damage;
-            }
-
-            de = (MCH_Config.DamageEntity)var6.next();
-         } while(!de.name.isEmpty() && (attacker == null || attacker.getClass().toString().indexOf(de.name) <= 0) && (attackerSource == null || attackerSource.getClass().toString().indexOf(de.name) <= 0));
-
-         damage = (float)((double)damage * de.factor);
+      for (MCH_Config.DamageEntity de : list) {
+         if (de.name.isEmpty()
+            || attacker != null && attacker.getClass().toString().indexOf(de.name) > 0
+            || attackerSource != null && attackerSource.getClass().toString().indexOf(de.name) > 0) {
+            damage = (float)(damage * de.factor);
+         }
       }
+
+      return damage;
    }
 
    public static float applyDamageVsEntity(Entity target, DamageSource ds, float damage) {
@@ -539,39 +634,30 @@ public class MCH_Config {
          return damage;
       } else {
          String targetName = target.getClass().toString();
-         List list;
-         if (!(target instanceof MCH_EntityHeli) && !(target instanceof MCP_EntityPlane)) {
-            if (target instanceof MCH_EntityTank) {
-               list = DamageVsMCHeliTank.list;
-            } else if (target instanceof MCH_EntityVehicle) {
-               list = DamageVsMCHeliVehicle.list;
-            } else if (targetName.indexOf("com.norwood.mcheli.") > 0) {
-               list = DamageVsMCHeliOther.list;
-            } else if (target instanceof EntityPlayer) {
-               list = DamageVsPlayer.list;
-            } else if (target instanceof EntityLivingBase) {
-               list = DamageVsLiving.list;
-            } else {
-               list = DamageVsEntity.list;
-            }
-         } else {
+         List<MCH_Config.DamageEntity> list;
+         if (target instanceof MCH_EntityHeli || target instanceof MCP_EntityPlane) {
             list = DamageVsMCHeliAircraft.list;
+         } else if (target instanceof MCH_EntityTank) {
+            list = DamageVsMCHeliTank.list;
+         } else if (target instanceof MCH_EntityVehicle) {
+            list = DamageVsMCHeliVehicle.list;
+         } else if (targetName.indexOf("com.norwood.mcheli.") > 0) {
+            list = DamageVsMCHeliOther.list;
+         } else if (target instanceof EntityPlayer) {
+            list = DamageVsPlayer.list;
+         } else if (target instanceof EntityLivingBase) {
+            list = DamageVsLiving.list;
+         } else {
+            list = DamageVsEntity.list;
          }
 
-         Iterator var5 = list.iterator();
-
-         while(true) {
-            MCH_Config.DamageEntity de;
-            do {
-               if (!var5.hasNext()) {
-                  return damage;
-               }
-
-               de = (MCH_Config.DamageEntity)var5.next();
-            } while(!de.name.isEmpty() && targetName.indexOf(de.name) <= 0);
-
-            damage = (float)((double)damage * de.factor);
+         for (MCH_Config.DamageEntity de : list) {
+            if (de.name.isEmpty() || targetName.indexOf(de.name) > 0) {
+               damage = (float)(damage * de.factor);
+            }
          }
+
+         return damage;
       }
    }
 
@@ -607,7 +693,7 @@ public class MCH_Config {
    public void load() {
       MCH_InputFile file = new MCH_InputFile();
       if (file.open(configFilePath)) {
-         for(String str = file.readLine(); str != null; str = file.readLine()) {
+         for (String str = file.readLine(); str != null; str = file.readLine()) {
             if (str.trim().equalsIgnoreCase("McHeliOutputDebugLog")) {
                DebugLog = true;
             } else {
@@ -618,7 +704,7 @@ public class MCH_Config {
          file.close();
          MCH_Lib.Log("loaded " + file.file.getAbsolutePath());
       } else {
-         MCH_Lib.Log("" + (new File(configFilePath)).getAbsolutePath() + " not found.");
+         MCH_Lib.Log("" + new File(configFilePath).getAbsolutePath() + " not found.");
       }
 
       this.correctionParameter();
@@ -636,12 +722,7 @@ public class MCH_Config {
                CommandPermission.add(new MCH_ConfigPrm("CommandPermission", s[1]));
             }
 
-            MCH_Config.DamageFactor[] var3 = DamageFactorList;
-            int var4 = var3.length;
-
-            int var5;
-            for(var5 = 0; var5 < var4; ++var5) {
-               MCH_Config.DamageFactor item = var3[var5];
+            for (MCH_Config.DamageFactor item : DamageFactorList) {
                if (item.itemName.equalsIgnoreCase(s[0])) {
                   DamageVs.add(new MCH_ConfigPrm(item.itemName, s[1]));
                }
@@ -651,29 +732,19 @@ public class MCH_Config {
                IgnoreBulletHitList.add(s[1]);
             }
 
-            MCH_ConfigPrm[] var7 = KeyConfig;
-            var4 = var7.length;
-
-            MCH_ConfigPrm p;
-            for(var5 = 0; var5 < var4; ++var5) {
-               p = var7[var5];
+            for (MCH_ConfigPrm p : KeyConfig) {
                if (p != null && p.compare(s[0]) && p.isValidVer(configVer)) {
                   p.setPrm(s[1]);
                   return;
                }
             }
 
-            var7 = General;
-            var4 = var7.length;
-
-            for(var5 = 0; var5 < var4; ++var5) {
-               p = var7[var5];
-               if (p != null && p.compare(s[0]) && p.isValidVer(configVer)) {
-                  p.setPrm(s[1]);
+            for (MCH_ConfigPrm px : General) {
+               if (px != null && px.compare(s[0]) && px.isValidVer(configVer)) {
+                  px.setPrm(s[1]);
                   return;
                }
             }
-
          }
       }
    }
@@ -685,9 +756,8 @@ public class MCH_Config {
          file.close();
          MCH_Lib.Log("update " + file.file.getAbsolutePath());
       } else {
-         MCH_Lib.Log("" + (new File(configFilePath)).getAbsolutePath() + " cannot open.");
+         MCH_Lib.Log("" + new File(configFilePath).getAbsolutePath() + " cannot open.");
       }
-
    }
 
    private void writeConfigData(PrintWriter pw) {
@@ -701,13 +771,7 @@ public class MCH_Config {
          pw.println();
       }
 
-      MCH_ConfigPrm[] var2 = General;
-      int var3 = var2.length;
-
-      int var4;
-      MCH_ConfigPrm p;
-      for(var4 = 0; var4 < var3; ++var4) {
-         p = var2[var4];
+      for (MCH_ConfigPrm p : General) {
          if (p != null) {
             if (!p.desc.isEmpty()) {
                pw.println(p.desc);
@@ -720,19 +784,14 @@ public class MCH_Config {
       }
 
       pw.println();
-      Iterator var6 = DamageVs.iterator();
 
-      MCH_ConfigPrm p;
-      while(var6.hasNext()) {
-         p = (MCH_ConfigPrm)var6.next();
-         pw.println(p.name + " = " + p);
+      for (MCH_ConfigPrm px : DamageVs) {
+         pw.println(px.name + " = " + px);
       }
 
       pw.println();
-      var6 = IgnoreBulletHitList.iterator();
 
-      while(var6.hasNext()) {
-         String s = (String)var6.next();
+      for (String s : IgnoreBulletHitList) {
          pw.println(IgnoreBulletHitItem.name + " = " + s);
       }
 
@@ -743,11 +802,8 @@ public class MCH_Config {
          pw.println(";CommandPermission = status :  example2");
       }
 
-      var6 = CommandPermission.iterator();
-
-      while(var6.hasNext()) {
-         p = (MCH_ConfigPrm)var6.next();
-         pw.println(p.name + " = " + p);
+      for (MCH_ConfigPrm px : CommandPermission) {
+         pw.println(px.name + " = " + px);
       }
 
       pw.println();
@@ -755,33 +811,9 @@ public class MCH_Config {
       pw.println("[Key config]");
       pw.println("http://minecraft.gamepedia.com/Key_codes");
       pw.println();
-      var2 = KeyConfig;
-      var3 = var2.length;
 
-      for(var4 = 0; var4 < var3; ++var4) {
-         p = var2[var4];
-         pw.println(p.name + " = " + p);
-      }
-
-   }
-
-   class DamageFactor {
-      public final String itemName;
-      public List<MCH_Config.DamageEntity> list;
-
-      public DamageFactor(MCH_Config paramMCH_Config, String itemName) {
-         this.itemName = itemName;
-         this.list = new ArrayList();
-      }
-   }
-
-   class DamageEntity {
-      public final double factor;
-      public final String name;
-
-      public DamageEntity(MCH_Config paramMCH_Config, double factor, String name) {
-         this.factor = factor;
-         this.name = name;
+      for (MCH_ConfigPrm px : KeyConfig) {
+         pw.println(px.name + " = " + px);
       }
    }
 
@@ -798,7 +830,26 @@ public class MCH_Config {
             this.name = "";
             this.players = new String[0];
          }
+      }
+   }
 
+   class DamageEntity {
+      public final double factor;
+      public final String name;
+
+      public DamageEntity(MCH_Config paramMCH_Config, double factor, String name) {
+         this.factor = factor;
+         this.name = name;
+      }
+   }
+
+   class DamageFactor {
+      public final String itemName;
+      public List<MCH_Config.DamageEntity> list;
+
+      public DamageFactor(MCH_Config paramMCH_Config, String itemName) {
+         this.itemName = itemName;
+         this.list = new ArrayList<>();
       }
    }
 }

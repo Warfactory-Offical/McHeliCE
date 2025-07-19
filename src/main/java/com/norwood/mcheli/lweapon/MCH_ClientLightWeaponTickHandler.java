@@ -10,7 +10,6 @@ import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.gltd.MCH_EntityGLTD;
-import com.norwood.mcheli.weapon.MCH_IEntityLockChecker;
 import com.norwood.mcheli.weapon.MCH_WeaponBase;
 import com.norwood.mcheli.weapon.MCH_WeaponCreator;
 import com.norwood.mcheli.weapon.MCH_WeaponGuidanceSystem;
@@ -39,7 +38,7 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
    protected boolean isHeldItem = false;
    protected boolean isBeforeHeldItem = false;
    protected EntityPlayer prevThePlayer = null;
-   protected ItemStack prevItemStack;
+   protected ItemStack prevItemStack = ItemStack.EMPTY;
    public MCH_Key KeyAttack;
    public MCH_Key KeyUseWeapon;
    public MCH_Key KeySwWeaponMode;
@@ -52,21 +51,20 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
    public static int weaponMode;
    public static int selectedZoom;
    public static Entity markEntity = null;
-   public static Vec3d markPos;
-   public static MCH_WeaponGuidanceSystem gs;
-   public static double lockRange;
+   public static Vec3d markPos = Vec3d.ZERO;
+   public static MCH_WeaponGuidanceSystem gs = new MCH_WeaponGuidanceSystem();
+   public static double lockRange = 120.0;
 
    public MCH_ClientLightWeaponTickHandler(Minecraft minecraft, MCH_Config config) {
       super(minecraft);
-      this.prevItemStack = ItemStack.field_190927_a;
       this.updateKeybind(config);
       gs.canLockInAir = false;
       gs.canLockOnGround = false;
       gs.canLockInWater = false;
       gs.setLockCountMax(40);
-      gs.lockRange = 120.0D;
+      gs.lockRange = 120.0;
       lockonSoundCount = 0;
-      this.initWeaponParam((EntityPlayer)null);
+      this.initWeaponParam(null);
    }
 
    public static void markEntity(Entity entity, double x, double y, double z) {
@@ -76,22 +74,21 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
          GL11.glGetInteger(2978, matViewport);
          GLU.gluProject((float)x, (float)y, (float)z, matModel, matProjection, matViewport, screenPos);
          MCH_AircraftInfo i = entity instanceof MCH_EntityAircraft ? ((MCH_EntityAircraft)entity).getAcInfo() : null;
-         float w = entity.field_70130_N > entity.field_70131_O ? entity.field_70130_N : (i != null ? i.markerWidth : entity.field_70131_O);
-         float h = i != null ? i.markerHeight : entity.field_70131_O;
+         float w = entity.width > entity.height ? entity.width : (i != null ? i.markerWidth : entity.height);
+         float h = i != null ? i.markerHeight : entity.height;
          GLU.gluProject((float)x + w, (float)y + h, (float)z + w, matModel, matProjection, matViewport, screenPosBB);
          markEntity = entity;
       }
-
    }
 
    @Nullable
    public static Vec3d getMartEntityPos() {
-      return gs.getLockingEntity() == markEntity && markEntity != null ? new Vec3d((double)screenPos.get(0), (double)screenPos.get(1), (double)screenPos.get(2)) : null;
+      return gs.getLockingEntity() == markEntity && markEntity != null ? new Vec3d(screenPos.get(0), screenPos.get(1), screenPos.get(2)) : null;
    }
 
    @Nullable
    public static Vec3d getMartEntityBBPos() {
-      return gs.getLockingEntity() == markEntity && markEntity != null ? new Vec3d((double)screenPosBB.get(0), (double)screenPosBB.get(1), (double)screenPosBB.get(2)) : null;
+      return gs.getLockingEntity() == markEntity && markEntity != null ? new Vec3d(screenPosBB.get(0), screenPosBB.get(1), screenPosBB.get(2)) : null;
    }
 
    public void initWeaponParam(EntityPlayer player) {
@@ -100,6 +97,7 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
       selectedZoom = 0;
    }
 
+   @Override
    public void updateKeybind(MCH_Config config) {
       this.KeyAttack = new MCH_Key(MCH_Config.KeyAttack.prmInt);
       this.KeyUseWeapon = new MCH_Key(MCH_Config.KeyUseWeapon.prmInt);
@@ -109,12 +107,9 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
       this.Keys = new MCH_Key[]{this.KeyAttack, this.KeyUseWeapon, this.KeySwWeaponMode, this.KeyZoom, this.KeyCameraMode};
    }
 
+   @Override
    protected void onTick(boolean inGUI) {
-      MCH_Key[] var2 = this.Keys;
-      int var3 = var2.length;
-
-      for(int var4 = 0; var4 < var3; ++var4) {
-         MCH_Key k = var2[var4];
+      for (MCH_Key k : this.Keys) {
          k.update();
       }
 
@@ -125,20 +120,20 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
          this.prevThePlayer = player;
       }
 
-      ItemStack is = player != null ? player.func_184614_ca() : ItemStack.field_190927_a;
-      if (player == null || player.func_184187_bx() instanceof MCH_EntityGLTD || player.func_184187_bx() instanceof MCH_EntityAircraft) {
-         is = ItemStack.field_190927_a;
+      ItemStack is = player != null ? player.getHeldItemMainhand() : ItemStack.EMPTY;
+      if (player == null || player.getRidingEntity() instanceof MCH_EntityGLTD || player.getRidingEntity() instanceof MCH_EntityAircraft) {
+         is = ItemStack.EMPTY;
       }
 
       if (gs.getLockingEntity() == null) {
          markEntity = null;
       }
 
-      if (!is.func_190926_b() && is.func_77973_b() instanceof MCH_ItemLightWeaponBase) {
-         MCH_ItemLightWeaponBase lweapon = (MCH_ItemLightWeaponBase)is.func_77973_b();
-         if (this.prevItemStack.func_190926_b() || !this.prevItemStack.func_77969_a(is) && !this.prevItemStack.func_77977_a().equals(is.func_77977_a())) {
+      if (!is.isEmpty() && is.getItem() instanceof MCH_ItemLightWeaponBase) {
+         MCH_ItemLightWeaponBase lweapon = (MCH_ItemLightWeaponBase)is.getItem();
+         if (this.prevItemStack.isEmpty() || !this.prevItemStack.isItemEqual(is) && !this.prevItemStack.getTranslationKey().equals(is.getTranslationKey())) {
             this.initWeaponParam(player);
-            weapon = MCH_WeaponCreator.createWeapon(player.world, MCH_ItemLightWeaponBase.getName(is), Vec3d.ZERO, 0.0F, 0.0F, (MCH_IEntityLockChecker)null, false);
+            weapon = MCH_WeaponCreator.createWeapon(player.world, MCH_ItemLightWeaponBase.getName(is), Vec3d.ZERO, 0.0F, 0.0F, null, false);
             if (weapon != null && weapon.getInfo() != null && weapon.getGuidanceSystem() != null) {
                gs = weapon.getGuidanceSystem();
             }
@@ -150,22 +145,22 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
 
          gs.setWorld(player.world);
          gs.lockRange = lockRange;
-         if (player.func_184612_cw() > 10) {
-            selectedZoom %= weapon.getInfo().zoom.length;
+         if (player.getItemInUseMaxCount() > 10) {
+            selectedZoom = selectedZoom % weapon.getInfo().zoom.length;
             W_Reflection.setCameraZoom(weapon.getInfo().zoom[selectedZoom]);
          } else {
             W_Reflection.restoreCameraZoom();
          }
 
-         if (is.func_77960_j() < is.func_77958_k()) {
-            if (player.func_184612_cw() > 10) {
+         if (is.getMetadata() < is.getMaxDamage()) {
+            if (player.getItemInUseMaxCount() > 10) {
                gs.lock(player);
                if (gs.getLockCount() > 0) {
                   if (lockonSoundCount > 0) {
-                     --lockonSoundCount;
+                     lockonSoundCount--;
                   } else {
                      lockonSoundCount = 7;
-                     lockonSoundCount = (int)((double)lockonSoundCount * (1.0D - (double)((float)gs.getLockCount() / (float)gs.getLockCountMax())));
+                     lockonSoundCount = (int)(lockonSoundCount * (1.0 - (float)gs.getLockCount() / gs.getLockCountMax()));
                      if (lockonSoundCount < 3) {
                         lockonSoundCount = 2;
                      }
@@ -181,13 +176,13 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
             reloadCount = 0;
          } else {
             lockonSoundCount = 0;
-            if (W_EntityPlayer.hasItem(player, lweapon.bullet) && player.func_184605_cv() <= 0) {
+            if (W_EntityPlayer.hasItem(player, lweapon.bullet) && player.getItemInUseCount() <= 0) {
                if (reloadCount == 10) {
                   W_McClient.MOD_playSoundFX("fim92_reload", 1.0F, 1.0F);
                }
 
                if (reloadCount < 40) {
-                  ++reloadCount;
+                  reloadCount++;
                   if (reloadCount == 40) {
                      this.onCompleteReload();
                   }
@@ -200,7 +195,7 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
          }
 
          if (!inGUI) {
-            this.playerControl(player, is, (MCH_ItemLightWeaponBase)is.func_77973_b());
+            this.playerControl(player, is, (MCH_ItemLightWeaponBase)is.getItem());
          }
 
          this.isHeldItem = MCH_ItemLightWeaponBase.isHeld(player);
@@ -217,7 +212,7 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
                MCH_PacketLightWeaponPlayerControl pc = new MCH_PacketLightWeaponPlayerControl();
                pc.camMode = 1;
                W_Network.sendToServer(pc);
-               player.func_184589_d(MobEffects.field_76439_r);
+               player.removePotionEffect(MobEffects.NIGHT_VISION);
             }
 
             W_Reflection.restoreCameraZoom();
@@ -238,7 +233,7 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
       MCH_PacketLightWeaponPlayerControl pc = new MCH_PacketLightWeaponPlayerControl();
       boolean send = false;
       boolean autoShot = false;
-      if (MCH_Config.LWeaponAutoFire.prmBool && is.func_77960_j() < is.func_77958_k() && gs.isLockComplete()) {
+      if (MCH_Config.LWeaponAutoFire.prmBool && is.getMetadata() < is.getMaxDamage() && gs.isLockComplete()) {
          autoShot = true;
       }
 
@@ -249,12 +244,12 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
 
       if (this.KeyAttack.isKeyPress() || autoShot) {
          boolean result = false;
-         if (is.func_77960_j() < is.func_77958_k() && gs.isLockComplete()) {
+         if (is.getMetadata() < is.getMaxDamage() && gs.isLockComplete()) {
             boolean canFire = true;
             if (weaponMode > 0 && gs.getTargetEntity() != null) {
                double dx = gs.getTargetEntity().posX - player.posX;
                double dz = gs.getTargetEntity().posZ - player.posZ;
-               canFire = Math.sqrt(dx * dx + dz * dz) >= 40.0D;
+               canFire = Math.sqrt(dx * dx + dz * dz) >= 40.0;
             }
 
             if (canFire) {
@@ -262,7 +257,7 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
                pc.useWeaponOption1 = W_Entity.getEntityId(gs.lastLockEntity);
                pc.useWeaponOption2 = weaponMode;
                pc.useWeaponPosX = player.posX;
-               pc.useWeaponPosY = player.posY + (double)player.func_70047_e();
+               pc.useWeaponPosY = player.posY + player.getEyeHeight();
                pc.useWeaponPosZ = player.posZ;
                gs.clearLock();
                send = true;
@@ -270,7 +265,7 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
             }
          }
 
-         if (this.KeyAttack.isKeyDown() && !result && player.func_184612_cw() > 5) {
+         if (this.KeyAttack.isKeyDown() && !result && player.getItemInUseMaxCount() > 5) {
             playSoundNG();
          }
       }
@@ -284,14 +279,14 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
       }
 
       if (this.KeyCameraMode.isKeyDown()) {
-         PotionEffect pe = player.func_70660_b(MobEffects.field_76439_r);
+         PotionEffect pe = player.getActivePotionEffect(MobEffects.NIGHT_VISION);
          MCH_Lib.DbgLog(true, "LWeapon NV %s", pe != null ? "ON->OFF" : "OFF->ON");
          if (pe != null) {
-            player.func_184589_d(MobEffects.field_76439_r);
+            player.removePotionEffect(MobEffects.NIGHT_VISION);
             pc.camMode = 1;
             send = true;
             W_McClient.MOD_playSoundFX("pi", 0.5F, 0.9F);
-         } else if (player.func_184612_cw() > 60) {
+         } else if (player.getItemInUseMaxCount() > 60) {
             pc.camMode = 2;
             send = true;
             W_McClient.MOD_playSoundFX("pi", 0.5F, 0.9F);
@@ -303,17 +298,10 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
       if (send) {
          W_Network.sendToServer(pc);
       }
-
    }
 
    public static int getPotionNightVisionDuration(EntityPlayer player) {
-      PotionEffect cpe = player.func_70660_b(MobEffects.field_76439_r);
-      return player != null && cpe != null ? cpe.func_76459_b() : 0;
-   }
-
-   static {
-      markPos = Vec3d.ZERO;
-      gs = new MCH_WeaponGuidanceSystem();
-      lockRange = 120.0D;
+      PotionEffect cpe = player.getActivePotionEffect(MobEffects.NIGHT_VISION);
+      return player != null && cpe != null ? cpe.getDuration() : 0;
    }
 }

@@ -1,6 +1,5 @@
 package com.norwood.mcheli;
 
-import java.util.Iterator;
 import java.util.List;
 import com.norwood.mcheli.__helper.addon.AddonResourceLocation;
 import com.norwood.mcheli.__helper.info.ContentParseException;
@@ -66,6 +65,7 @@ public abstract class MCH_BaseInfo implements IContentData {
       return data.split("\\s*/\\s*");
    }
 
+   @Override
    public boolean validate() throws Exception {
       return true;
    }
@@ -73,6 +73,7 @@ public abstract class MCH_BaseInfo implements IContentData {
    protected void loadItemData(String item, String data) {
    }
 
+   @Override
    public void onPostReload() {
    }
 
@@ -80,16 +81,14 @@ public abstract class MCH_BaseInfo implements IContentData {
       return false;
    }
 
+   @Override
    public void parse(List<String> lines, String fileExtension, boolean reload) throws Exception {
       if ("txt".equals(fileExtension)) {
          int line = 0;
 
          try {
-            Iterator var5 = lines.iterator();
-
-            while(var5.hasNext()) {
-               String str = (String)var5.next();
-               ++line;
+            for (String str : lines) {
+               line++;
                str = str.trim();
                int eqIdx = str.indexOf(61);
                if (eqIdx >= 0 && str.length() > eqIdx + 1) {
@@ -100,13 +99,14 @@ public abstract class MCH_BaseInfo implements IContentData {
             throw new ContentParseException(var8, line);
          }
       }
-
    }
 
+   @Override
    public AddonResourceLocation getLoation() {
       return this.location;
    }
 
+   @Override
    public String getContentPath() {
       return this.filePath;
    }

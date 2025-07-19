@@ -25,7 +25,6 @@ public class MCH_OStream extends ByteArrayOutputStream {
       } catch (IOException var3) {
          var3.printStackTrace();
       }
-
    }
 
    public boolean isDataEnd() {

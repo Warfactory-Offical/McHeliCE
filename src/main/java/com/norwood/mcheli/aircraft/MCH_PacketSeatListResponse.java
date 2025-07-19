@@ -13,10 +13,12 @@ public class MCH_PacketSeatListResponse extends MCH_Packet {
    public byte seatNum = -1;
    public int[] seatEntityID = new int[]{-1};
 
+   @Override
    public int getMessageID() {
       return 268439569;
    }
 
+   @Override
    public void readData(ByteArrayDataInput data) {
       try {
          this.entityID_AC = data.readInt();
@@ -24,23 +26,23 @@ public class MCH_PacketSeatListResponse extends MCH_Packet {
          if (this.seatNum > 0) {
             this.seatEntityID = new int[this.seatNum];
 
-            for(int i = 0; i < this.seatNum; ++i) {
+            for (int i = 0; i < this.seatNum; i++) {
                this.seatEntityID[i] = data.readInt();
             }
          }
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       try {
          dos.writeInt(this.entityID_AC);
          if (this.seatNum > 0 && this.seatEntityID != null && this.seatEntityID.length == this.seatNum) {
             dos.writeByte(this.seatNum);
 
-            for(int i = 0; i < this.seatNum; ++i) {
+            for (int i = 0; i < this.seatNum; i++) {
                dos.writeInt(this.seatEntityID[i]);
             }
          } else {
@@ -49,7 +51,6 @@ public class MCH_PacketSeatListResponse extends MCH_Packet {
       } catch (IOException var3) {
          var3.printStackTrace();
       }
-
    }
 
    public static void sendSeatList(MCH_EntityAircraft ac, EntityPlayer player) {
@@ -65,13 +66,12 @@ public class MCH_PacketSeatListResponse extends MCH_Packet {
          if (this.seatNum > 0) {
             this.seatEntityID = new int[this.seatNum];
 
-            for(int i = 0; i < this.seatNum; ++i) {
+            for (int i = 0; i < this.seatNum; i++) {
                this.seatEntityID[i] = W_Entity.getEntityId(ac.getSeat(i));
             }
          } else {
             this.seatEntityID = new int[]{-1};
          }
-
       }
    }
 }

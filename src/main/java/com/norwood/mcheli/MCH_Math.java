@@ -1,11 +1,12 @@
 package com.norwood.mcheli;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import net.minecraft.util.math.MathHelper;
 
 public class MCH_Math {
-   public static float PI = 3.1415927F;
+   public static float PI = (float) Math.PI;
    public static MCH_Math instance = new MCH_Math();
 
    public MCH_Math.FVector3D privateNewVec3D(float x, float y, float z) {
@@ -79,11 +80,11 @@ public class MCH_Math {
       float zx = m.m20;
       float zy = m.m21;
       float zz = m.m22;
-      float b = (float)(-Math.asin((double)zy));
+      float b = (float)(-Math.asin(zy));
       float cosB = Cos(b);
       float a;
       float c;
-      if ((double)Math.abs(cosB) >= 1.0E-4D) {
+      if (Math.abs(cosB) >= 1.0E-4) {
          c = Atan2(zx, zz);
          float xy_cos = xy / cosB;
          if (xy_cos > 1.0F) {
@@ -92,7 +93,7 @@ public class MCH_Math {
             xy_cos = -1.0F;
          }
 
-         a = (float)Math.asin((double)xy_cos);
+         a = (float)Math.asin(xy_cos);
          if (Float.isNaN(a)) {
             a = 0.0F;
          }
@@ -101,9 +102,9 @@ public class MCH_Math {
          a = 0.0F;
       }
 
-      a = (float)((double)a * (180.0D / (double)PI));
-      b = (float)((double)b * (180.0D / (double)PI));
-      c = (float)((double)c * (180.0D / (double)PI));
+      a = (float)(a * (180.0 / PI));
+      b = (float)(b * (180.0 / PI));
+      c = (float)(c * (180.0 / PI));
       if (yy < 0.0F) {
          a = 180.0F - a;
       }
@@ -120,18 +121,17 @@ public class MCH_Math {
    }
 
    public static float NORM(float a, float b, float c, float d) {
-      return (float)Math.sqrt((double)(a * a + b * b + c * c + d * d));
+      return (float)Math.sqrt(a * a + b * b + c * c + d * d);
    }
 
    public static void QuatNormalize(MCH_Math.FQuat q) {
       float r = NORM(q.w, q.x, q.y, q.z);
-      if ((double)MathHelper.func_76135_e(r) > 1.0E-4D) {
+      if (MathHelper.abs(r) > 1.0E-4) {
          q.w /= r;
          q.x /= r;
          q.y /= r;
          q.z /= r;
       }
-
    }
 
    public static boolean MatrixToQuat(MCH_Math.FQuat q, MCH_Math.FMatrix m) {
@@ -155,34 +155,34 @@ public class MCH_Math {
          q.z = 0.0F;
       }
 
-      q.w = (float)Math.sqrt((double)q.w);
-      q.x = (float)Math.sqrt((double)q.x);
-      q.y = (float)Math.sqrt((double)q.y);
-      q.z = (float)Math.sqrt((double)q.z);
+      q.w = (float)Math.sqrt(q.w);
+      q.x = (float)Math.sqrt(q.x);
+      q.y = (float)Math.sqrt(q.y);
+      q.z = (float)Math.sqrt(q.z);
       if (q.w >= q.x && q.w >= q.y && q.w >= q.z) {
          q.w *= 1.0F;
-         q.x *= SIGN(m.m21 - m.m12);
-         q.y *= SIGN(m.m02 - m.m20);
-         q.z *= SIGN(m.m10 - m.m01);
+         q.x = q.x * SIGN(m.m21 - m.m12);
+         q.y = q.y * SIGN(m.m02 - m.m20);
+         q.z = q.z * SIGN(m.m10 - m.m01);
       } else if (q.x >= q.w && q.x >= q.y && q.x >= q.z) {
-         q.w *= SIGN(m.m21 - m.m12);
+         q.w = q.w * SIGN(m.m21 - m.m12);
          q.x *= 1.0F;
-         q.y *= SIGN(m.m10 + m.m01);
-         q.z *= SIGN(m.m02 + m.m20);
+         q.y = q.y * SIGN(m.m10 + m.m01);
+         q.z = q.z * SIGN(m.m02 + m.m20);
       } else if (q.y >= q.w && q.y >= q.x && q.y >= q.z) {
-         q.w *= SIGN(m.m02 - m.m20);
-         q.x *= SIGN(m.m10 + m.m01);
+         q.w = q.w * SIGN(m.m02 - m.m20);
+         q.x = q.x * SIGN(m.m10 + m.m01);
          q.y *= 1.0F;
-         q.z *= SIGN(m.m21 + m.m12);
+         q.z = q.z * SIGN(m.m21 + m.m12);
       } else {
          if (!(q.z >= q.w) || !(q.z >= q.x) || !(q.z >= q.y)) {
             QuatIdentity(q);
             return false;
          }
 
-         q.w *= SIGN(m.m10 - m.m01);
-         q.x *= SIGN(m.m20 + m.m02);
-         q.y *= SIGN(m.m21 + m.m12);
+         q.w = q.w * SIGN(m.m10 - m.m01);
+         q.x = q.x * SIGN(m.m20 + m.m02);
+         q.y = q.y * SIGN(m.m21 + m.m12);
          q.z *= 1.0F;
       }
 
@@ -212,14 +212,13 @@ public class MCH_Math {
       if (Float.isNaN(q.z) || Float.isInfinite(q.z)) {
          q.z = 0.0F;
       }
-
    }
 
    public static MCH_Math.FQuat motionTest(int x, int y, MCH_Math.FQuat prevQtn) {
       MCH_Math.FVector3D axis = newVec3D();
       MCH_Math.FQuat dqtn = newQuat();
-      axis.x = 2.0F * PI * (float)y / 200.0F;
-      axis.y = 2.0F * PI * (float)x / 200.0F;
+      axis.x = 2.0F * PI * y / 200.0F;
+      axis.y = 2.0F * PI * x / 200.0F;
       axis.z = 0.0F;
       float rot = VecNormalize(axis);
       QuatRotation(dqtn, rot, axis.x, axis.y, axis.z);
@@ -227,27 +226,27 @@ public class MCH_Math {
    }
 
    public static float Sin(float rad) {
-      return (float)Math.sin((double)rad);
+      return (float)Math.sin(rad);
    }
 
    public static float Cos(float rad) {
-      return (float)Math.cos((double)rad);
+      return (float)Math.cos(rad);
    }
 
    public static float Tan(float rad) {
-      return (float)Math.tan((double)rad);
+      return (float)Math.tan(rad);
    }
 
    public static float Floor(float x) {
-      return (float)Math.floor((double)x);
+      return (float)Math.floor(x);
    }
 
    public static float Atan(float x) {
-      return (float)Math.atan((double)x);
+      return (float)Math.atan(x);
    }
 
    public static float Atan2(float y, float x) {
-      return (float)Math.atan2((double)y, (double)x);
+      return (float)Math.atan2(y, x);
    }
 
    public static float Fabs(float x) {
@@ -255,15 +254,15 @@ public class MCH_Math {
    }
 
    public static float Sqrt(float x) {
-      return (float)Math.sqrt((double)x);
+      return (float)Math.sqrt(x);
    }
 
    public static float InvSqrt(float x) {
-      return 1.0F / (float)Math.sqrt((double)x);
+      return 1.0F / (float)Math.sqrt(x);
    }
 
    public static float Pow(float a, float b) {
-      return (float)Math.pow((double)a, (double)b);
+      return (float)Math.pow(a, b);
    }
 
    public static float VecNormalize(MCH_Math.FVector3D lpV) {
@@ -359,15 +358,15 @@ public class MCH_Math {
    }
 
    public static void MatMove(MCH_Math.FMatrix m, float x, float y, float z) {
-      m.m03 += m.m00 * x + m.m01 * y + m.m02 * z;
-      m.m13 += m.m10 * x + m.m11 * y + m.m12 * z;
-      m.m23 += m.m20 * x + m.m21 * y + m.m22 * z;
-      m.m33 += m.m30 * x + m.m31 * y + m.m32 * z;
+      m.m03 = m.m03 + (m.m00 * x + m.m01 * y + m.m02 * z);
+      m.m13 = m.m13 + (m.m10 * x + m.m11 * y + m.m12 * z);
+      m.m23 = m.m23 + (m.m20 * x + m.m21 * y + m.m22 * z);
+      m.m33 = m.m33 + (m.m30 * x + m.m31 * y + m.m32 * z);
    }
 
    public static void MatRotateX(MCH_Math.FMatrix m, float rad) {
       if (rad > 2.0F * PI || rad < -2.0F * PI) {
-         rad -= 2.0F * PI * (float)((int)(rad / (2.0F * PI)));
+         rad -= 2.0F * PI * (int)(rad / (2.0F * PI));
       }
 
       float cosA = Cos(rad);
@@ -392,7 +391,7 @@ public class MCH_Math {
 
    public static void MatRotateY(MCH_Math.FMatrix m, float rad) {
       if (rad > 2.0F * PI || rad < -2.0F * PI) {
-         rad -= 2.0F * PI * (float)((int)(rad / (2.0F * PI)));
+         rad -= 2.0F * PI * (int)(rad / (2.0F * PI));
       }
 
       float cosA = Cos(rad);
@@ -417,7 +416,7 @@ public class MCH_Math {
 
    public static void MatRotateZ(MCH_Math.FMatrix m, float rad) {
       if (rad > 2.0F * PI || rad < -2.0F * PI) {
-         rad -= 2.0F * PI * (float)((int)(rad / (2.0F * PI)));
+         rad -= 2.0F * PI * (int)(rad / (2.0F * PI));
       }
 
       float cosA = Cos(rad);
@@ -442,7 +441,7 @@ public class MCH_Math {
 
    public static void MatTurnX(MCH_Math.FMatrix m, float rad) {
       if (rad > 2.0F * PI || rad < -2.0F * PI) {
-         rad -= 2.0F * PI * (float)((int)(rad / (2.0F * PI)));
+         rad -= 2.0F * PI * (int)(rad / (2.0F * PI));
       }
 
       float cosA = Cos(rad);
@@ -467,7 +466,7 @@ public class MCH_Math {
 
    public static void MatTurnY(MCH_Math.FMatrix m, float rad) {
       if (rad > 2.0F * PI || rad < -2.0F * PI) {
-         rad -= 2.0F * PI * (float)((int)(rad / (2.0F * PI)));
+         rad -= 2.0F * PI * (int)(rad / (2.0F * PI));
       }
 
       float cosA = Cos(rad);
@@ -492,7 +491,7 @@ public class MCH_Math {
 
    public static void MatTurnZ(MCH_Math.FMatrix m, float rad) {
       if (rad > 2.0F * PI || rad < -2.0F * PI) {
-         rad -= 2.0F * PI * (float)((int)(rad / (2.0F * PI)));
+         rad -= 2.0F * PI * (int)(rad / (2.0F * PI));
       }
 
       float cosA = Cos(rad);
@@ -563,10 +562,10 @@ public class MCH_Math {
    }
 
    public static void QuatAdd(MCH_Math.FQuat q_out, MCH_Math.FQuat q) {
-      q_out.w += q.w;
-      q_out.x += q.x;
-      q_out.y += q.y;
-      q_out.z += q.z;
+      q_out.w = q_out.w + q.w;
+      q_out.x = q_out.x + q.x;
+      q_out.y = q_out.y + q.y;
+      q_out.z = q_out.z + q.z;
    }
 
    public static MCH_Math.FMatrix QuatToMatrix(MCH_Math.FQuat lpQ) {
@@ -624,33 +623,6 @@ public class MCH_Math {
       lpTo.z = lpFrom.z;
    }
 
-   public class FVector3D {
-      public float x;
-      public float y;
-      public float z;
-
-      public FVector3D(MCH_Math paramMCH_Math) {
-      }
-   }
-
-   public class FVector2D {
-      public float x;
-      public float y;
-
-      public FVector2D(MCH_Math paramMCH_Math) {
-      }
-   }
-
-   public class FQuat {
-      public float w;
-      public float x;
-      public float y;
-      public float z;
-
-      public FQuat(MCH_Math paramMCH_Math) {
-      }
-   }
-
    public class FMatrix {
       float m00;
       float m10;
@@ -693,8 +665,35 @@ public class MCH_Math {
          fb.put(this.m33);
          float f = fb.get(0);
          f = fb.get(1);
-         fb.position(0);
+         ((Buffer)fb).position(0);
          return fb;
+      }
+   }
+
+   public class FQuat {
+      public float w;
+      public float x;
+      public float y;
+      public float z;
+
+      public FQuat(MCH_Math paramMCH_Math) {
+      }
+   }
+
+   public class FVector2D {
+      public float x;
+      public float y;
+
+      public FVector2D(MCH_Math paramMCH_Math) {
+      }
+   }
+
+   public class FVector3D {
+      public float x;
+      public float y;
+      public float z;
+
+      public FVector3D(MCH_Math paramMCH_Math) {
       }
    }
 }

@@ -1,7 +1,6 @@
 package com.norwood.mcheli.__helper;
 
 import com.google.common.collect.Sets;
-import java.util.Iterator;
 import java.util.Set;
 import javax.annotation.Nullable;
 import net.minecraft.block.Block;
@@ -22,24 +21,17 @@ public class MCH_Items {
 
    @SubscribeEvent
    static void onItemRegistryEvent(Register<Item> event) {
-      Iterator var1 = registryWrapper.iterator();
-
-      while(var1.hasNext()) {
-         Item item = (Item)var1.next();
+      for (Item item : registryWrapper) {
          event.getRegistry().register(item);
       }
-
    }
 
-   public static Item register(Item item, String name) {
+   public static void register(Item item, String name) {
       registryWrapper.add(item.setRegistryName(MCH_Utils.suffix(name)));
-      return item;
    }
 
-   public static ItemBlock registerBlock(Block block) {
-      ItemBlock itemBlock = new ItemBlock(block);
-      registryWrapper.add(itemBlock.setRegistryName(block.getRegistryName()));
-      return itemBlock;
+   public static void registerBlock(Block block) {
+      registryWrapper.add(new ItemBlock(block).setRegistryName(block.getRegistryName()));
    }
 
    @Nullable

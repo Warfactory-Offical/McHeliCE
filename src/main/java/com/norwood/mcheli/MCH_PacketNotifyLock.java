@@ -11,26 +11,27 @@ import net.minecraft.entity.player.EntityPlayerMP;
 public class MCH_PacketNotifyLock extends MCH_Packet {
    public int entityID = -1;
 
+   @Override
    public int getMessageID() {
       return 536873984;
    }
 
+   @Override
    public void readData(ByteArrayDataInput data) {
       try {
          this.entityID = data.readInt();
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       try {
          dos.writeInt(this.entityID);
       } catch (IOException var3) {
          var3.printStackTrace();
       }
-
    }
 
    public static void send(Entity target) {
@@ -39,7 +40,6 @@ public class MCH_PacketNotifyLock extends MCH_Packet {
          s.entityID = target.getEntityId();
          W_Network.sendToServer(s);
       }
-
    }
 
    public static void sendToPlayer(EntityPlayer entity) {
@@ -47,6 +47,5 @@ public class MCH_PacketNotifyLock extends MCH_Packet {
          MCH_PacketNotifyLock s = new MCH_PacketNotifyLock();
          W_Network.sendToPlayer(s, entity);
       }
-
    }
 }

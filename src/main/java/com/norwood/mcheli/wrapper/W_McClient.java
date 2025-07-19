@@ -9,15 +9,15 @@ import net.minecraft.util.SoundEvent;
 
 public class W_McClient {
    public static void playSoundClick(float volume, float pitch) {
-      playSound(SoundEvents.field_187909_gi, volume, pitch);
+      playSound(SoundEvents.UI_BUTTON_CLICK, volume, pitch);
    }
 
    public static void playSound(SoundEvent sound, float volume, float pitch) {
-      Minecraft.getMinecraft().func_147118_V().func_147682_a(new W_Sound(sound, volume, pitch));
+      Minecraft.getMinecraft().getSoundHandler().playSound(new W_Sound(sound, volume, pitch));
    }
 
    public static void DEF_playSoundFX(String name, float volume, float pitch) {
-      Minecraft.getMinecraft().func_147118_V().func_147682_a(new W_Sound(new ResourceLocation(name), volume, pitch));
+      Minecraft.getMinecraft().getSoundHandler().playSound(new W_Sound(new ResourceLocation(name), volume, pitch));
    }
 
    public static void MOD_playSoundFX(String name, float volume, float pitch) {
@@ -28,23 +28,23 @@ public class W_McClient {
    }
 
    public static void DEF_bindTexture(String tex) {
-      Minecraft.getMinecraft().field_71446_o.func_110577_a(new ResourceLocation(tex));
+      Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(tex));
    }
 
    public static void MOD_bindTexture(String tex) {
-      Minecraft.getMinecraft().field_71446_o.func_110577_a(new ResourceLocation(W_MOD.DOMAIN, tex));
+      Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(W_MOD.DOMAIN, tex));
    }
 
    public static boolean isGamePaused() {
       Minecraft mc = Minecraft.getMinecraft();
-      return mc.func_147113_T();
+      return mc.isGamePaused();
    }
 
    public static Entity getRenderEntity() {
-      return Minecraft.getMinecraft().func_175606_aa();
+      return Minecraft.getMinecraft().getRenderViewEntity();
    }
 
    public static void setRenderEntity(EntityLivingBase entity) {
-      Minecraft.getMinecraft().func_175607_a(entity);
+      Minecraft.getMinecraft().setRenderViewEntity(entity);
    }
 }

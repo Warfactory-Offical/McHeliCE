@@ -1,6 +1,5 @@
 package com.norwood.mcheli.vehicle;
 
-import java.util.Iterator;
 import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.MCH_ModelManager;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
@@ -20,9 +19,10 @@ public class MCH_RenderVehicle extends MCH_RenderAircraft<MCH_EntityVehicle> {
 
    public MCH_RenderVehicle(RenderManager renderManager) {
       super(renderManager);
-      this.field_76989_e = 2.0F;
+      this.shadowSize = 2.0F;
    }
 
+   @Override
    public void renderAircraft(MCH_EntityAircraft entity, double posX, double posY, double posZ, float yaw, float pitch, float roll, float tickTime) {
       MCH_VehicleInfo vehicleInfo = null;
       if (entity != null && entity instanceof MCH_EntityVehicle) {
@@ -31,14 +31,14 @@ public class MCH_RenderVehicle extends MCH_RenderAircraft<MCH_EntityVehicle> {
          if (vehicleInfo != null) {
             if (vehicle.getRiddenByEntity() != null && !vehicle.isDestroyed()) {
                vehicle.isUsedPlayer = true;
-               vehicle.lastRiderYaw = vehicle.getRiddenByEntity().field_70177_z;
-               vehicle.lastRiderPitch = vehicle.getRiddenByEntity().field_70125_A;
+               vehicle.lastRiderYaw = vehicle.getRiddenByEntity().rotationYaw;
+               vehicle.lastRiderPitch = vehicle.getRiddenByEntity().rotationPitch;
             } else if (!vehicle.isUsedPlayer) {
-               vehicle.lastRiderYaw = vehicle.field_70177_z;
-               vehicle.lastRiderPitch = vehicle.field_70125_A;
+               vehicle.lastRiderYaw = vehicle.rotationYaw;
+               vehicle.lastRiderPitch = vehicle.rotationPitch;
             }
 
-            posY += 0.3499999940395355D;
+            posY += 0.35F;
             this.renderDebugHitBox(vehicle, posX, posY, posZ, yaw, pitch);
             this.renderDebugPilotSeat(vehicle, posX, posY, posZ, yaw, pitch, roll);
             GL11.glTranslated(posX, posY, posZ);
@@ -56,14 +56,22 @@ public class MCH_RenderVehicle extends MCH_RenderAircraft<MCH_EntityVehicle> {
       float rotBrl = ws.prevRotBarrel + (ws.rotBarrel - ws.prevRotBarrel) * tickTime;
       int index = 0;
 
-      MCH_VehicleInfo.VPart vp;
-      for(Iterator var9 = info.partList.iterator(); var9.hasNext(); index = this.drawPart(vp, vehicle, info, yaw, pitch, rotBrl, tickTime, ws, index)) {
-         vp = (MCH_VehicleInfo.VPart)var9.next();
+      for (MCH_VehicleInfo.VPart vp : info.partList) {
+         index = this.drawPart(vp, vehicle, info, yaw, pitch, rotBrl, tickTime, ws, index);
       }
-
    }
 
-   int drawPart(MCH_VehicleInfo.VPart vp, MCH_EntityVehicle vehicle, MCH_VehicleInfo info, float yaw, float pitch, float rotBrl, float tickTime, MCH_WeaponSet ws, int index) {
+   int drawPart(
+      MCH_VehicleInfo.VPart vp,
+      MCH_EntityVehicle vehicle,
+      MCH_VehicleInfo info,
+      float yaw,
+      float pitch,
+      float rotBrl,
+      float tickTime,
+      MCH_WeaponSet ws,
+      int index
+   ) {
       GL11.glPushMatrix();
       float recoilBuf = 0.0F;
       if (index < ws.getWeaponNum()) {
@@ -71,6 +79,7 @@ public class MCH_RenderVehicle extends MCH_RenderAircraft<MCH_EntityVehicle> {
          recoilBuf = r.prevRecoilBuf + (r.recoilBuf - r.prevRecoilBuf) * tickTime;
       }
 
+      int bkIndex = index;
       if (vp.rotPitch || vp.rotYaw || vp.type == 1) {
          GL11.glTranslated(vp.pos.x, vp.pos.y, vp.pos.z);
          if (vp.rotYaw) {
@@ -90,21 +99,21 @@ public class MCH_RenderVehicle extends MCH_RenderAircraft<MCH_EntityVehicle> {
       }
 
       if (vp.type == 2) {
-         GL11.glTranslated(0.0D, 0.0D, (double)(-vp.recoilBuf * recoilBuf));
+         GL11.glTranslated(0.0, 0.0, -vp.recoilBuf * recoilBuf);
       }
 
       if (vp.type == 2 || vp.type == 3) {
-         ++index;
+         index++;
       }
 
-      MCH_VehicleInfo.VPart vcp;
       if (vp.child != null) {
-         for(Iterator var14 = vp.child.iterator(); var14.hasNext(); index = this.drawPart(vcp, vehicle, info, yaw, pitch, rotBrl, recoilBuf, ws, index)) {
-            vcp = (MCH_VehicleInfo.VPart)var14.next();
+         for (MCH_VehicleInfo.VPart vcp : vp.child) {
+            index = this.drawPart(vcp, vehicle, info, yaw, pitch, rotBrl, recoilBuf, ws, index);
          }
       }
 
-      if ((vp.drawFP || !W_Lib.isClientPlayer(vehicle.getRiddenByEntity()) || !W_Lib.isFirstPerson()) && (vp.type != 3 || !vehicle.isWeaponNotCooldown(ws, index))) {
+      if ((vp.drawFP || !W_Lib.isClientPlayer(vehicle.getRiddenByEntity()) || !W_Lib.isFirstPerson())
+         && (vp.type != 3 || !vehicle.isWeaponNotCooldown(ws, bkIndex))) {
          renderPart(vp.model, info.model, vp.modelName);
          MCH_ModelManager.render("vehicles", vp.modelName);
       }

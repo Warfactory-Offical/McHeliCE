@@ -11,10 +11,12 @@ public class MCH_PacketLargeData extends MCH_Packet {
    public int imageDataTotalSize = 0;
    public byte[] buf;
 
+   @Override
    public int getMessageID() {
       return 536873472;
    }
 
+   @Override
    public void readData(ByteArrayDataInput data) {
       try {
          this.imageDataIndex = data.readInt();
@@ -25,9 +27,9 @@ public class MCH_PacketLargeData extends MCH_Packet {
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       try {
          MCH_MultiplayClient.readImageData(dos);

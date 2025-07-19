@@ -2,7 +2,6 @@ package com.norwood.mcheli.__helper.info;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,12 +25,12 @@ public class ContentRegistry<T extends MCH_BaseInfo> {
 
    @Nullable
    public T get(@Nullable String key) {
-      return key == null ? null : (MCH_BaseInfo)this.registry.get(key);
+      return key == null ? null : this.registry.get(key);
    }
 
    @Nullable
    public T findFirst(Predicate<? super T> filter) {
-      return (MCH_BaseInfo)this.registry.values().stream().filter(filter).findFirst().orElse((Object)null);
+      return this.registry.values().stream().filter(filter).findFirst().orElse(null);
    }
 
    public boolean reload(String key) {
@@ -39,7 +38,7 @@ public class ContentRegistry<T extends MCH_BaseInfo> {
       if (content != null) {
          IContentData newContent = ContentRegistries.reparseContent(content, this.dir);
          if (this.contentClass.isInstance(newContent)) {
-            T castedContent = (MCH_BaseInfo)this.contentClass.cast(newContent);
+            T castedContent = this.contentClass.cast(newContent);
             this.registry.replace(key, castedContent);
             return true;
          }
@@ -51,14 +50,9 @@ public class ContentRegistry<T extends MCH_BaseInfo> {
    }
 
    public void reloadAll() {
-      List<T> contents = ContentRegistries.reloadAllAddonContents(this);
-      Iterator var2 = contents.iterator();
-
-      while(var2.hasNext()) {
-         T content = (MCH_BaseInfo)var2.next();
-         this.registry.replace(content.getLoation().func_110623_a(), content);
+      for (T content : ContentRegistries.reloadAllAddonContents(this)) {
+         this.registry.replace(content.getLoation().getPath(), content);
       }
-
    }
 
    public List<T> values() {
@@ -90,16 +84,11 @@ public class ContentRegistry<T extends MCH_BaseInfo> {
    }
 
    private static <TYPE extends IContentData> void putTable(Map<String, TYPE> table, TYPE content) {
-      table.put(content.getLoation().func_110623_a(), content);
+      table.put(content.getLoation().getPath(), content);
    }
 
    public static <TYPE extends MCH_BaseInfo> ContentRegistry.Builder<TYPE> builder(Class<TYPE> type, String dir) {
-      return new ContentRegistry.Builder(type, dir);
-   }
-
-   // $FF: synthetic method
-   ContentRegistry(Class x0, String x1, Map x2, Object x3) {
-      this(x0, x1, x2);
+      return new ContentRegistry.Builder<>(type, dir);
    }
 
    public static class Builder<E extends MCH_BaseInfo> {
@@ -117,7 +106,7 @@ public class ContentRegistry<T extends MCH_BaseInfo> {
       }
 
       public ContentRegistry<E> build() {
-         return new ContentRegistry(this.clazz, this.dirName, this.map);
+         return new ContentRegistry<>(this.clazz, this.dirName, this.map);
       }
    }
 }

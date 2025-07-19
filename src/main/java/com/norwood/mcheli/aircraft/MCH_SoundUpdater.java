@@ -35,7 +35,7 @@ public class MCH_SoundUpdater extends W_SoundUpdater {
 
          MCH_AircraftInfo info = this.theAircraft.getAcInfo();
          boolean isBeforeMoving = this.isMoving;
-         boolean isDead = this.theAircraft.field_70128_L;
+         boolean isDead = this.theAircraft.isDead;
          if (isDead || !this.silent && this.aircraftVolume == 0.0F) {
             if (isDead) {
                this.stopEntitySound(this.theAircraft);
@@ -51,7 +51,7 @@ public class MCH_SoundUpdater extends W_SoundUpdater {
          boolean isPlaying = this.isEntitySoundPlaying(this.theAircraft);
          if (!isPlaying && this.aircraftVolume > 0.0F) {
             if (this.soundDelay > 0) {
-               --this.soundDelay;
+               this.soundDelay--;
             } else {
                this.soundDelay = 20;
                this.playEntitySound(this.theAircraft.getSoundName(), this.theAircraft, this.aircraftVolume, this.aircraftPitch, true);
@@ -62,15 +62,15 @@ public class MCH_SoundUpdater extends W_SoundUpdater {
 
          float prevVolume = this.aircraftVolume;
          float prevPitch = this.aircraftPitch;
-         this.isMoving = (double)(info.soundVolume * this.theAircraft.getSoundVolume()) >= 0.01D;
+         this.isMoving = info.soundVolume * this.theAircraft.getSoundVolume() >= 0.01;
          if (this.isMoving) {
             this.aircraftVolume = info.soundVolume * this.theAircraft.getSoundVolume();
             this.aircraftPitch = info.soundPitch * this.theAircraft.getSoundPitch();
             if (!isRide) {
-               double dist = this.thePlayer.func_70011_f(this.theAircraft.posX, this.thePlayer.posY, this.theAircraft.posZ);
+               double dist = this.thePlayer.getDistance(this.theAircraft.posX, this.thePlayer.posY, this.theAircraft.posZ);
                double pitch = this.prevDist - dist;
-               if (Math.abs(pitch) > 0.3D) {
-                  this.addPitch = (float)((double)this.addPitch + pitch / 40.0D);
+               if (Math.abs(pitch) > 0.3) {
+                  this.addPitch = (float)(this.addPitch + pitch / 40.0);
                   float maxAddPitch = 0.2F;
                   if (this.addPitch < -maxAddPitch) {
                      this.addPitch = -maxAddPitch;
@@ -81,8 +81,8 @@ public class MCH_SoundUpdater extends W_SoundUpdater {
                   }
                }
 
-               this.addPitch = (float)((double)this.addPitch * 0.9D);
-               this.aircraftPitch += this.addPitch;
+               this.addPitch = (float)(this.addPitch * 0.9);
+               this.aircraftPitch = this.aircraftPitch + this.addPitch;
                this.prevDist = dist;
             }
 
@@ -116,7 +116,7 @@ public class MCH_SoundUpdater extends W_SoundUpdater {
                double dx = this.theAircraft.posX - px;
                double dy = this.theAircraft.posY - py;
                double dz = this.theAircraft.posZ - pz;
-               double dist = (double)info.soundRange / 16.0D;
+               double dist = info.soundRange / 16.0;
                dx /= dist;
                dy /= dist;
                dz /= dist;
@@ -125,7 +125,6 @@ public class MCH_SoundUpdater extends W_SoundUpdater {
          } else if (this.isEntitySoundPlaying(this.theAircraft)) {
             this.stopEntitySound(this.theAircraft);
          }
-
       }
    }
 }

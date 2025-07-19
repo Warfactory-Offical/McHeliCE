@@ -36,7 +36,6 @@ public class MCH_Key {
          } else {
             this.isPress = Mouse.isButtonDown(this.key + 100);
          }
-
       }
    }
 

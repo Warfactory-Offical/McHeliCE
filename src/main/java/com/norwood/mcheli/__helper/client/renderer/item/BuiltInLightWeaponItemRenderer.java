@@ -16,10 +16,12 @@ import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class BuiltInLightWeaponItemRenderer implements IItemModelRenderer {
+   @Override
    public boolean shouldRenderer(ItemStack itemStack, TransformType transformType) {
       return IItemModelRenderer.isFirstPerson(transformType) || IItemModelRenderer.isThirdPerson(transformType);
    }
 
+   @Override
    public void renderItem(ItemStack itemStack, EntityLivingBase entityLivingBase, TransformType transformType, float partialTicks) {
       boolean isRender = false;
       if (IItemModelRenderer.isFirstPerson(transformType) || IItemModelRenderer.isThirdPerson(transformType)) {
@@ -35,7 +37,6 @@ public class BuiltInLightWeaponItemRenderer implements IItemModelRenderer {
       if (isRender) {
          this.renderItem(itemStack, IItemModelRenderer.isFirstPerson(transformType), entityLivingBase);
       }
-
    }
 
    private void renderItem(ItemStack itemStack, boolean isFirstPerson, EntityLivingBase entity) {
@@ -49,8 +50,8 @@ public class BuiltInLightWeaponItemRenderer implements IItemModelRenderer {
 
       GL11.glEnable(2884);
       W_McClient.MOD_bindTexture("textures/lweapon/" + name + ".png");
-      if (isFirstPerson && entity.func_184587_cr() && entity.func_184600_cs() == EnumHand.MAIN_HAND) {
-         GL11.glTranslated(0.12999999523162842D, 0.27000001072883606D, 0.009999999776482582D);
+      if (isFirstPerson && entity.isHandActive() && entity.getActiveHand() == EnumHand.MAIN_HAND) {
+         GL11.glTranslated(0.13F, 0.27F, 0.01F);
       }
 
       MCH_ModelManager.render("lweapons", name);

@@ -1,8 +1,6 @@
 package com.norwood.mcheli;
 
 import java.io.File;
-import java.util.Calendar;
-import java.util.Iterator;
 import java.util.Map.Entry;
 import com.norwood.mcheli.__helper.MCH_Blocks;
 import com.norwood.mcheli.__helper.MCH_Entities;
@@ -70,7 +68,6 @@ import com.norwood.mcheli.wrapper.W_LanguageRegistry;
 import com.norwood.mcheli.wrapper.W_NetworkRegistry;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -90,8 +87,7 @@ import org.apache.logging.log4j.Logger;
 @Mod(
    modid = "mcheli",
    name = "MC Helicopter MOD",
-   dependencies = "required-after:forge@[14.23.5.2854,)",
-   guiFactory = "com.norwood.mcheli.__helper.config.MODGuiFactory"
+   dependencies = "required-after:forge@[14.23.5.2854,)"
 )
 @NetworkMod(
    clientSideRequired = true,
@@ -99,7 +95,6 @@ import org.apache.logging.log4j.Logger;
 )
 public class MCH_MOD {
    public static final String MOD_ID = "mcheli";
-   /** @deprecated */
    @Deprecated
    public static final String DOMAIN = "mcheli";
    public static final String MOD_NAME = "MC Helicopter MOD";
@@ -141,9 +136,7 @@ public class MCH_MOD {
    public static MCH_CreativeTabs creativeTabsVehicle;
    public static MCH_DraftingTableBlock blockDraftingTable;
    public static MCH_DraftingTableBlock blockDraftingTableLit;
-   public static ItemBlock itemDraftingTable;
    public static Item sampleHelmet;
-   private static Boolean isSep01 = null;
 
    @EventHandler
    public void PreInit(FMLPreInitializationEvent evt) {
@@ -156,7 +149,7 @@ public class MCH_MOD {
       sourceFile = evt.getSourceFile();
       addonDir = new File(evt.getModConfigurationDirectory().getParentFile(), "/mcheli_addons/");
       MCH_Lib.Log("SourcePath: " + sourcePath);
-      MCH_Lib.Log("CurrentDirectory:" + (new File(".")).getAbsolutePath());
+      MCH_Lib.Log("CurrentDirectory:" + new File(".").getAbsolutePath());
       proxy.init();
       creativeTabs = new MCH_CreativeTabs("MC Heli Item");
       creativeTabsHeli = new MCH_CreativeTabs("MC Heli Helicopters");
@@ -167,7 +160,6 @@ public class MCH_MOD {
       proxy.loadConfig("config/com.norwood.mcheli.cfg");
       config = proxy.config;
       ContentRegistries.loadContents(addonDir);
-      MCH_SoundsJson.updateGenerated();
       MCH_Lib.Log("Register item");
       this.registerItemSpawnGunner();
       this.registerItemRangeFinder();
@@ -184,13 +176,13 @@ public class MCH_MOD {
       this.registerItemLightWeapon();
       registerItemAircraft();
       blockDraftingTable = new MCH_DraftingTableBlock(MCH_Config.BlockID_DraftingTableOFF.prmInt, false);
-      blockDraftingTable.func_149663_c("drafting_table");
-      blockDraftingTable.func_149647_a(creativeTabs);
+      blockDraftingTable.setTranslationKey("drafting_table");
+      blockDraftingTable.setCreativeTab(creativeTabs);
       blockDraftingTableLit = new MCH_DraftingTableBlock(MCH_Config.BlockID_DraftingTableON.prmInt, true);
-      blockDraftingTableLit.func_149663_c("lit_drafting_table");
+      blockDraftingTableLit.setTranslationKey("lit_drafting_table");
       MCH_Blocks.register(blockDraftingTable, "drafting_table");
       MCH_Blocks.register(blockDraftingTableLit, "lit_drafting_table");
-      itemDraftingTable = MCH_Items.registerBlock(blockDraftingTable);
+      MCH_Items.registerBlock(blockDraftingTable);
       W_LanguageRegistry.addName(blockDraftingTable, "Drafting Table");
       W_LanguageRegistry.addNameForObject(blockDraftingTable, "ja_jp", "製図台");
       MCH_Achievement.PreInit();
@@ -224,7 +216,6 @@ public class MCH_MOD {
       creativeTabsPlane.setFixedIconItem(MCH_Config.CreativeTabIconPlane.prmString);
       creativeTabsTank.setFixedIconItem(MCH_Config.CreativeTabIconTank.prmString);
       creativeTabsVehicle.setFixedIconItem(MCH_Config.CreativeTabIconVehicle.prmString);
-      proxy.registerRecipeDescriptions();
       MCH_WeaponInfoManager.setRoundItems();
       proxy.readClientModList();
    }
@@ -266,8 +257,8 @@ public class MCH_MOD {
 
    @EventHandler
    public void registerCommand(FMLServerStartedEvent e) {
-      CommandHandler handler = (CommandHandler)FMLCommonHandler.instance().getSidedDelegate().getServer().func_71187_D();
-      handler.func_71560_a(new MCH_Command());
+      CommandHandler handler = (CommandHandler)FMLCommonHandler.instance().getSidedDelegate().getServer().getCommandManager();
+      handler.registerCommand(new MCH_Command());
    }
 
    private void registerItemSpawnGunner() {
@@ -313,7 +304,7 @@ public class MCH_MOD {
       String name = "internal";
       MCH_InvisibleItem item = new MCH_InvisibleItem(MCH_Config.ItemID_InvisibleItem.prmInt);
       invisibleItem = item;
-      registerItem(item, name, (MCH_CreativeTabs)null);
+      registerItem(item, name, null);
    }
 
    public void registerItemUavStation() {
@@ -322,7 +313,7 @@ public class MCH_MOD {
       itemUavStation = new MCH_ItemUavStation[MCH_ItemUavStation.UAV_STATION_KIND_NUM];
       String name = "uav_station";
 
-      for(int i = 0; i < itemUavStation.length; ++i) {
+      for (int i = 0; i < itemUavStation.length; i++) {
          String nn = i > 0 ? "" + (i + 1) : "";
          MCH_ItemUavStation item = new MCH_ItemUavStation(MCH_Config.ItemID_UavStation[i].prmInt, 1 + i);
          itemUavStation[i] = item;
@@ -330,7 +321,6 @@ public class MCH_MOD {
          W_LanguageRegistry.addName(item, dispName[i]);
          W_LanguageRegistry.addNameForObject(item, "ja_jp", localName[i]);
       }
-
    }
 
    public void registerItemParachute() {
@@ -405,9 +395,9 @@ public class MCH_MOD {
    }
 
    public static void registerItem(W_Item item, String name, MCH_CreativeTabs ct) {
-      item.func_77655_b("mcheli:" + name);
+      item.setTranslationKey("mcheli:" + name);
       if (ct != null) {
-         item.func_77637_a(ct);
+         item.setCreativeTab(ct);
          ct.addIconItem(item);
       }
 
@@ -415,130 +405,99 @@ public class MCH_MOD {
    }
 
    public static void registerItemThrowable() {
-      Iterator var1 = ContentRegistries.throwable().entries().iterator();
-
-      while(var1.hasNext()) {
-         Entry<String, MCH_ThrowableInfo> entry = (Entry)var1.next();
-         MCH_ThrowableInfo info = (MCH_ThrowableInfo)entry.getValue();
+      for (Entry<String, MCH_ThrowableInfo> entry : ContentRegistries.throwable().entries()) {
+         MCH_ThrowableInfo info = entry.getValue();
          info.item = new MCH_ItemThrowable(info.itemID);
-         info.item.func_77625_d(info.stackSize);
-         registerItem(info.item, (String)entry.getKey(), creativeTabs);
+         info.item.setMaxStackSize(info.stackSize);
+         registerItem(info.item, entry.getKey(), creativeTabs);
          MCH_ItemThrowable.registerDispenseBehavior(info.item);
          info.itemID = W_Item.getIdFromItem(info.item) - 256;
          W_LanguageRegistry.addName(info.item, info.displayName);
-         Iterator var3 = info.displayNameLang.keySet().iterator();
 
-         while(var3.hasNext()) {
-            String lang = (String)var3.next();
-            W_LanguageRegistry.addNameForObject(info.item, lang, (String)info.displayNameLang.get(lang));
+         for (String lang : info.displayNameLang.keySet()) {
+            W_LanguageRegistry.addNameForObject(info.item, lang, info.displayNameLang.get(lang));
          }
       }
-
    }
 
    public static void registerItemAircraft() {
-      Iterator var0 = ContentRegistries.heli().entries().iterator();
-
-      Entry entry;
-      Iterator var3;
-      String lang;
-      while(var0.hasNext()) {
-         entry = (Entry)var0.next();
-         MCH_HeliInfo info = (MCH_HeliInfo)entry.getValue();
+      for (Entry<String, MCH_HeliInfo> entry : ContentRegistries.heli().entries()) {
+         MCH_HeliInfo info = entry.getValue();
          info.item = new MCH_ItemHeli(info.itemID);
-         info.item.func_77656_e(info.maxHp);
+         info.item.setMaxDamage(info.maxHp);
          if (info.canRide || !(info.ammoSupplyRange > 0.0F) && !(info.fuelSupplyRange > 0.0F)) {
-            registerItem(info.item, (String)entry.getKey(), creativeTabsHeli);
+            registerItem(info.item, entry.getKey(), creativeTabsHeli);
          } else {
-            registerItem(info.item, (String)entry.getKey(), creativeTabs);
+            registerItem(info.item, entry.getKey(), creativeTabs);
          }
 
          MCH_ItemAircraft.registerDispenseBehavior(info.item);
          info.itemID = W_Item.getIdFromItem(info.item) - 256;
          W_LanguageRegistry.addName(info.item, info.displayName);
-         var3 = info.displayNameLang.keySet().iterator();
 
-         while(var3.hasNext()) {
-            lang = (String)var3.next();
-            W_LanguageRegistry.addNameForObject(info.item, lang, (String)info.displayNameLang.get(lang));
+         for (String lang : info.displayNameLang.keySet()) {
+            W_LanguageRegistry.addNameForObject(info.item, lang, info.displayNameLang.get(lang));
          }
       }
 
-      var0 = ContentRegistries.plane().entries().iterator();
-
-      while(var0.hasNext()) {
-         entry = (Entry)var0.next();
-         MCP_PlaneInfo info = (MCP_PlaneInfo)entry.getValue();
+      for (Entry<String, MCP_PlaneInfo> entry : ContentRegistries.plane().entries()) {
+         MCP_PlaneInfo info = entry.getValue();
          info.item = new MCP_ItemPlane(info.itemID);
-         info.item.func_77656_e(info.maxHp);
+         info.item.setMaxDamage(info.maxHp);
          if (info.canRide || !(info.ammoSupplyRange > 0.0F) && !(info.fuelSupplyRange > 0.0F)) {
-            registerItem(info.item, (String)entry.getKey(), creativeTabsPlane);
+            registerItem(info.item, entry.getKey(), creativeTabsPlane);
          } else {
-            registerItem(info.item, (String)entry.getKey(), creativeTabs);
+            registerItem(info.item, entry.getKey(), creativeTabs);
          }
 
          MCH_ItemAircraft.registerDispenseBehavior(info.item);
          info.itemID = W_Item.getIdFromItem(info.item) - 256;
          W_LanguageRegistry.addName(info.item, info.displayName);
-         var3 = info.displayNameLang.keySet().iterator();
 
-         while(var3.hasNext()) {
-            lang = (String)var3.next();
-            W_LanguageRegistry.addNameForObject(info.item, lang, (String)info.displayNameLang.get(lang));
+         for (String lang : info.displayNameLang.keySet()) {
+            W_LanguageRegistry.addNameForObject(info.item, lang, info.displayNameLang.get(lang));
          }
       }
 
-      var0 = ContentRegistries.tank().entries().iterator();
-
-      while(var0.hasNext()) {
-         entry = (Entry)var0.next();
-         MCH_TankInfo info = (MCH_TankInfo)entry.getValue();
+      for (Entry<String, MCH_TankInfo> entry : ContentRegistries.tank().entries()) {
+         MCH_TankInfo info = entry.getValue();
          info.item = new MCH_ItemTank(info.itemID);
-         info.item.func_77656_e(info.maxHp);
+         info.item.setMaxDamage(info.maxHp);
          if (info.canRide || !(info.ammoSupplyRange > 0.0F) && !(info.fuelSupplyRange > 0.0F)) {
-            registerItem(info.item, (String)entry.getKey(), creativeTabsTank);
+            registerItem(info.item, entry.getKey(), creativeTabsTank);
          } else {
-            registerItem(info.item, (String)entry.getKey(), creativeTabs);
+            registerItem(info.item, entry.getKey(), creativeTabs);
          }
 
          MCH_ItemAircraft.registerDispenseBehavior(info.item);
          info.itemID = W_Item.getIdFromItem(info.item) - 256;
          W_LanguageRegistry.addName(info.item, info.displayName);
-         var3 = info.displayNameLang.keySet().iterator();
 
-         while(var3.hasNext()) {
-            lang = (String)var3.next();
-            W_LanguageRegistry.addNameForObject(info.item, lang, (String)info.displayNameLang.get(lang));
+         for (String lang : info.displayNameLang.keySet()) {
+            W_LanguageRegistry.addNameForObject(info.item, lang, info.displayNameLang.get(lang));
          }
       }
 
-      var0 = ContentRegistries.vehicle().entries().iterator();
-
-      while(var0.hasNext()) {
-         entry = (Entry)var0.next();
-         MCH_VehicleInfo info = (MCH_VehicleInfo)entry.getValue();
+      for (Entry<String, MCH_VehicleInfo> entry : ContentRegistries.vehicle().entries()) {
+         MCH_VehicleInfo info = entry.getValue();
          info.item = new MCH_ItemVehicle(info.itemID);
-         info.item.func_77656_e(info.maxHp);
+         info.item.setMaxDamage(info.maxHp);
          if (info.canRide || !(info.ammoSupplyRange > 0.0F) && !(info.fuelSupplyRange > 0.0F)) {
-            registerItem(info.item, (String)entry.getKey(), creativeTabsVehicle);
+            registerItem(info.item, entry.getKey(), creativeTabsVehicle);
          } else {
-            registerItem(info.item, (String)entry.getKey(), creativeTabs);
+            registerItem(info.item, entry.getKey(), creativeTabs);
          }
 
          MCH_ItemAircraft.registerDispenseBehavior(info.item);
          info.itemID = W_Item.getIdFromItem(info.item) - 256;
          W_LanguageRegistry.addName(info.item, info.displayName);
-         var3 = info.displayNameLang.keySet().iterator();
 
-         while(var3.hasNext()) {
-            lang = (String)var3.next();
-            W_LanguageRegistry.addNameForObject(info.item, lang, (String)info.displayNameLang.get(lang));
+         for (String lang : info.displayNameLang.keySet()) {
+            W_LanguageRegistry.addNameForObject(info.item, lang, info.displayNameLang.get(lang));
          }
       }
-
    }
 
-   /** @deprecated */
    @Deprecated
    public static Logger getLogger() {
       return MCH_Logger.get();
@@ -550,14 +509,5 @@ public class MCH_MOD {
 
    public static File getAddonDir() {
       return addonDir;
-   }
-
-   public static boolean isTodaySep01() {
-      if (isSep01 == null) {
-         Calendar c = Calendar.getInstance();
-         isSep01 = c.get(2) + 1 == 9 && c.get(5) == 1;
-      }
-
-      return isSep01;
    }
 }

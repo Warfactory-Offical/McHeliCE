@@ -9,7 +9,7 @@ public class MCH_HudManager {
 
    @Nullable
    public static MCH_Hud get(String name) {
-      return (MCH_Hud)ContentRegistries.hud().get(name);
+      return ContentRegistries.hud().get(name);
    }
 
    public static boolean contains(String name) {

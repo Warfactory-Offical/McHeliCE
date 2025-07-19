@@ -41,7 +41,7 @@ public class AddonResourceLocation extends ResourceLocation {
    }
 
    protected static String[] parsePath(String pathIn) {
-      String[] spl = func_177516_a(pathIn);
+      String[] spl = splitObjectName(pathIn);
       String[] ret = new String[]{spl[0], null, spl[1]};
       int i = ret[2].indexOf(124);
       if (i >= 0) {
@@ -61,13 +61,12 @@ public class AddonResourceLocation extends ResourceLocation {
    }
 
    protected static String[] parsePath(String addonDomain, String pathIn) {
-      String[] spl = func_177516_a(pathIn);
-      String[] ret = new String[]{spl[0], addonDomain, spl[1]};
-      return ret;
+      String[] spl = splitObjectName(pathIn);
+      return new String[]{spl[0], addonDomain, spl[1]};
    }
 
    public static AddonResourceLocation share(ResourceLocation location) {
-      return share(location.func_110624_b(), location.func_110623_a());
+      return share(location.getNamespace(), location.getPath());
    }
 
    public static AddonResourceLocation share(String modid, String location) {
@@ -79,15 +78,15 @@ public class AddonResourceLocation extends ResourceLocation {
    }
 
    public String getAddonLocation() {
-      return this.addonDomain + '|' + this.field_110625_b;
+      return this.addonDomain + '|' + this.path;
    }
 
    public ResourceLocation asVanillaLocation() {
-      return new ResourceLocation(this.field_110626_a, this.getAddonLocation());
+      return new ResourceLocation(this.namespace, this.getAddonLocation());
    }
 
    public ResourceLocation asVanillaDomainPath() {
-      return new ResourceLocation(this.field_110626_a, this.field_110625_b);
+      return new ResourceLocation(this.namespace, this.path);
    }
 
    public boolean isShareDomain() {
@@ -131,19 +130,19 @@ public class AddonResourceLocation extends ResourceLocation {
    }
 
    public int compareTo(ResourceLocation p_compareTo_1_) {
-      int i = this.field_110626_a.compareTo(p_compareTo_1_.func_110624_b());
+      int i = this.namespace.compareTo(p_compareTo_1_.getNamespace());
       if (i == 0 && p_compareTo_1_ instanceof AddonResourceLocation) {
          i = this.addonDomain.compareTo(((AddonResourceLocation)p_compareTo_1_).addonDomain);
       }
 
       if (i == 0) {
-         i = this.field_110625_b.compareTo(p_compareTo_1_.func_110623_a());
+         i = this.path.compareTo(p_compareTo_1_.getPath());
       }
 
       return i;
    }
 
    public String toString() {
-      return this.field_110626_a + ":" + this.addonDomain + '|' + this.field_110625_b;
+      return this.namespace + ":" + this.addonDomain + '|' + this.path;
    }
 }

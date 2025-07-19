@@ -14,29 +14,35 @@ public class MCH_GuiWrench extends MCH_Gui {
       super(minecraft);
    }
 
-   public void func_73866_w_() {
-      super.func_73866_w_();
+   @Override
+   public void initGui() {
+      super.initGui();
    }
 
-   public boolean func_73868_f() {
+   @Override
+   public boolean doesGuiPauseGame() {
       return false;
    }
 
+   @Override
    public boolean isDrawGui(EntityPlayer player) {
-      return player != null && player.world != null && !player.func_184614_ca().func_190926_b() && player.func_184614_ca().func_77973_b() instanceof MCH_ItemWrench;
+      return player != null
+         && player.world != null
+         && !player.getHeldItemMainhand().isEmpty()
+         && player.getHeldItemMainhand().getItem() instanceof MCH_ItemWrench;
    }
 
+   @Override
    public void drawGui(EntityPlayer player, boolean isThirdPersonView) {
       if (!isThirdPersonView) {
-         GL11.glLineWidth((float)scaleFactor);
+         GL11.glLineWidth(scaleFactor);
          if (this.isDrawGui(player)) {
             GL11.glDisable(3042);
-            MCH_EntityAircraft ac = ((MCH_ItemWrench)player.func_184614_ca().func_77973_b()).getMouseOverAircraft(player);
+            MCH_EntityAircraft ac = ((MCH_ItemWrench)player.getHeldItemMainhand().getItem()).getMouseOverAircraft(player);
             if (ac != null && ac.getMaxHP() > 0) {
-               int color = (double)((float)ac.getHP() / (float)ac.getMaxHP()) > 0.3D ? -14101432 : -2161656;
+               int color = (float)ac.getHP() / ac.getMaxHP() > 0.3 ? -14101432 : -2161656;
                this.drawHP(color, -15433180, ac.getHP(), ac.getMaxHP());
             }
-
          }
       }
    }
@@ -44,13 +50,13 @@ public class MCH_GuiWrench extends MCH_Gui {
    void drawHP(int color, int colorBG, int hp, int hpmax) {
       int posX = this.centerX;
       int posY = this.centerY + 20;
-      func_73734_a(posX - 20, posY + 20 + 1, posX - 20 + 40, posY + 20 + 1 + 1 + 3 + 1, colorBG);
+      drawRect(posX - 20, posY + 20 + 1, posX - 20 + 40, posY + 20 + 1 + 1 + 3 + 1, colorBG);
       if (hp > hpmax) {
          hp = hpmax;
       }
 
-      float hpp = (float)hp / (float)hpmax;
-      func_73734_a(posX - 20 + 1, posY + 20 + 1 + 1, posX - 20 + 1 + (int)(38.0D * (double)hpp), posY + 20 + 1 + 1 + 3, color);
+      float hpp = (float)hp / hpmax;
+      drawRect(posX - 20 + 1, posY + 20 + 1 + 1, posX - 20 + 1 + (int)(38.0 * hpp), posY + 20 + 1 + 1 + 3, color);
       int hppn = (int)(hpp * 100.0F);
       if (hp < hpmax && hppn >= 100) {
          hppn = 99;

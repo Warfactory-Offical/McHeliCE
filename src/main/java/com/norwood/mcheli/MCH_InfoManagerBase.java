@@ -19,17 +19,14 @@ public abstract class MCH_InfoManagerBase<T extends MCH_BaseInfo> {
       path = path.replace('\\', '/');
       File dir = new File(path + type);
       File[] files = dir.listFiles(new FileFilter() {
+         @Override
          public boolean accept(File pathname) {
             String s = pathname.getName().toLowerCase();
             return pathname.isFile() && s.length() >= 5 && s.substring(s.length() - 4).compareTo(".txt") == 0;
          }
       });
       if (files != null && files.length > 0) {
-         File[] var5 = files;
-         int var6 = files.length;
-
-         for(int var7 = 0; var7 < var6; ++var7) {
-            File f = var5[var7];
+         for (File f : files) {
             int line = 0;
             MCH_InputFile inFile = new MCH_InputFile();
 
@@ -39,11 +36,11 @@ public abstract class MCH_InfoManagerBase<T extends MCH_BaseInfo> {
                if (this.contains(name)) {
                   inFile.close();
                } else if (inFile.openUTF8(f)) {
-                  MCH_BaseInfo info = this.newInfo(MCH_Utils.buildinAddon(name), f.getCanonicalPath());
+                  T info = this.newInfo(MCH_Utils.buildinAddon(name), f.getCanonicalPath());
 
                   String str;
-                  while((str = inFile.br.readLine()) != null) {
-                     ++line;
+                  while ((str = inFile.br.readLine()) != null) {
+                     line++;
                      str = str.trim();
                      int eqIdx = str.indexOf(61);
                      if (eqIdx >= 0 && str.length() > eqIdx + 1) {
@@ -51,7 +48,7 @@ public abstract class MCH_InfoManagerBase<T extends MCH_BaseInfo> {
                      }
                   }
 
-                  int line = false;
+                  line = 0;
                   if (info.validate()) {
                      this.put(name, info);
                   }

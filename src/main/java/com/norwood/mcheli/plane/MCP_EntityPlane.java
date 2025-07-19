@@ -1,6 +1,5 @@
 package com.norwood.mcheli.plane;
 
-import java.util.Iterator;
 import javax.annotation.Nullable;
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_Lib;
@@ -33,28 +32,31 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
    public float rotationRotor;
    public float prevRotationRotor;
    public float addkeyRotValue;
+   private boolean addKeyFlag;
 
    public MCP_EntityPlane(World world) {
       super(world);
-      this.currentSpeed = 0.07D;
-      this.field_70156_m = true;
-      this.func_70105_a(2.0F, 0.7F);
-      this.field_70159_w = 0.0D;
-      this.field_70181_x = 0.0D;
-      this.field_70179_y = 0.0D;
+      this.currentSpeed = 0.07;
+      this.preventEntitySpawning = true;
+      this.setSize(2.0F, 0.7F);
+      this.motionX = 0.0;
+      this.motionY = 0.0;
+      this.motionZ = 0.0;
       this.weapons = this.createWeapon(0);
       this.soundVolume = 0.0F;
       this.partNozzle = null;
       this.partWing = null;
-      this.field_70138_W = 0.6F;
+      this.stepHeight = 0.6F;
       this.rotationRotor = 0.0F;
       this.prevRotationRotor = 0.0F;
    }
 
+   @Override
    public String getKindName() {
       return "planes";
    }
 
+   @Override
    public String getEntityType() {
       return "Plane";
    }
@@ -63,6 +65,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
       return this.planeInfo;
    }
 
+   @Override
    public void changeType(String type) {
       MCH_Lib.DbgLog(this.world, "MCP_EntityPlane.changeType " + type + " : " + this.toString());
       if (!type.isEmpty()) {
@@ -70,8 +73,8 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
       }
 
       if (this.planeInfo == null) {
-         MCH_Lib.Log((Entity)this, "##### MCP_EntityPlane changePlaneType() Plane info null %d, %s, %s", W_Entity.getEntityId(this), type, this.getEntityName());
-         this.func_70106_y();
+         MCH_Lib.Log(this, "##### MCP_EntityPlane changePlaneType() Plane info null %d, %s, %s", W_Entity.getEntityId(this), type, this.getEntityName());
+         this.setDead();
       } else {
          this.setAcInfo(this.planeInfo);
          this.newSeats(this.getAcInfo().getNumSeatAndRack());
@@ -80,44 +83,49 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
          this.weapons = this.createWeapon(1 + this.getSeatNum());
          this.initPartRotation(this.getRotYaw(), this.getRotPitch());
       }
-
    }
 
    @Nullable
+   @Override
    public Item getItem() {
       return this.getPlaneInfo() != null ? this.getPlaneInfo().item : null;
    }
 
+   @Override
    public boolean canMountWithNearEmptyMinecart() {
       return MCH_Config.MountMinecartPlane.prmBool;
    }
 
+   @Override
    protected void entityInit() {
       super.entityInit();
    }
 
-   protected void func_70014_b(NBTTagCompound par1NBTTagCompound) {
-      super.func_70014_b(par1NBTTagCompound);
+   @Override
+   protected void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
+      super.writeEntityToNBT(par1NBTTagCompound);
    }
 
-   protected void func_70037_a(NBTTagCompound par1NBTTagCompound) {
-      super.func_70037_a(par1NBTTagCompound);
+   @Override
+   protected void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
+      super.readEntityFromNBT(par1NBTTagCompound);
       if (this.planeInfo == null) {
          this.planeInfo = MCP_PlaneInfoManager.get(this.getTypeName());
          if (this.planeInfo == null) {
-            MCH_Lib.Log((Entity)this, "##### MCP_EntityPlane readEntityFromNBT() Plane info null %d, %s", W_Entity.getEntityId(this), this.getEntityName());
-            this.func_70106_y();
+            MCH_Lib.Log(this, "##### MCP_EntityPlane readEntityFromNBT() Plane info null %d, %s", W_Entity.getEntityId(this), this.getEntityName());
+            this.setDead();
          } else {
             this.setAcInfo(this.planeInfo);
          }
       }
-
    }
 
-   public void func_70106_y() {
-      super.func_70106_y();
+   @Override
+   public void setDead() {
+      super.setDead();
    }
 
+   @Override
    public int getNumEjectionSeat() {
       if (this.getAcInfo() != null && this.getAcInfo().isEnableEjectionSeat) {
          int n = this.getSeatNum() + 1;
@@ -127,31 +135,35 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
       }
    }
 
+   @Override
    public void onInteractFirst(EntityPlayer player) {
       this.addkeyRotValue = 0.0F;
+      this.addKeyFlag = false;
    }
 
+   @Override
    public boolean canSwitchGunnerMode() {
       if (!super.canSwitchGunnerMode()) {
          return false;
       } else {
-         float roll = MathHelper.func_76135_e(MathHelper.func_76142_g(this.getRotRoll()));
-         float pitch = MathHelper.func_76135_e(MathHelper.func_76142_g(this.getRotPitch()));
-         if (!(roll > 40.0F) && !(pitch > 40.0F)) {
-            return this.getCurrentThrottle() > 0.6000000238418579D && MCH_Lib.getBlockIdY(this, 3, -5) == 0;
-         } else {
-            return false;
-         }
+         float roll = MathHelper.abs(MathHelper.wrapDegrees(this.getRotRoll()));
+         float pitch = MathHelper.abs(MathHelper.wrapDegrees(this.getRotPitch()));
+         return !(roll > 40.0F) && !(pitch > 40.0F) ? this.getCurrentThrottle() > 0.6F && MCH_Lib.getBlockIdY(this, 3, -5) == 0 : false;
       }
    }
 
+   @Override
    public void onUpdateAircraft() {
       if (this.planeInfo == null) {
          this.changeType(this.getTypeName());
-         this.field_70169_q = this.posX;
-         this.field_70167_r = this.posY;
-         this.field_70166_s = this.posZ;
+         this.prevPosX = this.posX;
+         this.prevPosY = this.posY;
+         this.prevPosZ = this.posZ;
       } else {
+         if (this.addKeyFlag) {
+            this.addKeyFlag = false;
+         }
+
          if (!this.isRequestedSyncStatus) {
             this.isRequestedSyncStatus = true;
             if (this.world.isRemote) {
@@ -167,7 +179,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
          this.onUpdate_Seats();
          this.onUpdate_Control();
          this.prevRotationRotor = this.rotationRotor;
-         this.rotationRotor = (float)((double)this.rotationRotor + this.getCurrentThrottle() * (double)this.getAcInfo().rotorSpeed);
+         this.rotationRotor = (float)(this.rotationRotor + this.getCurrentThrottle() * this.getAcInfo().rotorSpeed);
          if (this.rotationRotor > 360.0F) {
             this.rotationRotor -= 360.0F;
             this.prevRotationRotor -= 360.0F;
@@ -178,24 +190,24 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
             this.prevRotationRotor += 360.0F;
          }
 
-         if (this.field_70122_E && this.getVtolMode() == 0 && this.planeInfo.isDefaultVtol) {
+         if (this.onGround && this.getVtolMode() == 0 && this.planeInfo.isDefaultVtol) {
             this.swithVtolMode(true);
          }
 
-         this.field_70169_q = this.posX;
-         this.field_70167_r = this.posY;
-         this.field_70166_s = this.posZ;
-         if (!this.isDestroyed() && this.isHovering() && MathHelper.func_76135_e(this.getRotPitch()) < 70.0F) {
+         this.prevPosX = this.posX;
+         this.prevPosY = this.posY;
+         this.prevPosZ = this.posZ;
+         if (!this.isDestroyed() && this.isHovering() && MathHelper.abs(this.getRotPitch()) < 70.0F) {
             this.setRotPitch(this.getRotPitch() * 0.95F, "isHovering()");
          }
 
-         if (this.isDestroyed() && this.getCurrentThrottle() > 0.0D) {
+         if (this.isDestroyed() && this.getCurrentThrottle() > 0.0) {
             if (MCH_Lib.getBlockIdY(this, 3, -2) > 0) {
-               this.setCurrentThrottle(this.getCurrentThrottle() * 0.8D);
+               this.setCurrentThrottle(this.getCurrentThrottle() * 0.8);
             }
 
             if (this.isExploded()) {
-               this.setCurrentThrottle(this.getCurrentThrottle() * 0.98D);
+               this.setCurrentThrottle(this.getCurrentThrottle() * 0.98);
             }
          }
 
@@ -205,45 +217,53 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
          } else {
             this.onUpdate_Server();
          }
-
       }
    }
 
+   @Override
    public boolean canUpdateYaw(Entity player) {
       return super.canUpdateYaw(player) && !this.isHovering();
    }
 
+   @Override
    public boolean canUpdatePitch(Entity player) {
       return super.canUpdatePitch(player) && !this.isHovering();
    }
 
+   @Override
    public boolean canUpdateRoll(Entity player) {
       return super.canUpdateRoll(player) && !this.isHovering();
    }
 
+   @Override
    public float getYawFactor() {
       float yaw = this.getVtolMode() > 0 ? this.getPlaneInfo().vtolYaw : super.getYawFactor();
       return yaw * 0.8F;
    }
 
+   @Override
    public float getPitchFactor() {
       float pitch = this.getVtolMode() > 0 ? this.getPlaneInfo().vtolPitch : super.getPitchFactor();
       return pitch * 0.8F;
    }
 
+   @Override
    public float getRollFactor() {
       float roll = this.getVtolMode() > 0 ? this.getPlaneInfo().vtolYaw : super.getRollFactor();
       return roll * 0.8F;
    }
 
+   @Override
    public boolean isOverridePlayerPitch() {
       return super.isOverridePlayerPitch() && !this.isHovering();
    }
 
+   @Override
    public boolean isOverridePlayerYaw() {
       return super.isOverridePlayerYaw() && !this.isHovering();
    }
 
+   @Override
    public float getControlRotYaw(float mouseX, float mouseY, float tick) {
       if (MCH_Config.MouseControlFlightSimMode.prmBool) {
          this.rotationByKey(tick);
@@ -253,10 +273,12 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
       }
    }
 
+   @Override
    public float getControlRotPitch(float mouseX, float mouseY, float tick) {
       return mouseY;
    }
 
+   @Override
    public float getControlRotRoll(float mouseX, float mouseY, float tick) {
       if (MCH_Config.MouseControlFlightSimMode.prmBool) {
          return mouseX * 2.0F;
@@ -271,40 +293,37 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
          rot *= 0.0F;
       }
 
-      if (this.moveLeft && !this.moveRight) {
-         this.addkeyRotValue -= rot * partialTicks;
-      }
+      if (!this.addKeyFlag) {
+         this.addKeyFlag = true;
+         if (this.moveLeft && !this.moveRight) {
+            this.addkeyRotValue -= rot * partialTicks;
+         }
 
-      if (this.moveRight && !this.moveLeft) {
-         this.addkeyRotValue += rot * partialTicks;
+         if (this.moveRight && !this.moveLeft) {
+            this.addkeyRotValue += rot * partialTicks;
+         }
       }
-
    }
 
+   @Override
    public void onUpdateAngles(float partialTicks) {
       if (!this.isDestroyed()) {
          if (this.isGunnerMode) {
             this.setRotPitch(this.getRotPitch() * 0.95F);
             this.setRotYaw(this.getRotYaw() + this.getAcInfo().autoPilotRot * 0.2F);
-            if (MathHelper.func_76135_e(this.getRotRoll()) > 20.0F) {
+            if (MathHelper.abs(this.getRotRoll()) > 20.0F) {
                this.setRotRoll(this.getRotRoll() * 0.95F);
             }
          }
 
          boolean isFly = MCH_Lib.getBlockIdY(this, 3, -3) == 0;
-         float gmy;
-         if (isFly && !this.isFreeLookMode() && !this.isGunnerMode && (!this.getAcInfo().isFloat || !(this.getWaterDepth() > 0.0D))) {
-            if (isFly && !MCH_Config.MouseControlFlightSimMode.prmBool) {
-               this.rotationByKey(partialTicks);
-               this.setRotRoll(this.getRotRoll() + this.addkeyRotValue * 0.5F * this.getAcInfo().mobilityRoll * partialTicks * 3.3F);
-            }
-         } else {
-            gmy = 1.0F;
+         if (!isFly || this.isFreeLookMode() || this.isGunnerMode || this.getAcInfo().isFloat && this.getWaterDepth() > 0.0) {
+            float gmy = 1.0F;
             if (!isFly) {
                gmy = this.getAcInfo().mobilityYawOnGround;
                if (!this.getAcInfo().canRotOnGround) {
                   Block block = MCH_Lib.getBlockY(this, 3, -2, false);
-                  if (!W_Block.isEqual(block, W_Block.getWater()) && !W_Block.isEqual(block, W_Blocks.field_150350_a)) {
+                  if (!W_Block.isEqual(block, W_Block.getWater()) && !W_Block.isEqual(block, W_Blocks.AIR)) {
                      gmy = 0.0F;
                   }
                }
@@ -317,20 +336,22 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
             if (this.moveRight && !this.moveLeft) {
                this.setRotYaw(this.getRotYaw() + 0.6F * gmy * partialTicks);
             }
+         } else if (isFly && !MCH_Config.MouseControlFlightSimMode.prmBool) {
+            this.rotationByKey(partialTicks);
+            this.setRotRoll(this.getRotRoll() + this.addkeyRotValue * 0.5F * this.getAcInfo().mobilityRoll);
          }
 
-         this.addkeyRotValue = (float)((double)this.addkeyRotValue * (1.0D - (double)(0.1F * partialTicks)));
-         if (!isFly && MathHelper.func_76135_e(this.getRotPitch()) < 40.0F) {
+         this.addkeyRotValue = (float)(this.addkeyRotValue * (1.0 - 0.1F * partialTicks));
+         if (!isFly && MathHelper.abs(this.getRotPitch()) < 40.0F) {
             this.applyOnGroundPitch(0.97F);
          }
 
          if (this.getNozzleRotation() > 0.001F) {
-            gmy = 1.0F - 0.03F * partialTicks;
-            this.setRotPitch(this.getRotPitch() * gmy);
-            gmy = 1.0F - 0.1F * partialTicks;
-            this.setRotRoll(this.getRotRoll() * gmy);
+            float rot = 1.0F - 0.03F * partialTicks;
+            this.setRotPitch(this.getRotPitch() * rot);
+            rot = 1.0F - 0.1F * partialTicks;
+            this.setRotRoll(this.getRotRoll() * rot);
          }
-
       }
    }
 
@@ -339,37 +360,41 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
          this.switchGunnerMode(false);
       }
 
-      this.throttleBack = (float)((double)this.throttleBack * 0.8D);
-      if (this.getRiddenByEntity() != null && !this.getRiddenByEntity().field_70128_L && this.isCanopyClose() && this.canUseWing() && this.canUseFuel() && !this.isDestroyed()) {
+      this.throttleBack = (float)(this.throttleBack * 0.8);
+      if (this.getRiddenByEntity() != null
+         && !this.getRiddenByEntity().isDead
+         && this.isCanopyClose()
+         && this.canUseWing()
+         && this.canUseFuel()
+         && !this.isDestroyed()) {
          this.onUpdate_ControlNotHovering();
       } else if (this.isTargetDrone() && this.canUseFuel() && !this.isDestroyed()) {
          this.throttleUp = true;
          this.onUpdate_ControlNotHovering();
-      } else if (this.getCurrentThrottle() > 0.0D) {
-         this.addCurrentThrottle(-0.0025D * (double)this.getAcInfo().throttleUpDown);
+      } else if (this.getCurrentThrottle() > 0.0) {
+         this.addCurrentThrottle(-0.0025 * this.getAcInfo().throttleUpDown);
       } else {
-         this.setCurrentThrottle(0.0D);
+         this.setCurrentThrottle(0.0);
       }
 
-      if (this.getCurrentThrottle() < 0.0D) {
-         this.setCurrentThrottle(0.0D);
+      if (this.getCurrentThrottle() < 0.0) {
+         this.setCurrentThrottle(0.0);
       }
 
       if (this.world.isRemote) {
          if (!W_Lib.isClientPlayer(this.getRiddenByEntity())) {
             double ct = this.getThrottle();
             if (this.getCurrentThrottle() > ct) {
-               this.addCurrentThrottle(-0.005D);
+               this.addCurrentThrottle(-0.005);
             }
 
             if (this.getCurrentThrottle() < ct) {
-               this.addCurrentThrottle(0.005D);
+               this.addCurrentThrottle(0.005);
             }
          }
       } else {
          this.setThrottle(this.getCurrentThrottle());
       }
-
    }
 
    protected void onUpdate_ControlNotHovering() {
@@ -377,49 +402,48 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
          float throttleUpDown = this.getAcInfo().throttleUpDown;
          boolean turn = this.moveLeft && !this.moveRight || !this.moveLeft && this.moveRight;
          boolean localThrottleUp = this.throttleUp;
-         if (turn && this.getCurrentThrottle() < (double)this.getAcInfo().pivotTurnThrottle && !localThrottleUp && !this.throttleDown) {
+         if (turn && this.getCurrentThrottle() < this.getAcInfo().pivotTurnThrottle && !localThrottleUp && !this.throttleDown) {
             localThrottleUp = true;
             throttleUpDown *= 2.0F;
          }
 
          if (localThrottleUp) {
             float f = throttleUpDown;
-            if (this.func_184187_bx() != null) {
-               double mx = this.func_184187_bx().field_70159_w;
-               double mz = this.func_184187_bx().field_70179_y;
-               f = throttleUpDown * MathHelper.func_76133_a(mx * mx + mz * mz) * this.getAcInfo().throttleUpDownOnEntity;
+            if (this.getRidingEntity() != null) {
+               double mx = this.getRidingEntity().motionX;
+               double mz = this.getRidingEntity().motionZ;
+               f = throttleUpDown * (MathHelper.sqrt(mx * mx + mz * mz) * this.getAcInfo().throttleUpDownOnEntity);
             }
 
             if (this.getAcInfo().enableBack && this.throttleBack > 0.0F) {
-               this.throttleBack = (float)((double)this.throttleBack - 0.01D * (double)f);
+               this.throttleBack = (float)(this.throttleBack - 0.01 * f);
             } else {
                this.throttleBack = 0.0F;
-               if (this.getCurrentThrottle() < 1.0D) {
-                  this.addCurrentThrottle(0.01D * (double)f);
+               if (this.getCurrentThrottle() < 1.0) {
+                  this.addCurrentThrottle(0.01 * f);
                } else {
-                  this.setCurrentThrottle(1.0D);
+                  this.setCurrentThrottle(1.0);
                }
             }
          } else if (this.throttleDown) {
-            if (this.getCurrentThrottle() > 0.0D) {
-               this.addCurrentThrottle(-0.01D * (double)throttleUpDown);
+            if (this.getCurrentThrottle() > 0.0) {
+               this.addCurrentThrottle(-0.01 * throttleUpDown);
             } else {
-               this.setCurrentThrottle(0.0D);
+               this.setCurrentThrottle(0.0);
                if (this.getAcInfo().enableBack) {
-                  this.throttleBack = (float)((double)this.throttleBack + 0.0025D * (double)throttleUpDown);
+                  this.throttleBack = (float)(this.throttleBack + 0.0025 * throttleUpDown);
                   if (this.throttleBack > 0.6F) {
                      this.throttleBack = 0.6F;
                   }
                }
             }
-         } else if (this.cs_planeAutoThrottleDown && this.getCurrentThrottle() > 0.0D) {
-            this.addCurrentThrottle(-0.005D * (double)throttleUpDown);
-            if (this.getCurrentThrottle() <= 0.0D) {
-               this.setCurrentThrottle(0.0D);
+         } else if (this.cs_planeAutoThrottleDown && this.getCurrentThrottle() > 0.0) {
+            this.addCurrentThrottle(-0.005 * throttleUpDown);
+            if (this.getCurrentThrottle() <= 0.0) {
+               this.setCurrentThrottle(0.0);
             }
          }
       }
-
    }
 
    protected void onUpdate_Particle() {
@@ -427,12 +451,11 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
          this.onUpdate_ParticleLandingGear();
          this.onUpdate_ParticleNozzle();
       }
-
    }
 
    protected void onUpdate_Particle2() {
       if (this.world.isRemote) {
-         if (!((double)this.getHP() >= (double)this.getMaxHP() * 0.5D)) {
+         if (!(this.getHP() >= this.getMaxHP() * 0.5)) {
             if (this.getPlaneInfo() != null) {
                int rotorNum = this.getPlaneInfo().rotorList.size();
                if (rotorNum < 0) {
@@ -448,27 +471,26 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
                float roll = this.getRotRoll();
                boolean spawnSmoke = true;
 
-               int d;
-               for(d = 0; d < rotorNum; ++d) {
-                  if ((double)this.getHP() >= (double)this.getMaxHP() * 0.2D && this.getMaxHP() > 0) {
-                     int d = (int)(((double)(this.getHP() / this.getMaxHP()) - 0.2D) / 0.3D * 15.0D);
-                     if (d > 0 && this.field_70146_Z.nextInt(d) > 0) {
+               for (int ri = 0; ri < rotorNum; ri++) {
+                  if (this.getHP() >= this.getMaxHP() * 0.2 && this.getMaxHP() > 0) {
+                     int d = (int)((this.getHP() / this.getMaxHP() - 0.2) / 0.3 * 15.0);
+                     if (d > 0 && this.rand.nextInt(d) > 0) {
                         spawnSmoke = false;
                      }
                   }
 
-                  Vec3d rotor_pos = ((MCP_PlaneInfo.Rotor)this.getPlaneInfo().rotorList.get(d)).pos;
+                  Vec3d rotor_pos = this.getPlaneInfo().rotorList.get(ri).pos;
                   Vec3d pos = MCH_Lib.RotVec3(rotor_pos, -yaw, -pitch, -roll);
                   double x = this.posX + pos.x;
                   double y = this.posY + pos.y;
                   double z = this.posZ + pos.z;
-                  this.onUpdate_Particle2SpawnSmoke(d, x, y, z, 1.0F, spawnSmoke);
+                  this.onUpdate_Particle2SpawnSmoke(ri, x, y, z, 1.0F, spawnSmoke);
                }
 
                spawnSmoke = true;
-               if ((double)this.getHP() >= (double)this.getMaxHP() * 0.2D && this.getMaxHP() > 0) {
-                  d = (int)(((double)(this.getHP() / this.getMaxHP()) - 0.2D) / 0.3D * 15.0D);
-                  if (d > 0 && this.field_70146_Z.nextInt(d) > 0) {
+               if (this.getHP() >= this.getMaxHP() * 0.2 && this.getMaxHP() > 0) {
+                  int d = (int)((this.getHP() / this.getMaxHP() - 0.2) / 0.3 * 15.0);
+                  if (d > 0 && this.rand.nextInt(d) > 0) {
                      spawnSmoke = false;
                   }
                }
@@ -477,7 +499,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
                double py = this.posY;
                double pz = this.posZ;
                if (this.getSeatInfo(0) != null && this.getSeatInfo(0).pos != null) {
-                  Vec3d pos = MCH_Lib.RotVec3(0.0D, this.getSeatInfo(0).pos.y, -2.0D, -yaw, -pitch, -roll);
+                  Vec3d pos = MCH_Lib.RotVec3(0.0, this.getSeatInfo(0).pos.y, -2.0, -yaw, -pitch, -roll);
                   px += pos.x;
                   py += pos.y;
                   pz += pos.z;
@@ -499,16 +521,18 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
       double dx = x - prev.x;
       double dy = y - prev.y;
       double dz = z - prev.z;
-      int num = (int)((double)MathHelper.func_76133_a(dx * dx + dy * dy + dz * dz) / 0.3D) + 1;
+      int num = (int)(MathHelper.sqrt(dx * dx + dy * dy + dz * dz) / 0.3) + 1;
 
-      for(int i = 0; i < num; ++i) {
-         float c = 0.2F + this.field_70146_Z.nextFloat() * 0.3F;
-         MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "smoke", prev.x + (x - prev.x) * (double)i / 3.0D, prev.y + (y - prev.y) * (double)i / 3.0D, prev.z + (z - prev.z) * (double)i / 3.0D);
-         prm.motionX = (double)size * (this.field_70146_Z.nextDouble() - 0.5D) * 0.3D;
-         prm.motionY = (double)size * this.field_70146_Z.nextDouble() * 0.1D;
-         prm.motionZ = (double)size * (this.field_70146_Z.nextDouble() - 0.5D) * 0.3D;
-         prm.size = size * ((float)this.field_70146_Z.nextInt(5) + 5.0F) * 1.0F;
-         prm.setColor(0.7F + this.field_70146_Z.nextFloat() * 0.1F, c, c, c);
+      for (int i = 0; i < num; i++) {
+         float c = 0.2F + this.rand.nextFloat() * 0.3F;
+         MCH_ParticleParam prm = new MCH_ParticleParam(
+            this.world, "smoke", prev.x + (x - prev.x) * i / 3.0, prev.y + (y - prev.y) * i / 3.0, prev.z + (z - prev.z) * i / 3.0
+         );
+         prm.motionX = size * (this.rand.nextDouble() - 0.5) * 0.3;
+         prm.motionY = size * this.rand.nextDouble() * 0.1;
+         prm.motionZ = size * (this.rand.nextDouble() - 0.5) * 0.3;
+         prm.size = size * (this.rand.nextInt(5) + 5.0F) * 1.0F;
+         prm.setColor(0.7F + this.rand.nextFloat() * 0.1F, c, c, c);
          MCH_ParticlesUtil.spawnParticle(prm);
       }
 
@@ -516,93 +540,105 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
    }
 
    public void onUpdate_ParticleLandingGear() {
-      double d = this.field_70159_w * this.field_70159_w + this.field_70179_y * this.field_70179_y;
-      if (d > 0.01D) {
-         int x = MathHelper.func_76128_c(this.posX + 0.5D);
-         int y = MathHelper.func_76128_c(this.posY - 0.5D);
-         int z = MathHelper.func_76128_c(this.posZ + 0.5D);
-         MCH_ParticlesUtil.spawnParticleTileCrack(this.world, x, y, z, this.posX + ((double)this.field_70146_Z.nextFloat() - 0.5D) * (double)this.field_70130_N, this.func_174813_aQ().field_72338_b + 0.1D, this.posZ + ((double)this.field_70146_Z.nextFloat() - 0.5D) * (double)this.field_70130_N, -this.field_70159_w * 4.0D, 1.5D, -this.field_70179_y * 4.0D);
+      double d = this.motionX * this.motionX + this.motionZ * this.motionZ;
+      if (d > 0.01) {
+         int x = MathHelper.floor(this.posX + 0.5);
+         int y = MathHelper.floor(this.posY - 0.5);
+         int z = MathHelper.floor(this.posZ + 0.5);
+         MCH_ParticlesUtil.spawnParticleTileCrack(
+            this.world,
+            x,
+            y,
+            z,
+            this.posX + (this.rand.nextFloat() - 0.5) * this.width,
+            this.getEntityBoundingBox().minY + 0.1,
+            this.posZ + (this.rand.nextFloat() - 0.5) * this.width,
+            -this.motionX * 4.0,
+            1.5,
+            -this.motionZ * 4.0
+         );
       }
-
    }
 
    private void onUpdate_ParticleSplash() {
       if (this.getAcInfo() != null) {
          if (this.world.isRemote) {
-            double mx = this.posX - this.field_70169_q;
-            double mz = this.posZ - this.field_70166_s;
+            double mx = this.posX - this.prevPosX;
+            double mz = this.posZ - this.prevPosZ;
             double dist = mx * mx + mz * mz;
-            if (dist > 1.0D) {
-               dist = 1.0D;
+            if (dist > 1.0) {
+               dist = 1.0;
             }
 
-            Iterator var7 = this.getAcInfo().particleSplashs.iterator();
-
-            while(var7.hasNext()) {
-               MCH_AircraftInfo.ParticleSplash p = (MCH_AircraftInfo.ParticleSplash)var7.next();
-
-               for(int i = 0; i < p.num; ++i) {
-                  if (dist > 0.03D + (double)this.field_70146_Z.nextFloat() * 0.1D) {
-                     this.setParticleSplash(p.pos, -mx * (double)p.acceleration, (double)p.motionY, -mz * (double)p.acceleration, p.gravity, (double)p.size * (0.5D + dist * 0.5D), p.age);
+            for (MCH_AircraftInfo.ParticleSplash p : this.getAcInfo().particleSplashs) {
+               for (int i = 0; i < p.num; i++) {
+                  if (dist > 0.03 + this.rand.nextFloat() * 0.1) {
+                     this.setParticleSplash(p.pos, -mx * p.acceleration, p.motionY, -mz * p.acceleration, p.gravity, p.size * (0.5 + dist * 0.5), p.age);
                   }
                }
             }
-
          }
       }
    }
 
    private void setParticleSplash(Vec3d pos, double mx, double my, double mz, float gravity, double size, int age) {
       Vec3d v = this.getTransformedPosition(pos);
-      v = v.func_72441_c(this.field_70146_Z.nextDouble() - 0.5D, (this.field_70146_Z.nextDouble() - 0.5D) * 0.5D, this.field_70146_Z.nextDouble() - 0.5D);
-      int x = (int)(v.x + 0.5D);
-      int y = (int)(v.y + 0.0D);
-      int z = (int)(v.z + 0.5D);
+      v = v.add(this.rand.nextDouble() - 0.5, (this.rand.nextDouble() - 0.5) * 0.5, this.rand.nextDouble() - 0.5);
+      int x = (int)(v.x + 0.5);
+      int y = (int)(v.y + 0.0);
+      int z = (int)(v.z + 0.5);
       if (W_WorldFunc.isBlockWater(this.world, x, y, z)) {
-         float c = this.field_70146_Z.nextFloat() * 0.3F + 0.7F;
+         float c = this.rand.nextFloat() * 0.3F + 0.7F;
          MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "smoke", v.x, v.y, v.z);
-         prm.motionX = mx + ((double)this.field_70146_Z.nextFloat() - 0.5D) * 0.7D;
+         prm.motionX = mx + (this.rand.nextFloat() - 0.5) * 0.7;
          prm.motionY = my;
-         prm.motionZ = mz + ((double)this.field_70146_Z.nextFloat() - 0.5D) * 0.7D;
-         prm.size = (float)size * (this.field_70146_Z.nextFloat() * 0.2F + 0.8F);
+         prm.motionZ = mz + (this.rand.nextFloat() - 0.5) * 0.7;
+         prm.size = (float)size * (this.rand.nextFloat() * 0.2F + 0.8F);
          prm.setColor(0.9F, c, c, c);
-         prm.age = age + (int)((double)this.field_70146_Z.nextFloat() * 0.5D * (double)age);
+         prm.age = age + (int)(this.rand.nextFloat() * 0.5 * age);
          prm.gravity = gravity;
          MCH_ParticlesUtil.spawnParticle(prm);
       }
-
    }
 
    public void onUpdate_ParticleNozzle() {
       if (this.planeInfo != null && this.planeInfo.haveNozzle()) {
-         if (!(this.getCurrentThrottle() <= 0.10000000149011612D)) {
+         if (!(this.getCurrentThrottle() <= 0.1F)) {
             float yaw = this.getRotYaw();
             float pitch = this.getRotPitch();
             float roll = this.getRotRoll();
-            Vec3d nozzleRot = MCH_Lib.RotVec3(0.0D, 0.0D, 1.0D, -yaw - 180.0F, pitch - this.getNozzleRotation(), roll);
-            Iterator var5 = this.planeInfo.nozzles.iterator();
+            Vec3d nozzleRot = MCH_Lib.RotVec3(0.0, 0.0, 1.0, -yaw - 180.0F, pitch - this.getNozzleRotation(), roll);
 
-            while(var5.hasNext()) {
-               MCH_AircraftInfo.DrawnPart nozzle = (MCH_AircraftInfo.DrawnPart)var5.next();
-               if ((double)this.field_70146_Z.nextFloat() <= this.getCurrentThrottle() * 1.5D) {
+            for (MCH_AircraftInfo.DrawnPart nozzle : this.planeInfo.nozzles) {
+               if (this.rand.nextFloat() <= this.getCurrentThrottle() * 1.5) {
                   Vec3d nozzlePos = MCH_Lib.RotVec3(nozzle.pos, -yaw, -pitch, -roll);
                   double x = this.posX + nozzlePos.x + nozzleRot.x;
                   double y = this.posY + nozzlePos.y + nozzleRot.y;
                   double z = this.posZ + nozzlePos.z + nozzleRot.z;
                   float a = 0.7F;
-                  if (W_WorldFunc.getBlockId(this.world, (int)(x + nozzleRot.x * 3.0D), (int)(y + nozzleRot.y * 3.0D), (int)(z + nozzleRot.z * 3.0D)) != 0) {
+                  if (W_WorldFunc.getBlockId(this.world, (int)(x + nozzleRot.x * 3.0), (int)(y + nozzleRot.y * 3.0), (int)(z + nozzleRot.z * 3.0)) != 0) {
                      a = 2.0F;
                   }
 
-                  MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "smoke", x, y, z, nozzleRot.x + (double)((this.field_70146_Z.nextFloat() - 0.5F) * a), nozzleRot.y, nozzleRot.z + (double)((this.field_70146_Z.nextFloat() - 0.5F) * a), 5.0F * this.getAcInfo().particlesScale);
+                  MCH_ParticleParam prm = new MCH_ParticleParam(
+                     this.world,
+                     "smoke",
+                     x,
+                     y,
+                     z,
+                     nozzleRot.x + (this.rand.nextFloat() - 0.5F) * a,
+                     nozzleRot.y,
+                     nozzleRot.z + (this.rand.nextFloat() - 0.5F) * a,
+                     5.0F * this.getAcInfo().particlesScale
+                  );
                   MCH_ParticlesUtil.spawnParticle(prm);
                }
             }
-
          }
       }
    }
 
+   @Override
    public void destroyAircraft() {
       super.destroyAircraft();
       int inv = 1;
@@ -614,41 +650,41 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
          inv = -1;
       }
 
-      this.rotDestroyedRoll = (0.5F + this.field_70146_Z.nextFloat()) * (float)inv;
+      this.rotDestroyedRoll = (0.5F + this.rand.nextFloat()) * inv;
    }
 
    protected void onUpdate_Client() {
       if (this.getRiddenByEntity() != null && W_Lib.isClientPlayer(this.getRiddenByEntity())) {
-         this.getRiddenByEntity().field_70125_A = this.getRiddenByEntity().field_70127_C;
+         this.getRiddenByEntity().rotationPitch = this.getRiddenByEntity().prevRotationPitch;
       }
 
       if (this.aircraftPosRotInc > 0) {
          this.applyServerPositionAndRotation();
       } else {
-         this.func_70107_b(this.posX + this.field_70159_w, this.posY + this.field_70181_x, this.posZ + this.field_70179_y);
-         if (!this.isDestroyed() && (this.field_70122_E || MCH_Lib.getBlockIdY(this, 1, -2) > 0)) {
-            this.field_70159_w *= 0.95D;
-            this.field_70179_y *= 0.95D;
+         this.setPosition(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+         if (!this.isDestroyed() && (this.onGround || MCH_Lib.getBlockIdY(this, 1, -2) > 0)) {
+            this.motionX *= 0.95;
+            this.motionZ *= 0.95;
             this.applyOnGroundPitch(0.95F);
          }
 
-         if (this.func_70090_H()) {
-            this.field_70159_w *= 0.99D;
-            this.field_70179_y *= 0.99D;
+         if (this.isInWater()) {
+            this.motionX *= 0.99;
+            this.motionZ *= 0.99;
          }
       }
 
       if (this.isDestroyed()) {
          if (MCH_Lib.getBlockIdY(this, 3, -3) == 0) {
-            if (MathHelper.func_76135_e(this.getRotPitch()) < 10.0F) {
+            if (MathHelper.abs(this.getRotPitch()) < 10.0F) {
                this.setRotPitch(this.getRotPitch() + this.rotDestroyedPitch);
             }
 
-            float roll = MathHelper.func_76135_e(this.getRotRoll());
+            float roll = MathHelper.abs(this.getRotRoll());
             if (roll < 45.0F || roll > 135.0F) {
                this.setRotRoll(this.getRotRoll() + this.rotDestroyedRoll);
             }
-         } else if (MathHelper.func_76135_e(this.getRotPitch()) > 20.0F) {
+         } else if (MathHelper.abs(this.getRotPitch()) > 20.0F) {
             this.setRotPitch(this.getRotPitch() * 0.99F);
          }
       }
@@ -665,19 +701,19 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
    }
 
    private void onUpdate_Server() {
-      double prevMotion = Math.sqrt(this.field_70159_w * this.field_70159_w + this.field_70179_y * this.field_70179_y);
-      double dp = 0.0D;
+      double prevMotion = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+      double dp = 0.0;
       if (this.canFloatWater()) {
          dp = this.getWaterDepth();
       }
 
       boolean levelOff = this.isGunnerMode;
-      if (dp == 0.0D) {
+      if (dp == 0.0) {
          if (this.isTargetDrone() && this.canUseFuel() && !this.isDestroyed()) {
             Block block = MCH_Lib.getBlockY(this, 3, -40, true);
-            if (block != null && !W_Block.isEqual(block, W_Blocks.field_150350_a)) {
+            if (block != null && !W_Block.isEqual(block, W_Blocks.AIR)) {
                block = MCH_Lib.getBlockY(this, 3, -5, true);
-               if (block == null || W_Block.isEqual(block, W_Blocks.field_150350_a)) {
+               if (block == null || W_Block.isEqual(block, W_Blocks.AIR)) {
                   this.setRotYaw(this.getRotYaw() + this.getAcInfo().autoPilotRot * 2.0F);
                   if (this.getRotPitch() > -20.0F) {
                      this.setRotPitch(this.getRotPitch() - 0.5F);
@@ -695,36 +731,36 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
          }
 
          if (!levelOff) {
-            this.field_70181_x += 0.04D + (double)(!this.func_70090_H() ? this.getAcInfo().gravity : this.getAcInfo().gravityInWater);
-            this.field_70181_x += -0.047D * (1.0D - this.getCurrentThrottle());
+            this.motionY = this.motionY + (0.04 + (!this.isInWater() ? this.getAcInfo().gravity : this.getAcInfo().gravityInWater));
+            this.motionY = this.motionY + -0.047 * (1.0 - this.getCurrentThrottle());
          } else {
-            this.field_70181_x *= 0.8D;
+            this.motionY *= 0.8;
          }
       } else {
          this.setRotPitch(this.getRotPitch() * 0.8F, "getWaterDepth != 0");
-         if (MathHelper.func_76135_e(this.getRotRoll()) < 40.0F) {
+         if (MathHelper.abs(this.getRotRoll()) < 40.0F) {
             this.setRotRoll(this.getRotRoll() * 0.9F);
          }
 
-         if (dp < 1.0D) {
-            this.field_70181_x -= 1.0E-4D;
-            this.field_70181_x += 0.007D * this.getCurrentThrottle();
+         if (dp < 1.0) {
+            this.motionY -= 1.0E-4;
+            this.motionY = this.motionY + 0.007 * this.getCurrentThrottle();
          } else {
-            if (this.field_70181_x < 0.0D) {
-               this.field_70181_x /= 2.0D;
+            if (this.motionY < 0.0) {
+               this.motionY /= 2.0;
             }
 
-            this.field_70181_x += 0.007D;
+            this.motionY += 0.007;
          }
       }
 
-      float throttle = (float)(this.getCurrentThrottle() / 10.0D);
+      float throttle = (float)(this.getCurrentThrottle() / 10.0);
       Vec3d v;
       if (this.getNozzleRotation() > 0.001F) {
          this.setRotPitch(this.getRotPitch() * 0.95F);
          v = MCH_Lib.Rot2Vec3(this.getRotYaw(), this.getRotPitch() - this.getNozzleRotation());
          if (this.getNozzleRotation() >= 90.0F) {
-            v = new Vec3d(v.x * 0.800000011920929D, v.y, v.z * 0.800000011920929D);
+            v = new Vec3d(v.x * 0.8F, v.y, v.z * 0.8F);
          }
       } else {
          v = MCH_Lib.Rot2Vec3(this.getRotYaw(), this.getRotPitch() - 10.0F);
@@ -732,68 +768,67 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
 
       if (!levelOff) {
          if (this.getNozzleRotation() <= 0.01F) {
-            this.field_70181_x += v.y * (double)throttle / 2.0D;
+            this.motionY = this.motionY + v.y * throttle / 2.0;
          } else {
-            this.field_70181_x += v.y * (double)throttle / 8.0D;
+            this.motionY = this.motionY + v.y * throttle / 8.0;
          }
       }
 
       boolean canMove = true;
       if (!this.getAcInfo().canMoveOnGround) {
          Block block = MCH_Lib.getBlockY(this, 3, -2, false);
-         if (!W_Block.isEqual(block, W_Block.getWater()) && !W_Block.isEqual(block, W_Blocks.field_150350_a)) {
+         if (!W_Block.isEqual(block, W_Block.getWater()) && !W_Block.isEqual(block, W_Blocks.AIR)) {
             canMove = false;
          }
       }
 
       if (canMove) {
          if (this.getAcInfo().enableBack && this.throttleBack > 0.0F) {
-            this.field_70159_w -= v.x * (double)this.throttleBack;
-            this.field_70179_y -= v.z * (double)this.throttleBack;
+            this.motionX = this.motionX - v.x * this.throttleBack;
+            this.motionZ = this.motionZ - v.z * this.throttleBack;
          } else {
-            this.field_70159_w += v.x * (double)throttle;
-            this.field_70179_y += v.z * (double)throttle;
+            this.motionX = this.motionX + v.x * throttle;
+            this.motionZ = this.motionZ + v.z * throttle;
          }
       }
 
-      double motion = Math.sqrt(this.field_70159_w * this.field_70159_w + this.field_70179_y * this.field_70179_y);
+      double motion = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
       float speedLimit = this.getMaxSpeed();
-      if (motion > (double)speedLimit) {
-         this.field_70159_w *= (double)speedLimit / motion;
-         this.field_70179_y *= (double)speedLimit / motion;
-         motion = (double)speedLimit;
+      if (motion > speedLimit) {
+         this.motionX *= speedLimit / motion;
+         this.motionZ *= speedLimit / motion;
+         motion = speedLimit;
       }
 
-      if (motion > prevMotion && this.currentSpeed < (double)speedLimit) {
-         this.currentSpeed += ((double)speedLimit - this.currentSpeed) / 35.0D;
-         if (this.currentSpeed > (double)speedLimit) {
-            this.currentSpeed = (double)speedLimit;
+      if (motion > prevMotion && this.currentSpeed < speedLimit) {
+         this.currentSpeed = this.currentSpeed + (speedLimit - this.currentSpeed) / 35.0;
+         if (this.currentSpeed > speedLimit) {
+            this.currentSpeed = speedLimit;
          }
       } else {
-         this.currentSpeed -= (this.currentSpeed - 0.07D) / 35.0D;
-         if (this.currentSpeed < 0.07D) {
-            this.currentSpeed = 0.07D;
+         this.currentSpeed = this.currentSpeed - (this.currentSpeed - 0.07) / 35.0;
+         if (this.currentSpeed < 0.07) {
+            this.currentSpeed = 0.07;
          }
       }
 
-      if (this.field_70122_E || MCH_Lib.getBlockIdY(this, 1, -2) > 0) {
-         this.field_70159_w *= (double)this.getAcInfo().motionFactor;
-         this.field_70179_y *= (double)this.getAcInfo().motionFactor;
-         if (MathHelper.func_76135_e(this.getRotPitch()) < 40.0F) {
+      if (this.onGround || MCH_Lib.getBlockIdY(this, 1, -2) > 0) {
+         this.motionX = this.motionX * this.getAcInfo().motionFactor;
+         this.motionZ = this.motionZ * this.getAcInfo().motionFactor;
+         if (MathHelper.abs(this.getRotPitch()) < 40.0F) {
             this.applyOnGroundPitch(0.8F);
          }
       }
 
-      this.func_70091_d(MoverType.SELF, this.field_70159_w, this.field_70181_x, this.field_70179_y);
-      this.field_70181_x *= 0.95D;
-      this.field_70159_w *= (double)this.getAcInfo().motionFactor;
-      this.field_70179_y *= (double)this.getAcInfo().motionFactor;
-      this.func_70101_b(this.getRotYaw(), this.getRotPitch());
+      this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+      this.motionY *= 0.95;
+      this.motionX = this.motionX * this.getAcInfo().motionFactor;
+      this.motionZ = this.motionZ * this.getAcInfo().motionFactor;
+      this.setRotation(this.getRotYaw(), this.getRotPitch());
       this.onUpdate_updateBlock();
-      if (this.getRiddenByEntity() != null && this.getRiddenByEntity().field_70128_L) {
+      if (this.getRiddenByEntity() != null && this.getRiddenByEntity().isDead) {
          this.unmountEntity();
       }
-
    }
 
    public float getMaxSpeed() {
@@ -807,6 +842,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
       return this.getPlaneInfo().speed + f;
    }
 
+   @Override
    public float getSoundVolume() {
       return this.getAcInfo() != null && this.getAcInfo().throttleUpDown <= 0.0F ? 0.0F : this.soundVolume * 0.7F;
    }
@@ -828,59 +864,61 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
             this.soundVolume = target;
          }
       }
-
    }
 
+   @Override
    public float getSoundPitch() {
-      return (float)(0.6D + this.getCurrentThrottle() * 0.4D);
+      return (float)(0.6 + this.getCurrentThrottle() * 0.4);
    }
 
+   @Override
    public String getDefaultSoundName() {
       return "plane";
    }
 
+   @Override
    public void updateParts(int stat) {
       super.updateParts(stat);
       if (!this.isDestroyed()) {
          MCH_Parts[] parts = new MCH_Parts[]{this.partNozzle, this.partWing};
-         MCH_Parts[] var3 = parts;
-         int var4 = parts.length;
 
-         for(int var5 = 0; var5 < var4; ++var5) {
-            MCH_Parts p = var3[var5];
+         for (MCH_Parts p : parts) {
             if (p != null) {
                p.updateStatusClient(stat);
                p.update();
             }
          }
 
-         if (!this.world.isRemote && this.partWing != null && this.getPlaneInfo().isVariableSweepWing && this.partWing.isON() && this.getCurrentThrottle() >= 0.20000000298023224D && (this.getCurrentThrottle() < 0.5D || MCH_Lib.getBlockIdY(this, 1, -10) != 0)) {
+         if (!this.world.isRemote
+            && this.partWing != null
+            && this.getPlaneInfo().isVariableSweepWing
+            && this.partWing.isON()
+            && this.getCurrentThrottle() >= 0.2F
+            && (this.getCurrentThrottle() < 0.5 || MCH_Lib.getBlockIdY(this, 1, -10) != 0)) {
             this.partWing.setStatusServer(false);
          }
-
       }
    }
 
+   @Override
    public float getUnfoldLandingGearThrottle() {
       return 0.7F;
    }
 
    public boolean canSwitchVtol() {
-      if (this.planeInfo != null && this.planeInfo.isEnableVtol) {
-         if (this.getModeSwitchCooldown() > 0) {
-            return false;
-         } else if (this.getVtolMode() == 1) {
-            return false;
-         } else if (MathHelper.func_76135_e(this.getRotRoll()) > 30.0F) {
-            return false;
-         } else if (this.field_70122_E && this.planeInfo.isDefaultVtol) {
-            return false;
-         } else {
-            this.setModeSwitchCooldown(20);
-            return true;
-         }
-      } else {
+      if (this.planeInfo == null || !this.planeInfo.isEnableVtol) {
          return false;
+      } else if (this.getModeSwitchCooldown() > 0) {
+         return false;
+      } else if (this.getVtolMode() == 1) {
+         return false;
+      } else if (MathHelper.abs(this.getRotRoll()) > 30.0F) {
+         return false;
+      } else if (this.onGround && this.planeInfo.isDefaultVtol) {
+         return false;
+      } else {
+         this.setModeSwitchCooldown(20);
+         return true;
       }
    }
 
@@ -888,6 +926,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
       return this.partNozzle != null ? this.partNozzle.getStatus() : false;
    }
 
+   @Override
    public int getVtolMode() {
       if (!this.getNozzleStat()) {
          return this.getNozzleRotation() <= 0.005F ? 0 : 1;
@@ -897,7 +936,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
    }
 
    public float getFuleConsumptionFactor() {
-      return super.getFuelConsumptionFactor() * (float)(this.getVtolMode() == 2 ? 1 : 1);
+      return super.getFuelConsumptionFactor() * (this.getVtolMode() == 2 ? 1 : 1);
    }
 
    public float getNozzleRotation() {
@@ -910,7 +949,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
 
    public void swithVtolMode(boolean mode) {
       if (this.partNozzle != null) {
-         if (this.planeInfo.isDefaultVtol && this.field_70122_E && !mode) {
+         if (this.planeInfo.isDefaultVtol && this.onGround && !mode) {
             return;
          }
 
@@ -918,11 +957,10 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
             this.partNozzle.setStatusServer(mode);
          }
 
-         if (this.getRiddenByEntity() != null && !this.getRiddenByEntity().field_70128_L) {
-            this.getRiddenByEntity().field_70125_A = this.getRiddenByEntity().field_70127_C = 0.0F;
+         if (this.getRiddenByEntity() != null && !this.getRiddenByEntity().isDead) {
+            this.getRiddenByEntity().rotationPitch = this.getRiddenByEntity().prevRotationPitch = 0.0F;
          }
       }
-
    }
 
    protected MCH_Parts createNozzle(MCP_PlaneInfo info) {
@@ -963,7 +1001,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
       if (this.partWing == null) {
          return true;
       } else if (this.getPlaneInfo().isVariableSweepWing) {
-         return this.getCurrentThrottle() < 0.2D ? this.partWing.isOFF() : true;
+         return this.getCurrentThrottle() < 0.2 ? this.partWing.isOFF() : true;
       } else {
          return this.partWing.isOFF();
       }
@@ -972,19 +1010,19 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
    public boolean canFoldWing() {
       if (this.partWing != null && this.getModeSwitchCooldown() <= 0) {
          if (this.getPlaneInfo().isVariableSweepWing) {
-            if (!this.field_70122_E && MCH_Lib.getBlockIdY(this, 3, -20) == 0) {
-               if (this.getCurrentThrottle() < 0.699999988079071D) {
+            if (!this.onGround && MCH_Lib.getBlockIdY(this, 3, -20) == 0) {
+               if (this.getCurrentThrottle() < 0.7F) {
                   return false;
                }
-            } else if (this.getCurrentThrottle() > 0.10000000149011612D) {
+            } else if (this.getCurrentThrottle() > 0.1F) {
                return false;
             }
          } else {
-            if (!this.field_70122_E && MCH_Lib.getBlockIdY(this, 3, -3) == 0) {
+            if (!this.onGround && MCH_Lib.getBlockIdY(this, 3, -3) == 0) {
                return false;
             }
 
-            if (this.getCurrentThrottle() > 0.009999999776482582D) {
+            if (this.getCurrentThrottle() > 0.01F) {
                return false;
             }
          }

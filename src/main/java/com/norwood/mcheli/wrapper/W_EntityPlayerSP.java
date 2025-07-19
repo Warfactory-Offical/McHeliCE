@@ -6,8 +6,7 @@ import net.minecraft.entity.Entity;
 public class W_EntityPlayerSP {
    public static void closeScreen(Entity p) {
       if (p instanceof EntityPlayerSP) {
-         ((EntityPlayerSP)p).func_71053_j();
+         ((EntityPlayerSP)p).closeScreen();
       }
-
    }
 }

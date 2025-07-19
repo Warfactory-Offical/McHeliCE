@@ -23,7 +23,6 @@ public abstract class Col2Expression extends AbstractExpression {
       if (from.expr != null) {
          this.expr = from.expr.dup(s);
       }
-
    }
 
    public final void setExpression(AbstractExpression x, AbstractExpression y) {
@@ -31,22 +30,27 @@ public abstract class Col2Expression extends AbstractExpression {
       this.expr = y;
    }
 
+   @Override
    protected final int getCols() {
       return 2;
    }
 
+   @Override
    protected final int getFirstPos() {
       return this.expl.getFirstPos();
    }
 
+   @Override
    public long evalLong() {
       return this.operateLong(this.expl.evalLong(), this.expr.evalLong());
    }
 
+   @Override
    public double evalDouble() {
       return this.operateDouble(this.expl.evalDouble(), this.expr.evalDouble());
    }
 
+   @Override
    public Object evalObject() {
       return this.operateObject(this.expl.evalObject(), this.expr.evalObject());
    }
@@ -57,6 +61,7 @@ public abstract class Col2Expression extends AbstractExpression {
 
    protected abstract Object operateObject(Object var1, Object var2);
 
+   @Override
    protected void search() {
       this.share.srch.search(this);
       if (!this.share.srch.end()) {
@@ -78,18 +83,21 @@ public abstract class Col2Expression extends AbstractExpression {
       }
    }
 
+   @Override
    protected AbstractExpression replace() {
       this.expl = this.expl.replace();
       this.expr = this.expr.replace();
       return this.share.repl.replace2(this);
    }
 
+   @Override
    protected AbstractExpression replaceVar() {
       this.expl = this.expl.replaceVar();
       this.expr = this.expr.replaceVar();
       return this.share.repl.replaceVar2(this);
    }
 
+   @Override
    public boolean equals(Object obj) {
       if (obj instanceof Col2Expression) {
          Col2Expression e = (Col2Expression)obj;
@@ -101,14 +109,16 @@ public abstract class Col2Expression extends AbstractExpression {
       return false;
    }
 
+   @Override
    public int hashCode() {
       return this.getClass().hashCode() ^ this.expl.hashCode() ^ this.expr.hashCode() * 2;
    }
 
+   @Override
    public void dump(int n) {
       StringBuffer sb = new StringBuffer();
 
-      for(int i = 0; i < n; ++i) {
+      for (int i = 0; i < n; i++) {
          sb.append(' ');
       }
 
@@ -118,6 +128,7 @@ public abstract class Col2Expression extends AbstractExpression {
       this.expr.dump(n + 1);
    }
 
+   @Override
    public String toString() {
       StringBuffer sb = new StringBuffer();
       if (this.expl.getPriority() < this.prio) {

@@ -4,7 +4,6 @@ import java.util.List;
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.MCH_MOD;
-import com.norwood.mcheli.__helper.entity.IEntityItemStackPickable;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_EntitySeat;
 import com.norwood.mcheli.aircraft.MCH_IEntityCanRideAircraft;
@@ -19,7 +18,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -29,17 +27,16 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntityCanRideAircraft, IEntityItemStackPickable {
+public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntityCanRideAircraft {
    public static final float Y_OFFSET = 0.5F;
-   private static final DataParameter<Integer> TIME_SINCE_HIT;
-   private static final DataParameter<Integer> FORWARD_DIR;
-   private static final DataParameter<Integer> DAMAGE_TAKEN;
-   private double speedMultiplier;
+   private static final DataParameter<Integer> TIME_SINCE_HIT = EntityDataManager.createKey(MCH_EntityContainer.class, DataSerializers.VARINT);
+   private static final DataParameter<Integer> FORWARD_DIR = EntityDataManager.createKey(MCH_EntityContainer.class, DataSerializers.VARINT);
+   private static final DataParameter<Integer> DAMAGE_TAKEN = EntityDataManager.createKey(MCH_EntityContainer.class, DataSerializers.VARINT);
+   private double speedMultiplier = 0.07;
    private int boatPosRotationIncrements;
    private double boatX;
    private double boatY;
@@ -55,80 +52,83 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
 
    public MCH_EntityContainer(World par1World) {
       super(par1World);
-      this.speedMultiplier = 0.07D;
-      this.field_70156_m = true;
-      this.func_70105_a(2.0F, 1.0F);
-      this.field_70138_W = 0.6F;
-      this.field_70178_ae = true;
-      this._renderDistanceWeight = 2.0D;
+      this.preventEntitySpawning = true;
+      this.setSize(2.0F, 1.0F);
+      this.stepHeight = 0.6F;
+      this.isImmuneToFire = true;
+      this._renderDistanceWeight = 2.0;
    }
 
    public MCH_EntityContainer(World par1World, double par2, double par4, double par6) {
       this(par1World);
-      this.func_70107_b(par2, par4 + 0.5D, par6);
-      this.field_70159_w = 0.0D;
-      this.field_70181_x = 0.0D;
-      this.field_70179_y = 0.0D;
-      this.field_70169_q = par2;
-      this.field_70167_r = par4;
-      this.field_70166_s = par6;
+      this.setPosition(par2, par4 + 0.5, par6);
+      this.motionX = 0.0;
+      this.motionY = 0.0;
+      this.motionZ = 0.0;
+      this.prevPosX = par2;
+      this.prevPosY = par4;
+      this.prevPosZ = par6;
    }
 
-   protected boolean func_70041_e_() {
+   protected boolean canTriggerWalking() {
       return false;
    }
 
+   @Override
    protected void entityInit() {
       this.dataManager.register(TIME_SINCE_HIT, 0);
       this.dataManager.register(FORWARD_DIR, 1);
       this.dataManager.register(DAMAGE_TAKEN, 0);
    }
 
-   public AxisAlignedBB func_70114_g(Entity par1Entity) {
-      return par1Entity.func_174813_aQ();
+   public AxisAlignedBB getCollisionBox(Entity par1Entity) {
+      return par1Entity.getEntityBoundingBox();
    }
 
-   public AxisAlignedBB func_70046_E() {
-      return this.func_174813_aQ();
+   public AxisAlignedBB getCollisionBoundingBox() {
+      return this.getEntityBoundingBox();
    }
 
-   public boolean func_70104_M() {
+   public boolean canBePushed() {
       return true;
    }
 
-   public int func_70302_i_() {
+   @Override
+   public int getSizeInventory() {
       return 54;
    }
 
+   @Override
    public String getInvName() {
       return "Container " + super.getInvName();
    }
 
-   public double func_70042_X() {
-      return -0.3D;
+   public double getMountedYOffset() {
+      return -0.3;
    }
 
-   public boolean func_70097_a(DamageSource ds, float damage) {
-      if (this.func_180431_b(ds)) {
+   @Override
+   public boolean attackEntityFrom(DamageSource ds, float damage) {
+      if (this.isEntityInvulnerable(ds)) {
          return false;
-      } else if (!this.world.isRemote && !this.field_70128_L) {
+      } else if (!this.world.isRemote && !this.isDead) {
          damage = MCH_Config.applyDamageByExternal(this, ds, damage);
-         if (!MCH_Multiplay.canAttackEntity((DamageSource)ds, this)) {
+         if (!MCH_Multiplay.canAttackEntity(ds, this)) {
             return false;
-         } else if (ds.func_76346_g() instanceof EntityPlayer && ds.func_76355_l().equalsIgnoreCase("player")) {
-            MCH_Lib.DbgLog(this.world, "MCH_EntityContainer.attackEntityFrom:damage=%.1f:%s", damage, ds.func_76355_l());
+         } else if (ds.getTrueSource() instanceof EntityPlayer && ds.getDamageType().equalsIgnoreCase("player")) {
+            MCH_Lib.DbgLog(this.world, "MCH_EntityContainer.attackEntityFrom:damage=%.1f:%s", damage, ds.getDamageType());
             W_WorldFunc.MOD_playSoundAtEntity(this, "hit", 1.0F, 1.3F);
             this.setDamageTaken(this.getDamageTaken() + (int)(damage * 20.0F));
             this.setForwardDirection(-this.getForwardDirection());
             this.setTimeSinceHit(10);
-            this.func_70018_K();
-            boolean flag = ds.func_76346_g() instanceof EntityPlayer && ((EntityPlayer)ds.func_76346_g()).field_71075_bZ.field_75098_d;
-            if (flag || (float)this.getDamageTaken() > 40.0F) {
+            this.markVelocityChanged();
+            boolean flag = ds.getTrueSource() instanceof EntityPlayer && ((EntityPlayer)ds.getTrueSource()).capabilities.isCreativeMode;
+            if (flag || this.getDamageTaken() > 40.0F) {
                if (!flag) {
-                  this.func_145778_a(MCH_MOD.itemContainer, 1, 0.0F);
+                  this.dropItemWithOffset(MCH_MOD.itemContainer, 1, 0.0F);
                }
 
-               this.func_70106_y();
+               this.setDead();
             }
 
             return true;
@@ -141,179 +141,174 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
    }
 
    @SideOnly(Side.CLIENT)
-   public void func_70057_ab() {
+   public void performHurtAnimation() {
       this.setForwardDirection(-this.getForwardDirection());
       this.setTimeSinceHit(10);
       this.setDamageTaken(this.getDamageTaken() * 11);
    }
 
-   public boolean func_70067_L() {
-      return !this.field_70128_L;
+   public boolean canBeCollidedWith() {
+      return !this.isDead;
    }
 
    @SideOnly(Side.CLIENT)
-   public void func_180426_a(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
-      this.boatPosRotationIncrements = posRotationIncrements + 10;
-      this.boatX = x;
-      this.boatY = y;
-      this.boatZ = z;
-      this.boatYaw = (double)yaw;
-      this.boatPitch = (double)pitch;
-      this.field_70159_w = this.velocityX;
-      this.field_70181_x = this.velocityY;
-      this.field_70179_y = this.velocityZ;
+   public void setPositionAndRotation2(double par1, double par3, double par5, float par7, float par8, int par9) {
+      this.boatPosRotationIncrements = par9 + 10;
+      this.boatX = par1;
+      this.boatY = par3;
+      this.boatZ = par5;
+      this.boatYaw = par7;
+      this.boatPitch = par8;
+      this.motionX = this.velocityX;
+      this.motionY = this.velocityY;
+      this.motionZ = this.velocityZ;
    }
 
    @SideOnly(Side.CLIENT)
-   public void func_70016_h(double par1, double par3, double par5) {
-      this.velocityX = this.field_70159_w = par1;
-      this.velocityY = this.field_70181_x = par3;
-      this.velocityZ = this.field_70179_y = par5;
+   public void setVelocity(double par1, double par3, double par5) {
+      this.velocityX = this.motionX = par1;
+      this.velocityY = this.motionY = par3;
+      this.velocityZ = this.motionZ = par5;
    }
 
-   public void func_70071_h_() {
-      super.func_70071_h_();
+   public void onUpdate() {
+      super.onUpdate();
       if (this.getTimeSinceHit() > 0) {
          this.setTimeSinceHit(this.getTimeSinceHit() - 1);
       }
 
-      if ((float)this.getDamageTaken() > 0.0F) {
+      if (this.getDamageTaken() > 0.0F) {
          this.setDamageTaken(this.getDamageTaken() - 1);
       }
 
-      this.field_70169_q = this.posX;
-      this.field_70167_r = this.posY;
-      this.field_70166_s = this.posZ;
+      this.prevPosX = this.posX;
+      this.prevPosY = this.posY;
+      this.prevPosZ = this.posZ;
       byte b0 = 5;
-      double d0 = 0.0D;
+      double d0 = 0.0;
 
-      double d4;
-      double d5;
-      for(int i = 0; i < b0; ++i) {
-         AxisAlignedBB boundingBox = this.func_174813_aQ();
-         d4 = boundingBox.field_72338_b + (boundingBox.field_72337_e - boundingBox.field_72338_b) * (double)(i + 0) / (double)b0 - 0.125D;
-         d5 = boundingBox.field_72338_b + (boundingBox.field_72337_e - boundingBox.field_72338_b) * (double)(i + 1) / (double)b0 - 0.125D;
-         AxisAlignedBB axisalignedbb = W_AxisAlignedBB.getAABB(boundingBox.field_72340_a, d4, boundingBox.field_72339_c, boundingBox.field_72336_d, d5, boundingBox.field_72334_f);
-         if (this.world.func_72875_a(axisalignedbb, Material.field_151586_h)) {
-            d0 += 1.0D / (double)b0;
-         } else if (this.world.func_72875_a(axisalignedbb, Material.field_151587_i)) {
-            d0 += 1.0D / (double)b0;
+      for (int i = 0; i < b0; i++) {
+         AxisAlignedBB boundingBox = this.getEntityBoundingBox();
+         double d1 = boundingBox.minY + (boundingBox.maxY - boundingBox.minY) * (i + 0) / b0 - 0.125;
+         double d2 = boundingBox.minY + (boundingBox.maxY - boundingBox.minY) * (i + 1) / b0 - 0.125;
+         AxisAlignedBB axisalignedbb = W_AxisAlignedBB.getAABB(boundingBox.minX, d1, boundingBox.minZ, boundingBox.maxX, d2, boundingBox.maxZ);
+         if (this.world.isMaterialInBB(axisalignedbb, Material.WATER)) {
+            d0 += 1.0 / b0;
+         } else if (this.world.isMaterialInBB(axisalignedbb, Material.LAVA)) {
+            d0 += 1.0 / b0;
          }
       }
 
-      double d3 = Math.sqrt(this.field_70159_w * this.field_70159_w + this.field_70179_y * this.field_70179_y);
-      if (d3 > 0.2625D) {
+      double d3 = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+      if (d3 > 0.2625) {
       }
 
-      double d10;
-      double d11;
       if (this.world.isRemote) {
          if (this.boatPosRotationIncrements > 0) {
-            d4 = this.posX + (this.boatX - this.posX) / (double)this.boatPosRotationIncrements;
-            d5 = this.posY + (this.boatY - this.posY) / (double)this.boatPosRotationIncrements;
-            d11 = this.posZ + (this.boatZ - this.posZ) / (double)this.boatPosRotationIncrements;
-            d10 = MathHelper.func_76138_g(this.boatYaw - (double)this.field_70177_z);
-            this.field_70177_z = (float)((double)this.field_70177_z + d10 / (double)this.boatPosRotationIncrements);
-            this.field_70125_A = (float)((double)this.field_70125_A + (this.boatPitch - (double)this.field_70125_A) / (double)this.boatPosRotationIncrements);
-            --this.boatPosRotationIncrements;
-            this.func_70107_b(d4, d5, d11);
-            this.func_70101_b(this.field_70177_z, this.field_70125_A);
+            double d4 = this.posX + (this.boatX - this.posX) / this.boatPosRotationIncrements;
+            double d5 = this.posY + (this.boatY - this.posY) / this.boatPosRotationIncrements;
+            double d11 = this.posZ + (this.boatZ - this.posZ) / this.boatPosRotationIncrements;
+            double d10 = MathHelper.wrapDegrees(this.boatYaw - this.rotationYaw);
+            this.rotationYaw = (float)(this.rotationYaw + d10 / this.boatPosRotationIncrements);
+            this.rotationPitch = (float)(this.rotationPitch + (this.boatPitch - this.rotationPitch) / this.boatPosRotationIncrements);
+            this.boatPosRotationIncrements--;
+            this.setPosition(d4, d5, d11);
+            this.setRotation(this.rotationYaw, this.rotationPitch);
          } else {
-            d4 = this.posX + this.field_70159_w;
-            d5 = this.posY + this.field_70181_x;
-            d11 = this.posZ + this.field_70179_y;
-            this.func_70107_b(d4, d5, d11);
-            if (this.field_70122_E) {
-               this.field_70159_w *= 0.8999999761581421D;
-               this.field_70179_y *= 0.8999999761581421D;
+            double d4 = this.posX + this.motionX;
+            double d5 = this.posY + this.motionY;
+            double d11 = this.posZ + this.motionZ;
+            this.setPosition(d4, d5, d11);
+            if (this.onGround) {
+               this.motionX *= 0.9F;
+               this.motionZ *= 0.9F;
             }
 
-            this.field_70159_w *= 0.99D;
-            this.field_70181_x *= 0.95D;
-            this.field_70179_y *= 0.99D;
+            this.motionX *= 0.99;
+            this.motionY *= 0.95;
+            this.motionZ *= 0.99;
          }
       } else {
-         if (d0 < 1.0D) {
-            d4 = d0 * 2.0D - 1.0D;
-            this.field_70181_x += 0.04D * d4;
+         if (d0 < 1.0) {
+            double d4 = d0 * 2.0 - 1.0;
+            this.motionY += 0.04 * d4;
          } else {
-            if (this.field_70181_x < 0.0D) {
-               this.field_70181_x /= 2.0D;
+            if (this.motionY < 0.0) {
+               this.motionY /= 2.0;
             }
 
-            this.field_70181_x += 0.007D;
+            this.motionY += 0.007;
          }
 
-         d4 = Math.sqrt(this.field_70159_w * this.field_70159_w + this.field_70179_y * this.field_70179_y);
-         if (d4 > 0.35D) {
-            d5 = 0.35D / d4;
-            this.field_70159_w *= d5;
-            this.field_70179_y *= d5;
-            d4 = 0.35D;
+         double d4 = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+         if (d4 > 0.35) {
+            double d5 = 0.35 / d4;
+            this.motionX *= d5;
+            this.motionZ *= d5;
+            d4 = 0.35;
          }
 
-         if (d4 > d3 && this.speedMultiplier < 0.35D) {
-            this.speedMultiplier += (0.35D - this.speedMultiplier) / 35.0D;
-            if (this.speedMultiplier > 0.35D) {
-               this.speedMultiplier = 0.35D;
+         if (d4 > d3 && this.speedMultiplier < 0.35) {
+            this.speedMultiplier = this.speedMultiplier + (0.35 - this.speedMultiplier) / 35.0;
+            if (this.speedMultiplier > 0.35) {
+               this.speedMultiplier = 0.35;
             }
          } else {
-            this.speedMultiplier -= (this.speedMultiplier - 0.07D) / 35.0D;
-            if (this.speedMultiplier < 0.07D) {
-               this.speedMultiplier = 0.07D;
+            this.speedMultiplier = this.speedMultiplier - (this.speedMultiplier - 0.07) / 35.0;
+            if (this.speedMultiplier < 0.07) {
+               this.speedMultiplier = 0.07;
             }
          }
 
-         if (this.field_70122_E) {
-            this.field_70159_w *= 0.8999999761581421D;
-            this.field_70179_y *= 0.8999999761581421D;
+         if (this.onGround) {
+            this.motionX *= 0.9F;
+            this.motionZ *= 0.9F;
          }
 
-         this.func_70091_d(MoverType.SELF, this.field_70159_w, this.field_70181_x, this.field_70179_y);
-         this.field_70159_w *= 0.99D;
-         this.field_70181_x *= 0.95D;
-         this.field_70179_y *= 0.99D;
-         this.field_70125_A = 0.0F;
-         d5 = (double)this.field_70177_z;
-         d11 = this.field_70169_q - this.posX;
-         d10 = this.field_70166_s - this.posZ;
-         if (d11 * d11 + d10 * d10 > 0.001D) {
-            d5 = (double)((float)(Math.atan2(d10, d11) * 180.0D / 3.141592653589793D));
+         this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+         this.motionX *= 0.99;
+         this.motionY *= 0.95;
+         this.motionZ *= 0.99;
+         this.rotationPitch = 0.0F;
+         double d5 = this.rotationYaw;
+         double d11 = this.prevPosX - this.posX;
+         double d10 = this.prevPosZ - this.posZ;
+         if (d11 * d11 + d10 * d10 > 0.001) {
+            d5 = (float)(Math.atan2(d10, d11) * 180.0 / Math.PI);
          }
 
-         double d12 = MathHelper.func_76138_g(d5 - (double)this.field_70177_z);
-         if (d12 > 5.0D) {
-            d12 = 5.0D;
+         double d12 = MathHelper.wrapDegrees(d5 - this.rotationYaw);
+         if (d12 > 5.0) {
+            d12 = 5.0;
          }
 
-         if (d12 < -5.0D) {
-            d12 = -5.0D;
+         if (d12 < -5.0) {
+            d12 = -5.0;
          }
 
-         this.field_70177_z = (float)((double)this.field_70177_z + d12);
-         this.func_70101_b(this.field_70177_z, this.field_70125_A);
+         this.rotationYaw = (float)(this.rotationYaw + d12);
+         this.setRotation(this.rotationYaw, this.rotationPitch);
          if (!this.world.isRemote) {
-            List<Entity> list = this.world.func_72839_b(this, this.func_174813_aQ().func_72314_b(0.2D, 0.0D, 0.2D));
-            int l;
+            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().grow(0.2, 0.0, 0.2));
             if (list != null && !list.isEmpty()) {
-               for(l = 0; l < list.size(); ++l) {
-                  Entity entity = (Entity)list.get(l);
-                  if (entity.func_70104_M() && entity instanceof MCH_EntityContainer) {
-                     entity.func_70108_f(this);
+               for (int l = 0; l < list.size(); l++) {
+                  Entity entity = list.get(l);
+                  if (entity.canBePushed() && entity instanceof MCH_EntityContainer) {
+                     entity.applyEntityCollision(this);
                   }
                }
             }
 
             if (MCH_Config.Collision_DestroyBlock.prmBool) {
-               for(l = 0; l < 4; ++l) {
-                  int i1 = MathHelper.func_76128_c(this.posX + ((double)(l % 2) - 0.5D) * 0.8D);
-                  int j1 = MathHelper.func_76128_c(this.posZ + ((double)(l / 2) - 0.5D) * 0.8D);
+               for (int lx = 0; lx < 4; lx++) {
+                  int i1 = MathHelper.floor(this.posX + (lx % 2 - 0.5) * 0.8);
+                  int j1 = MathHelper.floor(this.posZ + (lx / 2 - 0.5) * 0.8);
 
-                  for(int k1 = 0; k1 < 2; ++k1) {
-                     int l1 = MathHelper.func_76128_c(this.posY) + k1;
+                  for (int k1 = 0; k1 < 2; k1++) {
+                     int l1 = MathHelper.floor(this.posY) + k1;
                      if (W_WorldFunc.isEqualBlock(this.world, i1, l1, j1, W_Block.getSnowLayer())) {
-                        this.world.func_175698_g(new BlockPos(i1, l1, j1));
-                     } else if (W_WorldFunc.isEqualBlock(this.world, i1, l1, j1, W_Blocks.field_150392_bi)) {
+                        this.world.setBlockToAir(new BlockPos(i1, l1, j1));
+                     } else if (W_WorldFunc.isEqualBlock(this.world, i1, l1, j1, W_Blocks.WATERLILY)) {
                         W_WorldFunc.destroyBlock(this.world, i1, l1, j1, true);
                      }
                   }
@@ -321,15 +316,16 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
             }
          }
       }
-
    }
 
-   protected void func_70014_b(NBTTagCompound par1NBTTagCompound) {
-      super.func_70014_b(par1NBTTagCompound);
+   @Override
+   protected void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
+      super.writeEntityToNBT(par1NBTTagCompound);
    }
 
-   protected void func_70037_a(NBTTagCompound par1NBTTagCompound) {
-      super.func_70037_a(par1NBTTagCompound);
+   @Override
+   protected void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
+      super.readEntityFromNBT(par1NBTTagCompound);
    }
 
    @SideOnly(Side.CLIENT)
@@ -337,7 +333,7 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
       return 2.0F;
    }
 
-   public boolean func_184230_a(EntityPlayer player, EnumHand hand) {
+   public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
       if (player != null) {
          this.displayInventory(player);
       }
@@ -346,54 +342,42 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
    }
 
    public void setDamageTaken(int par1) {
-      this.dataManager.func_187227_b(DAMAGE_TAKEN, par1);
+      this.dataManager.set(DAMAGE_TAKEN, par1);
    }
 
    public int getDamageTaken() {
-      return (Integer)this.dataManager.func_187225_a(DAMAGE_TAKEN);
+      return (Integer)this.dataManager.get(DAMAGE_TAKEN);
    }
 
    public void setTimeSinceHit(int par1) {
-      this.dataManager.func_187227_b(TIME_SINCE_HIT, par1);
+      this.dataManager.set(TIME_SINCE_HIT, par1);
    }
 
    public int getTimeSinceHit() {
-      return (Integer)this.dataManager.func_187225_a(TIME_SINCE_HIT);
+      return (Integer)this.dataManager.get(TIME_SINCE_HIT);
    }
 
    public void setForwardDirection(int par1) {
-      this.dataManager.func_187227_b(FORWARD_DIR, par1);
+      this.dataManager.set(FORWARD_DIR, par1);
    }
 
    public int getForwardDirection() {
-      return (Integer)this.dataManager.func_187225_a(FORWARD_DIR);
+      return (Integer)this.dataManager.get(FORWARD_DIR);
    }
 
+   @Override
    public boolean canRideAircraft(MCH_EntityAircraft ac, int seatID, MCH_SeatRackInfo info) {
-      String[] var4 = info.names;
-      int var5 = var4.length;
-
-      for(int var6 = 0; var6 < var5; ++var6) {
-         String s = var4[var6];
+      for (String s : info.names) {
          if (s.equalsIgnoreCase("container")) {
-            return ac.func_184187_bx() == null && this.func_184187_bx() == null;
+            return ac.getRidingEntity() == null && this.getRidingEntity() == null;
          }
       }
 
       return false;
    }
 
+   @Override
    public boolean isSkipNormalRender() {
-      return this.func_184187_bx() instanceof MCH_EntitySeat;
-   }
-
-   public ItemStack getPickedResult(RayTraceResult target) {
-      return new ItemStack(MCH_MOD.itemContainer);
-   }
-
-   static {
-      TIME_SINCE_HIT = EntityDataManager.createKey(MCH_EntityContainer.class, DataSerializers.VARINT);
-      FORWARD_DIR = EntityDataManager.createKey(MCH_EntityContainer.class, DataSerializers.VARINT);
-      DAMAGE_TAKEN = EntityDataManager.createKey(MCH_EntityContainer.class, DataSerializers.VARINT);
+      return this.getRidingEntity() instanceof MCH_EntitySeat;
    }
 }

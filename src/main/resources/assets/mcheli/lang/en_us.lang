@@ -146,6 +146,6 @@ achievement.McHeliAintWarHell.desc=?
 achievement.McHeliReliefSupplies=Relief supplies
 achievement.McHeliReliefSupplies.desc=Drop a container
 
-gui.mcheli.gameConfig=Game config (in progress...)
-gui.mcheli.generateLegacyAsisst=Generate Template-Addon
-gui.mcheli.generateLegacyAsisst.desc=Generate template addon.
+gui.com.norwood.mcheli.gameConfig=Game config (in progress...)
+gui.com.norwood.mcheli.generateLegacyAsisst=Generate Template-Addon
+gui.com.norwood.mcheli.generateLegacyAsisst.desc=Generate template addon.

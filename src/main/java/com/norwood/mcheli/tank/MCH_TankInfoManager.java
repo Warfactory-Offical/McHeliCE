@@ -11,7 +11,7 @@ public class MCH_TankInfoManager extends MCH_AircraftInfoManager<MCH_TankInfo> {
 
    @Nullable
    public static MCH_TankInfo get(String name) {
-      return (MCH_TankInfo)ContentRegistries.tank().get(name);
+      return ContentRegistries.tank().get(name);
    }
 
    public static MCH_TankInfoManager getInstance() {
@@ -29,15 +29,15 @@ public class MCH_TankInfoManager extends MCH_AircraftInfoManager<MCH_TankInfo> {
 
    @Nullable
    public MCH_TankInfo getAcInfoFromItem(Item item) {
-      return (MCH_TankInfo)ContentRegistries.tank().findFirst((info) -> {
-         return info.item == item;
-      });
+      return ContentRegistries.tank().findFirst(info -> info.item == item);
    }
 
+   @Override
    protected boolean contains(String name) {
       return ContentRegistries.tank().contains(name);
    }
 
+   @Override
    protected int size() {
       return ContentRegistries.tank().size();
    }

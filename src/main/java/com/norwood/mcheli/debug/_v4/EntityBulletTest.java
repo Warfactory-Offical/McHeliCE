@@ -11,22 +11,24 @@ public class EntityBulletTest extends MCH_EntityBullet {
    public EntityBulletTest(World par1World) {
       super(par1World);
       this.setName("m230");
-      this.func_70105_a(1.0F, 1.0F);
+      this.setSize(1.0F, 1.0F);
       this.explosionPower = 3;
       this.setPower(22);
       this.firstPos = Vec3d.ZERO;
-      this.acceleration = 4.0D;
+      this.acceleration = 4.0;
       this.explosionPower = 1;
       this.delayFuse = 100;
    }
 
-   public void func_70037_a(NBTTagCompound par1nbtTagCompound) {
-      this.field_70159_w = 1.0D;
+   @Override
+   public void readEntityFromNBT(NBTTagCompound par1nbtTagCompound) {
+      this.motionX = 1.0;
    }
 
+   @Override
    public boolean checkValid() {
       double x = this.posX - this.firstPos.x;
       double z = this.posZ - this.firstPos.z;
-      return x * x + z * z < 3.38724E7D && this.posY > -10.0D;
+      return x * x + z * z < 3.38724E7 && this.posY > -10.0;
    }
 }

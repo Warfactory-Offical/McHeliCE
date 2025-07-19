@@ -9,10 +9,12 @@ public class MCH_PacketVehiclePlayerControl extends MCH_PacketPlayerControlBase 
    public byte switchFold = -1;
    public int unhitchChainId = -1;
 
+   @Override
    public int getMessageID() {
       return 537002000;
    }
 
+   @Override
    public void readData(ByteArrayDataInput data) {
       super.readData(data);
 
@@ -22,9 +24,9 @@ public class MCH_PacketVehiclePlayerControl extends MCH_PacketPlayerControlBase 
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       super.writeData(dos);
 
@@ -34,6 +36,5 @@ public class MCH_PacketVehiclePlayerControl extends MCH_PacketPlayerControlBase 
       } catch (IOException var3) {
          var3.printStackTrace();
       }
-
    }
 }

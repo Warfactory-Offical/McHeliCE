@@ -15,7 +15,7 @@ public class MCH_HeliInfoManager extends MCH_AircraftInfoManager<MCH_HeliInfo> {
 
    @Nullable
    public static MCH_HeliInfo get(String name) {
-      return (MCH_HeliInfo)ContentRegistries.heli().get(name);
+      return ContentRegistries.heli().get(name);
    }
 
    public MCH_HeliInfo newInfo(AddonResourceLocation name, String filepath) {
@@ -29,15 +29,15 @@ public class MCH_HeliInfoManager extends MCH_AircraftInfoManager<MCH_HeliInfo> {
 
    @Nullable
    public MCH_HeliInfo getAcInfoFromItem(Item item) {
-      return (MCH_HeliInfo)ContentRegistries.heli().findFirst((info) -> {
-         return info.item == item;
-      });
+      return ContentRegistries.heli().findFirst(info -> info.item == item);
    }
 
+   @Override
    protected boolean contains(String name) {
       return ContentRegistries.heli().contains(name);
    }
 
+   @Override
    protected int size() {
       return ContentRegistries.heli().size();
    }

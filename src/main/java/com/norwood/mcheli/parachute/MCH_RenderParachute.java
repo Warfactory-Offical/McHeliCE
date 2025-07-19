@@ -18,7 +18,7 @@ public class MCH_RenderParachute extends W_Render<MCH_EntityParachute> {
 
    public MCH_RenderParachute(RenderManager renderManager) {
       super(renderManager);
-      this.field_76989_e = 0.5F;
+      this.shadowSize = 0.5F;
    }
 
    public void doRender(MCH_EntityParachute entity, double posX, double posY, double posZ, float par8, float tickTime) {
@@ -28,14 +28,14 @@ public class MCH_RenderParachute extends W_Render<MCH_EntityParachute> {
             GL11.glPushMatrix();
             GL11.glEnable(2884);
             GL11.glTranslated(posX, posY, posZ);
-            float prevYaw = entity.field_70126_B;
-            if (entity.field_70177_z - prevYaw < -180.0F) {
+            float prevYaw = entity.prevRotationYaw;
+            if (entity.rotationYaw - prevYaw < -180.0F) {
                prevYaw -= 360.0F;
-            } else if (prevYaw - entity.field_70177_z < -180.0F) {
+            } else if (prevYaw - entity.rotationYaw < -180.0F) {
                prevYaw += 360.0F;
             }
 
-            float yaw = prevYaw + (entity.field_70177_z - prevYaw) * tickTime;
+            float yaw = prevYaw + (entity.rotationYaw - prevYaw) * tickTime;
             GL11.glRotatef(yaw, 0.0F, -1.0F, 0.0F);
             GL11.glColor4f(0.75F, 0.75F, 0.75F, 1.0F);
             GL11.glEnable(3042);
@@ -46,22 +46,22 @@ public class MCH_RenderParachute extends W_Render<MCH_EntityParachute> {
                GL11.glShadeModel(7425);
             }
 
-            switch(type) {
-            case 1:
-               this.bindTexture("textures/parachute1.png");
-               MCH_ModelManager.render("parachute1");
-               break;
-            case 2:
-               this.bindTexture("textures/parachute2.png");
-               if (entity.isOpenParachute()) {
+            switch (type) {
+               case 1:
+                  this.bindTexture("textures/parachute1.png");
+                  MCH_ModelManager.render("parachute1");
+                  break;
+               case 2:
+                  this.bindTexture("textures/parachute2.png");
+                  if (entity.isOpenParachute()) {
+                     MCH_ModelManager.renderPart("parachute2", "$parachute");
+                  } else {
+                     MCH_ModelManager.renderPart("parachute2", "$seat");
+                  }
+                  break;
+               case 3:
+                  this.bindTexture("textures/parachute2.png");
                   MCH_ModelManager.renderPart("parachute2", "$parachute");
-               } else {
-                  MCH_ModelManager.renderPart("parachute2", "$seat");
-               }
-               break;
-            case 3:
-               this.bindTexture("textures/parachute2.png");
-               MCH_ModelManager.renderPart("parachute2", "$parachute");
             }
 
             GL11.glBlendFunc(srcBlend, dstBlend);

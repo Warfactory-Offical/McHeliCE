@@ -10,16 +10,17 @@ public class MCH_HudItemConditional extends MCH_HudItem {
       this.conditional = conditional;
    }
 
+   @Override
    public boolean canExecute() {
       return true;
    }
 
+   @Override
    public void execute() {
       if (!this.isEndif) {
-         this.parent.isIfFalse = calc(this.conditional) == 0.0D;
+         this.parent.isIfFalse = calc(this.conditional) == 0.0;
       } else {
          this.parent.isIfFalse = false;
       }
-
    }
 }

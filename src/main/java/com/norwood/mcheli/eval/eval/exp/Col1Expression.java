@@ -18,25 +18,28 @@ public abstract class Col1Expression extends AbstractExpression {
       if (from.exp != null) {
          this.exp = from.exp.dup(s);
       }
-
    }
 
    public void setExpression(AbstractExpression x) {
       this.exp = x;
    }
 
+   @Override
    protected final int getCols() {
       return 1;
    }
 
+   @Override
    protected final int getFirstPos() {
       return this.exp.getFirstPos();
    }
 
+   @Override
    public long evalLong() {
       return this.operateLong(this.exp.evalLong());
    }
 
+   @Override
    public double evalDouble() {
       return this.operateDouble(this.exp.evalDouble());
    }
@@ -45,6 +48,7 @@ public abstract class Col1Expression extends AbstractExpression {
 
    protected abstract double operateDouble(double var1);
 
+   @Override
    protected void search() {
       this.share.srch.search(this);
       if (!this.share.srch.end()) {
@@ -59,16 +63,19 @@ public abstract class Col1Expression extends AbstractExpression {
       }
    }
 
+   @Override
    protected AbstractExpression replace() {
       this.exp = this.exp.replace();
       return this.share.repl.replace1(this);
    }
 
+   @Override
    protected AbstractExpression replaceVar() {
       this.exp = this.exp.replaceVar();
       return this.share.repl.replaceVar1(this);
    }
 
+   @Override
    public boolean equals(Object obj) {
       if (obj instanceof Col1Expression) {
          Col1Expression e = (Col1Expression)obj;
@@ -88,14 +95,16 @@ public abstract class Col1Expression extends AbstractExpression {
       return false;
    }
 
+   @Override
    public int hashCode() {
       return this.getClass().hashCode() ^ this.exp.hashCode();
    }
 
+   @Override
    public void dump(int n) {
       StringBuffer sb = new StringBuffer();
 
-      for(int i = 0; i < n; ++i) {
+      for (int i = 0; i < n; i++) {
          sb.append(' ');
       }
 
@@ -104,9 +113,9 @@ public abstract class Col1Expression extends AbstractExpression {
       if (this.exp != null) {
          this.exp.dump(n + 1);
       }
-
    }
 
+   @Override
    public String toString() {
       if (this.exp == null) {
          return this.getOperator();

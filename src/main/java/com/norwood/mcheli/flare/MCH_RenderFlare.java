@@ -21,12 +21,12 @@ public class MCH_RenderFlare extends W_Render<MCH_EntityFlare> {
       GL11.glPushMatrix();
       GL11.glEnable(2884);
       GL11.glTranslated(posX, posY, posZ);
-      GL11.glRotatef(-entity.field_70177_z, 0.0F, 1.0F, 0.0F);
-      GL11.glRotatef(entity.field_70125_A, 1.0F, 0.0F, 0.0F);
+      GL11.glRotatef(-entity.rotationYaw, 0.0F, 1.0F, 0.0F);
+      GL11.glRotatef(entity.rotationPitch, 1.0F, 0.0F, 0.0F);
       GL11.glRotatef(45.0F, 0.0F, 0.0F, 1.0F);
       GL11.glColor4f(1.0F, 1.0F, 0.5F, 1.0F);
       this.bindTexture("textures/flare.png");
-      this.model.renderModel(0.0D, 0.0D, 0.0625F);
+      this.model.renderModel(0.0, 0.0, 0.0625F);
       GL11.glPopMatrix();
    }
 

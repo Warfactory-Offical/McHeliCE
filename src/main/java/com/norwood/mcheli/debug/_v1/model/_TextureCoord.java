@@ -18,6 +18,7 @@ class _TextureCoord implements DebugInfoObject {
       this.w = w;
    }
 
+   @Override
    public void printInfo(PrintStreamWrapper stream) {
       stream.println(String.format("T: [%.6f, %.6f, %.6f]", this.u, this.v, this.w));
    }

@@ -5,7 +5,6 @@ import javax.annotation.Nullable;
 import com.norwood.mcheli.MCH_Camera;
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_MOD;
-import com.norwood.mcheli.__helper.entity.IEntityItemStackPickable;
 import com.norwood.mcheli.__helper.entity.IEntitySinglePassenger;
 import com.norwood.mcheli.multiplay.MCH_Multiplay;
 import com.norwood.mcheli.weapon.MCH_WeaponCAS;
@@ -17,7 +16,6 @@ import com.norwood.mcheli.wrapper.W_WorldFunc;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -27,19 +25,18 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, IEntityItemStackPickable {
+public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger {
    public static final float Y_OFFSET = 0.25F;
-   private static final DataParameter<Integer> TIME_SINCE_HIT;
-   private static final DataParameter<Integer> FORWARD_DIR;
-   private static final DataParameter<Integer> DAMAGE_TAKEN;
-   private boolean isBoatEmpty;
-   private double speedMultiplier;
+   private static final DataParameter<Integer> TIME_SINCE_HIT = EntityDataManager.createKey(MCH_EntityGLTD.class, DataSerializers.VARINT);
+   private static final DataParameter<Integer> FORWARD_DIR = EntityDataManager.createKey(MCH_EntityGLTD.class, DataSerializers.VARINT);
+   private static final DataParameter<Integer> DAMAGE_TAKEN = EntityDataManager.createKey(MCH_EntityGLTD.class, DataSerializers.VARINT);
+   private boolean isBoatEmpty = true;
+   private double speedMultiplier = 0.07;
    private int gltdPosRotInc;
    private double gltdX;
    private double gltdY;
@@ -64,17 +61,14 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
 
    public MCH_EntityGLTD(World world) {
       super(world);
-      this.isBoatEmpty = true;
-      this.speedMultiplier = 0.07D;
-      this.field_70156_m = true;
-      this.func_70105_a(0.5F, 0.5F);
+      this.preventEntitySpawning = true;
+      this.setSize(0.5F, 0.5F);
       this.camera = new MCH_Camera(world, this);
       MCH_WeaponInfo wi = MCH_WeaponInfoManager.get("a10gau8");
       this.weaponCAS = new MCH_WeaponCAS(world, Vec3d.ZERO, 0.0F, 0.0F, "a10gau8", wi);
-      MCH_WeaponCAS var10000 = this.weaponCAS;
-      var10000.interval += this.weaponCAS.interval > 0 ? 150 : 'ｪ';
+      this.weaponCAS.interval = this.weaponCAS.interval + (this.weaponCAS.interval > 0 ? 150 : 'ｪ');
       this.weaponCAS.displayName = "A-10 GAU-8 Avenger";
-      this.noClip = true;
+      this.ignoreFrustumCheck = true;
       this.countWait = 0;
       this.retryRiddenByEntityCheck = 0;
       this.lastRiddenByEntity = null;
@@ -83,73 +77,75 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
       this.renderRotaionYaw = 0.0F;
       this.renderRotaionPitch = 0.0F;
       this.zoomDir = true;
-      this._renderDistanceWeight = 2.0D;
+      this._renderDistanceWeight = 2.0;
    }
 
    public MCH_EntityGLTD(World par1World, double x, double y, double z) {
       this(par1World);
-      this.func_70107_b(x, y, z);
-      this.field_70159_w = 0.0D;
-      this.field_70181_x = 0.0D;
-      this.field_70179_y = 0.0D;
-      this.field_70169_q = x;
-      this.field_70167_r = y;
-      this.field_70166_s = z;
+      this.setPosition(x, y, z);
+      this.motionX = 0.0;
+      this.motionY = 0.0;
+      this.motionZ = 0.0;
+      this.prevPosX = x;
+      this.prevPosY = y;
+      this.prevPosZ = z;
       this.camera.setPosition(x, y, z);
    }
 
-   protected boolean func_70041_e_() {
+   protected boolean canTriggerWalking() {
       return false;
    }
 
+   @Override
    protected void entityInit() {
       this.dataManager.register(TIME_SINCE_HIT, 0);
       this.dataManager.register(FORWARD_DIR, 1);
       this.dataManager.register(DAMAGE_TAKEN, 0);
    }
 
-   public AxisAlignedBB func_70114_g(Entity par1Entity) {
-      return par1Entity.func_174813_aQ();
+   public AxisAlignedBB getCollisionBox(Entity par1Entity) {
+      return par1Entity.getEntityBoundingBox();
    }
 
-   public AxisAlignedBB func_70046_E() {
-      return this.func_174813_aQ();
+   public AxisAlignedBB getCollisionBoundingBox() {
+      return this.getEntityBoundingBox();
    }
 
-   public boolean func_70104_M() {
+   public boolean canBePushed() {
       return false;
    }
 
-   public double func_70042_X() {
-      return (double)this.field_70131_O * 0.0D - 0.3D;
+   public double getMountedYOffset() {
+      return this.height * 0.0 - 0.3;
    }
 
-   public boolean func_70097_a(DamageSource ds, float damage) {
-      if (this.func_180431_b(ds)) {
+   @Override
+   public boolean attackEntityFrom(DamageSource ds, float damage) {
+      if (this.isEntityInvulnerable(ds)) {
          return false;
-      } else if (!this.world.isRemote && !this.field_70128_L) {
+      } else if (!this.world.isRemote && !this.isDead) {
          damage = MCH_Config.applyDamageByExternal(this, ds, damage);
-         if (!MCH_Multiplay.canAttackEntity((DamageSource)ds, this)) {
+         if (!MCH_Multiplay.canAttackEntity(ds, this)) {
             return false;
          } else {
             this.setForwardDirection(-this.getForwardDirection());
             this.setTimeSinceHit(10);
-            this.setDamageTaken((int)((float)this.getDamageTaken() + damage * 100.0F));
-            this.func_70018_K();
-            boolean flag = ds.func_76346_g() instanceof EntityPlayer && ((EntityPlayer)ds.func_76346_g()).field_71075_bZ.field_75098_d;
-            if (flag || (float)this.getDamageTaken() > 40.0F) {
+            this.setDamageTaken((int)(this.getDamageTaken() + damage * 100.0F));
+            this.markVelocityChanged();
+            boolean flag = ds.getTrueSource() instanceof EntityPlayer && ((EntityPlayer)ds.getTrueSource()).capabilities.isCreativeMode;
+            if (flag || this.getDamageTaken() > 40.0F) {
                Entity riddenByEntity = this.getRiddenByEntity();
                this.camera.initCamera(0, riddenByEntity);
                if (riddenByEntity != null) {
-                  riddenByEntity.func_184220_m(this);
+                  riddenByEntity.startRiding(this);
                }
 
                if (!flag) {
-                  this.func_145778_a(MCH_MOD.itemGLTD, 1, 0.0F);
+                  this.dropItemWithOffset(MCH_MOD.itemGLTD, 1, 0.0F);
                }
 
                W_WorldFunc.MOD_playSoundEffect(this.world, this.posX, this.posY, this.posZ, "hit", 1.0F, 1.0F);
-               this.func_70106_y();
+               this.setDead();
             }
 
             return true;
@@ -160,11 +156,11 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
    }
 
    @SideOnly(Side.CLIENT)
-   public void func_70057_ab() {
+   public void performHurtAnimation() {
    }
 
-   public boolean func_70067_L() {
-      return !this.field_70128_L;
+   public boolean canBeCollidedWith() {
+      return !this.isDead;
    }
 
    @SideOnly(Side.CLIENT)
@@ -175,7 +171,7 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
          double x = par1 - this.posX;
          double y = par3 - this.posY;
          double z = par5 - this.posZ;
-         if (x * x + y * y + z * z <= 1.0D) {
+         if (x * x + y * y + z * z <= 1.0) {
             return;
          }
 
@@ -185,180 +181,171 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
       this.gltdX = par1;
       this.gltdY = par3;
       this.gltdZ = par5;
-      this.gltdYaw = (double)par7;
-      this.gltdPitch = (double)par8;
-      this.field_70159_w = this.velocityX;
-      this.field_70181_x = this.velocityY;
-      this.field_70179_y = this.velocityZ;
+      this.gltdYaw = par7;
+      this.gltdPitch = par8;
+      this.motionX = this.velocityX;
+      this.motionY = this.velocityY;
+      this.motionZ = this.velocityZ;
    }
 
    @SideOnly(Side.CLIENT)
-   public void func_70016_h(double x, double y, double z) {
-      this.velocityX = this.field_70159_w = x;
-      this.velocityY = this.field_70181_x = y;
-      this.velocityZ = this.field_70179_y = z;
+   public void setVelocity(double x, double y, double z) {
+      this.velocityX = this.motionX = x;
+      this.velocityY = this.motionY = y;
+      this.velocityZ = this.motionZ = z;
    }
 
-   public void func_70071_h_() {
-      super.func_70071_h_();
+   public void onUpdate() {
+      super.onUpdate();
       if (this.getTimeSinceHit() > 0) {
          this.setTimeSinceHit(this.getTimeSinceHit() - 1);
       }
 
-      if ((float)this.getDamageTaken() > 0.0F) {
+      if (this.getDamageTaken() > 0.0F) {
          this.setDamageTaken(this.getDamageTaken() - 1);
       }
 
-      this.field_70169_q = this.posX;
-      this.field_70167_r = this.posY;
-      this.field_70166_s = this.posZ;
-      double d3 = Math.sqrt(this.field_70159_w * this.field_70159_w + this.field_70179_y * this.field_70179_y);
+      this.prevPosX = this.posX;
+      this.prevPosY = this.posY;
+      this.prevPosZ = this.posZ;
+      double d3 = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
       Entity riddenByEntity = this.getRiddenByEntity();
       if (riddenByEntity != null) {
          this.camera.updateViewer(0, riddenByEntity);
       }
 
-      double d4;
-      double d5;
-      double d11;
-      double d10;
-      if (this.world.isRemote && this.isBoatEmpty) {
-         if (this.gltdPosRotInc > 0) {
-            d4 = this.posX + (this.gltdX - this.posX) / (double)this.gltdPosRotInc;
-            d5 = this.posY + (this.gltdY - this.posY) / (double)this.gltdPosRotInc;
-            d11 = this.posZ + (this.gltdZ - this.posZ) / (double)this.gltdPosRotInc;
-            d10 = MathHelper.func_76138_g(this.gltdYaw - (double)this.field_70177_z);
-            this.field_70177_z = (float)((double)this.field_70177_z + d10 / (double)this.gltdPosRotInc);
-            this.field_70125_A = (float)((double)this.field_70125_A + (this.gltdPitch - (double)this.field_70125_A) / (double)this.gltdPosRotInc);
-            --this.gltdPosRotInc;
-            this.func_70107_b(d4, d5, d11);
-            this.func_70101_b(this.field_70177_z, this.field_70125_A);
-         } else {
-            d4 = this.posX + this.field_70159_w;
-            d5 = this.posY + this.field_70181_x;
-            d11 = this.posZ + this.field_70179_y;
-            this.func_70107_b(d4, d5, d11);
-            if (this.field_70122_E) {
-               this.field_70159_w *= 0.5D;
-               this.field_70181_x *= 0.5D;
-               this.field_70179_y *= 0.5D;
-            }
-
-            this.field_70159_w *= 0.99D;
-            this.field_70181_x *= 0.95D;
-            this.field_70179_y *= 0.99D;
-         }
-      } else {
-         this.field_70181_x -= 0.04D;
-         d4 = Math.sqrt(this.field_70159_w * this.field_70159_w + this.field_70179_y * this.field_70179_y);
-         if (d4 > 0.35D) {
-            d5 = 0.35D / d4;
-            this.field_70159_w *= d5;
-            this.field_70179_y *= d5;
-            d4 = 0.35D;
+      if (!this.world.isRemote || !this.isBoatEmpty) {
+         this.motionY -= 0.04;
+         double d4 = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+         if (d4 > 0.35) {
+            double d5 = 0.35 / d4;
+            this.motionX *= d5;
+            this.motionZ *= d5;
+            d4 = 0.35;
          }
 
-         if (d4 > d3 && this.speedMultiplier < 0.35D) {
-            this.speedMultiplier += (0.35D - this.speedMultiplier) / 35.0D;
-            if (this.speedMultiplier > 0.35D) {
-               this.speedMultiplier = 0.35D;
+         if (d4 > d3 && this.speedMultiplier < 0.35) {
+            this.speedMultiplier = this.speedMultiplier + (0.35 - this.speedMultiplier) / 35.0;
+            if (this.speedMultiplier > 0.35) {
+               this.speedMultiplier = 0.35;
             }
          } else {
-            this.speedMultiplier -= (this.speedMultiplier - 0.07D) / 35.0D;
-            if (this.speedMultiplier < 0.07D) {
-               this.speedMultiplier = 0.07D;
+            this.speedMultiplier = this.speedMultiplier - (this.speedMultiplier - 0.07) / 35.0;
+            if (this.speedMultiplier < 0.07) {
+               this.speedMultiplier = 0.07;
             }
          }
 
-         if (this.field_70122_E) {
-            this.field_70159_w *= 0.5D;
-            this.field_70181_x *= 0.5D;
-            this.field_70179_y *= 0.5D;
+         if (this.onGround) {
+            this.motionX *= 0.5;
+            this.motionY *= 0.5;
+            this.motionZ *= 0.5;
          }
 
-         this.func_70091_d(MoverType.SELF, this.field_70159_w, this.field_70181_x, this.field_70179_y);
-         this.field_70159_w *= 0.99D;
-         this.field_70181_x *= 0.95D;
-         this.field_70179_y *= 0.99D;
-         this.field_70125_A = 0.0F;
-         d5 = (double)this.field_70177_z;
-         d11 = this.field_70169_q - this.posX;
-         d10 = this.field_70166_s - this.posZ;
-         if (d11 * d11 + d10 * d10 > 0.001D) {
-            d5 = (double)((float)(Math.atan2(d10, d11) * 180.0D / 3.141592653589793D));
+         this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+         this.motionX *= 0.99;
+         this.motionY *= 0.95;
+         this.motionZ *= 0.99;
+         this.rotationPitch = 0.0F;
+         double d5 = this.rotationYaw;
+         double d11 = this.prevPosX - this.posX;
+         double d10 = this.prevPosZ - this.posZ;
+         if (d11 * d11 + d10 * d10 > 0.001) {
+            d5 = (float)(Math.atan2(d10, d11) * 180.0 / Math.PI);
          }
 
-         double d12 = MathHelper.func_76138_g(d5 - (double)this.field_70177_z);
-         if (d12 > 20.0D) {
-            d12 = 20.0D;
+         double d12 = MathHelper.wrapDegrees(d5 - this.rotationYaw);
+         if (d12 > 20.0) {
+            d12 = 20.0;
          }
 
-         if (d12 < -20.0D) {
-            d12 = -20.0D;
+         if (d12 < -20.0) {
+            d12 = -20.0;
          }
 
-         this.field_70177_z = (float)((double)this.field_70177_z + d12);
-         this.func_70101_b(this.field_70177_z, this.field_70125_A);
+         this.rotationYaw = (float)(this.rotationYaw + d12);
+         this.setRotation(this.rotationYaw, this.rotationPitch);
          if (!this.world.isRemote) {
             if (MCH_Config.Collision_DestroyBlock.prmBool) {
-               for(int l = 0; l < 4; ++l) {
-                  int i1 = MathHelper.func_76128_c(this.posX + ((double)(l % 2) - 0.5D) * 0.8D);
-                  int j1 = MathHelper.func_76128_c(this.posZ + ((double)(l / 2) - 0.5D) * 0.8D);
+               for (int l = 0; l < 4; l++) {
+                  int i1 = MathHelper.floor(this.posX + (l % 2 - 0.5) * 0.8);
+                  int j1 = MathHelper.floor(this.posZ + (l / 2 - 0.5) * 0.8);
 
-                  for(int k1 = 0; k1 < 2; ++k1) {
-                     int l1 = MathHelper.func_76128_c(this.posY) + k1;
+                  for (int k1 = 0; k1 < 2; k1++) {
+                     int l1 = MathHelper.floor(this.posY) + k1;
                      if (W_WorldFunc.isEqualBlock(this.world, i1, l1, j1, W_Block.getSnowLayer())) {
-                        this.world.func_175698_g(new BlockPos(i1, l1, j1));
+                        this.world.setBlockToAir(new BlockPos(i1, l1, j1));
                      }
                   }
                }
             }
 
             riddenByEntity = this.getRiddenByEntity();
-            if (riddenByEntity != null && riddenByEntity.field_70128_L) {
-               riddenByEntity.func_184210_p();
+            if (riddenByEntity != null && riddenByEntity.isDead) {
+               riddenByEntity.dismountRidingEntity();
             }
          }
+      } else if (this.gltdPosRotInc > 0) {
+         double d4x = this.posX + (this.gltdX - this.posX) / this.gltdPosRotInc;
+         double d5x = this.posY + (this.gltdY - this.posY) / this.gltdPosRotInc;
+         double d11x = this.posZ + (this.gltdZ - this.posZ) / this.gltdPosRotInc;
+         double d10x = MathHelper.wrapDegrees(this.gltdYaw - this.rotationYaw);
+         this.rotationYaw = (float)(this.rotationYaw + d10x / this.gltdPosRotInc);
+         this.rotationPitch = (float)(this.rotationPitch + (this.gltdPitch - this.rotationPitch) / this.gltdPosRotInc);
+         this.gltdPosRotInc--;
+         this.setPosition(d4x, d5x, d11x);
+         this.setRotation(this.rotationYaw, this.rotationPitch);
+      } else {
+         double d4x = this.posX + this.motionX;
+         double d5x = this.posY + this.motionY;
+         double d11x = this.posZ + this.motionZ;
+         this.setPosition(d4x, d5x, d11x);
+         if (this.onGround) {
+            this.motionX *= 0.5;
+            this.motionY *= 0.5;
+            this.motionZ *= 0.5;
+         }
+
+         this.motionX *= 0.99;
+         this.motionY *= 0.95;
+         this.motionZ *= 0.99;
       }
 
       this.updateCameraPosition(false);
       if (this.countWait > 0) {
-         --this.countWait;
+         this.countWait--;
       }
 
       if (this.countWait < 0) {
-         ++this.countWait;
+         this.countWait++;
       }
 
       this.weaponCAS.update(this.countWait);
       riddenByEntity = this.getRiddenByEntity();
-      if (this.lastRiddenByEntity != null && riddenByEntity == null) {
-         if (this.retryRiddenByEntityCheck < 3) {
-            ++this.retryRiddenByEntityCheck;
-            this.setUnmoundPosition(this.lastRiddenByEntity);
-         } else {
-            this.unmountEntity();
-         }
-      } else {
+      if (this.lastRiddenByEntity == null || riddenByEntity != null) {
          this.retryRiddenByEntityCheck = 0;
+      } else if (this.retryRiddenByEntityCheck < 3) {
+         this.retryRiddenByEntityCheck++;
+         this.setUnmoundPosition(this.lastRiddenByEntity);
+      } else {
+         this.unmountEntity();
       }
 
       riddenByEntity = this.getRiddenByEntity();
       if (riddenByEntity != null) {
          this.lastRiddenByEntity = riddenByEntity;
       }
-
    }
 
    public void setUnmoundPosition(Entity e) {
       if (e != null) {
-         float yaw = this.field_70177_z;
-         double d0 = Math.sin((double)yaw * 3.141592653589793D / 180.0D) * 1.2D;
-         double d1 = -Math.cos((double)yaw * 3.141592653589793D / 180.0D) * 1.2D;
-         e.func_70107_b(this.posX + d0, this.posY + this.func_70042_X() + e.func_70033_W() + 1.0D, this.posZ + d1);
-         e.field_70142_S = e.field_70169_q = e.posX;
-         e.field_70137_T = e.field_70167_r = e.posY;
-         e.field_70136_U = e.field_70166_s = e.posZ;
+         float yaw = this.rotationYaw;
+         double d0 = Math.sin(yaw * Math.PI / 180.0) * 1.2;
+         double d1 = -Math.cos(yaw * Math.PI / 180.0) * 1.2;
+         e.setPosition(this.posX + d0, this.posY + this.getMountedYOffset() + e.getYOffset() + 1.0, this.posZ + d1);
+         e.lastTickPosX = e.prevPosX = e.posX;
+         e.lastTickPosY = e.prevPosY = e.posY;
+         e.lastTickPosZ = e.prevPosZ = e.posZ;
       }
    }
 
@@ -368,10 +355,10 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
       if (!this.world.isRemote) {
          Entity riddenByEntity = this.getRiddenByEntity();
          if (riddenByEntity != null) {
-            if (!riddenByEntity.field_70128_L) {
-               riddenByEntity.func_184210_p();
+            if (!riddenByEntity.isDead) {
+               riddenByEntity.dismountRidingEntity();
             }
-         } else if (this.lastRiddenByEntity != null && !this.lastRiddenByEntity.field_70128_L) {
+         } else if (this.lastRiddenByEntity != null && !this.lastRiddenByEntity.isDead) {
             this.camera.updateViewer(0, this.lastRiddenByEntity);
             this.setUnmoundPosition(this.lastRiddenByEntity);
          }
@@ -383,11 +370,10 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
    public void updateCameraPosition(boolean foreceUpdate) {
       Entity riddenByEntity = this.getRiddenByEntity();
       if (foreceUpdate || riddenByEntity != null && this.camera != null) {
-         double x = -Math.sin((double)this.field_70177_z * 3.141592653589793D / 180.0D) * 0.6D;
-         double z = Math.cos((double)this.field_70177_z * 3.141592653589793D / 180.0D) * 0.6D;
-         this.camera.setPosition(this.posX + x, this.posY + 0.7D, this.posZ + z);
+         double x = -Math.sin(this.rotationYaw * Math.PI / 180.0) * 0.6;
+         double z = Math.cos(this.rotationYaw * Math.PI / 180.0) * 0.6;
+         this.camera.setPosition(this.posX + x, this.posY + 0.7, this.posZ + z);
       }
-
    }
 
    @SideOnly(Side.CLIENT)
@@ -405,13 +391,12 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
       this.camera.setCameraZoom(z);
    }
 
-   public void func_184232_k(Entity passenger) {
-      if (this.func_184196_w(passenger)) {
-         double x = Math.sin((double)this.field_70177_z * 3.141592653589793D / 180.0D) * 0.5D;
-         double z = -Math.cos((double)this.field_70177_z * 3.141592653589793D / 180.0D) * 0.5D;
-         passenger.func_70107_b(this.posX + x, this.posY + this.func_70042_X() + passenger.func_70033_W(), this.posZ + z);
+   public void updatePassenger(Entity passenger) {
+      if (this.isPassenger(passenger)) {
+         double x = Math.sin(this.rotationYaw * Math.PI / 180.0) * 0.5;
+         double z = -Math.cos(this.rotationYaw * Math.PI / 180.0) * 0.5;
+         passenger.setPosition(this.posX + x, this.posY + this.getMountedYOffset() + passenger.getYOffset(), this.posZ + z);
       }
-
    }
 
    public void switchWeapon(int id) {
@@ -419,10 +404,12 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
 
    public boolean useCurrentWeapon(int option1, int option2) {
       Entity riddenByEntity = this.getRiddenByEntity();
-      if (this.countWait == 0 && riddenByEntity != null && this.weaponCAS.shot(riddenByEntity, this.camera.posX, this.camera.posY, this.camera.posZ, option1, option2)) {
+      if (this.countWait == 0
+         && riddenByEntity != null
+         && this.weaponCAS.shot(riddenByEntity, this.camera.posX, this.camera.posY, this.camera.posZ, option1, option2)) {
          this.countWait = this.weaponCAS.interval;
          if (this.world.isRemote) {
-            this.countWait += this.countWait > 0 ? 10 : -10;
+            this.countWait = this.countWait + (this.countWait > 0 ? 10 : -10);
          } else {
             W_WorldFunc.MOD_playSoundEffect(this.world, this.posX, this.posY, this.posZ, "gltd", 0.5F, 1.0F);
          }
@@ -433,10 +420,10 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
       }
    }
 
-   protected void func_70014_b(NBTTagCompound par1NBTTagCompound) {
+   protected void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
    }
 
-   protected void func_70037_a(NBTTagCompound par1NBTTagCompound) {
+   protected void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
    }
 
    @SideOnly(Side.CLIENT)
@@ -444,15 +431,15 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
       return 0.0F;
    }
 
-   public boolean func_184230_a(EntityPlayer player, EnumHand hand) {
+   public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
       Entity riddenByEntity = this.getRiddenByEntity();
       if (riddenByEntity != null && riddenByEntity instanceof EntityPlayer && riddenByEntity != player) {
          return true;
       } else {
-         player.field_70177_z = MathHelper.func_76142_g(this.field_70177_z);
-         player.field_70125_A = MathHelper.func_76142_g(this.field_70125_A);
+         player.rotationYaw = MathHelper.wrapDegrees(this.rotationYaw);
+         player.rotationPitch = MathHelper.wrapDegrees(this.rotationPitch);
          if (!this.world.isRemote) {
-            player.func_184220_m(this);
+            player.startRiding(this);
          } else {
             this.zoomDir = true;
             this.camera.setCameraZoom(1.0F);
@@ -471,23 +458,23 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
    }
 
    public void setDamageTaken(int par1) {
-      this.dataManager.func_187227_b(DAMAGE_TAKEN, par1);
+      this.dataManager.set(DAMAGE_TAKEN, par1);
    }
 
    public int getDamageTaken() {
-      return (Integer)this.dataManager.func_187225_a(DAMAGE_TAKEN);
+      return (Integer)this.dataManager.get(DAMAGE_TAKEN);
    }
 
    public void setTimeSinceHit(int par1) {
-      this.dataManager.func_187227_b(TIME_SINCE_HIT, par1);
+      this.dataManager.set(TIME_SINCE_HIT, par1);
    }
 
    public int getTimeSinceHit() {
-      return (Integer)this.dataManager.func_187225_a(TIME_SINCE_HIT);
+      return (Integer)this.dataManager.get(TIME_SINCE_HIT);
    }
 
    public void setForwardDirection(int par1) {
-      this.dataManager.func_187227_b(FORWARD_DIR, par1);
+      this.dataManager.set(FORWARD_DIR, par1);
    }
 
    public int getForwardDirection() {
@@ -500,18 +487,9 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger, 
    }
 
    @Nullable
+   @Override
    public Entity getRiddenByEntity() {
-      List<Entity> passengers = this.func_184188_bt();
-      return passengers.isEmpty() ? null : (Entity)passengers.get(0);
-   }
-
-   public ItemStack getPickedResult(RayTraceResult target) {
-      return new ItemStack(MCH_MOD.itemGLTD);
-   }
-
-   static {
-      TIME_SINCE_HIT = EntityDataManager.createKey(MCH_EntityGLTD.class, DataSerializers.VARINT);
-      FORWARD_DIR = EntityDataManager.createKey(MCH_EntityGLTD.class, DataSerializers.VARINT);
-      DAMAGE_TAKEN = EntityDataManager.createKey(MCH_EntityGLTD.class, DataSerializers.VARINT);
+      List<Entity> passengers = this.getPassengers();
+      return passengers.isEmpty() ? null : passengers.get(0);
    }
 }

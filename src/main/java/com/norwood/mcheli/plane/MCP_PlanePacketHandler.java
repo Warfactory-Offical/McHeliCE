@@ -15,16 +15,16 @@ public class MCP_PlanePacketHandler {
       if (!player.world.isRemote) {
          MCP_PlanePacketPlayerControl pc = new MCP_PlanePacketPlayerControl();
          pc.readData(data);
-         scheduler.func_152344_a(() -> {
+         scheduler.addScheduledTask(() -> {
             MCP_EntityPlane plane = null;
-            if (player.func_184187_bx() instanceof MCP_EntityPlane) {
-               plane = (MCP_EntityPlane)player.func_184187_bx();
-            } else if (player.func_184187_bx() instanceof MCH_EntitySeat) {
-               if (((MCH_EntitySeat)player.func_184187_bx()).getParent() instanceof MCP_EntityPlane) {
-                  plane = (MCP_EntityPlane)((MCH_EntitySeat)player.func_184187_bx()).getParent();
+            if (player.getRidingEntity() instanceof MCP_EntityPlane) {
+               plane = (MCP_EntityPlane)player.getRidingEntity();
+            } else if (player.getRidingEntity() instanceof MCH_EntitySeat) {
+               if (((MCH_EntitySeat)player.getRidingEntity()).getParent() instanceof MCP_EntityPlane) {
+                  plane = (MCP_EntityPlane)((MCH_EntitySeat)player.getRidingEntity()).getParent();
                }
-            } else if (player.func_184187_bx() instanceof MCH_EntityUavStation) {
-               MCH_EntityUavStation uavStation = (MCH_EntityUavStation)player.func_184187_bx();
+            } else if (player.getRidingEntity() instanceof MCH_EntityUavStation) {
+               MCH_EntityUavStation uavStation = (MCH_EntityUavStation)player.getRidingEntity();
                if (uavStation.getControlAircract() instanceof MCP_EntityPlane) {
                   plane = (MCP_EntityPlane)uavStation.getControlAircract();
                }
@@ -139,7 +139,6 @@ public class MCP_PlanePacketHandler {
                      plane.setGunnerStatus(!plane.getGunnerStatus());
                   }
                }
-
             }
          });
       }

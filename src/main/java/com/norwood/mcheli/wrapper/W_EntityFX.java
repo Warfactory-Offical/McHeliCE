@@ -14,6 +14,6 @@ public abstract class W_EntityFX extends Particle {
    }
 
    public AxisAlignedBB getCollisionBoundingBox() {
-      return this.getCollisionBoundingBox();
+      return this.getBoundingBox();
    }
 }

@@ -10,22 +10,27 @@ public class ParenExpression extends Col1Expression {
       super(from, s);
    }
 
+   @Override
    public AbstractExpression dup(ShareExpValue s) {
       return new ParenExpression(this, s);
    }
 
+   @Override
    protected long operateLong(long val) {
       return val;
    }
 
+   @Override
    protected double operateDouble(double val) {
       return val;
    }
 
+   @Override
    public Object evalObject() {
       return this.exp.evalObject();
    }
 
+   @Override
    public String toString() {
       return this.exp == null ? "" : this.getOperator() + this.exp.toString() + this.getEndOperator();
    }

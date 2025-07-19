@@ -11,15 +11,17 @@ public class MCH_PacketGLTDPlayerControl extends MCH_Packet {
    public boolean useWeapon = false;
    public int useWeaponOption1 = 0;
    public int useWeaponOption2 = 0;
-   public double useWeaponPosX = 0.0D;
-   public double useWeaponPosY = 0.0D;
-   public double useWeaponPosZ = 0.0D;
+   public double useWeaponPosX = 0.0;
+   public double useWeaponPosY = 0.0;
+   public double useWeaponPosZ = 0.0;
    public boolean unmount = false;
 
+   @Override
    public int getMessageID() {
       return 536887312;
    }
 
+   @Override
    public void readData(ByteArrayDataInput data) {
       try {
          this.switchCameraMode = data.readByte();
@@ -37,9 +39,9 @@ public class MCH_PacketGLTDPlayerControl extends MCH_Packet {
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       try {
          dos.writeByte(this.switchCameraMode);
@@ -57,6 +59,5 @@ public class MCH_PacketGLTDPlayerControl extends MCH_Packet {
       } catch (IOException var3) {
          var3.printStackTrace();
       }
-
    }
 }

@@ -14,11 +14,10 @@ class _GroupObject implements DebugInfoObject {
       this.faces = faces;
    }
 
+   @Override
    public void printInfo(PrintStreamWrapper stream) {
       stream.push(String.format("G: [name: %s]", this.name));
-      this.faces.forEach((f) -> {
-         f.printInfo(stream);
-      });
+      this.faces.forEach(f -> f.printInfo(stream));
       stream.pop();
       stream.println();
    }
@@ -27,14 +26,9 @@ class _GroupObject implements DebugInfoObject {
       return new _GroupObject.Builder();
    }
 
-   // $FF: synthetic method
-   _GroupObject(String x0, List x1, Object x2) {
-      this(x0, x1);
-   }
-
    static class Builder {
       private String name;
-      private List<_Face> faces = new ArrayList();
+      private List<_Face> faces = new ArrayList<>();
 
       public _GroupObject.Builder name(String name) {
          this.name = name;

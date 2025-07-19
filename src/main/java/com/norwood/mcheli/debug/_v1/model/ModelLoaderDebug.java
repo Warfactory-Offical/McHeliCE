@@ -14,7 +14,6 @@ public class ModelLoaderDebug {
       } catch (Exception var2) {
          var2.printStackTrace();
       }
-
    }
 
    static URI getResource(String path) {

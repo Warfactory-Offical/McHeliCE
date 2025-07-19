@@ -13,44 +13,43 @@ public class MCH_TextureManagerDummy extends TextureManager {
    private TextureManager tm;
 
    public MCH_TextureManagerDummy(TextureManager t) {
-      super((IResourceManager)null);
+      super(null);
       this.tm = t;
    }
 
-   public void func_110577_a(ResourceLocation resouce) {
+   public void bindTexture(ResourceLocation resouce) {
       if (MCH_ClientCommonTickHandler.cameraMode == 2) {
-         this.tm.func_110577_a(R);
+         this.tm.bindTexture(R);
       } else {
-         this.tm.func_110577_a(resouce);
+         this.tm.bindTexture(resouce);
       }
-
    }
 
-   public boolean func_110580_a(ResourceLocation textureLocation, ITickableTextureObject textureObj) {
-      return this.tm.func_110580_a(textureLocation, textureObj);
+   public boolean loadTickableTexture(ResourceLocation textureLocation, ITickableTextureObject textureObj) {
+      return this.tm.loadTickableTexture(textureLocation, textureObj);
    }
 
-   public boolean func_110579_a(ResourceLocation textureLocation, ITextureObject textureObj) {
-      return this.tm.func_110579_a(textureLocation, textureObj);
+   public boolean loadTexture(ResourceLocation textureLocation, ITextureObject textureObj) {
+      return this.tm.loadTexture(textureLocation, textureObj);
    }
 
-   public ITextureObject func_110581_b(ResourceLocation textureLocation) {
-      return this.tm.func_110581_b(textureLocation);
+   public ITextureObject getTexture(ResourceLocation textureLocation) {
+      return this.tm.getTexture(textureLocation);
    }
 
-   public ResourceLocation func_110578_a(String name, DynamicTexture texture) {
-      return this.tm.func_110578_a(name, texture);
+   public ResourceLocation getDynamicTextureLocation(String name, DynamicTexture texture) {
+      return this.tm.getDynamicTextureLocation(name, texture);
    }
 
-   public void func_110550_d() {
-      this.tm.func_110550_d();
+   public void tick() {
+      this.tm.tick();
    }
 
-   public void func_147645_c(ResourceLocation textureLocation) {
-      this.tm.func_147645_c(textureLocation);
+   public void deleteTexture(ResourceLocation textureLocation) {
+      this.tm.deleteTexture(textureLocation);
    }
 
-   public void func_110549_a(IResourceManager resourceManager) {
-      this.tm.func_110549_a(resourceManager);
+   public void onResourceManagerReload(IResourceManager resourceManager) {
+      this.tm.onResourceManagerReload(resourceManager);
    }
 }

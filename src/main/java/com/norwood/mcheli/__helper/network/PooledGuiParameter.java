@@ -14,7 +14,6 @@ public class PooledGuiParameter {
       } else {
          serverEntity = target;
       }
-
    }
 
    @Nullable
@@ -23,6 +22,6 @@ public class PooledGuiParameter {
    }
 
    public static void resetEntity(EntityPlayer player) {
-      setEntity(player, (Entity)null);
+      setEntity(player, null);
    }
 }

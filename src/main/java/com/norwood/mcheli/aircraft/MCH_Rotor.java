@@ -34,11 +34,10 @@ public class MCH_Rotor {
       this.numBlade = num > 0 ? num : 1;
       this.blades = new MCH_Blade[this.numBlade];
 
-      for(int i = 0; i < this.numBlade; ++i) {
-         this.blades[i] = new MCH_Blade((float)(i * this.invRot));
-         this.blades[i].setFoldRotation((float)(5 + i * 3)).setFoldSpeed((float)foldSpeed);
+      for (int i = 0; i < this.numBlade; i++) {
+         this.blades[i] = new MCH_Blade(i * this.invRot);
+         this.blades[i].setFoldRotation(5 + i * 3).setFoldSpeed(foldSpeed);
       }
-
    }
 
    public boolean isFoldingOrUnfolding() {
@@ -57,31 +56,23 @@ public class MCH_Rotor {
       if (this.haveFoldBladeFunc) {
          this.isFoldBladeTarget = true;
       }
-
    }
 
    public void forceFold() {
       if (this.haveFoldBladeFunc) {
          this.isFoldBladeTarget = true;
          this.isFoldBlade = true;
-         MCH_Blade[] var1 = this.blades;
-         int var2 = var1.length;
 
-         for(int var3 = 0; var3 < var2; ++var3) {
-            MCH_Blade b = var1[var3];
+         for (MCH_Blade b : this.blades) {
             b.forceFold();
          }
       }
-
    }
 
    public void update(float rot) {
       boolean isCmpFoldUnfold = true;
-      MCH_Blade[] var3 = this.blades;
-      int var4 = var3.length;
 
-      for(int var5 = 0; var5 < var4; ++var5) {
-         MCH_Blade b = var3[var5];
+      for (MCH_Blade b : this.blades) {
          b.setPrevRotation(b.getRotation());
          if (!this.isFoldBlade) {
             if (!this.isFoldBladeTarget) {
@@ -100,6 +91,5 @@ public class MCH_Rotor {
       if (isCmpFoldUnfold) {
          this.isFoldBlade = this.isFoldBladeTarget;
       }
-
    }
 }

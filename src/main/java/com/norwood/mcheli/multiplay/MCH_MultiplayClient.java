@@ -7,11 +7,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.Buffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import javax.imageio.ImageIO;
@@ -34,18 +35,18 @@ public class MCH_MultiplayClient {
    private static IntBuffer pixelBuffer;
    private static int[] pixelValues;
    private static MCH_OStream dataOutputStream;
-   private static List<String> modList = new ArrayList();
+   private static List<String> modList = new ArrayList<>();
 
    public static void startSendImageData() {
       Minecraft mc = Minecraft.getMinecraft();
-      sendScreenShot(mc.field_71443_c, mc.field_71440_d, mc.func_147110_a());
+      sendScreenShot(mc.displayWidth, mc.displayHeight, mc.getFramebuffer());
    }
 
    public static void sendScreenShot(int displayWidth, int displayHeight, Framebuffer framebufferMc) {
       try {
-         if (OpenGlHelper.func_148822_b()) {
-            displayWidth = framebufferMc.field_147622_a;
-            displayHeight = framebufferMc.field_147620_b;
+         if (OpenGlHelper.isFramebufferEnabled()) {
+            displayWidth = framebufferMc.framebufferTextureWidth;
+            displayHeight = framebufferMc.framebufferTextureHeight;
          }
 
          int k = displayWidth * displayHeight;
@@ -56,27 +57,27 @@ public class MCH_MultiplayClient {
 
          GL11.glPixelStorei(3333, 1);
          GL11.glPixelStorei(3317, 1);
-         pixelBuffer.clear();
-         if (OpenGlHelper.func_148822_b()) {
-            GL11.glBindTexture(3553, framebufferMc.field_147617_g);
+         ((Buffer)pixelBuffer).clear();
+         if (OpenGlHelper.isFramebufferEnabled()) {
+            GL11.glBindTexture(3553, framebufferMc.framebufferTexture);
             GL11.glGetTexImage(3553, 0, 32993, 33639, pixelBuffer);
          } else {
             GL11.glReadPixels(0, 0, displayWidth, displayHeight, 32993, 33639, pixelBuffer);
          }
 
          pixelBuffer.get(pixelValues);
-         TextureUtil.func_147953_a(pixelValues, displayWidth, displayHeight);
+         TextureUtil.processPixelValues(pixelValues, displayWidth, displayHeight);
          BufferedImage bufferedimage = null;
-         if (!OpenGlHelper.func_148822_b()) {
+         if (!OpenGlHelper.isFramebufferEnabled()) {
             bufferedimage = new BufferedImage(displayWidth, displayHeight, 1);
             bufferedimage.setRGB(0, 0, displayWidth, displayHeight, pixelValues, 0, displayWidth);
          } else {
-            bufferedimage = new BufferedImage(framebufferMc.field_147621_c, framebufferMc.field_147618_d, 1);
-            int l = framebufferMc.field_147620_b - framebufferMc.field_147618_d;
+            bufferedimage = new BufferedImage(framebufferMc.framebufferWidth, framebufferMc.framebufferHeight, 1);
+            int l = framebufferMc.framebufferTextureHeight - framebufferMc.framebufferHeight;
 
-            for(int i1 = l; i1 < framebufferMc.field_147620_b; ++i1) {
-               for(int j1 = 0; j1 < framebufferMc.field_147621_c; ++j1) {
-                  bufferedimage.setRGB(j1, i1 - l, pixelValues[i1 * framebufferMc.field_147622_a + j1]);
+            for (int i1 = l; i1 < framebufferMc.framebufferTextureHeight; i1++) {
+               for (int j1 = 0; j1 < framebufferMc.framebufferWidth; j1++) {
+                  bufferedimage.setRGB(j1, i1 - l, pixelValues[i1 * framebufferMc.framebufferTextureWidth + j1]);
                }
             }
          }
@@ -85,7 +86,6 @@ public class MCH_MultiplayClient {
          ImageIO.write(bufferedimage, "png", dataOutputStream);
       } catch (Exception var8) {
       }
-
    }
 
    public static void readImageData(DataOutputStream dos) throws IOException {
@@ -99,23 +99,19 @@ public class MCH_MultiplayClient {
             dataOutputStream = null;
          }
       }
-
    }
 
    public static double getPerData() {
-      return dataOutputStream == null ? -1.0D : (double)(dataOutputStream.index / dataOutputStream.size());
+      return dataOutputStream == null ? -1.0 : dataOutputStream.index / dataOutputStream.size();
    }
 
    public static void readModList(String playerName, String commandSenderName) {
-      modList = new ArrayList();
+      modList = new ArrayList<>();
       modList.add(TextFormatting.RED + "###### Name:" + commandSenderName + " ######");
       modList.add(TextFormatting.RED + "###### ID  :" + playerName + " ######");
       String[] classFileNameList = System.getProperty("java.class.path").split(File.pathSeparator);
-      String[] var3 = classFileNameList;
-      int var4 = classFileNameList.length;
 
-      for(int var5 = 0; var5 < var4; ++var5) {
-         String classFileName = var3[var5];
+      for (String classFileName : classFileNameList) {
          MCH_Lib.DbgLog(true, "java.class.path=" + classFileName);
          if (classFileName.length() > 1) {
             File javaClassFile = new File(classFileName);
@@ -126,77 +122,57 @@ public class MCH_MultiplayClient {
       }
 
       modList.add(TextFormatting.YELLOW + "=== ActiveModList ===");
-      Iterator var21 = Loader.instance().getActiveModList().iterator();
 
-      while(var21.hasNext()) {
-         ModContainer mod = (ModContainer)var21.next();
+      for (ModContainer mod : Loader.instance().getActiveModList()) {
          modList.add("" + mod + "  [" + mod.getModId() + "]  " + mod.getName() + "[" + mod.getDisplayVersion() + "]  " + mod.getSource().getName());
       }
 
-      String s;
       if (CoreModManager.getAccessTransformers().size() > 0) {
          modList.add(TextFormatting.YELLOW + "=== AccessTransformers ===");
-         var21 = CoreModManager.getAccessTransformers().iterator();
 
-         while(var21.hasNext()) {
-            s = (String)var21.next();
+         for (String s : CoreModManager.getAccessTransformers()) {
             modList.add(s);
          }
       }
 
       if (CoreModManager.getIgnoredMods().size() > 0) {
          modList.add(TextFormatting.YELLOW + "=== LoadedCoremods ===");
-         var21 = CoreModManager.getIgnoredMods().iterator();
 
-         while(var21.hasNext()) {
-            s = (String)var21.next();
+         for (String s : CoreModManager.getIgnoredMods()) {
             modList.add(s);
          }
       }
 
       if (CoreModManager.getReparseableCoremods().size() > 0) {
          modList.add(TextFormatting.YELLOW + "=== ReparseableCoremods ===");
-         var21 = CoreModManager.getReparseableCoremods().iterator();
 
-         while(var21.hasNext()) {
-            s = (String)var21.next();
+         for (String s : CoreModManager.getReparseableCoremods()) {
             modList.add(s);
          }
       }
 
       Minecraft mc = Minecraft.getMinecraft();
       MCH_FileSearch search = new MCH_FileSearch();
-      File[] files = search.listFiles((new File(mc.field_71412_D, "mods")).getAbsolutePath(), "*.jar");
+      File[] files = search.listFiles(new File(mc.gameDir, "mods").getAbsolutePath(), "*.jar");
       modList.add(TextFormatting.YELLOW + "=== Manifest ===");
-      File[] var27 = files;
-      int var28 = files.length;
 
-      int var8;
-      File file;
-      String jarPath;
-      JarFile jarFile;
-      Enumeration jarEntries;
-      String litemod_json;
-      ZipEntry zipEntry;
-      for(var8 = 0; var8 < var28; ++var8) {
-         file = var27[var8];
-
+      for (File file : files) {
          try {
-            jarPath = file.getCanonicalPath();
-            jarFile = new JarFile(jarPath);
-            jarEntries = jarFile.entries();
-            litemod_json = "";
+            String jarPath = file.getCanonicalPath();
+            JarFile jarFile = new JarFile(jarPath);
+            Enumeration<JarEntry> jarEntries = jarFile.entries();
+            String manifest = "";
 
-            while(jarEntries.hasMoreElements()) {
-               zipEntry = (ZipEntry)jarEntries.nextElement();
+            while (jarEntries.hasMoreElements()) {
+               ZipEntry zipEntry = jarEntries.nextElement();
                if (zipEntry.getName().equalsIgnoreCase("META-INF/MANIFEST.MF") && !zipEntry.isDirectory()) {
                   InputStream is = jarFile.getInputStream(zipEntry);
                   BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-                  for(String line = br.readLine(); line != null; line = br.readLine()) {
+                  for (String line = br.readLine(); line != null; line = br.readLine()) {
                      line = line.replace(" ", "").trim();
                      if (!line.isEmpty()) {
-                        litemod_json = litemod_json + " [" + line + "]";
+                        manifest = manifest + " [" + line + "]";
                      }
                   }
 
@@ -206,8 +182,8 @@ public class MCH_MultiplayClient {
             }
 
             jarFile.close();
-            if (!litemod_json.isEmpty()) {
-               modList.add(file.getName() + litemod_json);
+            if (!manifest.isEmpty()) {
+               modList.add(file.getName() + manifest);
             }
          } catch (Exception var20) {
             modList.add(file.getName() + " : Read Manifest failed.");
@@ -215,45 +191,28 @@ public class MCH_MultiplayClient {
       }
 
       search = new MCH_FileSearch();
-      files = search.listFiles((new File(mc.field_71412_D, "mods")).getAbsolutePath(), "*.litemod");
+      files = search.listFiles(new File(mc.gameDir, "mods").getAbsolutePath(), "*.litemod");
       modList.add(TextFormatting.LIGHT_PURPLE + "=== LiteLoader ===");
-      var27 = files;
-      var28 = files.length;
 
-      label116:
-      for(var8 = 0; var8 < var28; ++var8) {
-         file = var27[var8];
-
+      for (File file : files) {
          try {
-            jarPath = file.getCanonicalPath();
-            jarFile = new JarFile(jarPath);
-            jarEntries = jarFile.entries();
-            litemod_json = "";
+            String jarPath = file.getCanonicalPath();
+            JarFile jarFile = new JarFile(jarPath);
+            Enumeration<JarEntry> jarEntries = jarFile.entries();
+            String litemod_json = "";
 
-            while(true) {
-               while(true) {
-                  String fname;
-                  do {
-                     if (!jarEntries.hasMoreElements()) {
-                        jarFile.close();
-                        if (!litemod_json.isEmpty()) {
-                           modList.add(file.getName() + litemod_json);
-                        }
-                        continue label116;
-                     }
-
-                     zipEntry = (ZipEntry)jarEntries.nextElement();
-                     fname = zipEntry.getName().toLowerCase();
-                  } while(zipEntry.isDirectory());
-
+            while (jarEntries.hasMoreElements()) {
+               ZipEntry zipEntry = jarEntries.nextElement();
+               String fname = zipEntry.getName().toLowerCase();
+               if (!zipEntry.isDirectory()) {
                   if (fname.equals("litemod.json")) {
                      InputStream is = jarFile.getInputStream(zipEntry);
                      BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-                     for(String line = br.readLine(); line != null; line = br.readLine()) {
-                        line = line.replace(" ", "").trim();
-                        if (line.toLowerCase().indexOf("name") >= 0) {
-                           litemod_json = litemod_json + " [" + line + "]";
+                     for (String linex = br.readLine(); linex != null; linex = br.readLine()) {
+                        linex = linex.replace(" ", "").trim();
+                        if (linex.toLowerCase().indexOf("name") >= 0) {
+                           litemod_json = litemod_json + " [" + linex + "]";
                            break;
                         }
                      }
@@ -276,11 +235,15 @@ public class MCH_MultiplayClient {
                   }
                }
             }
+
+            jarFile.close();
+            if (!litemod_json.isEmpty()) {
+               modList.add(file.getName() + litemod_json);
+            }
          } catch (Exception var19) {
             modList.add(file.getName() + " : Read LiteLoader failed.");
          }
       }
-
    }
 
    public static void sendModsInfo(String playerName, String commandSenderName, int id) {

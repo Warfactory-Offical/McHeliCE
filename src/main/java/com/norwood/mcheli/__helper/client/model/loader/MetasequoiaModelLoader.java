@@ -12,12 +12,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class MetasequoiaModelLoader implements IVertexModelLoader {
+   @Override
    public _IModelCustom load(IResourceManager resourceManager, ResourceLocation location) throws IOException, _ModelFormatException {
       ResourceLocation modelLocation = this.withExtension(location);
-      IResource resource = resourceManager.func_110536_a(modelLocation);
+      IResource resource = resourceManager.getResource(modelLocation);
       return new W_MetasequoiaObject(modelLocation, resource);
    }
 
+   @Override
    public String getExtension() {
       return "mqo";
    }

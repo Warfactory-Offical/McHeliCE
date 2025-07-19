@@ -15,14 +15,16 @@ public class MCH_PacketNotifyClientSetting extends MCH_Packet {
    public boolean tankAutoThrottleDown;
    public boolean shaderSupport = false;
 
+   @Override
    public int getMessageID() {
       return 536875072;
    }
 
+   @Override
    public void readData(ByteArrayDataInput di) {
       try {
-         byte data = false;
-         byte data = di.readByte();
+         byte data = 0;
+         data = di.readByte();
          this.dismountAll = this.getBit(data, 0);
          this.heliAutoThrottleDown = this.getBit(data, 1);
          this.planeAutoThrottleDown = this.getBit(data, 2);
@@ -31,13 +33,13 @@ public class MCH_PacketNotifyClientSetting extends MCH_Packet {
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       try {
          byte data = 0;
-         byte data = this.setBit(data, 0, this.dismountAll);
+         data = this.setBit(data, 0, this.dismountAll);
          data = this.setBit(data, 1, this.heliAutoThrottleDown);
          data = this.setBit(data, 2, this.planeAutoThrottleDown);
          data = this.setBit(data, 3, this.tankAutoThrottleDown);
@@ -46,7 +48,6 @@ public class MCH_PacketNotifyClientSetting extends MCH_Packet {
       } catch (IOException var3) {
          var3.printStackTrace();
       }
-
    }
 
    public static void send() {

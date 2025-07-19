@@ -14,15 +14,16 @@ public class MCH_HudItemCameraRot extends MCH_HudItem {
       this.drawPosY = toFormula(posy);
    }
 
+   @Override
    public void execute() {
       this.drawCommonGunnerCamera(ac, ac.camera, colorSetting, centerX + calc(this.drawPosX), centerY + calc(this.drawPosY));
    }
 
    private void drawCommonGunnerCamera(Entity ac, MCH_Camera camera, int color, double posX, double posY) {
       if (camera != null) {
-         double[] line = new double[]{posX - 21.0D, posY - 11.0D, posX + 21.0D, posY - 11.0D, posX + 21.0D, posY + 11.0D, posX - 21.0D, posY + 11.0D};
+         double[] line = new double[]{posX - 21.0, posY - 11.0, posX + 21.0, posY - 11.0, posX + 21.0, posY + 11.0, posX - 21.0, posY + 11.0};
          this.drawLine(line, color, 2);
-         line = new double[]{posX - 21.0D, posY, posX, posY, posX + 21.0D, posY, posX, posY, posX, posY - 11.0D, posX, posY, posX, posY + 11.0D, posX, posY};
+         line = new double[]{posX - 21.0, posY, posX, posY, posX + 21.0, posY, posX, posY, posX, posY - 11.0, posX, posY, posX, posY + 11.0, posX, posY};
          this.drawLineStipple(line, color, 1, 52428);
          float pitch = camera.rotationPitch;
          if (pitch < -30.0F) {
@@ -34,8 +35,8 @@ public class MCH_HudItemCameraRot extends MCH_HudItem {
          }
 
          pitch -= 20.0F;
-         pitch = (float)((double)pitch * 0.16D);
-         float yaw = (float)MCH_Lib.getRotateDiff((double)ac.field_70177_z, (double)camera.rotationYaw);
+         pitch = (float)(pitch * 0.16);
+         float yaw = (float)MCH_Lib.getRotateDiff(ac.rotationYaw, camera.rotationYaw);
          yaw *= 2.0F;
          if (yaw < -50.0F) {
             yaw = -50.0F;
@@ -45,8 +46,17 @@ public class MCH_HudItemCameraRot extends MCH_HudItem {
             yaw = 50.0F;
          }
 
-         yaw = (float)((double)yaw * 0.34D);
-         line = new double[]{posX + (double)yaw - 3.0D, posY + (double)pitch - 2.0D, posX + (double)yaw + 3.0D, posY + (double)pitch - 2.0D, posX + (double)yaw + 3.0D, posY + (double)pitch + 2.0D, posX + (double)yaw - 3.0D, posY + (double)pitch + 2.0D};
+         yaw = (float)(yaw * 0.34);
+         line = new double[]{
+            posX + yaw - 3.0,
+            posY + pitch - 2.0,
+            posX + yaw + 3.0,
+            posY + pitch - 2.0,
+            posX + yaw + 3.0,
+            posY + pitch + 2.0,
+            posX + yaw - 3.0,
+            posY + pitch + 2.0
+         };
          this.drawLine(line, color, 2);
       }
    }

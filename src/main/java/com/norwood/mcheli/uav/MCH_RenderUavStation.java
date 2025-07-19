@@ -19,7 +19,7 @@ public class MCH_RenderUavStation extends W_Render<MCH_EntityUavStation> {
 
    public MCH_RenderUavStation(RenderManager renderManager) {
       super(renderManager);
-      this.field_76989_e = 1.0F;
+      this.shadowSize = 1.0F;
    }
 
    public void doRender(MCH_EntityUavStation entity, double posX, double posY, double posZ, float par8, float tickTime) {
@@ -27,10 +27,10 @@ public class MCH_RenderUavStation extends W_Render<MCH_EntityUavStation> {
          if (entity.getKind() > 0) {
             int kind = entity.getKind() - 1;
             GL11.glPushMatrix();
-            GL11.glTranslated(posX, posY + 0.3499999940395355D, posZ);
+            GL11.glTranslated(posX, posY + 0.35F, posZ);
             GL11.glEnable(2884);
-            GL11.glRotatef(entity.field_70177_z, 0.0F, -1.0F, 0.0F);
-            GL11.glRotatef(entity.field_70125_A, 1.0F, 0.0F, 0.0F);
+            GL11.glRotatef(entity.rotationYaw, 0.0F, -1.0F, 0.0F);
+            GL11.glRotatef(entity.rotationPitch, 1.0F, 0.0F, 0.0F);
             GL11.glColor4f(0.75F, 0.75F, 0.75F, 1.0F);
             GL11.glEnable(3042);
             int srcBlend = GL11.glGetInteger(3041);
@@ -64,9 +64,9 @@ public class MCH_RenderUavStation extends W_Render<MCH_EntityUavStation> {
    public void renderPortableController(MCH_EntityUavStation uavSt, String name, float tickTime) {
       MCH_ModelManager.renderPart(name, "$body");
       float rot = MCH_Lib.smooth(uavSt.rotCover, uavSt.prevRotCover, tickTime);
-      this.renderRotPart(name, "$cover", rot * 60.0F, 0.0D, -0.1812D, -0.3186D);
-      this.renderRotPart(name, "$laptop_cover", rot * 95.0F, 0.0D, -0.1808D, -0.0422D);
-      this.renderRotPart(name, "$display", rot * -85.0F, 0.0D, -0.1807D, 0.2294D);
+      this.renderRotPart(name, "$cover", rot * 60.0F, 0.0, -0.1812, -0.3186);
+      this.renderRotPart(name, "$laptop_cover", rot * 95.0F, 0.0, -0.1808, -0.0422);
+      this.renderRotPart(name, "$display", rot * -85.0F, 0.0, -0.1807, 0.2294);
    }
 
    private void renderRotPart(String modelName, String partName, float rot, double x, double y, double z) {

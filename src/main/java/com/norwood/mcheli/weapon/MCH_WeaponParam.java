@@ -5,9 +5,9 @@ import net.minecraft.entity.Entity;
 public class MCH_WeaponParam {
    public Entity entity = null;
    public Entity user = null;
-   public double posX = 0.0D;
-   public double posY = 0.0D;
-   public double posZ = 0.0D;
+   public double posX = 0.0;
+   public double posY = 0.0;
+   public double posZ = 0.0;
    public float rotYaw = 0.0F;
    public float rotPitch = 0.0F;
    public float rotRoll = 0.0F;

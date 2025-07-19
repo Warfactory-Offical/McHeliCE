@@ -20,8 +20,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MCH_EntityChain extends W_Entity {
-   private static final DataParameter<Integer> TOWED_ID;
-   private static final DataParameter<Integer> TOW_ID;
+   private static final DataParameter<Integer> TOWED_ID = EntityDataManager.createKey(MCH_EntityChain.class, DataSerializers.VARINT);
+   private static final DataParameter<Integer> TOW_ID = EntityDataManager.createKey(MCH_EntityChain.class, DataSerializers.VARINT);
    private int isServerTowEntitySearchCount;
    public Entity towEntity;
    public Entity towedEntity;
@@ -32,51 +32,53 @@ public class MCH_EntityChain extends W_Entity {
 
    public MCH_EntityChain(World world) {
       super(world);
-      this.field_70156_m = true;
-      this.func_70105_a(1.0F, 1.0F);
+      this.preventEntitySpawning = true;
+      this.setSize(1.0F, 1.0F);
       this.towEntity = null;
       this.towedEntity = null;
       this.towEntityUUID = "";
       this.towedEntityUUID = "";
       this.isTowing = false;
-      this.noClip = true;
+      this.ignoreFrustumCheck = true;
       this.setChainLength(4);
       this.isServerTowEntitySearchCount = 50;
    }
 
    public MCH_EntityChain(World par1World, double par2, double par4, double par6) {
       this(par1World);
-      this.func_70107_b(par2, par4, par6);
-      this.field_70159_w = 0.0D;
-      this.field_70181_x = 0.0D;
-      this.field_70179_y = 0.0D;
-      this.field_70169_q = par2;
-      this.field_70167_r = par4;
-      this.field_70166_s = par6;
+      this.setPosition(par2, par4, par6);
+      this.motionX = 0.0;
+      this.motionY = 0.0;
+      this.motionZ = 0.0;
+      this.prevPosX = par2;
+      this.prevPosY = par4;
+      this.prevPosZ = par6;
    }
 
-   protected boolean func_70041_e_() {
+   protected boolean canTriggerWalking() {
       return false;
    }
 
+   @Override
    protected void entityInit() {
       this.dataManager.register(TOWED_ID, 0);
       this.dataManager.register(TOW_ID, 0);
    }
 
-   public AxisAlignedBB func_70114_g(Entity par1Entity) {
-      return par1Entity.func_174813_aQ();
+   public AxisAlignedBB getCollisionBox(Entity par1Entity) {
+      return par1Entity.getEntityBoundingBox();
    }
 
-   public AxisAlignedBB func_70046_E() {
+   public AxisAlignedBB getCollisionBoundingBox() {
       return null;
    }
 
-   public boolean func_70104_M() {
+   public boolean canBePushed() {
       return true;
    }
 
-   public boolean func_70097_a(DamageSource d, float par2) {
+   @Override
+   public boolean attackEntityFrom(DamageSource d, float par2) {
       return false;
    }
 
@@ -96,8 +98,8 @@ public class MCH_EntityChain extends W_Entity {
       return this.chainLength;
    }
 
-   public void func_70106_y() {
-      super.func_70106_y();
+   public void setDead() {
+      super.setDead();
       this.playDisconnectTowingEntity();
       this.isTowing = false;
       this.towEntity = null;
@@ -105,21 +107,21 @@ public class MCH_EntityChain extends W_Entity {
    }
 
    public boolean isTowingEntity() {
-      return this.isTowing && !this.field_70128_L && this.towedEntity != null && this.towEntity != null;
+      return this.isTowing && !this.isDead && this.towedEntity != null && this.towEntity != null;
    }
 
-   public boolean func_70067_L() {
+   public boolean canBeCollidedWith() {
       return false;
    }
 
    public void setTowEntity(Entity towedEntity, Entity towEntity) {
-      if (towedEntity != null && towEntity != null && !towedEntity.field_70128_L && !towEntity.field_70128_L && !W_Entity.isEqual(towedEntity, towEntity)) {
+      if (towedEntity != null && towEntity != null && !towedEntity.isDead && !towEntity.isDead && !W_Entity.isEqual(towedEntity, towEntity)) {
          this.isTowing = true;
          this.towedEntity = towedEntity;
          this.towEntity = towEntity;
          if (!this.world.isRemote) {
-            this.dataManager.func_187227_b(TOWED_ID, W_Entity.getEntityId(towedEntity));
-            this.dataManager.func_187227_b(TOW_ID, W_Entity.getEntityId(towEntity));
+            this.dataManager.set(TOWED_ID, W_Entity.getEntityId(towedEntity));
+            this.dataManager.set(TOW_ID, W_Entity.getEntityId(towedEntity));
             this.isServerTowEntitySearchCount = 0;
          }
 
@@ -135,15 +137,17 @@ public class MCH_EntityChain extends W_Entity {
          this.towedEntity = null;
          this.towEntity = null;
       }
-
    }
 
    public void searchTowingEntity() {
-      if ((this.towedEntity == null || this.towEntity == null) && !this.towedEntityUUID.isEmpty() && !this.towEntityUUID.isEmpty() && this.func_174813_aQ() != null) {
-         List<Entity> list = this.world.func_72839_b(this, this.func_174813_aQ().func_72314_b(32.0D, 32.0D, 32.0D));
+      if ((this.towedEntity == null || this.towEntity == null)
+         && !this.towedEntityUUID.isEmpty()
+         && !this.towEntityUUID.isEmpty()
+         && this.getEntityBoundingBox() != null) {
+         List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().grow(32.0, 32.0, 32.0));
          if (list != null) {
-            for(int i = 0; i < list.size(); ++i) {
-               Entity entity = (Entity)list.get(i);
+            for (int i = 0; i < list.size(); i++) {
+               Entity entity = list.get(i);
                String uuid = entity.getPersistentID().toString();
                if (this.towedEntity == null && uuid.compareTo(this.towedEntityUUID) == 0) {
                   this.towedEntity = entity;
@@ -156,50 +160,48 @@ public class MCH_EntityChain extends W_Entity {
             }
          }
       }
-
    }
 
-   public void func_70071_h_() {
-      super.func_70071_h_();
-      if (this.towedEntity == null || this.towedEntity.field_70128_L || this.towEntity == null || this.towEntity.field_70128_L) {
+   public void onUpdate() {
+      super.onUpdate();
+      if (this.towedEntity == null || this.towedEntity.isDead || this.towEntity == null || this.towEntity.isDead) {
          this.towedEntity = null;
          this.towEntity = null;
          this.isTowing = false;
       }
 
       if (this.towedEntity != null) {
-         this.towedEntity.field_70143_R = 0.0F;
+         this.towedEntity.fallDistance = 0.0F;
       }
 
-      this.field_70169_q = this.posX;
-      this.field_70167_r = this.posY;
-      this.field_70166_s = this.posZ;
+      this.prevPosX = this.posX;
+      this.prevPosY = this.posY;
+      this.prevPosZ = this.posZ;
       if (this.world.isRemote) {
          this.onUpdate_Client();
       } else {
          this.onUpdate_Server();
       }
-
    }
 
    public void onUpdate_Client() {
       if (!this.isTowingEntity()) {
-         this.setTowEntity(this.world.func_73045_a((Integer)this.dataManager.func_187225_a(TOWED_ID)), this.world.func_73045_a((Integer)this.dataManager.func_187225_a(TOW_ID)));
+         this.setTowEntity(this.world.getEntityByID((Integer)this.dataManager.get(TOWED_ID)), this.world.getEntityByID((Integer)this.dataManager.get(TOW_ID)));
       }
 
-      double d4 = this.posX + this.field_70159_w;
-      double d5 = this.posY + this.field_70181_x;
-      double d11 = this.posZ + this.field_70179_y;
-      this.func_70107_b(d4, d5, d11);
-      if (this.field_70122_E) {
-         this.field_70159_w *= 0.5D;
-         this.field_70181_x *= 0.5D;
-         this.field_70179_y *= 0.5D;
+      double d4 = this.posX + this.motionX;
+      double d5 = this.posY + this.motionY;
+      double d11 = this.posZ + this.motionZ;
+      this.setPosition(d4, d5, d11);
+      if (this.onGround) {
+         this.motionX *= 0.5;
+         this.motionY *= 0.5;
+         this.motionZ *= 0.5;
       }
 
-      this.field_70159_w *= 0.99D;
-      this.field_70181_x *= 0.95D;
-      this.field_70179_y *= 0.99D;
+      this.motionX *= 0.99;
+      this.motionY *= 0.95;
+      this.motionZ *= 0.99;
    }
 
    public void onUpdate_Server() {
@@ -208,72 +210,68 @@ public class MCH_EntityChain extends W_Entity {
          if (this.towEntity != null && this.towedEntity != null) {
             this.isServerTowEntitySearchCount = 0;
          } else {
-            --this.isServerTowEntitySearchCount;
+            this.isServerTowEntitySearchCount--;
          }
       } else if (this.towEntity == null || this.towedEntity == null) {
-         this.func_70106_y();
+         this.setDead();
       }
 
-      this.field_70181_x -= 0.01D;
+      this.motionY -= 0.01;
       if (!this.isTowing) {
-         this.field_70159_w *= 0.8D;
-         this.field_70181_x *= 0.8D;
-         this.field_70179_y *= 0.8D;
+         this.motionX *= 0.8;
+         this.motionY *= 0.8;
+         this.motionZ *= 0.8;
       }
 
-      this.func_70091_d(MoverType.SELF, this.field_70159_w, this.field_70181_x, this.field_70179_y);
+      this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
       if (this.isTowingEntity()) {
-         this.func_70107_b(this.towEntity.posX, this.towEntity.posY + 2.0D, this.towEntity.posZ);
+         this.setPosition(this.towEntity.posX, this.towEntity.posY + 2.0, this.towEntity.posZ);
          this.updateTowingEntityPosRot();
       }
 
-      this.field_70159_w *= 0.99D;
-      this.field_70181_x *= 0.95D;
-      this.field_70179_y *= 0.99D;
+      this.motionX *= 0.99;
+      this.motionY *= 0.95;
+      this.motionZ *= 0.99;
    }
 
    public void updateTowingEntityPosRot() {
       double dx = this.towedEntity.posX - this.towEntity.posX;
       double dy = this.towedEntity.posY - this.towEntity.posY;
       double dz = this.towedEntity.posZ - this.towEntity.posZ;
-      double dist = (double)MathHelper.func_76133_a(dx * dx + dy * dy + dz * dz);
-      float DIST = (float)this.getChainLength();
-      float MAX_DIST = (float)(this.getChainLength() + 2);
-      if (dist > (double)DIST) {
-         this.towedEntity.field_70177_z = (float)(Math.atan2(dz, dx) * 180.0D / 3.141592653589793D) + 90.0F;
-         this.towedEntity.field_70126_B = this.towedEntity.field_70177_z;
-         double tmp = dist - (double)DIST;
+      double dist = MathHelper.sqrt(dx * dx + dy * dy + dz * dz);
+      float DIST = this.getChainLength();
+      float MAX_DIST = this.getChainLength() + 2;
+      if (dist > DIST) {
+         this.towedEntity.rotationYaw = (float)(Math.atan2(dz, dx) * 180.0 / Math.PI) + 90.0F;
+         this.towedEntity.prevRotationYaw = this.towedEntity.rotationYaw;
+         double tmp = dist - DIST;
          float accl = 0.001F;
-         Entity var10000 = this.towedEntity;
-         var10000.field_70159_w -= dx * (double)accl / tmp;
-         var10000 = this.towedEntity;
-         var10000.field_70181_x -= dy * (double)accl / tmp;
-         var10000 = this.towedEntity;
-         var10000.field_70179_y -= dz * (double)accl / tmp;
-         if (dist > (double)MAX_DIST) {
-            this.towedEntity.func_70107_b(this.towEntity.posX + dx * (double)MAX_DIST / dist, this.towEntity.posY + dy * (double)MAX_DIST / dist, this.towEntity.posZ + dz * (double)MAX_DIST / dist);
+         this.towedEntity.motionX -= dx * accl / tmp;
+         this.towedEntity.motionY -= dy * accl / tmp;
+         this.towedEntity.motionZ -= dz * accl / tmp;
+         if (dist > MAX_DIST) {
+            this.towedEntity
+               .setPosition(this.towEntity.posX + dx * MAX_DIST / dist, this.towEntity.posY + dy * MAX_DIST / dist, this.towEntity.posZ + dz * MAX_DIST / dist);
          }
       }
-
    }
 
    public void playDisconnectTowingEntity() {
       W_WorldFunc.MOD_playSoundEffect(this.world, this.posX, this.posY, this.posZ, "chain_ct", 1.0F, 1.0F);
    }
 
-   protected void func_70014_b(NBTTagCompound nbt) {
-      if (this.isTowing && this.towEntity != null && !this.towEntity.field_70128_L && this.towedEntity != null && !this.towedEntity.field_70128_L) {
+   protected void writeEntityToNBT(NBTTagCompound nbt) {
+      if (this.isTowing && this.towEntity != null && !this.towEntity.isDead && this.towedEntity != null && !this.towedEntity.isDead) {
          nbt.setString("TowEntityUUID", this.towEntity.getPersistentID().toString());
          nbt.setString("TowedEntityUUID", this.towedEntity.getPersistentID().toString());
          nbt.setInteger("ChainLength", this.getChainLength());
       }
-
    }
 
-   protected void func_70037_a(NBTTagCompound nbt) {
-      this.towEntityUUID = nbt.func_74779_i("TowEntityUUID");
-      this.towedEntityUUID = nbt.func_74779_i("TowedEntityUUID");
-      this.setChainLength(nbt.func_74762_e("ChainLength"));
+   protected void readEntityFromNBT(NBTTagCompound nbt) {
+      this.towEntityUUID = nbt.getString("TowEntityUUID");
+      this.towedEntityUUID = nbt.getString("TowedEntityUUID");
+      this.setChainLength(nbt.getInteger("ChainLength"));
    }
 
    @SideOnly(Side.CLIENT)
@@ -281,12 +279,7 @@ public class MCH_EntityChain extends W_Entity {
       return 0.0F;
    }
 
-   public boolean func_184230_a(EntityPlayer player, EnumHand hand) {
+   public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
       return false;
-   }
-
-   static {
-      TOWED_ID = EntityDataManager.createKey(MCH_EntityChain.class, DataSerializers.VARINT);
-      TOW_ID = EntityDataManager.createKey(MCH_EntityChain.class, DataSerializers.VARINT);
    }
 }

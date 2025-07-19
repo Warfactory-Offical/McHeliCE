@@ -17,6 +17,6 @@ public interface IVertexModelLoader {
    _IModelCustom load(IResourceManager var1, ResourceLocation var2) throws IOException, _ModelFormatException;
 
    default ResourceLocation withExtension(ResourceLocation location) {
-      return new ResourceLocation(location.func_110624_b(), location.func_110623_a() + "." + this.getExtension());
+      return new ResourceLocation(location.getNamespace(), location.getPath() + "." + this.getExtension());
    }
 }

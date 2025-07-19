@@ -20,7 +20,7 @@ public class MCH_Blade {
    }
 
    public void setRotation(float rotation) {
-      this.rotation = (float)MCH_Lib.getRotate360((double)rotation);
+      this.rotation = (float)MCH_Lib.getRotate360(rotation);
    }
 
    public float getPrevRotation() {
@@ -28,11 +28,11 @@ public class MCH_Blade {
    }
 
    public void setPrevRotation(float rotation) {
-      this.prevRotation = (float)MCH_Lib.getRotate360((double)rotation);
+      this.prevRotation = (float)MCH_Lib.getRotate360(rotation);
    }
 
    public MCH_Blade setBaseRotation(float rotation) {
-      if ((double)rotation >= 0.0D) {
+      if (rotation >= 0.0) {
          this.baseRotation = rotation;
       }
 
@@ -44,7 +44,7 @@ public class MCH_Blade {
    }
 
    public MCH_Blade setFoldSpeed(float speed) {
-      if ((double)speed > 0.1D) {
+      if (speed > 0.1) {
          this.foldSpeed = speed;
       }
 
@@ -70,16 +70,15 @@ public class MCH_Blade {
          this.rotation %= 360.0F;
          this.prevRotation = this.rotation;
       }
-
    }
 
    public boolean folding() {
       boolean isCmpFolding = false;
       if (this.rotation > this.foldRotation && this.rotation < 360.0F - this.foldRotation) {
          if (this.rotation < 180.0F) {
-            this.rotation -= this.foldSpeed;
+            this.rotation = this.rotation - this.foldSpeed;
          } else {
-            this.rotation += this.foldSpeed;
+            this.rotation = this.rotation + this.foldSpeed;
          }
 
          this.rotation %= 360.0F;
@@ -92,16 +91,16 @@ public class MCH_Blade {
 
    public boolean unfolding(float rot) {
       boolean isCmpUnfolding = false;
-      float targetRot = (float)MCH_Lib.getRotate360((double)(rot + this.baseRotation));
+      float targetRot = (float)MCH_Lib.getRotate360(rot + this.baseRotation);
       float prevRot = this.rotation;
       if (targetRot <= 180.0F) {
-         this.rotation = (float)MCH_Lib.getRotate360((double)(this.rotation + this.foldSpeed));
+         this.rotation = (float)MCH_Lib.getRotate360(this.rotation + this.foldSpeed);
          if (this.rotation >= targetRot && prevRot <= targetRot) {
             this.rotation = targetRot;
             isCmpUnfolding = true;
          }
       } else {
-         this.rotation = (float)MCH_Lib.getRotate360((double)(this.rotation - this.foldSpeed));
+         this.rotation = (float)MCH_Lib.getRotate360(this.rotation - this.foldSpeed);
          if (this.rotation <= targetRot && prevRot >= targetRot) {
             this.rotation = targetRot;
             isCmpUnfolding = true;

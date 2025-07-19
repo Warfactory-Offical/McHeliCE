@@ -16,54 +16,51 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MCH_EntityA10 extends W_Entity {
-   private static final DataParameter<String> WEAPON_NAME;
-   public final int DESPAWN_COUNT;
-   public int despawnCount;
+   private static final DataParameter<String> WEAPON_NAME = EntityDataManager.createKey(MCH_EntityA10.class, DataSerializers.STRING);
+   public final int DESPAWN_COUNT = 70;
+   public int despawnCount = 0;
    public Entity shootingAircraft;
    public Entity shootingEntity;
-   public int shotCount;
-   public int direction;
+   public int shotCount = 0;
+   public int direction = 0;
    public int power;
    public float acceleration;
    public int explosionPower;
    public boolean isFlaming;
    public String name;
    public MCH_WeaponInfo weaponInfo;
-   static int snd_num;
+   static int snd_num = 0;
 
    public MCH_EntityA10(World world) {
       super(world);
-      this.DESPAWN_COUNT = 70;
-      this.despawnCount = 0;
-      this.shotCount = 0;
-      this.direction = 0;
-      this.noClip = true;
-      this.field_70156_m = false;
-      this.func_70105_a(5.0F, 3.0F);
-      this.field_70159_w = 0.0D;
-      this.field_70181_x = 0.0D;
-      this.field_70179_y = 0.0D;
+      this.ignoreFrustumCheck = true;
+      this.preventEntitySpawning = false;
+      this.setSize(5.0F, 3.0F);
+      this.motionX = 0.0;
+      this.motionY = 0.0;
+      this.motionZ = 0.0;
       this.power = 32;
       this.acceleration = 4.0F;
       this.explosionPower = 1;
       this.isFlaming = false;
       this.shootingEntity = null;
       this.shootingAircraft = null;
-      this.field_70178_ae = true;
-      this._renderDistanceWeight *= 10.0D;
+      this.isImmuneToFire = true;
+      this._renderDistanceWeight *= 10.0;
    }
 
    public MCH_EntityA10(World world, double x, double y, double z) {
       this(world);
-      this.field_70142_S = this.field_70169_q = this.posX = x;
-      this.field_70137_T = this.field_70167_r = this.posY = y;
-      this.field_70136_U = this.field_70166_s = this.posZ = z;
+      this.lastTickPosX = this.prevPosX = this.posX = x;
+      this.lastTickPosY = this.prevPosY = this.posY = y;
+      this.lastTickPosZ = this.prevPosZ = this.posZ = z;
    }
 
-   protected boolean func_70041_e_() {
+   protected boolean canTriggerWalking() {
       return false;
    }
 
+   @Override
    protected void entityInit() {
       this.dataManager.register(WEAPON_NAME, "");
    }
@@ -72,14 +69,13 @@ public class MCH_EntityA10 extends W_Entity {
       if (s != null && !s.isEmpty()) {
          this.weaponInfo = MCH_WeaponInfoManager.get(s);
          if (this.weaponInfo != null && !this.world.isRemote) {
-            this.dataManager.func_187227_b(WEAPON_NAME, s);
+            this.dataManager.set(WEAPON_NAME, s);
          }
       }
-
    }
 
    public String getWeaponName() {
-      return (String)this.dataManager.func_187225_a(WEAPON_NAME);
+      return (String)this.dataManager.get(WEAPON_NAME);
    }
 
    @Nullable
@@ -87,40 +83,41 @@ public class MCH_EntityA10 extends W_Entity {
       return this.weaponInfo;
    }
 
-   public AxisAlignedBB func_70114_g(Entity par1Entity) {
-      return par1Entity.func_174813_aQ();
+   public AxisAlignedBB getCollisionBox(Entity par1Entity) {
+      return par1Entity.getEntityBoundingBox();
    }
 
-   public AxisAlignedBB func_70046_E() {
-      return this.func_174813_aQ();
+   public AxisAlignedBB getCollisionBoundingBox() {
+      return this.getEntityBoundingBox();
    }
 
-   public boolean func_70104_M() {
+   public boolean canBePushed() {
       return false;
    }
 
-   public boolean func_70097_a(DamageSource par1DamageSource, float par2) {
+   @Override
+   public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
       return false;
    }
 
-   public boolean func_70067_L() {
+   public boolean canBeCollidedWith() {
       return false;
    }
 
-   public void func_70106_y() {
-      super.func_70106_y();
+   public void setDead() {
+      super.setDead();
    }
 
-   public void func_70071_h_() {
-      super.func_70071_h_();
-      if (!this.field_70128_L) {
-         ++this.despawnCount;
+   public void onUpdate() {
+      super.onUpdate();
+      if (!this.isDead) {
+         this.despawnCount++;
       }
 
       if (this.weaponInfo == null) {
          this.setWeaponName(this.getWeaponName());
          if (this.weaponInfo == null) {
-            this.func_70106_y();
+            this.setDead();
             return;
          }
       }
@@ -131,15 +128,14 @@ public class MCH_EntityA10 extends W_Entity {
          this.onUpdate_Server();
       }
 
-      if (!this.field_70128_L) {
+      if (!this.isDead) {
          if (this.despawnCount <= 20) {
-            this.field_70181_x = -0.3D;
+            this.motionY = -0.3;
          } else {
-            this.func_70107_b(this.posX + this.field_70159_w, this.posY + this.field_70181_x, this.posZ + this.field_70179_y);
-            this.field_70181_x += 0.02D;
+            this.setPosition(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+            this.motionY += 0.02;
          }
       }
-
    }
 
    public boolean isRender() {
@@ -151,13 +147,13 @@ public class MCH_EntityA10 extends W_Entity {
    }
 
    private void onUpdate_Server() {
-      if (!this.field_70128_L) {
+      if (!this.isDead) {
          if (this.despawnCount > 70) {
-            this.func_70106_y();
+            this.setDead();
          } else if (this.despawnCount > 0 && this.shotCount < 40) {
-            for(int i = 0; i < 2; ++i) {
+            for (int i = 0; i < 2; i++) {
                this.shotGAU8(true, this.shotCount);
-               ++this.shotCount;
+               this.shotCount++;
             }
 
             if (this.shotCount == 38) {
@@ -165,70 +161,63 @@ public class MCH_EntityA10 extends W_Entity {
             }
          }
       }
-
    }
 
    protected void shotGAU8(boolean playSound, int cnt) {
-      float yaw = (float)(90 * this.direction);
+      float yaw = 90 * this.direction;
       float pitch = 30.0F;
       double x = this.posX;
       double y = this.posY;
       double z = this.posZ;
-      double tX = this.field_70146_Z.nextDouble() - 0.5D;
-      double tY = -2.6D;
-      double tZ = this.field_70146_Z.nextDouble() - 0.5D;
+      double tX = this.rand.nextDouble() - 0.5;
+      double tY = -2.6;
+      double tZ = this.rand.nextDouble() - 0.5;
       if (this.direction == 0) {
-         tZ += 10.0D;
-         z += (double)cnt * 0.6D;
+         tZ += 10.0;
+         z += cnt * 0.6;
       }
 
       if (this.direction == 1) {
-         tX -= 10.0D;
-         x -= (double)cnt * 0.6D;
+         tX -= 10.0;
+         x -= cnt * 0.6;
       }
 
       if (this.direction == 2) {
-         tZ -= 10.0D;
-         z -= (double)cnt * 0.6D;
+         tZ -= 10.0;
+         z -= cnt * 0.6;
       }
 
       if (this.direction == 3) {
-         tX += 10.0D;
-         x += (double)cnt * 0.6D;
+         tX += 10.0;
+         x += cnt * 0.6;
       }
 
-      double dist = (double)MathHelper.func_76133_a(tX * tX + tY * tY + tZ * tZ);
-      tX = tX * 4.0D / dist;
-      tY = tY * 4.0D / dist;
-      tZ = tZ * 4.0D / dist;
-      MCH_EntityBullet e = new MCH_EntityBullet(this.world, x, y, z, tX, tY, tZ, yaw, pitch, (double)this.acceleration);
+      double dist = MathHelper.sqrt(tX * tX + tY * tY + tZ * tZ);
+      tX = tX * 4.0 / dist;
+      tY = tY * 4.0 / dist;
+      tZ = tZ * 4.0 / dist;
+      MCH_EntityBullet e = new MCH_EntityBullet(this.world, x, y, z, tX, tY, tZ, yaw, pitch, this.acceleration);
       e.setName(this.getWeaponName());
       e.explosionPower = this.shotCount % 4 == 0 ? this.explosionPower : 0;
       e.setPower(this.power);
       e.shootingEntity = this.shootingEntity;
       e.shootingAircraft = this.shootingAircraft;
-      this.world.func_72838_d(e);
+      this.world.spawnEntity(e);
    }
 
-   protected void func_70014_b(NBTTagCompound par1NBTTagCompound) {
+   protected void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
       par1NBTTagCompound.setString("WeaponName", this.getWeaponName());
    }
 
-   protected void func_70037_a(NBTTagCompound par1NBTTagCompound) {
+   protected void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
       this.despawnCount = 200;
       if (par1NBTTagCompound.hasKey("WeaponName")) {
-         this.setWeaponName(par1NBTTagCompound.func_74779_i("WeaponName"));
+         this.setWeaponName(par1NBTTagCompound.getString("WeaponName"));
       }
-
    }
 
    @SideOnly(Side.CLIENT)
    public float getShadowSize() {
       return 10.0F;
-   }
-
-   static {
-      WEAPON_NAME = EntityDataManager.createKey(MCH_EntityA10.class, DataSerializers.STRING);
-      snd_num = 0;
    }
 }

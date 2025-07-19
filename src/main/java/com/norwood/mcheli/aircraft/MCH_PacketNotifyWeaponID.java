@@ -15,10 +15,12 @@ public class MCH_PacketNotifyWeaponID extends MCH_Packet {
    public short ammo = 0;
    public short restAmmo = 0;
 
+   @Override
    public int getMessageID() {
       return 268439601;
    }
 
+   @Override
    public void readData(ByteArrayDataInput data) {
       try {
          this.entityID_Ac = data.readInt();
@@ -29,9 +31,9 @@ public class MCH_PacketNotifyWeaponID extends MCH_Packet {
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       try {
          dos.writeInt(this.entityID_Ac);
@@ -42,7 +44,6 @@ public class MCH_PacketNotifyWeaponID extends MCH_Packet {
       } catch (IOException var3) {
          var3.printStackTrace();
       }
-
    }
 
    public static void send(Entity sender, int sid, int wid, int ammo, int rest_ammo) {
@@ -52,6 +53,6 @@ public class MCH_PacketNotifyWeaponID extends MCH_Packet {
       s.weaponID = wid;
       s.ammo = (short)ammo;
       s.restAmmo = (short)rest_ammo;
-      W_Network.sendToAllAround(s, sender, 150.0D);
+      W_Network.sendToAllAround(s, sender, 150.0);
    }
 }

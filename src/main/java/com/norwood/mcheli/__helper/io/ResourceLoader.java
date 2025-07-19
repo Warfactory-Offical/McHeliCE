@@ -36,7 +36,7 @@ public abstract class ResourceLoader implements Closeable {
       return this.loadAll(null).stream().findFirst();
    }
 
-   public abstract ResourceLoader.ResourceEntry load(String var1) throws IOException;
+   public abstract ResourceLoader.ResourceEntry load(String var1) throws IOException, FileNotFoundException;
 
    public abstract InputStream getInputStreamFromEntry(ResourceLoader.ResourceEntry var1) throws IOException;
 
@@ -44,28 +44,28 @@ public abstract class ResourceLoader implements Closeable {
       return this.getInputStreamFromEntry(this.load(relativePath));
    }
 
+   @Override
    protected void finalize() throws Throwable {
       this.close();
       super.finalize();
    }
 
    public static ResourceLoader create(File file) {
-      return file.isDirectory() ? new DirectoryLoader(file) : new ZipJarFileLoader(file);
+      return (ResourceLoader)(file.isDirectory() ? new ResourceLoader.DirectoryLoader(file) : new ResourceLoader.ZipJarFileLoader(file));
    }
 
    static class DirectoryLoader extends ResourceLoader {
-      private static final boolean ON_WINDOWS;
-      private static final CharMatcher BACKSLASH_MATCHER;
+      private static final boolean ON_WINDOWS = OSUtils.IS_WINDOWS;
+      private static final CharMatcher BACKSLASH_MATCHER = CharMatcher.is('\\');
 
       DirectoryLoader(File file) {
          super(file);
       }
 
+      @Override
       public List<ResourceLoader.ResourceEntry> loadAll(@Nullable Predicate<? super ResourceLoader.ResourceEntry> filePathFilter) throws IOException {
          List<ResourceLoader.ResourceEntry> list = Lists.newLinkedList();
-         filePathFilter = filePathFilter == null ? (path) -> {
-            return true;
-         } : filePathFilter;
+         filePathFilter = filePathFilter == null ? path -> true : filePathFilter;
          this.loadFiles(this.dir, list, filePathFilter);
          return list;
       }
@@ -73,11 +73,7 @@ public abstract class ResourceLoader implements Closeable {
       private void loadFiles(File dir, List<ResourceLoader.ResourceEntry> list, Predicate<? super ResourceLoader.ResourceEntry> filePathFilter) throws IOException {
          if (dir.exists()) {
             if (dir.isDirectory()) {
-               File[] var4 = dir.listFiles();
-               int var5 = var4.length;
-
-               for(int var6 = 0; var6 < var5; ++var6) {
-                  File file = var4[var6];
+               for (File file : dir.listFiles()) {
                   this.loadFiles(file, list, filePathFilter);
                }
             } else {
@@ -94,10 +90,10 @@ public abstract class ResourceLoader implements Closeable {
                }
             }
          }
-
       }
 
-      public ResourceLoader.ResourceEntry load(String relativePath) throws IOException {
+      @Override
+      public ResourceLoader.ResourceEntry load(String relativePath) throws IOException, FileNotFoundException {
          File file = this.getFile(relativePath);
          if (file != null && file.exists()) {
             return new ResourceLoader.ResourceEntry(relativePath, file.isDirectory());
@@ -106,6 +102,7 @@ public abstract class ResourceLoader implements Closeable {
          }
       }
 
+      @Override
       public InputStream getInputStreamFromEntry(ResourceLoader.ResourceEntry resource) throws IOException {
          File file1 = this.getFile(resource.getPath());
          if (file1 == null) {
@@ -137,12 +134,26 @@ public abstract class ResourceLoader implements Closeable {
          return s.endsWith(filepath);
       }
 
+      @Override
       public void close() throws IOException {
       }
+   }
 
-      static {
-         ON_WINDOWS = OSUtils.IS_WINDOWS;
-         BACKSLASH_MATCHER = CharMatcher.is('\\');
+   public static class ResourceEntry {
+      private String path;
+      private boolean isDirectory;
+
+      public ResourceEntry(String path, boolean isDirectory) {
+         this.path = path;
+         this.isDirectory = isDirectory;
+      }
+
+      public boolean isDirectory() {
+         return this.isDirectory;
+      }
+
+      public String getPath() {
+         return this.path;
       }
    }
 
@@ -153,18 +164,18 @@ public abstract class ResourceLoader implements Closeable {
          super(file);
       }
 
+      @Override
       public List<ResourceLoader.ResourceEntry> loadAll(@Nullable Predicate<? super ResourceLoader.ResourceEntry> filePathFilter) throws IOException {
          ZipFile zipfile = this.getResourcePackZipFile();
-         filePathFilter = filePathFilter == null ? (path) -> {
-            return true;
-         } : filePathFilter;
-         List<ResourceLoader.ResourceEntry> list = zipfile.stream().map((enrty) -> {
-            return new ResourceEntry(enrty.getName(), enrty.isDirectory());
-         }).filter(filePathFilter).collect(Collectors.toList());
-         return list;
+         filePathFilter = filePathFilter == null ? path -> true : filePathFilter;
+         return zipfile.stream()
+            .map(enrty -> new ResourceLoader.ResourceEntry(enrty.getName(), enrty.isDirectory()))
+            .filter(filePathFilter)
+            .collect(Collectors.toList());
       }
 
-      public ResourceLoader.ResourceEntry load(String relativePath) throws IOException {
+      @Override
+      public ResourceLoader.ResourceEntry load(String relativePath) throws IOException, FileNotFoundException {
          ZipFile zipfile = this.getResourcePackZipFile();
          ZipEntry zipEntry = zipfile.getEntry(relativePath);
          if (zipEntry != null) {
@@ -174,6 +185,7 @@ public abstract class ResourceLoader implements Closeable {
          }
       }
 
+      @Override
       public InputStream getInputStreamFromEntry(ResourceLoader.ResourceEntry resource) throws IOException {
          ZipFile zipfile = this.getResourcePackZipFile();
          ZipEntry zipentry = zipfile.getEntry(resource.getPath());
@@ -192,30 +204,12 @@ public abstract class ResourceLoader implements Closeable {
          return this.resourcePackZipFile;
       }
 
+      @Override
       public void close() throws IOException {
          if (this.resourcePackZipFile != null) {
             this.resourcePackZipFile.close();
             this.resourcePackZipFile = null;
          }
-
-      }
-   }
-
-   public static class ResourceEntry {
-      private final String path;
-      private final boolean isDirectory;
-
-      public ResourceEntry(String path, boolean isDirectory) {
-         this.path = path;
-         this.isDirectory = isDirectory;
-      }
-
-      public boolean isDirectory() {
-         return this.isDirectory;
-      }
-
-      public String getPath() {
-         return this.path;
       }
    }
 }

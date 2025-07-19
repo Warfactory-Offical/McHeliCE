@@ -6,11 +6,12 @@ public class MCH_ConfigPrm {
    public int prmInt = 0;
    public String prmString = "";
    public boolean prmBool = false;
-   public double prmDouble = 0.0D;
+   public double prmDouble = 0.0;
    public String desc = "";
    public int prmIntDefault = 0;
    public String validVer = "";
 
+   @Override
    public String toString() {
       if (this.type == 0) {
          return String.valueOf(this.prmInt);
@@ -57,7 +58,7 @@ public class MCH_ConfigPrm {
          String[] configVerSplit = configVer.split("\\.");
          String[] validVerSplit = this.validVer.split("\\.");
          if (configVerSplit.length == 3 && validVerSplit.length == 3) {
-            for(int i = 0; i < 3; ++i) {
+            for (int i = 0; i < 3; i++) {
                int n1 = Integer.valueOf(configVerSplit[i].replaceAll("[a-zA-Z-_]", "").trim());
                int n2 = Integer.valueOf(validVerSplit[i].replaceAll("[a-zA-Z-_]", "").trim());
                if (n1 > n2) {
@@ -78,7 +79,6 @@ public class MCH_ConfigPrm {
       if (this.type == 0) {
          this.prmInt = n;
       }
-
    }
 
    public void setPrm(String s) {
@@ -104,20 +104,17 @@ public class MCH_ConfigPrm {
       if (this.type == 3 && !s.isEmpty()) {
          this.prmDouble = MCH_Lib.parseDouble(s);
       }
-
    }
 
    public void setPrm(boolean b) {
       if (this.type == 2) {
          this.prmBool = b;
       }
-
    }
 
    public void setPrm(double f) {
       if (this.type == 3) {
          this.prmDouble = f;
       }
-
    }
 }

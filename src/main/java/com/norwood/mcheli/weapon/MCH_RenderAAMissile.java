@@ -15,14 +15,14 @@ public class MCH_RenderAAMissile extends MCH_RenderBulletBase<MCH_EntityAAMissil
 
    public MCH_RenderAAMissile(RenderManager renderManager) {
       super(renderManager);
-      this.field_76989_e = 0.5F;
+      this.shadowSize = 0.5F;
    }
 
    public void renderBullet(MCH_EntityAAMissile entity, double posX, double posY, double posZ, float par8, float par9) {
       if (entity instanceof MCH_EntityAAMissile) {
-         double mx = entity.prevMotionX + (entity.field_70159_w - entity.prevMotionX) * (double)par9;
-         double my = entity.prevMotionY + (entity.field_70181_x - entity.prevMotionY) * (double)par9;
-         double mz = entity.prevMotionZ + (entity.field_70179_y - entity.prevMotionZ) * (double)par9;
+         double mx = entity.prevMotionX + (entity.motionX - entity.prevMotionX) * par9;
+         double my = entity.prevMotionY + (entity.motionY - entity.prevMotionY) * par9;
+         double mz = entity.prevMotionZ + (entity.motionZ - entity.prevMotionZ) * par9;
          GL11.glPushMatrix();
          GL11.glTranslated(posX, posY, posZ);
          Vec3d v = MCH_Lib.getYawPitchFromVec(mx, my, mz);

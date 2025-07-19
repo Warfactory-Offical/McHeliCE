@@ -40,7 +40,6 @@ public abstract class W_ModelCustom implements _IModelCustom {
       if (v.z > this.maxZ) {
          this.maxZ = v.z;
       }
-
    }
 
    public void checkMinMaxFinal() {

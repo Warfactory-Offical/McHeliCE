@@ -3,7 +3,6 @@ package com.norwood.mcheli.__helper.addon;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.io.File;
-import java.util.Iterator;
 import java.util.List;
 import com.norwood.mcheli.MCH_MOD;
 import com.norwood.mcheli.MCH_OutputFile;
@@ -26,9 +25,20 @@ public class GeneratedAddonPack extends AddonPack {
    }
 
    private GeneratedAddonPack() {
-      super("@generated", "Generated", "1.0", (File)null, "EMB4-MCHeli", ImmutableList.of("EMB4", "Murachiki27"), "Generated addon(auto generate or update files)", "1", ImmutableMap.of());
+      super(
+         "@generated",
+         "Generated",
+         "1.0",
+         null,
+         "EMB4-MCHeli",
+         ImmutableList.of("EMB4", "Murachiki27"),
+         "Generated addon(auto generate or update files)",
+         "1",
+         ImmutableMap.of()
+      );
    }
 
+   @Override
    public File getFile() {
       if (generatedDir == null) {
          generatedDir = new File(MCH_MOD.getAddonDir(), "/generated/");
@@ -43,10 +53,7 @@ public class GeneratedAddonPack extends AddonPack {
       if (!file.openUTF8(assets.getPath() + "/" + targetAssetPath)) {
          return false;
       } else {
-         Iterator var5 = lines.iterator();
-
-         while(var5.hasNext()) {
-            String s = (String)var5.next();
+         for (String s : lines) {
             file.writeLine(s);
          }
 

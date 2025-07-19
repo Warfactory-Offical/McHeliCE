@@ -14,12 +14,13 @@ public class MCH_RenderNull extends W_Render<Entity> {
 
    public MCH_RenderNull(RenderManager renderManager) {
       super(renderManager);
-      this.field_76989_e = 0.0F;
+      this.shadowSize = 0.0F;
    }
 
-   public void func_76986_a(Entity entity, double posX, double posY, double posZ, float par8, float tickTime) {
+   public void doRender(Entity entity, double posX, double posY, double posZ, float par8, float tickTime) {
    }
 
+   @Override
    protected ResourceLocation getEntityTexture(Entity entity) {
       return TEX_DEFAULT;
    }

@@ -20,10 +20,12 @@ public class VariableExpression extends WordExpression {
       super(from, s);
    }
 
+   @Override
    public AbstractExpression dup(ShareExpValue s) {
       return new VariableExpression(this, s);
    }
 
+   @Override
    public long evalLong() {
       try {
          return this.share.var.evalLong(this.getVarValue());
@@ -34,6 +36,7 @@ public class VariableExpression extends WordExpression {
       }
    }
 
+   @Override
    public double evalDouble() {
       try {
          return this.share.var.evalDouble(this.getVarValue());
@@ -44,10 +47,12 @@ public class VariableExpression extends WordExpression {
       }
    }
 
+   @Override
    public Object evalObject() {
       return this.getVarValue();
    }
 
+   @Override
    protected void let(Object val, int pos) {
       String name = this.getWord();
 
@@ -73,19 +78,20 @@ public class VariableExpression extends WordExpression {
       }
 
       if (val == null) {
-         throw new EvalException(2103, word, this.string, this.pos, (Throwable)null);
+         throw new EvalException(2103, word, this.string, this.pos, null);
       } else {
          return val;
       }
    }
 
+   @Override
    protected Object getVariable() {
       try {
          return this.share.var.getObject(this.word);
       } catch (EvalException var2) {
          throw var2;
       } catch (Exception var3) {
-         throw new EvalException(2002, this.word, this.string, this.pos, (Throwable)null);
+         throw new EvalException(2002, this.word, this.string, this.pos, null);
       }
    }
 }

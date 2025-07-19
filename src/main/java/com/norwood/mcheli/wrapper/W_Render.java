@@ -1,5 +1,6 @@
 package com.norwood.mcheli.wrapper;
 
+import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import com.norwood.mcheli.MCH_Config;
 import net.minecraft.client.renderer.GLAllocation;
@@ -11,8 +12,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 public abstract class W_Render<T extends Entity> extends Render<T> {
-   private static FloatBuffer colorBuffer = GLAllocation.func_74529_h(16);
-   protected static final ResourceLocation TEX_DEFAULT;
+   private static FloatBuffer colorBuffer = GLAllocation.createDirectFloatBuffer(16);
+   protected static final ResourceLocation TEX_DEFAULT = new ResourceLocation(W_MOD.DOMAIN, "textures/default.png");
    public int srcBlend;
    public int dstBlend;
 
@@ -21,7 +22,7 @@ public abstract class W_Render<T extends Entity> extends Render<T> {
    }
 
    protected void bindTexture(String path) {
-      super.func_110776_a(new ResourceLocation(W_MOD.DOMAIN, path));
+      super.bindTexture(new ResourceLocation(W_MOD.DOMAIN, path));
    }
 
    protected ResourceLocation getEntityTexture(T entity) {
@@ -29,9 +30,9 @@ public abstract class W_Render<T extends Entity> extends Render<T> {
    }
 
    public static FloatBuffer setColorBuffer(float p_74521_0_, float p_74521_1_, float p_74521_2_, float p_74521_3_) {
-      colorBuffer.clear();
+      ((Buffer)colorBuffer).clear();
       colorBuffer.put(p_74521_0_).put(p_74521_1_).put(p_74521_2_).put(p_74521_3_);
-      colorBuffer.flip();
+      ((Buffer)colorBuffer).flip();
       return colorBuffer;
    }
 
@@ -44,7 +45,7 @@ public abstract class W_Render<T extends Entity> extends Render<T> {
       GL11.glEnable(2884);
       int j = lighting % 65536;
       int k = lighting / 65536;
-      OpenGlHelper.func_77475_a(OpenGlHelper.field_77476_b, (float)j / 1.0F, (float)k / 1.0F);
+      OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j / 1.0F, k / 1.0F);
       GL11.glColor4f(0.75F, 0.75F, 0.75F, 1.0F);
       GL11.glEnable(3042);
       this.srcBlend = GL11.glGetInteger(3041);
@@ -56,9 +57,5 @@ public abstract class W_Render<T extends Entity> extends Render<T> {
       GL11.glBlendFunc(this.srcBlend, this.dstBlend);
       GL11.glDisable(3042);
       GL11.glShadeModel(7424);
-   }
-
-   static {
-      TEX_DEFAULT = new ResourceLocation(W_MOD.DOMAIN, "textures/default.png");
    }
 }

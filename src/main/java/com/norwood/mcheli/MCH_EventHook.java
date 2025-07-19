@@ -15,7 +15,7 @@ import com.norwood.mcheli.wrapper.W_Lib;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.EntityEvent.CanUpdate;
@@ -24,10 +24,12 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
 
 public class MCH_EventHook extends W_EventHook {
+   @Override
    public void commandEvent(CommandEvent event) {
       MCH_Command.onCommandEvent(event);
    }
 
+   @Override
    public void entitySpawn(EntityJoinWorldEvent event) {
       if (W_Lib.isEntityLivingBase(event.getEntity()) && !W_EntityPlayer.isPlayer(event.getEntity())) {
          MCH_MOD.proxy.setRenderEntityDistanceWeight(MCH_Config.MobRenderDistanceWeight.prmDouble);
@@ -38,24 +40,24 @@ public class MCH_EventHook extends W_EventHook {
          }
       } else if (W_EntityPlayer.isPlayer(event.getEntity())) {
          Entity e = event.getEntity();
-         boolean b = Float.isNaN(e.field_70125_A);
-         b |= Float.isNaN(e.field_70127_C);
-         b |= Float.isInfinite(e.field_70125_A);
-         b |= Float.isInfinite(e.field_70127_C);
+         boolean b = Float.isNaN(e.rotationPitch);
+         b |= Float.isNaN(e.prevRotationPitch);
+         b |= Float.isInfinite(e.rotationPitch);
+         b |= Float.isInfinite(e.prevRotationPitch);
          if (b) {
-            MCH_Lib.Log(event.getEntity(), "### EntityJoinWorldEvent Error:Player invalid rotation pitch(" + e.field_70125_A + ")");
-            e.field_70125_A = 0.0F;
-            e.field_70127_C = 0.0F;
+            MCH_Lib.Log(event.getEntity(), "### EntityJoinWorldEvent Error:Player invalid rotation pitch(" + e.rotationPitch + ")");
+            e.rotationPitch = 0.0F;
+            e.prevRotationPitch = 0.0F;
          }
 
-         b = Float.isInfinite(e.field_70177_z);
-         b |= Float.isInfinite(e.field_70126_B);
-         b |= Float.isNaN(e.field_70177_z);
-         b |= Float.isNaN(e.field_70126_B);
+         b = Float.isInfinite(e.rotationYaw);
+         b |= Float.isInfinite(e.prevRotationYaw);
+         b |= Float.isNaN(e.rotationYaw);
+         b |= Float.isNaN(e.prevRotationYaw);
          if (b) {
-            MCH_Lib.Log(event.getEntity(), "### EntityJoinWorldEvent Error:Player invalid rotation yaw(" + e.field_70177_z + ")");
-            e.field_70177_z = 0.0F;
-            e.field_70126_B = 0.0F;
+            MCH_Lib.Log(event.getEntity(), "### EntityJoinWorldEvent Error:Player invalid rotation yaw(" + e.rotationYaw + ")");
+            e.rotationYaw = 0.0F;
+            e.prevRotationYaw = 0.0F;
          }
 
          if (!e.world.isRemote && event.getEntity() instanceof EntityPlayerMP) {
@@ -63,16 +65,16 @@ public class MCH_EventHook extends W_EventHook {
             MCH_PacketNotifyServerSettings.send((EntityPlayerMP)event.getEntity());
          }
       }
-
    }
 
+   @Override
    public void livingAttackEvent(LivingAttackEvent event) {
       MCH_EntityAircraft ac = this.getRiddenAircraft(event.getEntity());
       if (ac != null) {
          if (ac.getAcInfo() != null) {
             if (!ac.isDestroyed()) {
                if (!(ac.getAcInfo().damageFactor > 0.0F)) {
-                  Entity attackEntity = event.getSource().func_76346_g();
+                  Entity attackEntity = event.getSource().getTrueSource();
                   if (attackEntity == null) {
                      event.setCanceled(true);
                   } else if (W_Entity.isEqual(attackEntity, event.getEntity())) {
@@ -85,25 +87,25 @@ public class MCH_EventHook extends W_EventHook {
                         event.setCanceled(true);
                      }
                   }
-
                }
             }
          }
       }
    }
 
+   @Override
    public void livingHurtEvent(LivingHurtEvent event) {
       MCH_EntityAircraft ac = this.getRiddenAircraft(event.getEntity());
       if (ac != null) {
          if (ac.getAcInfo() != null) {
             if (!ac.isDestroyed()) {
-               Entity attackEntity = event.getSource().func_76346_g();
+               Entity attackEntity = event.getSource().getTrueSource();
                float f = event.getAmount();
                if (attackEntity == null) {
-                  ac.func_70097_a(event.getSource(), f * 2.0F);
+                  ac.attackEntityFrom(event.getSource(), f * 2.0F);
                   f *= ac.getAcInfo().damageFactor;
                } else if (W_Entity.isEqual(attackEntity, event.getEntity())) {
-                  ac.func_70097_a(event.getSource(), f * 2.0F);
+                  ac.attackEntityFrom(event.getSource(), f * 2.0F);
                   f *= ac.getAcInfo().damageFactor;
                } else if (ac.isMountedEntity(attackEntity)) {
                   f = 0.0F;
@@ -114,7 +116,7 @@ public class MCH_EventHook extends W_EventHook {
                      f = 0.0F;
                      event.setCanceled(true);
                   } else {
-                     ac.func_70097_a(event.getSource(), f * 2.0F);
+                     ac.attackEntityFrom(event.getSource(), f * 2.0F);
                      f *= ac.getAcInfo().damageFactor;
                   }
                }
@@ -127,7 +129,7 @@ public class MCH_EventHook extends W_EventHook {
 
    public MCH_EntityAircraft getRiddenAircraft(Entity entity) {
       MCH_EntityAircraft ac = null;
-      Entity ridden = entity.func_184187_bx();
+      Entity ridden = entity.getRidingEntity();
       if (ridden instanceof MCH_EntityAircraft) {
          ac = (MCH_EntityAircraft)ridden;
       } else if (ridden instanceof MCH_EntitySeat) {
@@ -135,10 +137,10 @@ public class MCH_EventHook extends W_EventHook {
       }
 
       if (ac == null) {
-         List<MCH_EntityAircraft> list = entity.world.func_72872_a(MCH_EntityAircraft.class, entity.func_174813_aQ().func_72314_b(50.0D, 50.0D, 50.0D));
+         List<MCH_EntityAircraft> list = entity.world.getEntitiesWithinAABB(MCH_EntityAircraft.class, entity.getEntityBoundingBox().grow(50.0, 50.0, 50.0));
          if (list != null) {
-            for(int i = 0; i < list.size(); ++i) {
-               MCH_EntityAircraft tmp = (MCH_EntityAircraft)list.get(i);
+            for (int i = 0; i < list.size(); i++) {
+               MCH_EntityAircraft tmp = list.get(i);
                if (tmp.isMountedEntity(entity)) {
                   return tmp;
                }
@@ -149,25 +151,24 @@ public class MCH_EventHook extends W_EventHook {
       return ac;
    }
 
+   @Override
    public void entityInteractEvent(EntityInteract event) {
-      ItemStack item = event.getEntityPlayer().func_184586_b(event.getHand());
-      if (!item.func_190926_b()) {
-         if (item.func_77973_b() instanceof MCH_ItemChain) {
+      ItemStack item = event.getEntityPlayer().getHeldItem(EnumHand.MAIN_HAND);
+      if (!item.isEmpty()) {
+         if (item.getItem() instanceof MCH_ItemChain) {
             MCH_ItemChain.interactEntity(item, event.getTarget(), event.getEntityPlayer(), event.getEntityPlayer().world);
             event.setCanceled(true);
-            event.setCancellationResult(EnumActionResult.SUCCESS);
-         } else if (item.func_77973_b() instanceof MCH_ItemAircraft) {
-            ((MCH_ItemAircraft)item.func_77973_b()).rideEntity(item, event.getTarget(), event.getEntityPlayer());
+         } else if (item.getItem() instanceof MCH_ItemAircraft) {
+            ((MCH_ItemAircraft)item.getItem()).rideEntity(item, event.getTarget(), event.getEntityPlayer());
          }
-
       }
    }
 
+   @Override
    public void entityCanUpdate(CanUpdate event) {
       if (event.getEntity() instanceof MCH_EntityBaseBullet) {
          MCH_EntityBaseBullet bullet = (MCH_EntityBaseBullet)event.getEntity();
-         bullet.func_70106_y();
+         bullet.setDead();
       }
-
    }
 }

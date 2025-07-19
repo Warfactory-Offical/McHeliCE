@@ -9,30 +9,30 @@ public abstract class W_Block extends Block {
    }
 
    public static Block getBlockFromName(String name) {
-      return Block.func_149684_b(name);
+      return Block.getBlockFromName(name);
    }
 
    public static Block getSnowLayer() {
-      return W_Blocks.field_150431_aC;
+      return W_Blocks.SNOW_LAYER;
    }
 
    public static boolean isNull(Block block) {
-      return block == null || block == W_Blocks.field_150350_a;
+      return block == null || block == W_Blocks.AIR;
    }
 
    public static boolean isEqual(int blockId, Block block) {
-      return Block.func_149680_a(Block.func_149729_e(blockId), block);
+      return Block.isEqualTo(Block.getBlockById(blockId), block);
    }
 
    public static boolean isEqual(Block block1, Block block2) {
-      return Block.func_149680_a(block1, block2);
+      return Block.isEqualTo(block1, block2);
    }
 
    public static Block getWater() {
-      return W_Blocks.field_150355_j;
+      return W_Blocks.WATER;
    }
 
    public static Block getBlockById(int i) {
-      return Block.func_149729_e(i);
+      return Block.getBlockById(i);
    }
 }

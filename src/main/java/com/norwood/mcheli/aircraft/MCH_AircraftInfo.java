@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import com.norwood.mcheli.MCH_BaseInfo;
 import com.norwood.mcheli.MCH_MOD;
@@ -157,12 +156,12 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
 
    public MCH_AircraftInfo(AddonResourceLocation location, String path) {
       super(location, path);
-      this.name = location.func_110623_a();
+      this.name = location.getPath();
       this.displayName = this.name;
-      this.displayNameLang = new HashMap();
+      this.displayNameLang = new HashMap<>();
       this.itemID = 0;
-      this.recipeString = new ArrayList();
-      this.recipe = new ArrayList();
+      this.recipeString = new ArrayList<>();
+      this.recipe = new ArrayList<>();
       this.isShapedRecipe = true;
       this.category = "zzz";
       this.creativeOnly = false;
@@ -174,10 +173,10 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
       this.isEnableEjectionSeat = false;
       this.isEnableParachuting = false;
       this.flare = new MCH_AircraftInfo.Flare(this);
-      this.weaponSetList = new ArrayList();
-      this.seatList = new ArrayList();
-      this.exclusionSeatList = new ArrayList();
-      this.hudList = new ArrayList();
+      this.weaponSetList = new ArrayList<>();
+      this.seatList = new ArrayList<>();
+      this.exclusionSeatList = new ArrayList<>();
+      this.hudList = new ArrayList<>();
       this.hudTvMissile = null;
       this.bodyHeight = 0.7F;
       this.bodyWidth = 2.0F;
@@ -202,7 +201,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
       this.canMoveOnGround = true;
       this.canRotOnGround = true;
       this.cameraZoom = this.getDefaultMaxZoom();
-      this.extraBoundingBox = new ArrayList();
+      this.extraBoundingBox = new ArrayList<>();
       this.maxFuel = 0;
       this.fuelConsumption = 1.0F;
       this.fuelSupplyRange = 0.0F;
@@ -216,14 +215,14 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
       this.entityPitch = 0.0F;
       this.entityRoll = 0.0F;
       this.stepHeight = this.getDefaultStepHeight();
-      this.entityRackList = new ArrayList();
+      this.entityRackList = new ArrayList<>();
       this.mobSeatNum = 0;
       this.entityRackNum = 0;
       this.mobDropOption = new MCH_MobDropOption();
-      this.repellingHooks = new ArrayList();
-      this.rideRacks = new ArrayList();
-      this.particleSplashs = new ArrayList();
-      this.searchLights = new ArrayList();
+      this.repellingHooks = new ArrayList<>();
+      this.rideRacks = new ArrayList<>();
+      this.particleSplashs = new ArrayList<>();
+      this.searchLights = new ArrayList<>();
       this.markerHeight = 1.0F;
       this.markerWidth = 2.0F;
       this.bbZmax = 1.0F;
@@ -232,11 +231,11 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
       this.wheels = this.getDefaultWheelList();
       this.onGroundPitchFactor = 0.0F;
       this.onGroundRollFactor = 0.0F;
-      this.turretPosition = new Vec3d(0.0D, 0.0D, 0.0D);
+      this.turretPosition = new Vec3d(0.0, 0.0, 0.0);
       this.defaultFreelook = false;
       this.unmountPosition = null;
       this.thirdPersonDist = 4.0F;
-      this.cameraPosition = new ArrayList();
+      this.cameraPosition = new ArrayList<>();
       this.alwaysCameraView = false;
       this.cameraRotationSpeed = 100.0F;
       this.speed = 0.1F;
@@ -255,7 +254,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
       this.pivotTurnThrottle = 0.0F;
       this.trackRollerRot = 30.0F;
       this.partWheelRot = 30.0F;
-      this.textureNameList = new ArrayList();
+      this.textureNameList = new ArrayList<>();
       this.textureNameList.add(this.name);
       this.textureCount = 0;
       this.particlesScale = 1.0F;
@@ -267,20 +266,20 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
       this.soundVolume = 1.0F;
       this.soundRange = this.getDefaultSoundRange();
       this.model = null;
-      this.hatchList = new ArrayList();
-      this.cameraList = new ArrayList();
-      this.partWeapon = new ArrayList();
+      this.hatchList = new ArrayList<>();
+      this.cameraList = new ArrayList<>();
+      this.partWeapon = new ArrayList<>();
       this.lastWeaponPart = null;
-      this.partWeaponBay = new ArrayList();
-      this.canopyList = new ArrayList();
-      this.landingGear = new ArrayList();
-      this.partThrottle = new ArrayList();
-      this.partRotPart = new ArrayList();
-      this.partCrawlerTrack = new ArrayList();
-      this.partTrackRoller = new ArrayList();
-      this.partWheel = new ArrayList();
-      this.partSteeringWheel = new ArrayList();
-      this.lightHatchList = new ArrayList();
+      this.partWeaponBay = new ArrayList<>();
+      this.canopyList = new ArrayList<>();
+      this.landingGear = new ArrayList<>();
+      this.partThrottle = new ArrayList<>();
+      this.partRotPart = new ArrayList<>();
+      this.partCrawlerTrack = new ArrayList<>();
+      this.partTrackRoller = new ArrayList<>();
+      this.partWheel = new ArrayList<>();
+      this.partSteeringWheel = new ArrayList<>();
+      this.lightHatchList = new ArrayList<>();
    }
 
    public float getDefaultSoundRange() {
@@ -288,7 +287,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
    }
 
    public List<MCH_AircraftInfo.Wheel> getDefaultWheelList() {
-      return new ArrayList();
+      return new ArrayList<>();
    }
 
    public float getDefaultRotorSpeed() {
@@ -317,6 +316,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
 
    public abstract String getDefaultHudName(int var1);
 
+   @Override
    public boolean validate() throws Exception {
       if (this.cameraPosition.size() <= 0) {
          this.cameraPosition.add(new MCH_AircraftInfo.CameraPosition(this));
@@ -335,7 +335,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
       if (this.isUAV) {
          this.alwaysCameraView = true;
          if (this.seatList.size() == 0) {
-            MCH_SeatInfo s = new MCH_SeatInfo(new Vec3d(0.0D, 0.0D, 0.0D), false);
+            MCH_SeatInfo s = new MCH_SeatInfo(new Vec3d(0.0, 0.0, 0.0), false);
             this.seatList.add(s);
          }
       }
@@ -345,9 +345,8 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
       if (this.getNumSeat() < 1) {
          throw new Exception("At least one seat must be set.");
       } else {
-         int i;
          if (this.getNumHud() < this.getNumSeat()) {
-            for(i = this.getNumHud(); i < this.getNumSeat(); ++i) {
+            for (int i = this.getNumHud(); i < this.getNumSeat(); i++) {
                this.hudList.add(MCH_HudManager.get(this.getDefaultHudName(i)));
             }
          }
@@ -356,10 +355,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
             this.hudList.add(MCH_HudManager.get(this.getDefaultHudName(1)));
          }
 
-         Iterator var11 = this.entityRackList.iterator();
-
-         while(var11.hasNext()) {
-            MCH_SeatRackInfo ei = (MCH_SeatRackInfo)var11.next();
+         for (MCH_SeatRackInfo ei : this.entityRackList) {
             this.seatList.add(ei);
          }
 
@@ -374,18 +370,15 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
             if (this.itemID <= 0) {
             }
 
-            for(i = 0; i < this.partWeaponBay.size(); ++i) {
-               MCH_AircraftInfo.WeaponBay wb = (MCH_AircraftInfo.WeaponBay)this.partWeaponBay.get(i);
+            for (int i = 0; i < this.partWeaponBay.size(); i++) {
+               MCH_AircraftInfo.WeaponBay wb = this.partWeaponBay.get(i);
                String[] weaponNames = wb.weaponName.split("\\s*/\\s*");
                if (weaponNames.length <= 0) {
                   this.partWeaponBay.remove(i);
                } else {
-                  List<Integer> list = new ArrayList();
-                  String[] var5 = weaponNames;
-                  int var6 = weaponNames.length;
+                  List<Integer> list = new ArrayList<>();
 
-                  for(int var7 = 0; var7 < var6; ++var7) {
-                     String s = var5[var7];
+                  for (String s : weaponNames) {
                      int id = this.getWeaponIdByName(s);
                      if (id >= 0) {
                         list.add(id);
@@ -395,7 +388,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                   if (list.size() <= 0) {
                      this.partWeaponBay.remove(i);
                   } else {
-                     ((MCH_AircraftInfo.WeaponBay)this.partWeaponBay.get(i)).weaponIds = (Integer[])list.toArray(new Integer[0]);
+                     this.partWeaponBay.get(i).weaponIds = list.toArray(new Integer[0]);
                   }
                }
             }
@@ -462,17 +455,17 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
    }
 
    public MCH_AircraftInfo.WeaponSet getWeaponSetById(int id) {
-      return id >= 0 && id < this.weaponSetList.size() ? (MCH_AircraftInfo.WeaponSet)this.weaponSetList.get(id) : null;
+      return id >= 0 && id < this.weaponSetList.size() ? this.weaponSetList.get(id) : null;
    }
 
    public MCH_AircraftInfo.Weapon getWeaponById(int id) {
       MCH_AircraftInfo.WeaponSet ws = this.getWeaponSetById(id);
-      return ws != null ? (MCH_AircraftInfo.Weapon)ws.weapons.get(0) : null;
+      return ws != null ? ws.weapons.get(0) : null;
    }
 
    public int getWeaponIdByName(String s) {
-      for(int i = 0; i < this.weaponSetList.size(); ++i) {
-         if (((MCH_AircraftInfo.WeaponSet)this.weaponSetList.get(i)).type.equalsIgnoreCase(s)) {
+      for (int i = 0; i < this.weaponSetList.size(); i++) {
+         if (this.weaponSetList.get(i).type.equalsIgnoreCase(s)) {
             return i;
          }
       }
@@ -481,8 +474,8 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
    }
 
    public MCH_AircraftInfo.Weapon getWeaponByName(String s) {
-      for(int i = 0; i < this.weaponSetList.size(); ++i) {
-         if (((MCH_AircraftInfo.WeaponSet)this.weaponSetList.get(i)).type.equalsIgnoreCase(s)) {
+      for (int i = 0; i < this.weaponSetList.size(); i++) {
+         if (this.weaponSetList.get(i).type.equalsIgnoreCase(s)) {
             return this.getWeaponById(i);
          }
       }
@@ -494,630 +487,784 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
       return this.weaponSetList.size();
    }
 
+   @Override
    public void loadItemData(String item, String data) {
       if (item.compareTo("displayname") == 0) {
          this.displayName = data.trim();
-      } else {
-         String[] s;
-         if (item.compareTo("adddisplayname") == 0) {
-            s = data.split("\\s*,\\s*");
-            if (s != null && s.length == 2) {
-               this.displayNameLang.put(s[0].toLowerCase().trim(), s[1].trim());
-            }
-         } else if (item.equalsIgnoreCase("Category")) {
-            this.category = data.toUpperCase().replaceAll("[,;:]", ".").replaceAll("[ \t]", "");
-         } else if (item.equalsIgnoreCase("CanRide")) {
-            this.canRide = this.toBool(data, true);
-         } else if (item.equalsIgnoreCase("CreativeOnly")) {
-            this.creativeOnly = this.toBool(data, false);
-         } else if (item.equalsIgnoreCase("Invulnerable")) {
-            this.invulnerable = this.toBool(data, false);
-         } else if (item.equalsIgnoreCase("MaxFuel")) {
-            this.maxFuel = this.toInt(data, 0, 100000000);
-         } else if (item.equalsIgnoreCase("FuelConsumption")) {
-            this.fuelConsumption = this.toFloat(data, 0.0F, 10000.0F);
-         } else if (item.equalsIgnoreCase("FuelSupplyRange")) {
-            this.fuelSupplyRange = this.toFloat(data, 0.0F, 1000.0F);
-         } else if (item.equalsIgnoreCase("AmmoSupplyRange")) {
-            this.ammoSupplyRange = this.toFloat(data, 0.0F, 1000.0F);
-         } else if (item.equalsIgnoreCase("RepairOtherVehicles")) {
-            s = this.splitParam(data);
-            if (s.length >= 1) {
-               this.repairOtherVehiclesRange = this.toFloat(s[0], 0.0F, 1000.0F);
-               if (s.length >= 2) {
-                  this.repairOtherVehiclesValue = this.toInt(s[1], 0, 10000000);
-               }
-            }
-         } else if (item.compareTo("itemid") == 0) {
-            this.itemID = this.toInt(data, 0, 65535);
-         } else if (item.compareTo("addtexture") == 0) {
-            this.textureNameList.add(data.toLowerCase());
-         } else if (item.compareTo("particlesscale") == 0) {
-            this.particlesScale = this.toFloat(data, 0.0F, 50.0F);
-         } else if (item.equalsIgnoreCase("EnableSeaSurfaceParticle")) {
-            this.enableSeaSurfaceParticle = this.toBool(data);
-         } else {
-            Vec3d p;
-            int canopyNum;
-            float ry;
-            float rz;
-            int seatID;
-            float py;
-            float pz;
-            if (item.equalsIgnoreCase("AddParticleSplash")) {
-               s = this.splitParam(data);
-               if (s.length >= 3) {
-                  p = this.toVec3(s[0], s[1], s[2]);
-                  canopyNum = s.length >= 4 ? this.toInt(s[3], 1, 100) : 2;
-                  ry = s.length >= 5 ? this.toFloat(s[4]) : 2.0F;
-                  rz = s.length >= 6 ? this.toFloat(s[5]) : 1.0F;
-                  seatID = s.length >= 7 ? this.toInt(s[6], 1, 100000) : 80;
-                  py = s.length >= 8 ? this.toFloat(s[7]) : 0.01F;
-                  pz = s.length >= 9 ? this.toFloat(s[8]) : 0.0F;
-                  this.particleSplashs.add(new MCH_AircraftInfo.ParticleSplash(this, p, canopyNum, ry, rz, seatID, py, pz));
-               }
-            } else {
-               float mxy;
-               int i;
-               float px;
-               if (!item.equalsIgnoreCase("AddSearchLight") && !item.equalsIgnoreCase("AddFixedSearchLight") && !item.equalsIgnoreCase("AddSteeringSearchLight")) {
-                  float df;
-                  if (item.equalsIgnoreCase("AddPartLightHatch")) {
-                     s = this.splitParam(data);
-                     if (s.length >= 6) {
-                        df = s.length >= 7 ? this.toFloat(s[6], -1800.0F, 1800.0F) : 90.0F;
-                        this.lightHatchList.add(new MCH_AircraftInfo.Hatch(this, this.toFloat(s[0]), this.toFloat(s[1]), this.toFloat(s[2]), this.toFloat(s[3]), this.toFloat(s[4]), this.toFloat(s[5]), df, "light_hatch" + this.lightHatchList.size(), false));
-                     }
-                  } else {
-                     int i;
-                     if (item.equalsIgnoreCase("AddRepellingHook")) {
-                        s = this.splitParam(data);
-                        if (s != null && s.length >= 3) {
-                           i = s.length >= 4 ? this.toInt(s[3], 1, 100000) : 10;
-                           this.repellingHooks.add(new MCH_AircraftInfo.RepellingHook(this, this.toVec3(s[0], s[1], s[2]), i));
-                        }
-                     } else {
-                        String[] s;
-                        float rx;
-                        boolean isMissile;
-                        if (item.equalsIgnoreCase("AddRack")) {
-                           s = data.toLowerCase().split("\\s*,\\s*");
-                           if (s != null && s.length >= 7) {
-                              s = s[0].split("\\s*/\\s*");
-                              rx = s.length >= 8 ? this.toFloat(s[7]) : 6.0F;
-                              ry = s.length >= 9 ? this.toFloat(s[8], 0.0F, 1000000.0F) : 20.0F;
-                              rz = s.length >= 10 ? this.toFloat(s[9]) : 0.0F;
-                              px = s.length >= 11 ? this.toFloat(s[10]) : 0.0F;
-                              isMissile = s.length >= 12 ? this.toBool(s[11]) : false;
-                              this.entityRackList.add(new MCH_SeatRackInfo(s, this.toDouble(s[1]), this.toDouble(s[2]), this.toDouble(s[3]), new MCH_AircraftInfo.CameraPosition(this, this.toVec3(s[4], s[5], s[6]).func_72441_c(0.0D, 1.5D, 0.0D)), rx, ry, rz, px, isMissile));
-                           }
-                        } else if (item.equalsIgnoreCase("RideRack")) {
-                           s = this.splitParam(data);
-                           if (s.length >= 2) {
-                              MCH_AircraftInfo.RideRack r = new MCH_AircraftInfo.RideRack(this, s[0].trim().toLowerCase(), this.toInt(s[1], 1, 10000));
-                              this.rideRacks.add(r);
-                           }
-                        } else {
-                           boolean ps;
-                           MCH_SeatInfo n;
-                           boolean canUsePilot;
-                           boolean isRot;
-                           boolean turret;
-                           if (!item.equalsIgnoreCase("AddSeat") && !item.equalsIgnoreCase("AddGunnerSeat") && !item.equalsIgnoreCase("AddFixRotSeat")) {
-                              if (item.equalsIgnoreCase("SetWheelPos")) {
-                                 s = this.splitParam(data);
-                                 if (s.length >= 4) {
-                                    df = Math.abs(this.toFloat(s[0]));
-                                    rx = this.toFloat(s[1]);
-                                    this.wheels.clear();
-
-                                    for(i = 2; i < s.length; ++i) {
-                                       this.wheels.add(new MCH_AircraftInfo.Wheel(this, new Vec3d((double)df, (double)rx, (double)this.toFloat(s[i]))));
-                                    }
-
-                                    Collections.sort(this.wheels, new Comparator<MCH_AircraftInfo.Wheel>() {
-                                       public int compare(MCH_AircraftInfo.Wheel arg0, MCH_AircraftInfo.Wheel arg1) {
-                                          return arg0.pos.z > arg1.pos.z ? -1 : 1;
-                                       }
-                                    });
-                                 }
-                              } else if (item.equalsIgnoreCase("ExclusionSeat")) {
-                                 s = this.splitParam(data);
-                                 if (s.length >= 2) {
-                                    Integer[] a = new Integer[s.length];
-
-                                    for(canopyNum = 0; canopyNum < a.length; ++canopyNum) {
-                                       a[canopyNum] = this.toInt(s[canopyNum], 1, 10000) - 1;
-                                    }
-
-                                    this.exclusionSeatList.add(a);
-                                 }
-                              } else if (MCH_MOD.proxy.isRemote() && item.equalsIgnoreCase("HUD")) {
-                                 this.hudList.clear();
-                                 s = data.split("\\s*,\\s*");
-                                 s = s;
-                                 canopyNum = s.length;
-
-                                 for(i = 0; i < canopyNum; ++i) {
-                                    String s = s[i];
-                                    MCH_Hud hud = MCH_HudManager.get(s);
-                                    if (hud == null) {
-                                       hud = MCH_Hud.NoDisp;
-                                    }
-
-                                    this.hudList.add(hud);
-                                 }
-                              } else if (item.compareTo("enablenightvision") == 0) {
-                                 this.isEnableNightVision = this.toBool(data);
-                              } else if (item.compareTo("enableentityradar") == 0) {
-                                 this.isEnableEntityRadar = this.toBool(data);
-                              } else if (item.equalsIgnoreCase("EnableEjectionSeat")) {
-                                 this.isEnableEjectionSeat = this.toBool(data);
-                              } else if (item.equalsIgnoreCase("EnableParachuting")) {
-                                 this.isEnableParachuting = this.toBool(data);
-                              } else if (item.equalsIgnoreCase("MobDropOption")) {
-                                 s = this.splitParam(data);
-                                 if (s.length >= 3) {
-                                    this.mobDropOption.pos = this.toVec3(s[0], s[1], s[2]);
-                                    this.mobDropOption.interval = s.length >= 4 ? this.toInt(s[3]) : 12;
-                                 }
-                              } else if (item.equalsIgnoreCase("Width")) {
-                                 this.bodyWidth = this.toFloat(data, 0.1F, 1000.0F);
-                              } else if (item.equalsIgnoreCase("Height")) {
-                                 this.bodyHeight = this.toFloat(data, 0.1F, 1000.0F);
-                              } else if (item.compareTo("float") == 0) {
-                                 this.isFloat = this.toBool(data);
-                              } else if (item.compareTo("floatoffset") == 0) {
-                                 this.floatOffset = -this.toFloat(data);
-                              } else if (item.compareTo("gravity") == 0) {
-                                 this.gravity = this.toFloat(data, -50.0F, 50.0F);
-                              } else if (item.compareTo("gravityinwater") == 0) {
-                                 this.gravityInWater = this.toFloat(data, -50.0F, 50.0F);
-                              } else {
-                                 boolean ys;
-                                 if (item.compareTo("cameraposition") == 0) {
-                                    s = data.split("\\s*,\\s*");
-                                    if (s.length >= 3) {
-                                       this.alwaysCameraView = s.length >= 4 ? this.toBool(s[3]) : false;
-                                       ys = s.length >= 5;
-                                       rx = s.length >= 5 ? this.toFloat(s[4]) : 0.0F;
-                                       ry = s.length >= 6 ? this.toFloat(s[5]) : 0.0F;
-                                       this.cameraPosition.add(new MCH_AircraftInfo.CameraPosition(this, this.toVec3(s[0], s[1], s[2]), ys, rx, ry));
-                                    }
-                                 } else if (item.equalsIgnoreCase("UnmountPosition")) {
-                                    s = data.split("\\s*,\\s*");
-                                    if (s.length >= 3) {
-                                       this.unmountPosition = this.toVec3(s[0], s[1], s[2]);
-                                    }
-                                 } else if (item.equalsIgnoreCase("ThirdPersonDist")) {
-                                    this.thirdPersonDist = this.toFloat(data, 4.0F, 100.0F);
-                                 } else if (item.equalsIgnoreCase("TurretPosition")) {
-                                    s = data.split("\\s*,\\s*");
-                                    if (s.length >= 3) {
-                                       this.turretPosition = this.toVec3(s[0], s[1], s[2]);
-                                    }
-                                 } else if (item.equalsIgnoreCase("CameraRotationSpeed")) {
-                                    this.cameraRotationSpeed = this.toFloat(data, 0.0F, 10000.0F);
-                                 } else if (item.compareTo("regeneration") == 0) {
-                                    this.regeneration = this.toBool(data);
-                                 } else if (item.compareTo("speed") == 0) {
-                                    this.speed = this.toFloat(data, 0.0F, this.getMaxSpeed());
-                                 } else if (item.equalsIgnoreCase("EnableBack")) {
-                                    this.enableBack = this.toBool(data);
-                                 } else if (item.equalsIgnoreCase("MotionFactor")) {
-                                    this.motionFactor = this.toFloat(data, 0.0F, 1.0F);
-                                 } else if (item.equalsIgnoreCase("MobilityYawOnGround")) {
-                                    this.mobilityYawOnGround = this.toFloat(data, 0.0F, 100.0F);
-                                 } else if (item.equalsIgnoreCase("MobilityYaw")) {
-                                    this.mobilityYaw = this.toFloat(data, 0.0F, 100.0F);
-                                 } else if (item.equalsIgnoreCase("MobilityPitch")) {
-                                    this.mobilityPitch = this.toFloat(data, 0.0F, 100.0F);
-                                 } else if (item.equalsIgnoreCase("MobilityRoll")) {
-                                    this.mobilityRoll = this.toFloat(data, 0.0F, 100.0F);
-                                 } else if (item.equalsIgnoreCase("MinRotationPitch")) {
-                                    this.limitRotation = true;
-                                    this.minRotationPitch = this.toFloat(data, this.getMinRotationPitch(), 0.0F);
-                                 } else if (item.equalsIgnoreCase("MaxRotationPitch")) {
-                                    this.limitRotation = true;
-                                    this.maxRotationPitch = this.toFloat(data, 0.0F, this.getMaxRotationPitch());
-                                 } else if (item.equalsIgnoreCase("MinRotationRoll")) {
-                                    this.limitRotation = true;
-                                    this.minRotationRoll = this.toFloat(data, this.getMinRotationRoll(), 0.0F);
-                                 } else if (item.equalsIgnoreCase("MaxRotationRoll")) {
-                                    this.limitRotation = true;
-                                    this.maxRotationRoll = this.toFloat(data, 0.0F, this.getMaxRotationRoll());
-                                 } else if (item.compareTo("throttleupdown") == 0) {
-                                    this.throttleUpDown = this.toFloat(data, 0.0F, 3.0F);
-                                 } else if (item.equalsIgnoreCase("ThrottleUpDownOnEntity")) {
-                                    this.throttleUpDownOnEntity = this.toFloat(data, 0.0F, 100000.0F);
-                                 } else if (item.equalsIgnoreCase("Stealth")) {
-                                    this.stealth = this.toFloat(data, 0.0F, 1.0F);
-                                 } else if (item.equalsIgnoreCase("EntityWidth")) {
-                                    this.entityWidth = this.toFloat(data, -100.0F, 100.0F);
-                                 } else if (item.equalsIgnoreCase("EntityHeight")) {
-                                    this.entityHeight = this.toFloat(data, -100.0F, 100.0F);
-                                 } else if (item.equalsIgnoreCase("EntityPitch")) {
-                                    this.entityPitch = this.toFloat(data, -360.0F, 360.0F);
-                                 } else if (item.equalsIgnoreCase("EntityRoll")) {
-                                    this.entityRoll = this.toFloat(data, -360.0F, 360.0F);
-                                 } else if (item.equalsIgnoreCase("StepHeight")) {
-                                    this.stepHeight = this.toFloat(data, 0.0F, 1000.0F);
-                                 } else if (item.equalsIgnoreCase("CanMoveOnGround")) {
-                                    this.canMoveOnGround = this.toBool(data);
-                                 } else if (item.equalsIgnoreCase("CanRotOnGround")) {
-                                    this.canRotOnGround = this.toBool(data);
-                                 } else if (!item.equalsIgnoreCase("AddWeapon") && !item.equalsIgnoreCase("AddTurretWeapon")) {
-                                    if (!item.equalsIgnoreCase("AddPartWeapon") && !item.equalsIgnoreCase("AddPartRotWeapon") && !item.equalsIgnoreCase("AddPartTurretWeapon") && !item.equalsIgnoreCase("AddPartTurretRotWeapon") && !item.equalsIgnoreCase("AddPartWeaponMissile")) {
-                                       if (item.equalsIgnoreCase("AddPartWeaponChild")) {
-                                          s = data.split("\\s*,\\s*");
-                                          if (s.length >= 5 && this.lastWeaponPart != null) {
-                                             df = s.length >= 6 ? this.toFloat(s[5]) : 0.0F;
-                                             MCH_AircraftInfo.PartWeaponChild w = new MCH_AircraftInfo.PartWeaponChild(this, this.lastWeaponPart.name, this.toBool(s[0]), this.toBool(s[1]), this.toFloat(s[2]), this.toFloat(s[3]), this.toFloat(s[4]), this.lastWeaponPart.modelName + "_" + this.lastWeaponPart.child.size(), 0.0F, 0.0F, 0.0F, df);
-                                             this.lastWeaponPart.child.add(w);
-                                          }
-                                       } else if (item.compareTo("addrecipe") != 0 && item.compareTo("addshapelessrecipe") != 0) {
-                                          if (item.compareTo("maxhp") == 0) {
-                                             this.maxHp = this.toInt(data, 1, 1000000000);
-                                          } else if (item.compareTo("inventorysize") == 0) {
-                                             this.inventorySize = this.toInt(data, 0, 54);
-                                          } else if (item.compareTo("damagefactor") == 0) {
-                                             this.damageFactor = this.toFloat(data, 0.0F, 1.0F);
-                                          } else if (item.equalsIgnoreCase("SubmergedDamageHeight")) {
-                                             this.submergedDamageHeight = this.toFloat(data, -1000.0F, 1000.0F);
-                                          } else if (item.equalsIgnoreCase("ArmorDamageFactor")) {
-                                             this.armorDamageFactor = this.toFloat(data, 0.0F, 10000.0F);
-                                          } else if (item.equalsIgnoreCase("ArmorMinDamage")) {
-                                             this.armorMinDamage = this.toFloat(data, 0.0F, 1000000.0F);
-                                          } else if (item.equalsIgnoreCase("ArmorMaxDamage")) {
-                                             this.armorMaxDamage = this.toFloat(data, 0.0F, 1000000.0F);
-                                          } else if (item.equalsIgnoreCase("FlareType")) {
-                                             s = data.split("\\s*,\\s*");
-                                             this.flare.types = new int[s.length];
-
-                                             for(i = 0; i < s.length; ++i) {
-                                                this.flare.types[i] = this.toInt(s[i], 1, 10);
-                                             }
-                                          } else if (item.equalsIgnoreCase("FlareOption")) {
-                                             s = this.splitParam(data);
-                                             if (s.length >= 3) {
-                                                this.flare.pos = this.toVec3(s[0], s[1], s[2]);
-                                             }
-                                          } else if (item.equalsIgnoreCase("Sound")) {
-                                             this.soundMove = data.toLowerCase();
-                                          } else if (item.equalsIgnoreCase("SoundRange")) {
-                                             this.soundRange = this.toFloat(data, 1.0F, 1000.0F);
-                                          } else if (item.equalsIgnoreCase("SoundVolume")) {
-                                             this.soundVolume = this.toFloat(data, 0.0F, 10.0F);
-                                          } else if (item.equalsIgnoreCase("SoundPitch")) {
-                                             this.soundPitch = this.toFloat(data, 0.0F, 10.0F);
-                                          } else if (item.equalsIgnoreCase("UAV")) {
-                                             this.isUAV = this.toBool(data);
-                                             this.isSmallUAV = false;
-                                          } else if (item.equalsIgnoreCase("SmallUAV")) {
-                                             this.isUAV = this.toBool(data);
-                                             this.isSmallUAV = true;
-                                          } else if (item.equalsIgnoreCase("TargetDrone")) {
-                                             this.isTargetDrone = this.toBool(data);
-                                          } else if (item.compareTo("autopilotrot") == 0) {
-                                             this.autoPilotRot = this.toFloat(data, -5.0F, 5.0F);
-                                          } else if (item.compareTo("ongroundpitch") == 0) {
-                                             this.onGroundPitch = -this.toFloat(data, -90.0F, 90.0F);
-                                          } else if (item.compareTo("enablegunnermode") == 0) {
-                                             this.isEnableGunnerMode = this.toBool(data);
-                                          } else if (item.compareTo("hideentity") == 0) {
-                                             this.hideEntity = this.toBool(data);
-                                          } else if (item.equalsIgnoreCase("SmoothShading")) {
-                                             this.smoothShading = this.toBool(data);
-                                          } else if (item.compareTo("concurrentgunnermode") == 0) {
-                                             this.isEnableConcurrentGunnerMode = this.toBool(data);
-                                          } else {
-                                             boolean slide;
-                                             if (!item.equalsIgnoreCase("AddPartWeaponBay") && !item.equalsIgnoreCase("AddPartSlideWeaponBay")) {
-                                                if (item.compareTo("addparthatch") != 0 && item.compareTo("addpartslidehatch") != 0) {
-                                                   if (item.compareTo("addpartcanopy") != 0 && item.compareTo("addpartslidecanopy") != 0) {
-                                                      if (!item.equalsIgnoreCase("AddPartLG") && !item.equalsIgnoreCase("AddPartSlideRotLG") && !item.equalsIgnoreCase("AddPartLGRev") && !item.equalsIgnoreCase("AddPartLGHatch")) {
-                                                         if (item.equalsIgnoreCase("AddPartThrottle")) {
-                                                            s = data.split("\\s*,\\s*");
-                                                            if (s.length >= 7) {
-                                                               df = s.length >= 8 ? this.toFloat(s[7]) : 0.0F;
-                                                               rx = s.length >= 9 ? this.toFloat(s[8]) : 0.0F;
-                                                               ry = s.length >= 10 ? this.toFloat(s[9]) : 0.0F;
-                                                               MCH_AircraftInfo.Throttle c = new MCH_AircraftInfo.Throttle(this, this.toFloat(s[0]), this.toFloat(s[1]), this.toFloat(s[2]), this.toFloat(s[3]), this.toFloat(s[4]), this.toFloat(s[5]), this.toFloat(s[6]), "throttle" + this.partThrottle.size(), df, rx, ry);
-                                                               this.partThrottle.add(c);
-                                                            }
-                                                         } else if (item.equalsIgnoreCase("AddPartRotation")) {
-                                                            s = data.split("\\s*,\\s*");
-                                                            if (s.length >= 7) {
-                                                               ys = s.length >= 8 ? this.toBool(s[7]) : true;
-                                                               MCH_AircraftInfo.RotPart c = new MCH_AircraftInfo.RotPart(this, this.toFloat(s[0]), this.toFloat(s[1]), this.toFloat(s[2]), this.toFloat(s[3]), this.toFloat(s[4]), this.toFloat(s[5]), this.toFloat(s[6]), ys, "rotpart" + this.partThrottle.size());
-                                                               this.partRotPart.add(c);
-                                                            }
-                                                         } else if (item.compareTo("addpartcamera") == 0) {
-                                                            s = data.split("\\s*,\\s*");
-                                                            if (s.length >= 3) {
-                                                               ys = s.length >= 4 ? this.toBool(s[3]) : true;
-                                                               ps = s.length >= 5 ? this.toBool(s[4]) : false;
-                                                               MCH_AircraftInfo.Camera c = new MCH_AircraftInfo.Camera(this, this.toFloat(s[0]), this.toFloat(s[1]), this.toFloat(s[2]), 0.0F, -1.0F, 0.0F, "camera" + this.cameraList.size(), ys, ps);
-                                                               this.cameraList.add(c);
-                                                            }
-                                                         } else if (item.equalsIgnoreCase("AddPartWheel")) {
-                                                            s = this.splitParam(data);
-                                                            if (s.length >= 3) {
-                                                               df = s.length >= 4 ? this.toFloat(s[3], -1800.0F, 1800.0F) : 0.0F;
-                                                               rx = s.length >= 7 ? this.toFloat(s[4]) : 0.0F;
-                                                               ry = s.length >= 7 ? this.toFloat(s[5]) : 1.0F;
-                                                               rz = s.length >= 7 ? this.toFloat(s[6]) : 0.0F;
-                                                               px = s.length >= 10 ? this.toFloat(s[7]) : this.toFloat(s[0]);
-                                                               py = s.length >= 10 ? this.toFloat(s[8]) : this.toFloat(s[1]);
-                                                               pz = s.length >= 10 ? this.toFloat(s[9]) : this.toFloat(s[2]);
-                                                               this.partWheel.add(new MCH_AircraftInfo.PartWheel(this, this.toFloat(s[0]), this.toFloat(s[1]), this.toFloat(s[2]), rx, ry, rz, df, px, py, pz, "wheel" + this.partWheel.size()));
-                                                            }
-                                                         } else if (item.equalsIgnoreCase("AddPartSteeringWheel")) {
-                                                            s = this.splitParam(data);
-                                                            if (s.length >= 7) {
-                                                               this.partSteeringWheel.add(new MCH_AircraftInfo.PartWheel(this, this.toFloat(s[0]), this.toFloat(s[1]), this.toFloat(s[2]), this.toFloat(s[3]), this.toFloat(s[4]), this.toFloat(s[5]), this.toFloat(s[6]), "steering_wheel" + this.partSteeringWheel.size()));
-                                                            }
-                                                         } else if (item.equalsIgnoreCase("AddTrackRoller")) {
-                                                            s = this.splitParam(data);
-                                                            if (s.length >= 3) {
-                                                               this.partTrackRoller.add(new MCH_AircraftInfo.TrackRoller(this, this.toFloat(s[0]), this.toFloat(s[1]), this.toFloat(s[2]), "track_roller" + this.partTrackRoller.size()));
-                                                            }
-                                                         } else if (item.equalsIgnoreCase("AddCrawlerTrack")) {
-                                                            this.partCrawlerTrack.add(this.createCrawlerTrack(data, "crawler_track" + this.partCrawlerTrack.size()));
-                                                         } else if (item.equalsIgnoreCase("PivotTurnThrottle")) {
-                                                            this.pivotTurnThrottle = this.toFloat(data, 0.0F, 1.0F);
-                                                         } else if (item.equalsIgnoreCase("TrackRollerRot")) {
-                                                            this.trackRollerRot = this.toFloat(data, -10000.0F, 10000.0F);
-                                                         } else if (item.equalsIgnoreCase("PartWheelRot")) {
-                                                            this.partWheelRot = this.toFloat(data, -10000.0F, 10000.0F);
-                                                         } else if (item.compareTo("camerazoom") == 0) {
-                                                            this.cameraZoom = this.toInt(data, 1, 10);
-                                                         } else if (item.equalsIgnoreCase("DefaultFreelook")) {
-                                                            this.defaultFreelook = this.toBool(data);
-                                                         } else if (item.equalsIgnoreCase("BoundingBox")) {
-                                                            s = data.split("\\s*,\\s*");
-                                                            if (s.length >= 5) {
-                                                               df = s.length >= 6 ? this.toFloat(s[5]) : 1.0F;
-                                                               MCH_BoundingBox c = new MCH_BoundingBox((double)this.toFloat(s[0]), (double)this.toFloat(s[1]), (double)this.toFloat(s[2]), this.toFloat(s[3]), this.toFloat(s[4]), df);
-                                                               this.extraBoundingBox.add(c);
-                                                               if (c.getBoundingBox().field_72337_e > (double)this.markerHeight) {
-                                                                  this.markerHeight = (float)c.getBoundingBox().field_72337_e;
-                                                               }
-
-                                                               this.markerWidth = (float)Math.max((double)this.markerWidth, Math.abs(c.getBoundingBox().field_72336_d) / 2.0D);
-                                                               this.markerWidth = (float)Math.max((double)this.markerWidth, Math.abs(c.getBoundingBox().field_72340_a) / 2.0D);
-                                                               this.markerWidth = (float)Math.max((double)this.markerWidth, Math.abs(c.getBoundingBox().field_72334_f) / 2.0D);
-                                                               this.markerWidth = (float)Math.max((double)this.markerWidth, Math.abs(c.getBoundingBox().field_72339_c) / 2.0D);
-                                                               this.bbZmin = (float)Math.min((double)this.bbZmin, c.getBoundingBox().field_72339_c);
-                                                               this.bbZmax = (float)Math.min((double)this.bbZmax, c.getBoundingBox().field_72334_f);
-                                                            }
-                                                         } else if (item.equalsIgnoreCase("RotorSpeed")) {
-                                                            this.rotorSpeed = this.toFloat(data, -10000.0F, 10000.0F);
-                                                            if ((double)this.rotorSpeed > 0.01D) {
-                                                               this.rotorSpeed = (float)((double)this.rotorSpeed - 0.01D);
-                                                            }
-
-                                                            if ((double)this.rotorSpeed < -0.01D) {
-                                                               this.rotorSpeed = (float)((double)this.rotorSpeed + 0.01D);
-                                                            }
-                                                         } else if (item.equalsIgnoreCase("OnGroundPitchFactor")) {
-                                                            this.onGroundPitchFactor = this.toFloat(data, 0.0F, 180.0F);
-                                                         } else if (item.equalsIgnoreCase("OnGroundRollFactor")) {
-                                                            this.onGroundRollFactor = this.toFloat(data, 0.0F, 180.0F);
-                                                         }
-                                                      } else {
-                                                         s = data.split("\\s*,\\s*");
-                                                         MCH_AircraftInfo.LandingGear n;
-                                                         if (!item.equalsIgnoreCase("AddPartSlideRotLG") && s.length >= 6) {
-                                                            df = s.length >= 7 ? this.toFloat(s[6], -180.0F, 180.0F) : 90.0F;
-                                                            df /= 90.0F;
-                                                            n = new MCH_AircraftInfo.LandingGear(this, this.toFloat(s[0]), this.toFloat(s[1]), this.toFloat(s[2]), this.toFloat(s[3]), this.toFloat(s[4]), this.toFloat(s[5]), "lg" + this.landingGear.size(), df, item.equalsIgnoreCase("AddPartLgRev"), item.equalsIgnoreCase("AddPartLGHatch"));
-                                                            if (s.length >= 8) {
-                                                               n.enableRot2 = true;
-                                                               n.maxRotFactor2 = s.length >= 11 ? this.toFloat(s[10], -180.0F, 180.0F) : 90.0F;
-                                                               n.maxRotFactor2 /= 90.0F;
-                                                               n.rot2 = new Vec3d((double)this.toFloat(s[7]), (double)this.toFloat(s[8]), (double)this.toFloat(s[9]));
-                                                            }
-
-                                                            this.landingGear.add(n);
-                                                         }
-
-                                                         if (item.equalsIgnoreCase("AddPartSlideRotLG") && s.length >= 9) {
-                                                            df = s.length >= 10 ? this.toFloat(s[9], -180.0F, 180.0F) : 90.0F;
-                                                            df /= 90.0F;
-                                                            n = new MCH_AircraftInfo.LandingGear(this, this.toFloat(s[3]), this.toFloat(s[4]), this.toFloat(s[5]), this.toFloat(s[6]), this.toFloat(s[7]), this.toFloat(s[8]), "lg" + this.landingGear.size(), df, false, false);
-                                                            n.slide = new Vec3d((double)this.toFloat(s[0]), (double)this.toFloat(s[1]), (double)this.toFloat(s[2]));
-                                                            this.landingGear.add(n);
-                                                         }
-                                                      }
-                                                   } else {
-                                                      s = data.split("\\s*,\\s*");
-                                                      ys = item.compareTo("addpartslidecanopy") == 0;
-                                                      canopyNum = this.canopyList.size();
-                                                      if (canopyNum > 0) {
-                                                         --canopyNum;
-                                                      }
-
-                                                      if (ys) {
-                                                         if (s.length >= 3) {
-                                                            MCH_AircraftInfo.Canopy c = new MCH_AircraftInfo.Canopy(this, this.toFloat(s[0]), this.toFloat(s[1]), this.toFloat(s[2]), 0.0F, 0.0F, 0.0F, 90.0F, "canopy" + canopyNum, ys);
-                                                            this.canopyList.add(c);
-                                                            if (canopyNum == 0) {
-                                                               c = new MCH_AircraftInfo.Canopy(this, this.toFloat(s[0]), this.toFloat(s[1]), this.toFloat(s[2]), 0.0F, 0.0F, 0.0F, 90.0F, "canopy", ys);
-                                                               this.canopyList.add(c);
-                                                            }
-                                                         }
-                                                      } else if (s.length >= 6) {
-                                                         ry = s.length >= 7 ? this.toFloat(s[6], -180.0F, 180.0F) : 90.0F;
-                                                         ry /= 90.0F;
-                                                         MCH_AircraftInfo.Canopy c = new MCH_AircraftInfo.Canopy(this, this.toFloat(s[0]), this.toFloat(s[1]), this.toFloat(s[2]), this.toFloat(s[3]), this.toFloat(s[4]), this.toFloat(s[5]), ry, "canopy" + canopyNum, ys);
-                                                         this.canopyList.add(c);
-                                                         if (canopyNum == 0) {
-                                                            c = new MCH_AircraftInfo.Canopy(this, this.toFloat(s[0]), this.toFloat(s[1]), this.toFloat(s[2]), this.toFloat(s[3]), this.toFloat(s[4]), this.toFloat(s[5]), ry, "canopy", ys);
-                                                            this.canopyList.add(c);
-                                                         }
-                                                      }
-                                                   }
-                                                } else {
-                                                   slide = item.compareTo("addpartslidehatch") == 0;
-                                                   s = data.split("\\s*,\\s*");
-                                                   n = null;
-                                                   MCH_AircraftInfo.Hatch n;
-                                                   if (slide) {
-                                                      if (s.length >= 3) {
-                                                         n = new MCH_AircraftInfo.Hatch(this, this.toFloat(s[0]), this.toFloat(s[1]), this.toFloat(s[2]), 0.0F, 0.0F, 0.0F, 90.0F, "hatch" + this.hatchList.size(), slide);
-                                                         this.hatchList.add(n);
-                                                      }
-                                                   } else if (s.length >= 6) {
-                                                      ry = s.length >= 7 ? this.toFloat(s[6], -180.0F, 180.0F) : 90.0F;
-                                                      n = new MCH_AircraftInfo.Hatch(this, this.toFloat(s[0]), this.toFloat(s[1]), this.toFloat(s[2]), this.toFloat(s[3]), this.toFloat(s[4]), this.toFloat(s[5]), ry, "hatch" + this.hatchList.size(), slide);
-                                                      this.hatchList.add(n);
-                                                   }
-                                                }
-                                             } else {
-                                                slide = item.equalsIgnoreCase("AddPartSlideWeaponBay");
-                                                s = data.split("\\s*,\\s*");
-                                                n = null;
-                                                MCH_AircraftInfo.WeaponBay n;
-                                                if (slide) {
-                                                   if (s.length >= 4) {
-                                                      n = new MCH_AircraftInfo.WeaponBay(this, s[0].trim().toLowerCase(), this.toFloat(s[1]), this.toFloat(s[2]), this.toFloat(s[3]), 0.0F, 0.0F, 0.0F, 90.0F, "wb" + this.partWeaponBay.size(), slide);
-                                                      this.partWeaponBay.add(n);
-                                                   }
-                                                } else if (s.length >= 7) {
-                                                   ry = s.length >= 8 ? this.toFloat(s[7], -180.0F, 180.0F) : 90.0F;
-                                                   n = new MCH_AircraftInfo.WeaponBay(this, s[0].trim().toLowerCase(), this.toFloat(s[1]), this.toFloat(s[2]), this.toFloat(s[3]), this.toFloat(s[4]), this.toFloat(s[5]), this.toFloat(s[6]), ry / 90.0F, "wb" + this.partWeaponBay.size(), slide);
-                                                   this.partWeaponBay.add(n);
-                                                }
-                                             }
-                                          }
-                                       } else {
-                                          this.isShapedRecipe = item.compareTo("addrecipe") == 0;
-                                          this.recipeString.add(data.toUpperCase());
-                                       }
-                                    } else {
-                                       s = data.split("\\s*,\\s*");
-                                       if (s.length >= 7) {
-                                          df = 0.0F;
-                                          rx = 0.0F;
-                                          ry = 0.0F;
-                                          rz = 0.0F;
-                                          isRot = item.equalsIgnoreCase("AddPartRotWeapon") || item.equalsIgnoreCase("AddPartTurretRotWeapon");
-                                          isMissile = item.equalsIgnoreCase("AddPartWeaponMissile");
-                                          turret = item.equalsIgnoreCase("AddPartTurretWeapon") || item.equalsIgnoreCase("AddPartTurretRotWeapon");
-                                          if (isRot) {
-                                             df = s.length >= 10 ? this.toFloat(s[7]) : 0.0F;
-                                             rx = s.length >= 10 ? this.toFloat(s[8]) : 0.0F;
-                                             ry = s.length >= 10 ? this.toFloat(s[9]) : -1.0F;
-                                          } else {
-                                             rz = s.length >= 8 ? this.toFloat(s[7]) : 0.0F;
-                                          }
-
-                                          MCH_AircraftInfo.PartWeapon w = new MCH_AircraftInfo.PartWeapon(this, this.splitParamSlash(s[0].toLowerCase().trim()), isRot, isMissile, this.toBool(s[1]), this.toBool(s[2]), this.toBool(s[3]), this.toFloat(s[4]), this.toFloat(s[5]), this.toFloat(s[6]), "weapon" + this.partWeapon.size(), df, rx, ry, rz, turret);
-                                          this.lastWeaponPart = w;
-                                          this.partWeapon.add(w);
-                                       }
-                                    }
-                                 } else {
-                                    s = data.split("\\s*,\\s*");
-                                    String type = s[0].toLowerCase();
-                                    if (s.length >= 4 && MCH_WeaponInfoManager.contains(type)) {
-                                       rx = s.length >= 5 ? this.toFloat(s[4]) : 0.0F;
-                                       ry = s.length >= 6 ? this.toFloat(s[5]) : 0.0F;
-                                       canUsePilot = s.length >= 7 ? this.toBool(s[6]) : true;
-                                       seatID = s.length >= 8 ? this.toInt(s[7], 1, this.getInfo_MaxSeatNum()) - 1 : 0;
-                                       if (seatID <= 0) {
-                                          canUsePilot = true;
-                                       }
-
-                                       py = s.length >= 9 ? this.toFloat(s[8]) : 0.0F;
-                                       py = MathHelper.func_76142_g(py);
-                                       pz = s.length >= 10 ? this.toFloat(s[9]) : 0.0F;
-                                       mxy = s.length >= 11 ? this.toFloat(s[10]) : 0.0F;
-                                       float mnp = s.length >= 12 ? this.toFloat(s[11]) : 0.0F;
-                                       float mxp = s.length >= 13 ? this.toFloat(s[12]) : 0.0F;
-                                       MCH_AircraftInfo.Weapon e = new MCH_AircraftInfo.Weapon(this, this.toFloat(s[1]), this.toFloat(s[2]), this.toFloat(s[3]), rx, ry, canUsePilot, seatID, py, pz, mxy, mnp, mxp, item.equalsIgnoreCase("AddTurretWeapon"));
-                                       if (type.compareTo(this.lastWeaponType) != 0) {
-                                          this.weaponSetList.add(new MCH_AircraftInfo.WeaponSet(this, type));
-                                          ++this.lastWeaponIndex;
-                                          this.lastWeaponType = type;
-                                       }
-
-                                       ((MCH_AircraftInfo.WeaponSet)this.weaponSetList.get(this.lastWeaponIndex)).weapons.add(e);
-                                    }
-                                 }
-                              }
-                           } else {
-                              if (this.seatList.size() >= this.getInfo_MaxSeatNum()) {
-                                 return;
-                              }
-
-                              s = this.splitParam(data);
-                              if (s.length < 3) {
-                                 return;
-                              }
-
-                              p = this.toVec3(s[0], s[1], s[2]);
-                              if (item.equalsIgnoreCase("AddSeat")) {
-                                 ps = s.length >= 4 ? this.toBool(s[3]) : false;
-                                 MCH_SeatInfo seat = new MCH_SeatInfo(p, ps);
-                                 this.seatList.add(seat);
-                              } else {
-                                 if (s.length >= 6) {
-                                    MCH_AircraftInfo.CameraPosition c = new MCH_AircraftInfo.CameraPosition(this, this.toVec3(s[3], s[4], s[5]));
-                                    canUsePilot = s.length >= 7 ? this.toBool(s[6]) : false;
-                                    if (item.equalsIgnoreCase("AddGunnerSeat")) {
-                                       if (s.length >= 9) {
-                                          px = this.toFloat(s[7], -90.0F, 90.0F);
-                                          py = this.toFloat(s[8], -90.0F, 90.0F);
-                                          if (px > py) {
-                                             pz = px;
-                                             px = py;
-                                             py = pz;
-                                          }
-
-                                          turret = s.length >= 10 ? this.toBool(s[9]) : false;
-                                          n = new MCH_SeatInfo(p, true, c, true, canUsePilot, false, 0.0F, 0.0F, px, py, turret);
-                                       } else {
-                                          n = new MCH_SeatInfo(p, true, c, true, canUsePilot, false, 0.0F, 0.0F, false);
-                                       }
-                                    } else {
-                                       isRot = s.length >= 9;
-                                       py = isRot ? this.toFloat(s[7]) : 0.0F;
-                                       pz = isRot ? this.toFloat(s[8]) : 0.0F;
-                                       boolean rs = s.length >= 10 ? this.toBool(s[9]) : false;
-                                       n = new MCH_SeatInfo(p, true, c, true, canUsePilot, isRot, py, pz, rs);
-                                    }
-                                 } else {
-                                    n = new MCH_SeatInfo(p, true, new MCH_AircraftInfo.CameraPosition(this), false, false, false, 0.0F, 0.0F, false);
-                                 }
-
-                                 this.seatList.add(n);
-                              }
-                           }
-                        }
-                     }
-                  }
-               } else {
-                  s = this.splitParam(data);
-                  if (s.length >= 7) {
-                     p = this.toVec3(s[0], s[1], s[2]);
-                     canopyNum = this.hex2dec(s[3]);
-                     i = this.hex2dec(s[4]);
-                     rz = this.toFloat(s[5]);
-                     px = this.toFloat(s[6]);
-                     py = s.length >= 8 ? this.toFloat(s[7]) : 0.0F;
-                     pz = s.length >= 9 ? this.toFloat(s[8]) : 0.0F;
-                     mxy = s.length >= 10 ? this.toFloat(s[9]) : 0.0F;
-                     boolean fixDir = !item.equalsIgnoreCase("AddSearchLight");
-                     boolean steering = item.equalsIgnoreCase("AddSteeringSearchLight");
-                     this.searchLights.add(new MCH_AircraftInfo.SearchLight(this, p, canopyNum, i, rz, px, fixDir, py, pz, steering, mxy));
-                  }
-               }
+      } else if (item.compareTo("adddisplayname") == 0) {
+         String[] s = data.split("\\s*,\\s*");
+         if (s != null && s.length == 2) {
+            this.displayNameLang.put(s[0].toLowerCase().trim(), s[1].trim());
+         }
+      } else if (item.equalsIgnoreCase("Category")) {
+         this.category = data.toUpperCase().replaceAll("[,;:]", ".").replaceAll("[ \t]", "");
+      } else if (item.equalsIgnoreCase("CanRide")) {
+         this.canRide = this.toBool(data, true);
+      } else if (item.equalsIgnoreCase("CreativeOnly")) {
+         this.creativeOnly = this.toBool(data, false);
+      } else if (item.equalsIgnoreCase("Invulnerable")) {
+         this.invulnerable = this.toBool(data, false);
+      } else if (item.equalsIgnoreCase("MaxFuel")) {
+         this.maxFuel = this.toInt(data, 0, 100000000);
+      } else if (item.equalsIgnoreCase("FuelConsumption")) {
+         this.fuelConsumption = this.toFloat(data, 0.0F, 10000.0F);
+      } else if (item.equalsIgnoreCase("FuelSupplyRange")) {
+         this.fuelSupplyRange = this.toFloat(data, 0.0F, 1000.0F);
+      } else if (item.equalsIgnoreCase("AmmoSupplyRange")) {
+         this.ammoSupplyRange = this.toFloat(data, 0.0F, 1000.0F);
+      } else if (item.equalsIgnoreCase("RepairOtherVehicles")) {
+         String[] s = this.splitParam(data);
+         if (s.length >= 1) {
+            this.repairOtherVehiclesRange = this.toFloat(s[0], 0.0F, 1000.0F);
+            if (s.length >= 2) {
+               this.repairOtherVehiclesValue = this.toInt(s[1], 0, 10000000);
             }
          }
-      }
+      } else if (item.compareTo("itemid") == 0) {
+         this.itemID = this.toInt(data, 0, 65535);
+      } else if (item.compareTo("addtexture") == 0) {
+         this.textureNameList.add(data.toLowerCase());
+      } else if (item.compareTo("particlesscale") == 0) {
+         this.particlesScale = this.toFloat(data, 0.0F, 50.0F);
+      } else if (item.equalsIgnoreCase("EnableSeaSurfaceParticle")) {
+         this.enableSeaSurfaceParticle = this.toBool(data);
+      } else if (item.equalsIgnoreCase("AddParticleSplash")) {
+         String[] s = this.splitParam(data);
+         if (s.length >= 3) {
+            Vec3d v = this.toVec3(s[0], s[1], s[2]);
+            int num = s.length >= 4 ? this.toInt(s[3], 1, 100) : 2;
+            float size = s.length >= 5 ? this.toFloat(s[4]) : 2.0F;
+            float acc = s.length >= 6 ? this.toFloat(s[5]) : 1.0F;
+            int age = s.length >= 7 ? this.toInt(s[6], 1, 100000) : 80;
+            float motionY = s.length >= 8 ? this.toFloat(s[7]) : 0.01F;
+            float gravity = s.length >= 9 ? this.toFloat(s[8]) : 0.0F;
+            this.particleSplashs.add(new MCH_AircraftInfo.ParticleSplash(this, v, num, size, acc, age, motionY, gravity));
+         }
+      } else if (item.equalsIgnoreCase("AddSearchLight") || item.equalsIgnoreCase("AddFixedSearchLight") || item.equalsIgnoreCase("AddSteeringSearchLight")) {
+         String[] s = this.splitParam(data);
+         if (s.length >= 7) {
+            Vec3d v = this.toVec3(s[0], s[1], s[2]);
+            int cs = this.hex2dec(s[3]);
+            int ce = this.hex2dec(s[4]);
+            float h = this.toFloat(s[5]);
+            float w = this.toFloat(s[6]);
+            float yaw = s.length >= 8 ? this.toFloat(s[7]) : 0.0F;
+            float pitch = s.length >= 9 ? this.toFloat(s[8]) : 0.0F;
+            float stRot = s.length >= 10 ? this.toFloat(s[9]) : 0.0F;
+            boolean fixDir = !item.equalsIgnoreCase("AddSearchLight");
+            boolean steering = item.equalsIgnoreCase("AddSteeringSearchLight");
+            this.searchLights.add(new MCH_AircraftInfo.SearchLight(this, v, cs, ce, h, w, fixDir, yaw, pitch, steering, stRot));
+         }
+      } else if (item.equalsIgnoreCase("AddPartLightHatch")) {
+         String[] s = this.splitParam(data);
+         if (s.length >= 6) {
+            float mx = s.length >= 7 ? this.toFloat(s[6], -1800.0F, 1800.0F) : 90.0F;
+            this.lightHatchList
+               .add(
+                  new MCH_AircraftInfo.Hatch(
+                     this,
+                     this.toFloat(s[0]),
+                     this.toFloat(s[1]),
+                     this.toFloat(s[2]),
+                     this.toFloat(s[3]),
+                     this.toFloat(s[4]),
+                     this.toFloat(s[5]),
+                     mx,
+                     "light_hatch" + this.lightHatchList.size(),
+                     false
+                  )
+               );
+         }
+      } else if (item.equalsIgnoreCase("AddRepellingHook")) {
+         String[] s = this.splitParam(data);
+         if (s != null && s.length >= 3) {
+            int inv = s.length >= 4 ? this.toInt(s[3], 1, 100000) : 10;
+            this.repellingHooks.add(new MCH_AircraftInfo.RepellingHook(this, this.toVec3(s[0], s[1], s[2]), inv));
+         }
+      } else if (item.equalsIgnoreCase("AddRack")) {
+         String[] s = data.toLowerCase().split("\\s*,\\s*");
+         if (s != null && s.length >= 7) {
+            String[] names = s[0].split("\\s*/\\s*");
+            float range = s.length >= 8 ? this.toFloat(s[7]) : 6.0F;
+            float para = s.length >= 9 ? this.toFloat(s[8], 0.0F, 1000000.0F) : 20.0F;
+            float yaw = s.length >= 10 ? this.toFloat(s[9]) : 0.0F;
+            float pitch = s.length >= 11 ? this.toFloat(s[10]) : 0.0F;
+            boolean rs = s.length >= 12 ? this.toBool(s[11]) : false;
+            this.entityRackList
+               .add(
+                  new MCH_SeatRackInfo(
+                     names,
+                     this.toDouble(s[1]),
+                     this.toDouble(s[2]),
+                     this.toDouble(s[3]),
+                     new MCH_AircraftInfo.CameraPosition(this, this.toVec3(s[4], s[5], s[6]).add(0.0, 1.5, 0.0)),
+                     range,
+                     para,
+                     yaw,
+                     pitch,
+                     rs
+                  )
+               );
+         }
+      } else if (item.equalsIgnoreCase("RideRack")) {
+         String[] s = this.splitParam(data);
+         if (s.length >= 2) {
+            MCH_AircraftInfo.RideRack r = new MCH_AircraftInfo.RideRack(this, s[0].trim().toLowerCase(), this.toInt(s[1], 1, 10000));
+            this.rideRacks.add(r);
+         }
+      } else if (item.equalsIgnoreCase("AddSeat") || item.equalsIgnoreCase("AddGunnerSeat") || item.equalsIgnoreCase("AddFixRotSeat")) {
+         if (this.seatList.size() >= this.getInfo_MaxSeatNum()) {
+            return;
+         }
 
+         String[] s = this.splitParam(data);
+         if (s.length < 3) {
+            return;
+         }
+
+         Vec3d p = this.toVec3(s[0], s[1], s[2]);
+         if (item.equalsIgnoreCase("AddSeat")) {
+            boolean rs = s.length >= 4 ? this.toBool(s[3]) : false;
+            MCH_SeatInfo seat = new MCH_SeatInfo(p, rs);
+            this.seatList.add(seat);
+         } else {
+            MCH_SeatInfo seat;
+            if (s.length >= 6) {
+               MCH_AircraftInfo.CameraPosition c = new MCH_AircraftInfo.CameraPosition(this, this.toVec3(s[3], s[4], s[5]));
+               boolean sg = s.length >= 7 ? this.toBool(s[6]) : false;
+               if (item.equalsIgnoreCase("AddGunnerSeat")) {
+                  if (s.length >= 9) {
+                     float minPitch = this.toFloat(s[7], -90.0F, 90.0F);
+                     float maxPitch = this.toFloat(s[8], -90.0F, 90.0F);
+                     if (minPitch > maxPitch) {
+                        float t = minPitch;
+                        minPitch = maxPitch;
+                        maxPitch = t;
+                     }
+
+                     boolean rs = s.length >= 10 ? this.toBool(s[9]) : false;
+                     seat = new MCH_SeatInfo(p, true, c, true, sg, false, 0.0F, 0.0F, minPitch, maxPitch, rs);
+                  } else {
+                     seat = new MCH_SeatInfo(p, true, c, true, sg, false, 0.0F, 0.0F, false);
+                  }
+               } else {
+                  boolean fixRot = s.length >= 9;
+                  float fixYaw = fixRot ? this.toFloat(s[7]) : 0.0F;
+                  float fixPitch = fixRot ? this.toFloat(s[8]) : 0.0F;
+                  boolean rs = s.length >= 10 ? this.toBool(s[9]) : false;
+                  seat = new MCH_SeatInfo(p, true, c, true, sg, fixRot, fixYaw, fixPitch, rs);
+               }
+            } else {
+               seat = new MCH_SeatInfo(p, true, new MCH_AircraftInfo.CameraPosition(this), false, false, false, 0.0F, 0.0F, false);
+            }
+
+            this.seatList.add(seat);
+         }
+      } else if (item.equalsIgnoreCase("SetWheelPos")) {
+         String[] sx = this.splitParam(data);
+         if (sx.length >= 4) {
+            float x = Math.abs(this.toFloat(sx[0]));
+            float y = this.toFloat(sx[1]);
+            this.wheels.clear();
+
+            for (int i = 2; i < sx.length; i++) {
+               this.wheels.add(new MCH_AircraftInfo.Wheel(this, new Vec3d(x, y, this.toFloat(sx[i]))));
+            }
+
+            Collections.sort(this.wheels, new Comparator<MCH_AircraftInfo.Wheel>() {
+               public int compare(MCH_AircraftInfo.Wheel arg0, MCH_AircraftInfo.Wheel arg1) {
+                  return arg0.pos.z > arg1.pos.z ? -1 : 1;
+               }
+            });
+         }
+      } else if (item.equalsIgnoreCase("ExclusionSeat")) {
+         String[] sx = this.splitParam(data);
+         if (sx.length >= 2) {
+            Integer[] a = new Integer[sx.length];
+
+            for (int i = 0; i < a.length; i++) {
+               a[i] = this.toInt(sx[i], 1, 10000) - 1;
+            }
+
+            this.exclusionSeatList.add(a);
+         }
+      } else if (MCH_MOD.proxy.isRemote() && item.equalsIgnoreCase("HUD")) {
+         this.hudList.clear();
+         String[] ss = data.split("\\s*,\\s*");
+
+         for (String sx : ss) {
+            MCH_Hud hud = MCH_HudManager.get(sx);
+            if (hud == null) {
+               hud = MCH_Hud.NoDisp;
+            }
+
+            this.hudList.add(hud);
+         }
+      } else if (item.compareTo("enablenightvision") == 0) {
+         this.isEnableNightVision = this.toBool(data);
+      } else if (item.compareTo("enableentityradar") == 0) {
+         this.isEnableEntityRadar = this.toBool(data);
+      } else if (item.equalsIgnoreCase("EnableEjectionSeat")) {
+         this.isEnableEjectionSeat = this.toBool(data);
+      } else if (item.equalsIgnoreCase("EnableParachuting")) {
+         this.isEnableParachuting = this.toBool(data);
+      } else if (item.equalsIgnoreCase("MobDropOption")) {
+         String[] sx = this.splitParam(data);
+         if (sx.length >= 3) {
+            this.mobDropOption.pos = this.toVec3(sx[0], sx[1], sx[2]);
+            this.mobDropOption.interval = sx.length >= 4 ? this.toInt(sx[3]) : 12;
+         }
+      } else if (item.equalsIgnoreCase("Width")) {
+         this.bodyWidth = this.toFloat(data, 0.1F, 1000.0F);
+      } else if (item.equalsIgnoreCase("Height")) {
+         this.bodyHeight = this.toFloat(data, 0.1F, 1000.0F);
+      } else if (item.compareTo("float") == 0) {
+         this.isFloat = this.toBool(data);
+      } else if (item.compareTo("floatoffset") == 0) {
+         this.floatOffset = -this.toFloat(data);
+      } else if (item.compareTo("gravity") == 0) {
+         this.gravity = this.toFloat(data, -50.0F, 50.0F);
+      } else if (item.compareTo("gravityinwater") == 0) {
+         this.gravityInWater = this.toFloat(data, -50.0F, 50.0F);
+      } else if (item.compareTo("cameraposition") == 0) {
+         String[] sx = data.split("\\s*,\\s*");
+         if (sx.length >= 3) {
+            this.alwaysCameraView = sx.length >= 4 ? this.toBool(sx[3]) : false;
+            boolean fixRot = sx.length >= 5;
+            float yaw = sx.length >= 5 ? this.toFloat(sx[4]) : 0.0F;
+            float pitch = sx.length >= 6 ? this.toFloat(sx[5]) : 0.0F;
+            this.cameraPosition.add(new MCH_AircraftInfo.CameraPosition(this, this.toVec3(sx[0], sx[1], sx[2]), fixRot, yaw, pitch));
+         }
+      } else if (item.equalsIgnoreCase("UnmountPosition")) {
+         String[] sx = data.split("\\s*,\\s*");
+         if (sx.length >= 3) {
+            this.unmountPosition = this.toVec3(sx[0], sx[1], sx[2]);
+         }
+      } else if (item.equalsIgnoreCase("ThirdPersonDist")) {
+         this.thirdPersonDist = this.toFloat(data, 4.0F, 100.0F);
+      } else if (item.equalsIgnoreCase("TurretPosition")) {
+         String[] sx = data.split("\\s*,\\s*");
+         if (sx.length >= 3) {
+            this.turretPosition = this.toVec3(sx[0], sx[1], sx[2]);
+         }
+      } else if (item.equalsIgnoreCase("CameraRotationSpeed")) {
+         this.cameraRotationSpeed = this.toFloat(data, 0.0F, 10000.0F);
+      } else if (item.compareTo("regeneration") == 0) {
+         this.regeneration = this.toBool(data);
+      } else if (item.compareTo("speed") == 0) {
+         this.speed = this.toFloat(data, 0.0F, this.getMaxSpeed());
+      } else if (item.equalsIgnoreCase("EnableBack")) {
+         this.enableBack = this.toBool(data);
+      } else if (item.equalsIgnoreCase("MotionFactor")) {
+         this.motionFactor = this.toFloat(data, 0.0F, 1.0F);
+      } else if (item.equalsIgnoreCase("MobilityYawOnGround")) {
+         this.mobilityYawOnGround = this.toFloat(data, 0.0F, 100.0F);
+      } else if (item.equalsIgnoreCase("MobilityYaw")) {
+         this.mobilityYaw = this.toFloat(data, 0.0F, 100.0F);
+      } else if (item.equalsIgnoreCase("MobilityPitch")) {
+         this.mobilityPitch = this.toFloat(data, 0.0F, 100.0F);
+      } else if (item.equalsIgnoreCase("MobilityRoll")) {
+         this.mobilityRoll = this.toFloat(data, 0.0F, 100.0F);
+      } else if (item.equalsIgnoreCase("MinRotationPitch")) {
+         this.limitRotation = true;
+         this.minRotationPitch = this.toFloat(data, this.getMinRotationPitch(), 0.0F);
+      } else if (item.equalsIgnoreCase("MaxRotationPitch")) {
+         this.limitRotation = true;
+         this.maxRotationPitch = this.toFloat(data, 0.0F, this.getMaxRotationPitch());
+      } else if (item.equalsIgnoreCase("MinRotationRoll")) {
+         this.limitRotation = true;
+         this.minRotationRoll = this.toFloat(data, this.getMinRotationRoll(), 0.0F);
+      } else if (item.equalsIgnoreCase("MaxRotationRoll")) {
+         this.limitRotation = true;
+         this.maxRotationRoll = this.toFloat(data, 0.0F, this.getMaxRotationRoll());
+      } else if (item.compareTo("throttleupdown") == 0) {
+         this.throttleUpDown = this.toFloat(data, 0.0F, 3.0F);
+      } else if (item.equalsIgnoreCase("ThrottleUpDownOnEntity")) {
+         this.throttleUpDownOnEntity = this.toFloat(data, 0.0F, 100000.0F);
+      } else if (item.equalsIgnoreCase("Stealth")) {
+         this.stealth = this.toFloat(data, 0.0F, 1.0F);
+      } else if (item.equalsIgnoreCase("EntityWidth")) {
+         this.entityWidth = this.toFloat(data, -100.0F, 100.0F);
+      } else if (item.equalsIgnoreCase("EntityHeight")) {
+         this.entityHeight = this.toFloat(data, -100.0F, 100.0F);
+      } else if (item.equalsIgnoreCase("EntityPitch")) {
+         this.entityPitch = this.toFloat(data, -360.0F, 360.0F);
+      } else if (item.equalsIgnoreCase("EntityRoll")) {
+         this.entityRoll = this.toFloat(data, -360.0F, 360.0F);
+      } else if (item.equalsIgnoreCase("StepHeight")) {
+         this.stepHeight = this.toFloat(data, 0.0F, 1000.0F);
+      } else if (item.equalsIgnoreCase("CanMoveOnGround")) {
+         this.canMoveOnGround = this.toBool(data);
+      } else if (item.equalsIgnoreCase("CanRotOnGround")) {
+         this.canRotOnGround = this.toBool(data);
+      } else if (item.equalsIgnoreCase("AddWeapon") || item.equalsIgnoreCase("AddTurretWeapon")) {
+         String[] sx = data.split("\\s*,\\s*");
+         String type = sx[0].toLowerCase();
+         if (sx.length >= 4 && MCH_WeaponInfoManager.contains(type)) {
+            float y = sx.length >= 5 ? this.toFloat(sx[4]) : 0.0F;
+            float p = sx.length >= 6 ? this.toFloat(sx[5]) : 0.0F;
+            boolean canUsePilot = sx.length >= 7 ? this.toBool(sx[6]) : true;
+            int seatID = sx.length >= 8 ? this.toInt(sx[7], 1, this.getInfo_MaxSeatNum()) - 1 : 0;
+            if (seatID <= 0) {
+               canUsePilot = true;
+            }
+
+            float dfy = sx.length >= 9 ? this.toFloat(sx[8]) : 0.0F;
+            dfy = MathHelper.wrapDegrees(dfy);
+            float mny = sx.length >= 10 ? this.toFloat(sx[9]) : 0.0F;
+            float mxy = sx.length >= 11 ? this.toFloat(sx[10]) : 0.0F;
+            float mnp = sx.length >= 12 ? this.toFloat(sx[11]) : 0.0F;
+            float mxp = sx.length >= 13 ? this.toFloat(sx[12]) : 0.0F;
+            MCH_AircraftInfo.Weapon e = new MCH_AircraftInfo.Weapon(
+               this,
+               this.toFloat(sx[1]),
+               this.toFloat(sx[2]),
+               this.toFloat(sx[3]),
+               y,
+               p,
+               canUsePilot,
+               seatID,
+               dfy,
+               mny,
+               mxy,
+               mnp,
+               mxp,
+               item.equalsIgnoreCase("AddTurretWeapon")
+            );
+            if (type.compareTo(this.lastWeaponType) != 0) {
+               this.weaponSetList.add(new MCH_AircraftInfo.WeaponSet(this, type));
+               this.lastWeaponIndex++;
+               this.lastWeaponType = type;
+            }
+
+            this.weaponSetList.get(this.lastWeaponIndex).weapons.add(e);
+         }
+      } else if (item.equalsIgnoreCase("AddPartWeapon")
+         || item.equalsIgnoreCase("AddPartRotWeapon")
+         || item.equalsIgnoreCase("AddPartTurretWeapon")
+         || item.equalsIgnoreCase("AddPartTurretRotWeapon")
+         || item.equalsIgnoreCase("AddPartWeaponMissile")) {
+         String[] sx = data.split("\\s*,\\s*");
+         if (sx.length >= 7) {
+            float rx = 0.0F;
+            float ry = 0.0F;
+            float rz = 0.0F;
+            float rb = 0.0F;
+            boolean isRot = item.equalsIgnoreCase("AddPartRotWeapon") || item.equalsIgnoreCase("AddPartTurretRotWeapon");
+            boolean isMissile = item.equalsIgnoreCase("AddPartWeaponMissile");
+            boolean turret = item.equalsIgnoreCase("AddPartTurretWeapon") || item.equalsIgnoreCase("AddPartTurretRotWeapon");
+            if (isRot) {
+               rx = sx.length >= 10 ? this.toFloat(sx[7]) : 0.0F;
+               ry = sx.length >= 10 ? this.toFloat(sx[8]) : 0.0F;
+               rz = sx.length >= 10 ? this.toFloat(sx[9]) : -1.0F;
+            } else {
+               rb = sx.length >= 8 ? this.toFloat(sx[7]) : 0.0F;
+            }
+
+            MCH_AircraftInfo.PartWeapon w = new MCH_AircraftInfo.PartWeapon(
+               this,
+               this.splitParamSlash(sx[0].toLowerCase().trim()),
+               isRot,
+               isMissile,
+               this.toBool(sx[1]),
+               this.toBool(sx[2]),
+               this.toBool(sx[3]),
+               this.toFloat(sx[4]),
+               this.toFloat(sx[5]),
+               this.toFloat(sx[6]),
+               "weapon" + this.partWeapon.size(),
+               rx,
+               ry,
+               rz,
+               rb,
+               turret
+            );
+            this.lastWeaponPart = w;
+            this.partWeapon.add(w);
+         }
+      } else if (item.equalsIgnoreCase("AddPartWeaponChild")) {
+         String[] sx = data.split("\\s*,\\s*");
+         if (sx.length >= 5 && this.lastWeaponPart != null) {
+            float rb = sx.length >= 6 ? this.toFloat(sx[5]) : 0.0F;
+            MCH_AircraftInfo.PartWeaponChild w = new MCH_AircraftInfo.PartWeaponChild(
+               this,
+               this.lastWeaponPart.name,
+               this.toBool(sx[0]),
+               this.toBool(sx[1]),
+               this.toFloat(sx[2]),
+               this.toFloat(sx[3]),
+               this.toFloat(sx[4]),
+               this.lastWeaponPart.modelName + "_" + this.lastWeaponPart.child.size(),
+               0.0F,
+               0.0F,
+               0.0F,
+               rb
+            );
+            this.lastWeaponPart.child.add(w);
+         }
+      } else if (item.compareTo("addrecipe") == 0 || item.compareTo("addshapelessrecipe") == 0) {
+         this.isShapedRecipe = item.compareTo("addrecipe") == 0;
+         this.recipeString.add(data.toUpperCase());
+      } else if (item.compareTo("maxhp") == 0) {
+         this.maxHp = this.toInt(data, 1, 1000000000);
+      } else if (item.compareTo("inventorysize") == 0) {
+         this.inventorySize = this.toInt(data, 0, 54);
+      } else if (item.compareTo("damagefactor") == 0) {
+         this.damageFactor = this.toFloat(data, 0.0F, 1.0F);
+      } else if (item.equalsIgnoreCase("SubmergedDamageHeight")) {
+         this.submergedDamageHeight = this.toFloat(data, -1000.0F, 1000.0F);
+      } else if (item.equalsIgnoreCase("ArmorDamageFactor")) {
+         this.armorDamageFactor = this.toFloat(data, 0.0F, 10000.0F);
+      } else if (item.equalsIgnoreCase("ArmorMinDamage")) {
+         this.armorMinDamage = this.toFloat(data, 0.0F, 1000000.0F);
+      } else if (item.equalsIgnoreCase("ArmorMaxDamage")) {
+         this.armorMaxDamage = this.toFloat(data, 0.0F, 1000000.0F);
+      } else if (item.equalsIgnoreCase("FlareType")) {
+         String[] sx = data.split("\\s*,\\s*");
+         this.flare.types = new int[sx.length];
+
+         for (int i = 0; i < sx.length; i++) {
+            this.flare.types[i] = this.toInt(sx[i], 1, 10);
+         }
+      } else if (item.equalsIgnoreCase("FlareOption")) {
+         String[] sx = this.splitParam(data);
+         if (sx.length >= 3) {
+            this.flare.pos = this.toVec3(sx[0], sx[1], sx[2]);
+         }
+      } else if (item.equalsIgnoreCase("Sound")) {
+         this.soundMove = data.toLowerCase();
+      } else if (item.equalsIgnoreCase("SoundRange")) {
+         this.soundRange = this.toFloat(data, 1.0F, 1000.0F);
+      } else if (item.equalsIgnoreCase("SoundVolume")) {
+         this.soundVolume = this.toFloat(data, 0.0F, 10.0F);
+      } else if (item.equalsIgnoreCase("SoundPitch")) {
+         this.soundPitch = this.toFloat(data, 0.0F, 10.0F);
+      } else if (item.equalsIgnoreCase("UAV")) {
+         this.isUAV = this.toBool(data);
+         this.isSmallUAV = false;
+      } else if (item.equalsIgnoreCase("SmallUAV")) {
+         this.isUAV = this.toBool(data);
+         this.isSmallUAV = true;
+      } else if (item.equalsIgnoreCase("TargetDrone")) {
+         this.isTargetDrone = this.toBool(data);
+      } else if (item.compareTo("autopilotrot") == 0) {
+         this.autoPilotRot = this.toFloat(data, -5.0F, 5.0F);
+      } else if (item.compareTo("ongroundpitch") == 0) {
+         this.onGroundPitch = -this.toFloat(data, -90.0F, 90.0F);
+      } else if (item.compareTo("enablegunnermode") == 0) {
+         this.isEnableGunnerMode = this.toBool(data);
+      } else if (item.compareTo("hideentity") == 0) {
+         this.hideEntity = this.toBool(data);
+      } else if (item.equalsIgnoreCase("SmoothShading")) {
+         this.smoothShading = this.toBool(data);
+      } else if (item.compareTo("concurrentgunnermode") == 0) {
+         this.isEnableConcurrentGunnerMode = this.toBool(data);
+      } else if (item.equalsIgnoreCase("AddPartWeaponBay") || item.equalsIgnoreCase("AddPartSlideWeaponBay")) {
+         boolean slide = item.equalsIgnoreCase("AddPartSlideWeaponBay");
+         String[] sx = data.split("\\s*,\\s*");
+         MCH_AircraftInfo.WeaponBay n = null;
+         if (slide) {
+            if (sx.length >= 4) {
+               n = new MCH_AircraftInfo.WeaponBay(
+                  this,
+                  sx[0].trim().toLowerCase(),
+                  this.toFloat(sx[1]),
+                  this.toFloat(sx[2]),
+                  this.toFloat(sx[3]),
+                  0.0F,
+                  0.0F,
+                  0.0F,
+                  90.0F,
+                  "wb" + this.partWeaponBay.size(),
+                  slide
+               );
+               this.partWeaponBay.add(n);
+            }
+         } else if (sx.length >= 7) {
+            float mx = sx.length >= 8 ? this.toFloat(sx[7], -180.0F, 180.0F) : 90.0F;
+            n = new MCH_AircraftInfo.WeaponBay(
+               this,
+               sx[0].trim().toLowerCase(),
+               this.toFloat(sx[1]),
+               this.toFloat(sx[2]),
+               this.toFloat(sx[3]),
+               this.toFloat(sx[4]),
+               this.toFloat(sx[5]),
+               this.toFloat(sx[6]),
+               mx / 90.0F,
+               "wb" + this.partWeaponBay.size(),
+               slide
+            );
+            this.partWeaponBay.add(n);
+         }
+      } else if (item.compareTo("addparthatch") == 0 || item.compareTo("addpartslidehatch") == 0) {
+         boolean slide = item.compareTo("addpartslidehatch") == 0;
+         String[] sx = data.split("\\s*,\\s*");
+         MCH_AircraftInfo.Hatch n = null;
+         if (slide) {
+            if (sx.length >= 3) {
+               n = new MCH_AircraftInfo.Hatch(
+                  this, this.toFloat(sx[0]), this.toFloat(sx[1]), this.toFloat(sx[2]), 0.0F, 0.0F, 0.0F, 90.0F, "hatch" + this.hatchList.size(), slide
+               );
+               this.hatchList.add(n);
+            }
+         } else if (sx.length >= 6) {
+            float mx = sx.length >= 7 ? this.toFloat(sx[6], -180.0F, 180.0F) : 90.0F;
+            n = new MCH_AircraftInfo.Hatch(
+               this,
+               this.toFloat(sx[0]),
+               this.toFloat(sx[1]),
+               this.toFloat(sx[2]),
+               this.toFloat(sx[3]),
+               this.toFloat(sx[4]),
+               this.toFloat(sx[5]),
+               mx,
+               "hatch" + this.hatchList.size(),
+               slide
+            );
+            this.hatchList.add(n);
+         }
+      } else if (item.compareTo("addpartcanopy") == 0 || item.compareTo("addpartslidecanopy") == 0) {
+         String[] sx = data.split("\\s*,\\s*");
+         boolean slide = item.compareTo("addpartslidecanopy") == 0;
+         int canopyNum = this.canopyList.size();
+         if (canopyNum > 0) {
+            canopyNum--;
+         }
+
+         if (slide) {
+            if (sx.length >= 3) {
+               MCH_AircraftInfo.Canopy c = new MCH_AircraftInfo.Canopy(
+                  this, this.toFloat(sx[0]), this.toFloat(sx[1]), this.toFloat(sx[2]), 0.0F, 0.0F, 0.0F, 90.0F, "canopy" + canopyNum, slide
+               );
+               this.canopyList.add(c);
+               if (canopyNum == 0) {
+                  c = new MCH_AircraftInfo.Canopy(this, this.toFloat(sx[0]), this.toFloat(sx[1]), this.toFloat(sx[2]), 0.0F, 0.0F, 0.0F, 90.0F, "canopy", slide);
+                  this.canopyList.add(c);
+               }
+            }
+         } else if (sx.length >= 6) {
+            float mx = sx.length >= 7 ? this.toFloat(sx[6], -180.0F, 180.0F) : 90.0F;
+            mx /= 90.0F;
+            MCH_AircraftInfo.Canopy c = new MCH_AircraftInfo.Canopy(
+               this,
+               this.toFloat(sx[0]),
+               this.toFloat(sx[1]),
+               this.toFloat(sx[2]),
+               this.toFloat(sx[3]),
+               this.toFloat(sx[4]),
+               this.toFloat(sx[5]),
+               mx,
+               "canopy" + canopyNum,
+               slide
+            );
+            this.canopyList.add(c);
+            if (canopyNum == 0) {
+               c = new MCH_AircraftInfo.Canopy(
+                  this,
+                  this.toFloat(sx[0]),
+                  this.toFloat(sx[1]),
+                  this.toFloat(sx[2]),
+                  this.toFloat(sx[3]),
+                  this.toFloat(sx[4]),
+                  this.toFloat(sx[5]),
+                  mx,
+                  "canopy",
+                  slide
+               );
+               this.canopyList.add(c);
+            }
+         }
+      } else if (item.equalsIgnoreCase("AddPartLG")
+         || item.equalsIgnoreCase("AddPartSlideRotLG")
+         || item.equalsIgnoreCase("AddPartLGRev")
+         || item.equalsIgnoreCase("AddPartLGHatch")) {
+         String[] sxx = data.split("\\s*,\\s*");
+         if (!item.equalsIgnoreCase("AddPartSlideRotLG") && sxx.length >= 6) {
+            float maxRot = sxx.length >= 7 ? this.toFloat(sxx[6], -180.0F, 180.0F) : 90.0F;
+            maxRot /= 90.0F;
+            MCH_AircraftInfo.LandingGear n = new MCH_AircraftInfo.LandingGear(
+               this,
+               this.toFloat(sxx[0]),
+               this.toFloat(sxx[1]),
+               this.toFloat(sxx[2]),
+               this.toFloat(sxx[3]),
+               this.toFloat(sxx[4]),
+               this.toFloat(sxx[5]),
+               "lg" + this.landingGear.size(),
+               maxRot,
+               item.equalsIgnoreCase("AddPartLgRev"),
+               item.equalsIgnoreCase("AddPartLGHatch")
+            );
+            if (sxx.length >= 8) {
+               n.enableRot2 = true;
+               n.maxRotFactor2 = sxx.length >= 11 ? this.toFloat(sxx[10], -180.0F, 180.0F) : 90.0F;
+               n.maxRotFactor2 /= 90.0F;
+               n.rot2 = new Vec3d(this.toFloat(sxx[7]), this.toFloat(sxx[8]), this.toFloat(sxx[9]));
+            }
+
+            this.landingGear.add(n);
+         }
+
+         if (item.equalsIgnoreCase("AddPartSlideRotLG") && sxx.length >= 9) {
+            float maxRot = sxx.length >= 10 ? this.toFloat(sxx[9], -180.0F, 180.0F) : 90.0F;
+            maxRot /= 90.0F;
+            MCH_AircraftInfo.LandingGear n = new MCH_AircraftInfo.LandingGear(
+               this,
+               this.toFloat(sxx[3]),
+               this.toFloat(sxx[4]),
+               this.toFloat(sxx[5]),
+               this.toFloat(sxx[6]),
+               this.toFloat(sxx[7]),
+               this.toFloat(sxx[8]),
+               "lg" + this.landingGear.size(),
+               maxRot,
+               false,
+               false
+            );
+            n.slide = new Vec3d(this.toFloat(sxx[0]), this.toFloat(sxx[1]), this.toFloat(sxx[2]));
+            this.landingGear.add(n);
+         }
+      } else if (item.equalsIgnoreCase("AddPartThrottle")) {
+         String[] sxxx = data.split("\\s*,\\s*");
+         if (sxxx.length >= 7) {
+            float x = sxxx.length >= 8 ? this.toFloat(sxxx[7]) : 0.0F;
+            float yx = sxxx.length >= 9 ? this.toFloat(sxxx[8]) : 0.0F;
+            float z = sxxx.length >= 10 ? this.toFloat(sxxx[9]) : 0.0F;
+            MCH_AircraftInfo.Throttle c = new MCH_AircraftInfo.Throttle(
+               this,
+               this.toFloat(sxxx[0]),
+               this.toFloat(sxxx[1]),
+               this.toFloat(sxxx[2]),
+               this.toFloat(sxxx[3]),
+               this.toFloat(sxxx[4]),
+               this.toFloat(sxxx[5]),
+               this.toFloat(sxxx[6]),
+               "throttle" + this.partThrottle.size(),
+               x,
+               yx,
+               z
+            );
+            this.partThrottle.add(c);
+         }
+      } else if (item.equalsIgnoreCase("AddPartRotation")) {
+         String[] sxxx = data.split("\\s*,\\s*");
+         if (sxxx.length >= 7) {
+            boolean always = sxxx.length >= 8 ? this.toBool(sxxx[7]) : true;
+            MCH_AircraftInfo.RotPart c = new MCH_AircraftInfo.RotPart(
+               this,
+               this.toFloat(sxxx[0]),
+               this.toFloat(sxxx[1]),
+               this.toFloat(sxxx[2]),
+               this.toFloat(sxxx[3]),
+               this.toFloat(sxxx[4]),
+               this.toFloat(sxxx[5]),
+               this.toFloat(sxxx[6]),
+               always,
+               "rotpart" + this.partThrottle.size()
+            );
+            this.partRotPart.add(c);
+         }
+      } else if (item.compareTo("addpartcamera") == 0) {
+         String[] sxxx = data.split("\\s*,\\s*");
+         if (sxxx.length >= 3) {
+            boolean ys = sxxx.length >= 4 ? this.toBool(sxxx[3]) : true;
+            boolean ps = sxxx.length >= 5 ? this.toBool(sxxx[4]) : false;
+            MCH_AircraftInfo.Camera c = new MCH_AircraftInfo.Camera(
+               this, this.toFloat(sxxx[0]), this.toFloat(sxxx[1]), this.toFloat(sxxx[2]), 0.0F, -1.0F, 0.0F, "camera" + this.cameraList.size(), ys, ps
+            );
+            this.cameraList.add(c);
+         }
+      } else if (item.equalsIgnoreCase("AddPartWheel")) {
+         String[] sxxx = this.splitParam(data);
+         if (sxxx.length >= 3) {
+            float rd = sxxx.length >= 4 ? this.toFloat(sxxx[3], -1800.0F, 1800.0F) : 0.0F;
+            float rx = sxxx.length >= 7 ? this.toFloat(sxxx[4]) : 0.0F;
+            float ry = sxxx.length >= 7 ? this.toFloat(sxxx[5]) : 1.0F;
+            float rz = sxxx.length >= 7 ? this.toFloat(sxxx[6]) : 0.0F;
+            float px = sxxx.length >= 10 ? this.toFloat(sxxx[7]) : this.toFloat(sxxx[0]);
+            float py = sxxx.length >= 10 ? this.toFloat(sxxx[8]) : this.toFloat(sxxx[1]);
+            float pz = sxxx.length >= 10 ? this.toFloat(sxxx[9]) : this.toFloat(sxxx[2]);
+            this.partWheel
+               .add(
+                  new MCH_AircraftInfo.PartWheel(
+                     this, this.toFloat(sxxx[0]), this.toFloat(sxxx[1]), this.toFloat(sxxx[2]), rx, ry, rz, rd, px, py, pz, "wheel" + this.partWheel.size()
+                  )
+               );
+         }
+      } else if (item.equalsIgnoreCase("AddPartSteeringWheel")) {
+         String[] sxxx = this.splitParam(data);
+         if (sxxx.length >= 7) {
+            this.partSteeringWheel
+               .add(
+                  new MCH_AircraftInfo.PartWheel(
+                     this,
+                     this.toFloat(sxxx[0]),
+                     this.toFloat(sxxx[1]),
+                     this.toFloat(sxxx[2]),
+                     this.toFloat(sxxx[3]),
+                     this.toFloat(sxxx[4]),
+                     this.toFloat(sxxx[5]),
+                     this.toFloat(sxxx[6]),
+                     "steering_wheel" + this.partSteeringWheel.size()
+                  )
+               );
+         }
+      } else if (item.equalsIgnoreCase("AddTrackRoller")) {
+         String[] sxxx = this.splitParam(data);
+         if (sxxx.length >= 3) {
+            this.partTrackRoller
+               .add(
+                  new MCH_AircraftInfo.TrackRoller(
+                     this, this.toFloat(sxxx[0]), this.toFloat(sxxx[1]), this.toFloat(sxxx[2]), "track_roller" + this.partTrackRoller.size()
+                  )
+               );
+         }
+      } else if (item.equalsIgnoreCase("AddCrawlerTrack")) {
+         this.partCrawlerTrack.add(this.createCrawlerTrack(data, "crawler_track" + this.partCrawlerTrack.size()));
+      } else if (item.equalsIgnoreCase("PivotTurnThrottle")) {
+         this.pivotTurnThrottle = this.toFloat(data, 0.0F, 1.0F);
+      } else if (item.equalsIgnoreCase("TrackRollerRot")) {
+         this.trackRollerRot = this.toFloat(data, -10000.0F, 10000.0F);
+      } else if (item.equalsIgnoreCase("PartWheelRot")) {
+         this.partWheelRot = this.toFloat(data, -10000.0F, 10000.0F);
+      } else if (item.compareTo("camerazoom") == 0) {
+         this.cameraZoom = this.toInt(data, 1, 10);
+      } else if (item.equalsIgnoreCase("DefaultFreelook")) {
+         this.defaultFreelook = this.toBool(data);
+      } else if (item.equalsIgnoreCase("BoundingBox")) {
+         String[] sxxx = data.split("\\s*,\\s*");
+         if (sxxx.length >= 5) {
+            float df = sxxx.length >= 6 ? this.toFloat(sxxx[5]) : 1.0F;
+            MCH_BoundingBox c = new MCH_BoundingBox(
+               this.toFloat(sxxx[0]), this.toFloat(sxxx[1]), this.toFloat(sxxx[2]), this.toFloat(sxxx[3]), this.toFloat(sxxx[4]), df
+            );
+            this.extraBoundingBox.add(c);
+            if (c.getBoundingBox().maxY > this.markerHeight) {
+               this.markerHeight = (float)c.getBoundingBox().maxY;
+            }
+
+            this.markerWidth = (float)Math.max((double)this.markerWidth, Math.abs(c.getBoundingBox().maxX) / 2.0);
+            this.markerWidth = (float)Math.max((double)this.markerWidth, Math.abs(c.getBoundingBox().minX) / 2.0);
+            this.markerWidth = (float)Math.max((double)this.markerWidth, Math.abs(c.getBoundingBox().maxZ) / 2.0);
+            this.markerWidth = (float)Math.max((double)this.markerWidth, Math.abs(c.getBoundingBox().minZ) / 2.0);
+            this.bbZmin = (float)Math.min((double)this.bbZmin, c.getBoundingBox().minZ);
+            this.bbZmax = (float)Math.min((double)this.bbZmax, c.getBoundingBox().maxZ);
+         }
+      } else if (item.equalsIgnoreCase("RotorSpeed")) {
+         this.rotorSpeed = this.toFloat(data, -10000.0F, 10000.0F);
+         if (this.rotorSpeed > 0.01) {
+            this.rotorSpeed = (float)(this.rotorSpeed - 0.01);
+         }
+
+         if (this.rotorSpeed < -0.01) {
+            this.rotorSpeed = (float)(this.rotorSpeed + 0.01);
+         }
+      } else if (item.equalsIgnoreCase("OnGroundPitchFactor")) {
+         this.onGroundPitchFactor = this.toFloat(data, 0.0F, 180.0F);
+      } else if (item.equalsIgnoreCase("OnGroundRollFactor")) {
+         this.onGroundRollFactor = this.toFloat(data, 0.0F, 180.0F);
+      }
    }
 
    public MCH_AircraftInfo.CrawlerTrack createCrawlerTrack(String data, String name) {
@@ -1132,39 +1279,38 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
          double[] cx = new double[PC];
          double[] cy = new double[PC];
 
-         for(int i = 0; i < PC; ++i) {
+         for (int i = 0; i < PC; i++) {
             int idx = !REV ? i : PC - i - 1;
             String[] xy = this.splitParamSlash(s[3 + idx]);
-            cx[i] = (double)this.toFloat(xy[0]);
-            cy[i] = (double)this.toFloat(xy[1]);
+            cx[i] = this.toFloat(xy[0]);
+            cy[i] = this.toFloat(xy[1]);
          }
 
-         List<MCH_AircraftInfo.CrawlerTrackPrm> lp = new ArrayList();
+         List<MCH_AircraftInfo.CrawlerTrackPrm> lp = new ArrayList<>();
          lp.add(new MCH_AircraftInfo.CrawlerTrackPrm(this, (float)cx[0], (float)cy[0]));
-         double dist = 0.0D;
+         double dist = 0.0;
 
-         int i;
-         for(i = 0; i < PC; ++i) {
+         for (int i = 0; i < PC; i++) {
             double x = cx[(i + 1) % PC] - cx[i];
             double y = cy[(i + 1) % PC] - cy[i];
             dist += Math.sqrt(x * x + y * y);
             double dist2 = dist;
 
-            for(int j = 1; dist >= (double)LEN; ++j) {
-               lp.add(new MCH_AircraftInfo.CrawlerTrackPrm(this, (float)(cx[i] + x * ((double)(LEN * (float)j) / dist2)), (float)(cy[i] + y * ((double)(LEN * (float)j) / dist2))));
-               dist -= (double)LEN;
+            for (int j = 1; dist >= LEN; j++) {
+               lp.add(new MCH_AircraftInfo.CrawlerTrackPrm(this, (float)(cx[i] + x * (LEN * j / dist2)), (float)(cy[i] + y * (LEN * j / dist2))));
+               dist -= LEN;
             }
          }
 
-         for(i = 0; i < lp.size(); ++i) {
-            MCH_AircraftInfo.CrawlerTrackPrm pp = (MCH_AircraftInfo.CrawlerTrackPrm)lp.get((i + lp.size() - 1) % lp.size());
-            MCH_AircraftInfo.CrawlerTrackPrm cp = (MCH_AircraftInfo.CrawlerTrackPrm)lp.get(i);
-            MCH_AircraftInfo.CrawlerTrackPrm np = (MCH_AircraftInfo.CrawlerTrackPrm)lp.get((i + 1) % lp.size());
-            float pr = (float)(Math.atan2((double)(pp.x - cp.x), (double)(pp.y - cp.y)) * 180.0D / 3.141592653589793D);
-            float nr = (float)(Math.atan2((double)(np.x - cp.x), (double)(np.y - cp.y)) * 180.0D / 3.141592653589793D);
+         for (int i = 0; i < lp.size(); i++) {
+            MCH_AircraftInfo.CrawlerTrackPrm pp = lp.get((i + lp.size() - 1) % lp.size());
+            MCH_AircraftInfo.CrawlerTrackPrm cp = lp.get(i);
+            MCH_AircraftInfo.CrawlerTrackPrm np = lp.get((i + 1) % lp.size());
+            float pr = (float)(Math.atan2(pp.x - cp.x, pp.y - cp.y) * 180.0 / Math.PI);
+            float nr = (float)(Math.atan2(np.x - cp.x, np.y - cp.y) * 180.0 / Math.PI);
             float ppr = (pr + 360.0F) % 360.0F;
             float nnr = nr + 180.0F;
-            if (((double)nnr < (double)ppr - 0.3D || (double)nnr > (double)ppr + 0.3D) && nnr - ppr < 100.0F && nnr - ppr > -100.0F) {
+            if ((nnr < ppr - 0.3 || nnr > ppr + 0.3) && nnr - ppr < 100.0F && nnr - ppr > -100.0F) {
                nnr = (nnr + ppr) / 2.0F;
             }
 
@@ -1183,18 +1329,18 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
    }
 
    public String getTextureName() {
-      String s = (String)this.textureNameList.get(this.textureCount);
+      String s = this.textureNameList.get(this.textureCount);
       this.textureCount = (this.textureCount + 1) % this.textureNameList.size();
       return s;
    }
 
    public String getNextTextureName(String base) {
       if (this.textureNameList.size() >= 2) {
-         for(int i = 0; i < this.textureNameList.size(); ++i) {
-            String s = (String)this.textureNameList.get(i);
+         for (int i = 0; i < this.textureNameList.size(); i++) {
+            String s = this.textureNameList.get(i);
             if (s.equalsIgnoreCase(base)) {
                i = (i + 1) % this.textureNameList.size();
-               return (String)this.textureNameList.get(i);
+               return this.textureNameList.get(i);
             }
          }
       }
@@ -1203,16 +1349,16 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
    }
 
    public static String[] getCannotReloadItem() {
-      return new String[]{"DisplayName", "AddDisplayName", "ItemID", "AddRecipe", "AddShapelessRecipe", "InventorySize", "Sound", "UAV", "SmallUAV", "TargetDrone", "Category"};
+      return new String[]{
+         "DisplayName", "AddDisplayName", "ItemID", "AddRecipe", "AddShapelessRecipe", "InventorySize", "Sound", "UAV", "SmallUAV", "TargetDrone", "Category"
+      };
    }
 
+   @Override
    public boolean canReloadItem(String item) {
       String[] ignoreItems = getCannotReloadItem();
-      String[] var3 = ignoreItems;
-      int var4 = ignoreItems.length;
 
-      for(int var5 = 0; var5 < var4; ++var5) {
-         String s = var3[var5];
+      for (String s : ignoreItems) {
          if (s.equalsIgnoreCase(item)) {
             return false;
          }
@@ -1221,179 +1367,140 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
       return true;
    }
 
-   public class Wheel {
-      public final float size;
+   public class Camera extends MCH_AircraftInfo.DrawnPart {
+      public final boolean yawSync;
+      public final boolean pitchSync;
+
+      public Camera(MCH_AircraftInfo paramMCH_AircraftInfo, float px, float py, float pz, float rx, float ry, float rz, String name, boolean ys, boolean ps) {
+         super(paramMCH_AircraftInfo, px, py, pz, rx, ry, rz, name);
+         this.yawSync = ys;
+         this.pitchSync = ps;
+      }
+   }
+
+   public class CameraPosition {
       public final Vec3d pos;
+      public final boolean fixRot;
+      public final float yaw;
+      public final float pitch;
 
-      public Wheel(MCH_AircraftInfo paramMCH_AircraftInfo, Vec3d v, float sz) {
-         this.pos = v;
-         this.size = sz;
+      public CameraPosition(MCH_AircraftInfo paramMCH_AircraftInfo, Vec3d vec3, boolean fixRot, float yaw, float pitch) {
+         this.pos = vec3;
+         this.fixRot = fixRot;
+         this.yaw = yaw;
+         this.pitch = pitch;
       }
 
-      public Wheel(MCH_AircraftInfo paramMCH_AircraftInfo, Vec3d v) {
-         this(paramMCH_AircraftInfo, v, 1.0F);
+      public CameraPosition(MCH_AircraftInfo paramMCH_AircraftInfo, Vec3d vec3) {
+         this(paramMCH_AircraftInfo, vec3, false, 0.0F, 0.0F);
+      }
+
+      public CameraPosition(MCH_AircraftInfo paramMCH_AircraftInfo) {
+         this(paramMCH_AircraftInfo, new Vec3d(0.0, 0.0, 0.0));
       }
    }
 
-   public class WeaponSet {
-      public final String type;
-      public ArrayList<MCH_AircraftInfo.Weapon> weapons;
-
-      public WeaponSet(MCH_AircraftInfo paramMCH_AircraftInfo, String t) {
-         this.type = t;
-         this.weapons = new ArrayList();
-      }
-   }
-
-   public class WeaponBay extends MCH_AircraftInfo.DrawnPart {
+   public class Canopy extends MCH_AircraftInfo.DrawnPart {
       public final float maxRotFactor;
       public final boolean isSlide;
-      private final String weaponName;
-      public Integer[] weaponIds;
 
-      public WeaponBay(MCH_AircraftInfo paramMCH_AircraftInfo, String wn, float px, float py, float pz, float rx, float ry, float rz, float mr, String name, boolean slide) {
+      public Canopy(MCH_AircraftInfo paramMCH_AircraftInfo, float px, float py, float pz, float rx, float ry, float rz, float mr, String name, boolean slide) {
          super(paramMCH_AircraftInfo, px, py, pz, rx, ry, rz, name);
          this.maxRotFactor = mr;
          this.isSlide = slide;
-         this.weaponName = wn;
-         this.weaponIds = new Integer[0];
       }
    }
 
-   public class Weapon {
+   public class CrawlerTrack extends MCH_AircraftInfo.DrawnPart {
+      public float len = 0.35F;
+      public double[] cx;
+      public double[] cy;
+      public List<MCH_AircraftInfo.CrawlerTrackPrm> lp;
+      public float z;
+      public int side;
+
+      public CrawlerTrack(MCH_AircraftInfo paramMCH_AircraftInfo, String name) {
+         super(paramMCH_AircraftInfo, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, name);
+      }
+   }
+
+   public class CrawlerTrackPrm {
+      float x;
+      float y;
+      float nx;
+      float ny;
+      float r;
+
+      public CrawlerTrackPrm(MCH_AircraftInfo paramMCH_AircraftInfo, float x, float y) {
+         this.x = x;
+         this.y = y;
+      }
+   }
+
+   public class DrawnPart {
       public final Vec3d pos;
-      public final float yaw;
-      public final float pitch;
-      public final boolean canUsePilot;
-      public final int seatID;
-      public final float defaultYaw;
-      public final float minYaw;
-      public final float maxYaw;
-      public final float minPitch;
-      public final float maxPitch;
-      public final boolean turret;
+      public final Vec3d rot;
+      public final String modelName;
+      public _IModelCustom model;
 
-      public Weapon(MCH_AircraftInfo paramMCH_AircraftInfo, float x, float y, float z, float yaw, float pitch, boolean canPirot, int seatId, float defy, float mny, float mxy, float mnp, float mxp, boolean turret) {
-         this.pos = new Vec3d((double)x, (double)y, (double)z);
-         this.yaw = yaw;
-         this.pitch = pitch;
-         this.canUsePilot = canPirot;
-         this.seatID = seatId;
-         this.defaultYaw = defy;
-         this.minYaw = mny;
-         this.maxYaw = mxy;
-         this.minPitch = mnp;
-         this.maxPitch = mxp;
-         this.turret = turret;
+      public DrawnPart(MCH_AircraftInfo paramMCH_AircraftInfo, float px, float py, float pz, float rx, float ry, float rz, String name) {
+         this.pos = new Vec3d(px, py, pz);
+         this.rot = new Vec3d(rx, ry, rz);
+         this.modelName = name;
+         this.model = null;
       }
    }
 
-   public class TrackRoller extends MCH_AircraftInfo.DrawnPart {
-      final int side;
+   public class Flare {
+      public int[] types = new int[0];
+      public Vec3d pos = new Vec3d(0.0, 0.0, 0.0);
 
-      public TrackRoller(MCH_AircraftInfo paramMCH_AircraftInfo, float px, float py, float pz, String name) {
-         super(paramMCH_AircraftInfo, px, py, pz, 0.0F, 0.0F, 0.0F, name);
-         this.side = px >= 0.0F ? 1 : 0;
+      public Flare(MCH_AircraftInfo paramMCH_AircraftInfo) {
       }
    }
 
-   public class Throttle extends MCH_AircraftInfo.DrawnPart {
-      public final Vec3d slide;
-      public final float rot2;
+   public class Hatch extends MCH_AircraftInfo.DrawnPart {
+      public final float maxRotFactor;
+      public final float maxRot;
+      public final boolean isSlide;
 
-      public Throttle(MCH_AircraftInfo paramMCH_AircraftInfo, float px, float py, float pz, float rx, float ry, float rz, float rot, String name, float px2, float py2, float pz2) {
+      public Hatch(MCH_AircraftInfo paramMCH_AircraftInfo, float px, float py, float pz, float rx, float ry, float rz, float mr, String name, boolean slide) {
          super(paramMCH_AircraftInfo, px, py, pz, rx, ry, rz, name);
-         this.rot2 = rot;
-         this.slide = new Vec3d((double)px2, (double)py2, (double)pz2);
+         this.maxRot = mr;
+         this.maxRotFactor = this.maxRot / 90.0F;
+         this.isSlide = slide;
       }
    }
 
-   public class SearchLight {
-      public final int colorStart;
-      public final int colorEnd;
-      public final Vec3d pos;
-      public final float height;
-      public final float width;
-      public final float angle;
-      public final boolean fixDir;
-      public final float yaw;
-      public final float pitch;
-      public final boolean steering;
-      public final float stRot;
+   public class LandingGear extends MCH_AircraftInfo.DrawnPart {
+      public Vec3d slide = null;
+      public final float maxRotFactor;
+      public boolean enableRot2;
+      public Vec3d rot2;
+      public float maxRotFactor2;
+      public final boolean reverse;
+      public final boolean hatch;
 
-      public SearchLight(MCH_AircraftInfo paramMCH_AircraftInfo, Vec3d pos, int cs, int ce, float h, float w, boolean fix, float y, float p, boolean st, float stRot) {
-         this.colorStart = cs;
-         this.colorEnd = ce;
-         this.pos = pos;
-         this.height = h;
-         this.width = w;
-         this.angle = (float)(Math.atan2((double)(w / 2.0F), (double)h) * 180.0D / 3.141592653589793D);
-         this.fixDir = fix;
-         this.steering = st;
-         this.yaw = y;
-         this.pitch = p;
-         this.stRot = stRot;
-      }
-   }
-
-   public class RotPart extends MCH_AircraftInfo.DrawnPart {
-      public final float rotSpeed;
-      public final boolean rotAlways;
-
-      public RotPart(MCH_AircraftInfo paramMCH_AircraftInfo, float px, float py, float pz, float rx, float ry, float rz, float mr, boolean a, String name) {
-         super(paramMCH_AircraftInfo, px, py, pz, rx, ry, rz, name);
-         this.rotSpeed = mr;
-         this.rotAlways = a;
-      }
-   }
-
-   public class RideRack {
-      public final String name;
-      public final int rackID;
-
-      public RideRack(MCH_AircraftInfo paramMCH_AircraftInfo, String n, int id) {
-         this.name = n;
-         this.rackID = id;
-      }
-   }
-
-   public class RepellingHook {
-      final Vec3d pos;
-      final int interval;
-
-      public RepellingHook(MCH_AircraftInfo paramMCH_AircraftInfo, Vec3d pos, int inv) {
-         this.pos = pos;
-         this.interval = inv;
-      }
-   }
-
-   public class PartWheel extends MCH_AircraftInfo.DrawnPart {
-      final float rotDir;
-      final Vec3d pos2;
-
-      public PartWheel(MCH_AircraftInfo paramMCH_AircraftInfo, float px, float py, float pz, float rx, float ry, float rz, float rd, float px2, float py2, float pz2, String name) {
-         super(paramMCH_AircraftInfo, px, py, pz, rx, ry, rz, name);
-         this.rotDir = rd;
-         this.pos2 = new Vec3d((double)px2, (double)py2, (double)pz2);
-      }
-
-      public PartWheel(MCH_AircraftInfo paramMCH_AircraftInfo, float px, float py, float pz, float rx, float ry, float rz, float rd, String name) {
-         this(paramMCH_AircraftInfo, px, py, pz, rx, ry, rz, rd, px, py, pz, name);
-      }
-   }
-
-   public class PartWeaponChild extends MCH_AircraftInfo.DrawnPart {
-      public final String[] name;
-      public final boolean yaw;
-      public final boolean pitch;
-      public final float recoilBuf;
-
-      public PartWeaponChild(MCH_AircraftInfo paramMCH_AircraftInfo, String[] name, boolean y, boolean p, float px, float py, float pz, String modelName, float rx, float ry, float rz, float rb) {
-         super(paramMCH_AircraftInfo, px, py, pz, rx, ry, rz, modelName);
-         this.name = name;
-         this.yaw = y;
-         this.pitch = p;
-         this.recoilBuf = rb;
+      public LandingGear(
+         MCH_AircraftInfo paramMCH_AircraftInfo,
+         float x,
+         float y,
+         float z,
+         float rx,
+         float ry,
+         float rz,
+         String model,
+         float maxRotF,
+         boolean rev,
+         boolean isHatch
+      ) {
+         super(paramMCH_AircraftInfo, x, y, z, rx, ry, rz, model);
+         this.maxRotFactor = maxRotF;
+         this.enableRot2 = false;
+         this.rot2 = new Vec3d(0.0, 0.0, 0.0);
+         this.maxRotFactor2 = 0.0F;
+         this.reverse = rev;
+         this.hatch = isHatch;
       }
    }
 
@@ -1408,7 +1515,24 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
       public List<MCH_AircraftInfo.PartWeaponChild> child;
       public final boolean turret;
 
-      public PartWeapon(MCH_AircraftInfo paramMCH_AircraftInfo, String[] name, boolean rotBrl, boolean missile, boolean hgm, boolean y, boolean p, float px, float py, float pz, String modelName, float rx, float ry, float rz, float rb, boolean turret) {
+      public PartWeapon(
+         MCH_AircraftInfo paramMCH_AircraftInfo,
+         String[] name,
+         boolean rotBrl,
+         boolean missile,
+         boolean hgm,
+         boolean y,
+         boolean p,
+         float px,
+         float py,
+         float pz,
+         String modelName,
+         float rx,
+         float ry,
+         float rz,
+         float rb,
+         boolean turret
+      ) {
          super(paramMCH_AircraftInfo, px, py, pz, rx, ry, rz, modelName);
          this.name = name;
          this.rotBarrel = rotBrl;
@@ -1417,8 +1541,64 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
          this.yaw = y;
          this.pitch = p;
          this.recoilBuf = rb;
-         this.child = new ArrayList();
+         this.child = new ArrayList<>();
          this.turret = turret;
+      }
+   }
+
+   public class PartWeaponChild extends MCH_AircraftInfo.DrawnPart {
+      public final String[] name;
+      public final boolean yaw;
+      public final boolean pitch;
+      public final float recoilBuf;
+
+      public PartWeaponChild(
+         MCH_AircraftInfo paramMCH_AircraftInfo,
+         String[] name,
+         boolean y,
+         boolean p,
+         float px,
+         float py,
+         float pz,
+         String modelName,
+         float rx,
+         float ry,
+         float rz,
+         float rb
+      ) {
+         super(paramMCH_AircraftInfo, px, py, pz, rx, ry, rz, modelName);
+         this.name = name;
+         this.yaw = y;
+         this.pitch = p;
+         this.recoilBuf = rb;
+      }
+   }
+
+   public class PartWheel extends MCH_AircraftInfo.DrawnPart {
+      final float rotDir;
+      final Vec3d pos2;
+
+      public PartWheel(
+         MCH_AircraftInfo paramMCH_AircraftInfo,
+         float px,
+         float py,
+         float pz,
+         float rx,
+         float ry,
+         float rz,
+         float rd,
+         float px2,
+         float py2,
+         float pz2,
+         String name
+      ) {
+         super(paramMCH_AircraftInfo, px, py, pz, rx, ry, rz, name);
+         this.rotDir = rd;
+         this.pos2 = new Vec3d(px2, py2, pz2);
+      }
+
+      public PartWheel(MCH_AircraftInfo paramMCH_AircraftInfo, float px, float py, float pz, float rx, float ry, float rz, float rd, String name) {
+         this(paramMCH_AircraftInfo, px, py, pz, rx, ry, rz, rd, px, py, pz, name);
       }
    }
 
@@ -1442,128 +1622,181 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
       }
    }
 
-   public class LandingGear extends MCH_AircraftInfo.DrawnPart {
-      public Vec3d slide = null;
-      public final float maxRotFactor;
-      public boolean enableRot2;
-      public Vec3d rot2;
-      public float maxRotFactor2;
-      public final boolean reverse;
-      public final boolean hatch;
+   public class RepellingHook {
+      final Vec3d pos;
+      final int interval;
 
-      public LandingGear(MCH_AircraftInfo paramMCH_AircraftInfo, float x, float y, float z, float rx, float ry, float rz, String model, float maxRotF, boolean rev, boolean isHatch) {
-         super(paramMCH_AircraftInfo, x, y, z, rx, ry, rz, model);
-         this.maxRotFactor = maxRotF;
-         this.enableRot2 = false;
-         this.rot2 = new Vec3d(0.0D, 0.0D, 0.0D);
-         this.maxRotFactor2 = 0.0F;
-         this.reverse = rev;
-         this.hatch = isHatch;
+      public RepellingHook(MCH_AircraftInfo paramMCH_AircraftInfo, Vec3d pos, int inv) {
+         this.pos = pos;
+         this.interval = inv;
       }
    }
 
-   public class Hatch extends MCH_AircraftInfo.DrawnPart {
-      public final float maxRotFactor;
-      public final float maxRot;
-      public final boolean isSlide;
+   public class RideRack {
+      public final String name;
+      public final int rackID;
 
-      public Hatch(MCH_AircraftInfo paramMCH_AircraftInfo, float px, float py, float pz, float rx, float ry, float rz, float mr, String name, boolean slide) {
+      public RideRack(MCH_AircraftInfo paramMCH_AircraftInfo, String n, int id) {
+         this.name = n;
+         this.rackID = id;
+      }
+   }
+
+   public class RotPart extends MCH_AircraftInfo.DrawnPart {
+      public final float rotSpeed;
+      public final boolean rotAlways;
+
+      public RotPart(MCH_AircraftInfo paramMCH_AircraftInfo, float px, float py, float pz, float rx, float ry, float rz, float mr, boolean a, String name) {
          super(paramMCH_AircraftInfo, px, py, pz, rx, ry, rz, name);
-         this.maxRot = mr;
-         this.maxRotFactor = this.maxRot / 90.0F;
-         this.isSlide = slide;
+         this.rotSpeed = mr;
+         this.rotAlways = a;
       }
    }
 
-   public class Flare {
-      public int[] types = new int[0];
-      public Vec3d pos = new Vec3d(0.0D, 0.0D, 0.0D);
-
-      public Flare(MCH_AircraftInfo paramMCH_AircraftInfo) {
-      }
-   }
-
-   public class DrawnPart {
+   public class SearchLight {
+      public final int colorStart;
+      public final int colorEnd;
       public final Vec3d pos;
-      public final Vec3d rot;
-      public final String modelName;
-      public _IModelCustom model;
+      public final float height;
+      public final float width;
+      public final float angle;
+      public final boolean fixDir;
+      public final float yaw;
+      public final float pitch;
+      public final boolean steering;
+      public final float stRot;
 
-      public DrawnPart(MCH_AircraftInfo paramMCH_AircraftInfo, float px, float py, float pz, float rx, float ry, float rz, String name) {
-         this.pos = new Vec3d((double)px, (double)py, (double)pz);
-         this.rot = new Vec3d((double)rx, (double)ry, (double)rz);
-         this.modelName = name;
-         this.model = null;
+      public SearchLight(
+         MCH_AircraftInfo paramMCH_AircraftInfo, Vec3d pos, int cs, int ce, float h, float w, boolean fix, float y, float p, boolean st, float stRot
+      ) {
+         this.colorStart = cs;
+         this.colorEnd = ce;
+         this.pos = pos;
+         this.height = h;
+         this.width = w;
+         this.angle = (float)(Math.atan2(w / 2.0F, h) * 180.0 / Math.PI);
+         this.fixDir = fix;
+         this.steering = st;
+         this.yaw = y;
+         this.pitch = p;
+         this.stRot = stRot;
       }
    }
 
-   public class CrawlerTrackPrm {
-      float x;
-      float y;
-      float nx;
-      float ny;
-      float r;
+   public class Throttle extends MCH_AircraftInfo.DrawnPart {
+      public final Vec3d slide;
+      public final float rot2;
 
-      public CrawlerTrackPrm(MCH_AircraftInfo paramMCH_AircraftInfo, float x, float y) {
-         this.x = x;
-         this.y = y;
+      public Throttle(
+         MCH_AircraftInfo paramMCH_AircraftInfo,
+         float px,
+         float py,
+         float pz,
+         float rx,
+         float ry,
+         float rz,
+         float rot,
+         String name,
+         float px2,
+         float py2,
+         float pz2
+      ) {
+         super(paramMCH_AircraftInfo, px, py, pz, rx, ry, rz, name);
+         this.rot2 = rot;
+         this.slide = new Vec3d(px2, py2, pz2);
       }
    }
 
-   public class CrawlerTrack extends MCH_AircraftInfo.DrawnPart {
-      public float len = 0.35F;
-      public double[] cx;
-      public double[] cy;
-      public List<MCH_AircraftInfo.CrawlerTrackPrm> lp;
-      public float z;
-      public int side;
+   public class TrackRoller extends MCH_AircraftInfo.DrawnPart {
+      final int side;
 
-      public CrawlerTrack(MCH_AircraftInfo paramMCH_AircraftInfo, String name) {
-         super(paramMCH_AircraftInfo, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, name);
+      public TrackRoller(MCH_AircraftInfo paramMCH_AircraftInfo, float px, float py, float pz, String name) {
+         super(paramMCH_AircraftInfo, px, py, pz, 0.0F, 0.0F, 0.0F, name);
+         this.side = px >= 0.0F ? 1 : 0;
       }
    }
 
-   public class Canopy extends MCH_AircraftInfo.DrawnPart {
+   public class Weapon {
+      public final Vec3d pos;
+      public final float yaw;
+      public final float pitch;
+      public final boolean canUsePilot;
+      public final int seatID;
+      public final float defaultYaw;
+      public final float minYaw;
+      public final float maxYaw;
+      public final float minPitch;
+      public final float maxPitch;
+      public final boolean turret;
+
+      public Weapon(
+         MCH_AircraftInfo paramMCH_AircraftInfo,
+         float x,
+         float y,
+         float z,
+         float yaw,
+         float pitch,
+         boolean canPirot,
+         int seatId,
+         float defy,
+         float mny,
+         float mxy,
+         float mnp,
+         float mxp,
+         boolean turret
+      ) {
+         this.pos = new Vec3d(x, y, z);
+         this.yaw = yaw;
+         this.pitch = pitch;
+         this.canUsePilot = canPirot;
+         this.seatID = seatId;
+         this.defaultYaw = defy;
+         this.minYaw = mny;
+         this.maxYaw = mxy;
+         this.minPitch = mnp;
+         this.maxPitch = mxp;
+         this.turret = turret;
+      }
+   }
+
+   public class WeaponBay extends MCH_AircraftInfo.DrawnPart {
       public final float maxRotFactor;
       public final boolean isSlide;
+      private final String weaponName;
+      public Integer[] weaponIds;
 
-      public Canopy(MCH_AircraftInfo paramMCH_AircraftInfo, float px, float py, float pz, float rx, float ry, float rz, float mr, String name, boolean slide) {
+      public WeaponBay(
+         MCH_AircraftInfo paramMCH_AircraftInfo, String wn, float px, float py, float pz, float rx, float ry, float rz, float mr, String name, boolean slide
+      ) {
          super(paramMCH_AircraftInfo, px, py, pz, rx, ry, rz, name);
          this.maxRotFactor = mr;
          this.isSlide = slide;
+         this.weaponName = wn;
+         this.weaponIds = new Integer[0];
       }
    }
 
-   public class CameraPosition {
+   public class WeaponSet {
+      public final String type;
+      public ArrayList<MCH_AircraftInfo.Weapon> weapons;
+
+      public WeaponSet(MCH_AircraftInfo paramMCH_AircraftInfo, String t) {
+         this.type = t;
+         this.weapons = new ArrayList<>();
+      }
+   }
+
+   public class Wheel {
+      public final float size;
       public final Vec3d pos;
-      public final boolean fixRot;
-      public final float yaw;
-      public final float pitch;
 
-      public CameraPosition(MCH_AircraftInfo paramMCH_AircraftInfo, Vec3d vec3, boolean fixRot, float yaw, float pitch) {
-         this.pos = vec3;
-         this.fixRot = fixRot;
-         this.yaw = yaw;
-         this.pitch = pitch;
+      public Wheel(MCH_AircraftInfo paramMCH_AircraftInfo, Vec3d v, float sz) {
+         this.pos = v;
+         this.size = sz;
       }
 
-      public CameraPosition(MCH_AircraftInfo paramMCH_AircraftInfo, Vec3d vec3) {
-         this(paramMCH_AircraftInfo, vec3, false, 0.0F, 0.0F);
-      }
-
-      public CameraPosition(MCH_AircraftInfo paramMCH_AircraftInfo) {
-         this(paramMCH_AircraftInfo, new Vec3d(0.0D, 0.0D, 0.0D));
-      }
-   }
-
-   public class Camera extends MCH_AircraftInfo.DrawnPart {
-      public final boolean yawSync;
-      public final boolean pitchSync;
-
-      public Camera(MCH_AircraftInfo paramMCH_AircraftInfo, float px, float py, float pz, float rx, float ry, float rz, String name, boolean ys, boolean ps) {
-         super(paramMCH_AircraftInfo, px, py, pz, rx, ry, rz, name);
-         this.yawSync = ys;
-         this.pitchSync = ps;
+      public Wheel(MCH_AircraftInfo paramMCH_AircraftInfo, Vec3d v) {
+         this(paramMCH_AircraftInfo, v, 1.0F);
       }
    }
 }

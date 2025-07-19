@@ -17,16 +17,17 @@ public class MCH_RenderHeli extends MCH_RenderAircraft<MCH_EntityHeli> {
 
    public MCH_RenderHeli(RenderManager renderManager) {
       super(renderManager);
-      this.field_76989_e = 2.0F;
+      this.shadowSize = 2.0F;
    }
 
+   @Override
    public void renderAircraft(MCH_EntityAircraft entity, double posX, double posY, double posZ, float yaw, float pitch, float roll, float tickTime) {
       MCH_HeliInfo heliInfo = null;
       if (entity != null && entity instanceof MCH_EntityHeli) {
          MCH_EntityHeli heli = (MCH_EntityHeli)entity;
          heliInfo = heli.getHeliInfo();
          if (heliInfo != null) {
-            posY += 0.3499999940395355D;
+            posY += 0.35F;
             this.renderDebugHitBox(heli, posX, posY, posZ, yaw, pitch);
             this.renderDebugPilotSeat(heli, posX, posY, posZ, yaw, pitch, roll);
             GL11.glTranslated(posX, posY, posZ);
@@ -41,19 +42,15 @@ public class MCH_RenderHeli extends MCH_RenderAircraft<MCH_EntityHeli> {
    }
 
    public void drawModelBlade(MCH_EntityHeli heli, MCH_HeliInfo info, float tickTime) {
-      for(int i = 0; i < heli.rotors.length && i < info.rotorList.size(); ++i) {
-         MCH_HeliInfo.Rotor rotorInfo = (MCH_HeliInfo.Rotor)info.rotorList.get(i);
+      for (int i = 0; i < heli.rotors.length && i < info.rotorList.size(); i++) {
+         MCH_HeliInfo.Rotor rotorInfo = info.rotorList.get(i);
          MCH_Rotor rotor = heli.rotors[i];
          GL11.glPushMatrix();
          if (rotorInfo.oldRenderMethod) {
             GL11.glTranslated(rotorInfo.pos.x, rotorInfo.pos.y, rotorInfo.pos.z);
          }
 
-         MCH_Blade[] var7 = rotor.blades;
-         int var8 = var7.length;
-
-         for(int var9 = 0; var9 < var8; ++var9) {
-            MCH_Blade b = var7[var9];
+         for (MCH_Blade b : rotor.blades) {
             GL11.glPushMatrix();
             float rot = b.getRotation();
             float prevRot = b.getPrevRotation();
@@ -78,7 +75,6 @@ public class MCH_RenderHeli extends MCH_RenderAircraft<MCH_EntityHeli> {
 
          GL11.glPopMatrix();
       }
-
    }
 
    protected ResourceLocation getEntityTexture(MCH_EntityHeli entity) {

@@ -14,14 +14,17 @@ public class JavaRuleFactory extends ExpRuleFactory {
       return me;
    }
 
+   @Override
    protected AbstractRule createCommaRule(ShareRuleValue share) {
       return null;
    }
 
+   @Override
    protected AbstractRule createPowerRule(ShareRuleValue share) {
       return null;
    }
 
+   @Override
    protected AbstractExpression createLetPowerExpression() {
       return null;
    }

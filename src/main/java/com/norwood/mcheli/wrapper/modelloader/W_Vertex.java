@@ -20,16 +20,16 @@ public class W_Vertex {
    }
 
    public void normalize() {
-      double d = Math.sqrt((double)(this.x * this.x + this.y * this.y + this.z * this.z));
-      this.x = (float)((double)this.x / d);
-      this.y = (float)((double)this.y / d);
-      this.z = (float)((double)this.z / d);
+      double d = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+      this.x = (float)(this.x / d);
+      this.y = (float)(this.y / d);
+      this.z = (float)(this.z / d);
    }
 
    public void add(W_Vertex v) {
-      this.x += v.x;
-      this.y += v.y;
-      this.z += v.z;
+      this.x = this.x + v.x;
+      this.y = this.y + v.y;
+      this.z = this.z + v.z;
    }
 
    public boolean equal(W_Vertex v) {

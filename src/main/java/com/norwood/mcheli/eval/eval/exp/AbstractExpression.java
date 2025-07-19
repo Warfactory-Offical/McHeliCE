@@ -14,11 +14,7 @@ public abstract class AbstractExpression {
    protected int prio;
 
    protected final boolean isTrue(boolean lng) {
-      if (lng) {
-         return this.evalLong() != 0L;
-      } else {
-         return this.evalDouble() != 0.0D;
-      }
+      return lng ? this.evalLong() != 0L : this.evalDouble() != 0.0;
    }
 
    protected AbstractExpression() {
@@ -61,7 +57,7 @@ public abstract class AbstractExpression {
    }
 
    protected void setWord(String word) {
-      throw new EvalException(2001, word, this.string, this.pos, (Throwable)null);
+      throw new EvalException(2001, word, this.string, this.pos, null);
    }
 
    protected abstract int getCols();
@@ -82,7 +78,7 @@ public abstract class AbstractExpression {
    }
 
    protected void let(Object val, int pos) {
-      throw new EvalException(2004, this.toString(), this.string, pos, (Throwable)null);
+      throw new EvalException(2004, this.toString(), this.string, pos, null);
    }
 
    protected void let(long val, int pos) {
@@ -95,7 +91,7 @@ public abstract class AbstractExpression {
 
    protected Object getVariable() {
       String word = this.toString();
-      throw new EvalException(2002, word, this.string, this.pos, (Throwable)null);
+      throw new EvalException(2002, word, this.string, this.pos, null);
    }
 
    protected void evalArgsLong(List<Long> args) {
@@ -122,8 +118,10 @@ public abstract class AbstractExpression {
 
    protected abstract AbstractExpression replaceVar();
 
+   @Override
    public abstract boolean equals(Object var1);
 
+   @Override
    public abstract int hashCode();
 
    public boolean same(AbstractExpression exp) {
@@ -131,14 +129,11 @@ public abstract class AbstractExpression {
    }
 
    private static boolean same(String str1, String str2) {
-      if (str1 == null) {
-         return str2 == null;
-      } else {
-         return str1.equals(str2);
-      }
+      return str1 == null ? str2 == null : str1.equals(str2);
    }
 
    public abstract void dump(int var1);
 
+   @Override
    public abstract String toString();
 }

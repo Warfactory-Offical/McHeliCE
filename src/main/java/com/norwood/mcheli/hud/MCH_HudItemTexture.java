@@ -17,7 +17,9 @@ public class MCH_HudItemTexture extends MCH_HudItem {
    private int textureWidth;
    private int textureHeight;
 
-   public MCH_HudItemTexture(int fileLine, String name, String left, String top, String width, String height, String uLeft, String vTop, String uWidth, String vHeight, String rot) {
+   public MCH_HudItemTexture(
+      int fileLine, String name, String left, String top, String width, String height, String uLeft, String vTop, String uWidth, String vHeight, String rot
+   ) {
       super(fileLine);
       this.name = name;
       this.left = toFormula(left);
@@ -32,6 +34,7 @@ public class MCH_HudItemTexture extends MCH_HudItem {
       this.textureWidth = this.textureHeight = 0;
    }
 
+   @Override
    public void execute() {
       GL11.glEnable(3042);
       GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -48,6 +51,19 @@ public class MCH_HudItemTexture extends MCH_HudItem {
          this.textureHeight = h > 0 ? h : 256;
       }
 
-      this.drawTexture(this.name, centerX + calc(this.left), centerY + calc(this.top), calc(this.width), calc(this.height), calc(this.uLeft), calc(this.vTop), calc(this.uWidth), calc(this.vHeight), (float)calc(this.rot), this.textureWidth, this.textureHeight);
+      this.drawTexture(
+         this.name,
+         centerX + calc(this.left),
+         centerY + calc(this.top),
+         calc(this.width),
+         calc(this.height),
+         calc(this.uLeft),
+         calc(this.vTop),
+         calc(this.uWidth),
+         calc(this.vHeight),
+         (float)calc(this.rot),
+         this.textureWidth,
+         this.textureHeight
+      );
    }
 }

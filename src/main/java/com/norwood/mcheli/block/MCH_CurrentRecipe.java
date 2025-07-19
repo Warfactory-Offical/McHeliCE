@@ -1,11 +1,12 @@
 package com.norwood.mcheli.block;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 import com.norwood.mcheli.MCH_IRecipeList;
+import com.norwood.mcheli.MCH_MOD;
 import com.norwood.mcheli.MCH_ModelManager;
-import com.norwood.mcheli.__helper.client.RecipeDescriptionManager;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfoManager;
 import com.norwood.mcheli.plane.MCP_PlaneInfo;
@@ -38,7 +39,7 @@ public class MCH_CurrentRecipe {
       }
 
       this.index = idx;
-      this.displayName = this.recipe != null ? this.recipe.func_77571_b().func_82833_r() : "None";
+      this.displayName = this.recipe != null ? this.recipe.getRecipeOutput().getDisplayName() : "None";
       this.descTexture = this.getDescTexture(this.recipe);
       this.descPage = 0;
       this.descMaxPage = this.descTexture.size();
@@ -46,13 +47,13 @@ public class MCH_CurrentRecipe {
       if (list instanceof MCH_AircraftInfoManager) {
          info = ((MCH_AircraftInfoManager)list).getAcInfoFromItem(this.recipe);
          if (info != null) {
-            ++this.descMaxPage;
+            this.descMaxPage++;
             String dir = info.getDirectoryName();
             String name = info.name;
             this.model = MCH_ModelManager.get(dir, name);
             if (this.model != null) {
                this.modelTexture = new ResourceLocation("mcheli", "textures/" + dir + "/" + name + ".png");
-               ++this.descMaxPage;
+               this.descMaxPage++;
                if (list instanceof MCP_PlaneInfoManager) {
                   this.modelRot = 0;
                } else {
@@ -67,10 +68,10 @@ public class MCH_CurrentRecipe {
    }
 
    private void getAcInfoText(MCH_AircraftInfo info) {
-      this.infoItem = new ArrayList();
-      this.infoData = new ArrayList();
+      this.infoItem = new ArrayList<>();
+      this.infoData = new ArrayList<>();
       if (info != null) {
-         this.getAcInfoTextSub("Name", info.getItemStack().func_82833_r());
+         this.getAcInfoTextSub("Name", info.getItemStack().getDisplayName());
          this.getAcInfoTextSub("HP", "" + info.maxHp);
          int seatNum = !info.isUAV ? info.getNumSeat() : info.getNumSeat() - 1;
          this.getAcInfoTextSub("Num of Seat", "" + seatNum);
@@ -86,7 +87,7 @@ public class MCH_CurrentRecipe {
          if (info.getWeaponNum() > 0) {
             this.getAcInfoTextSub("Armed----------------");
 
-            for(int i = 0; i < info.getWeaponNum(); ++i) {
+            for (int i = 0; i < info.getWeaponNum(); i++) {
                String type = info.getWeaponSetById(i).type;
                MCH_WeaponInfo winfo = MCH_WeaponInfoManager.get(type);
                if (winfo != null) {
@@ -96,7 +97,6 @@ public class MCH_CurrentRecipe {
                }
             }
          }
-
       }
    }
 
@@ -116,17 +116,15 @@ public class MCH_CurrentRecipe {
       } else {
          this.descPage = 0;
       }
-
    }
 
    public void switchPrevPage() {
-      --this.descPage;
+      this.descPage--;
       if (this.descPage < 0 && this.descMaxPage >= 2) {
          this.descPage = this.descMaxPage - 1;
       } else {
          this.descPage = 0;
       }
-
    }
 
    public int getDescCurrentPage() {
@@ -139,7 +137,6 @@ public class MCH_CurrentRecipe {
       } else {
          this.descPage = 0;
       }
-
    }
 
    public int getDescMaxPage() {
@@ -148,7 +145,7 @@ public class MCH_CurrentRecipe {
 
    @Nullable
    public ResourceLocation getCurrentPageTexture() {
-      return this.descPage < this.descTexture.size() ? (ResourceLocation)this.descTexture.get(this.descPage) : null;
+      return this.descPage < this.descTexture.size() ? this.descTexture.get(this.descPage) : null;
    }
 
    public W_ModelCustom getModel() {
@@ -177,6 +174,26 @@ public class MCH_CurrentRecipe {
    }
 
    private List<ResourceLocation> getDescTexture(@Nullable IRecipe r) {
-      return RecipeDescriptionManager.getDescriptionTextures(r.getRegistryName());
+      List<ResourceLocation> list = new ArrayList<>();
+      if (r != null) {
+         for (int i = 0; i < 20; i++) {
+            String itemName = r.getRecipeOutput().getTranslationKey();
+            if (itemName.startsWith("tile.")) {
+               itemName = itemName.substring(5);
+            }
+
+            if (itemName.indexOf(":") >= 0) {
+               itemName = itemName.substring(itemName.indexOf(":") + 1);
+            }
+
+            itemName = "textures/drafting_table_desc/" + itemName + "#" + i + ".png";
+            File filePng = new File(MCH_MOD.sourcePath, "/assets/mcheli/" + itemName);
+            if (filePng.exists()) {
+               list.add(new ResourceLocation("mcheli", itemName));
+            }
+         }
+      }
+
+      return list;
    }
 }

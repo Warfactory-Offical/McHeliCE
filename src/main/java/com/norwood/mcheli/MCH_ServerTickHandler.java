@@ -7,11 +7,10 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
 
-/** @deprecated */
 @Deprecated
 public class MCH_ServerTickHandler {
-   HashMap<String, Integer> rcvMap = new HashMap();
-   HashMap<String, Integer> sndMap = new HashMap();
+   HashMap<String, Integer> rcvMap = new HashMap<>();
+   HashMap<String, Integer> sndMap = new HashMap<>();
    int sndPacketNum = 0;
    int rcvPacketNum = 0;
    int tick;
@@ -20,14 +19,13 @@ public class MCH_ServerTickHandler {
    public void onServerTickEvent(ServerTickEvent event) {
       if (event.phase == Phase.START && event.phase == Phase.END) {
       }
-
    }
 
    private void onServerTickPre() {
    }
 
    public void putMap(HashMap<String, Integer> map, Iterator iterator) {
-      while(iterator.hasNext()) {
+      while (iterator.hasNext()) {
          Object o = iterator.next();
          String key = o.getClass().getName().toString();
          if (key.startsWith("net.minecraft.")) {
@@ -40,12 +38,11 @@ public class MCH_ServerTickHandler {
          }
 
          if (map.containsKey(key)) {
-            map.put(key, 1 + (Integer)map.get(key));
+            map.put(key, 1 + map.get(key));
          } else {
             map.put(key, 1);
          }
       }
-
    }
 
    private void onServerTickPost() {

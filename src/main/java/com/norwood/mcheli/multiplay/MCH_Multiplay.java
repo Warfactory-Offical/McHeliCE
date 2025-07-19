@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Nullable;
 import com.norwood.mcheli.MCH_Lib;
@@ -32,27 +31,32 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.RayTraceResult.Type;
 
 public class MCH_Multiplay {
-   public static final MCH_TargetType[][] ENTITY_SPOT_TABLE;
+   public static final MCH_TargetType[][] ENTITY_SPOT_TABLE = new MCH_TargetType[][]{
+      {MCH_TargetType.NONE, MCH_TargetType.NONE},
+      {MCH_TargetType.OTHER_MOB, MCH_TargetType.OTHER_MOB},
+      {MCH_TargetType.MONSTER, MCH_TargetType.MONSTER},
+      {MCH_TargetType.NONE, MCH_TargetType.NO_TEAM_PLAYER},
+      {MCH_TargetType.NONE, MCH_TargetType.SAME_TEAM_PLAYER},
+      {MCH_TargetType.NONE, MCH_TargetType.OTHER_TEAM_PLAYER},
+      {MCH_TargetType.NONE, MCH_TargetType.NONE},
+      {MCH_TargetType.NONE, MCH_TargetType.NO_TEAM_PLAYER},
+      {MCH_TargetType.NONE, MCH_TargetType.SAME_TEAM_PLAYER},
+      {MCH_TargetType.NONE, MCH_TargetType.OTHER_TEAM_PLAYER}
+   };
 
    public static boolean canSpotEntityWithFilter(int filter, Entity entity) {
       if (entity instanceof MCP_EntityPlane) {
          return (filter & 32) != 0;
       } else if (entity instanceof MCH_EntityHeli) {
          return (filter & 16) != 0;
-      } else if (!(entity instanceof MCH_EntityVehicle) && !(entity instanceof MCH_EntityTank)) {
-         if (entity instanceof EntityPlayer) {
-            return (filter & 4) != 0;
-         } else if (entity instanceof EntityLivingBase) {
-            if (isMonster(entity)) {
-               return (filter & 2) != 0;
-            } else {
-               return (filter & 1) != 0;
-            }
-         } else {
-            return false;
-         }
-      } else {
+      } else if (entity instanceof MCH_EntityVehicle || entity instanceof MCH_EntityTank) {
          return (filter & 8) != 0;
+      } else if (entity instanceof EntityPlayer) {
+         return (filter & 4) != 0;
+      } else if (!(entity instanceof EntityLivingBase)) {
+         return false;
+      } else {
+         return isMonster(entity) ? (filter & 2) != 0 : (filter & 1) != 0;
       }
    }
 
@@ -80,7 +84,7 @@ public class MCH_Multiplay {
                EntityPlayer player = (EntityPlayer)target;
                if (player.getTeam() == null) {
                   row = 3;
-               } else if (spotter.func_184191_r(player)) {
+               } else if (spotter.isOnSameTeam(player)) {
                   row = 4;
                } else {
                   row = 5;
@@ -92,7 +96,7 @@ public class MCH_Multiplay {
                   row = 6;
                } else if (rideEntity.getTeam() == null) {
                   row = 7;
-               } else if (spotter.func_184191_r(rideEntity)) {
+               } else if (spotter.isOnSameTeam(rideEntity)) {
                   row = 8;
                } else {
                   row = 9;
@@ -105,9 +109,9 @@ public class MCH_Multiplay {
          MCH_TargetType ret = ENTITY_SPOT_TABLE[row][col];
          if (checkSee && ret != MCH_TargetType.NONE) {
             Vec3d vs = new Vec3d(posX, posY, posZ);
-            Vec3d ve = new Vec3d(target.posX, target.posY + (double)target.func_70047_e(), target.posZ);
-            RayTraceResult mop = target.world.func_72933_a(vs, ve);
-            if (mop != null && mop.field_72313_a == Type.BLOCK) {
+            Vec3d ve = new Vec3d(target.posX, target.posY + target.getEyeHeight(), target.posZ);
+            RayTraceResult mop = target.world.rayTraceBlocks(vs, ve);
+            if (mop != null && mop.typeOfHit == Type.BLOCK) {
                ret = MCH_TargetType.NONE;
             }
          }
@@ -117,7 +121,7 @@ public class MCH_Multiplay {
    }
 
    public static boolean canAttackEntity(DamageSource ds, Entity target) {
-      return canAttackEntity(ds.func_76346_g(), target);
+      return canAttackEntity(ds.getTrueSource(), target);
    }
 
    public static boolean canAttackEntity(Entity attacker, Entity target) {
@@ -141,7 +145,7 @@ public class MCH_Multiplay {
             }
          }
 
-         if (attackPlayer != null && targetPlayer != null && !attackPlayer.func_96122_a(targetPlayer)) {
+         if (attackPlayer != null && targetPlayer != null && !attackPlayer.canAttackPlayer(targetPlayer)) {
             return false;
          }
       }
@@ -152,78 +156,74 @@ public class MCH_Multiplay {
    public static void jumpSpawnPoint(EntityPlayer player) {
       MCH_Lib.DbgLog(false, "JumpSpawnPoint");
       CommandTeleport cmd = new CommandTeleport();
-      if (cmd.func_184882_a(MCH_Utils.getServer(), player)) {
+      if (cmd.checkPermission(MCH_Utils.getServer(), player)) {
          MinecraftServer minecraftServer = MCH_Utils.getServer();
-         String[] var3 = minecraftServer.func_184103_al().func_72369_d();
-         int var4 = var3.length;
 
-         for(int var5 = 0; var5 < var4; ++var5) {
-            String playerName = var3[var5];
-
+         for (String playerName : minecraftServer.getPlayerList().getOnlinePlayerNames()) {
             try {
-               EntityPlayerMP jumpPlayer = CommandTeleport.func_184888_a(minecraftServer, player, playerName);
+               EntityPlayerMP jumpPlayer = CommandTeleport.getPlayer(minecraftServer, player, playerName);
                BlockPos cc = null;
-               if (jumpPlayer != null && jumpPlayer.field_71093_bK == player.field_71093_bK) {
-                  cc = jumpPlayer.getBedLocation(jumpPlayer.field_71093_bK);
+               if (jumpPlayer != null && jumpPlayer.dimension == player.dimension) {
+                  cc = jumpPlayer.getBedLocation(jumpPlayer.dimension);
                   if (cc != null) {
-                     cc = EntityPlayer.func_180467_a(minecraftServer.func_71218_a(jumpPlayer.field_71093_bK), cc, true);
+                     cc = EntityPlayer.getBedSpawnLocation(minecraftServer.getWorld(jumpPlayer.dimension), cc, true);
                   }
 
                   if (cc == null) {
-                     cc = jumpPlayer.world.field_73011_w.getRandomizedSpawnPoint();
+                     cc = jumpPlayer.world.provider.getRandomizedSpawnPoint();
                   }
                }
 
                if (cc != null) {
-                  String[] cmdStr = new String[]{playerName, String.format("%.1f", (double)cc.func_177958_n() + 0.5D), String.format("%.1f", (double)cc.func_177956_o() + 0.1D), String.format("%.1f", (double)cc.func_177952_p() + 0.5D)};
-                  cmd.func_184881_a(minecraftServer, player, cmdStr);
+                  String[] cmdStr = new String[]{
+                     playerName,
+                     String.format("%.1f", cc.getX() + 0.5),
+                     String.format("%.1f", cc.getY() + 0.1),
+                     String.format("%.1f", cc.getZ() + 0.5)
+                  };
+                  cmd.execute(minecraftServer, player, cmdStr);
                }
             } catch (CommandException var10) {
                var10.printStackTrace();
             }
          }
       }
-
    }
 
    public static void shuffleTeam(EntityPlayer player) {
-      Collection<ScorePlayerTeam> teams = player.world.func_96441_U().func_96525_g();
+      Collection<ScorePlayerTeam> teams = player.world.getScoreboard().getTeams();
       int teamNum = teams.size();
       MCH_Lib.DbgLog(false, "ShuffleTeam:%d teams ----------", teamNum);
       if (teamNum > 0) {
          CommandScoreboard cmd = new CommandScoreboard();
-         if (cmd.func_184882_a(MCH_Utils.getServer(), player)) {
-            List<String> list = Arrays.asList(MCH_Utils.getServer().func_184103_al().func_72369_d());
+         if (cmd.checkPermission(MCH_Utils.getServer(), player)) {
+            List<String> list = Arrays.asList(MCH_Utils.getServer().getPlayerList().getOnlinePlayerNames());
             Collections.shuffle(list);
-            ArrayList<String> listTeam = new ArrayList();
-            Iterator var6 = teams.iterator();
+            ArrayList<String> listTeam = new ArrayList<>();
 
-            while(var6.hasNext()) {
-               Object o = var6.next();
+            for (Object o : teams) {
                ScorePlayerTeam team = (ScorePlayerTeam)o;
-               listTeam.add(team.func_96661_b());
+               listTeam.add(team.getName());
             }
 
             Collections.shuffle(listTeam);
             int i = 0;
 
-            int j;
-            for(j = 0; i < list.size(); ++i) {
-               listTeam.set(j, (String)listTeam.get(j) + " " + (String)list.get(i));
-               ++j;
-               if (j >= teamNum) {
+            for (int j = 0; i < list.size(); i++) {
+               listTeam.set(j, listTeam.get(j) + " " + list.get(i));
+               if (++j >= teamNum) {
                   j = 0;
                }
             }
 
-            for(j = 0; j < listTeam.size(); ++j) {
-               String exe_cmd = "teams join " + (String)listTeam.get(j);
+            for (int jx = 0; jx < listTeam.size(); jx++) {
+               String exe_cmd = "teams join " + listTeam.get(jx);
                String[] process_cmd = exe_cmd.split(" ");
                if (process_cmd.length > 3) {
                   MCH_Lib.DbgLog(false, "ShuffleTeam:" + exe_cmd);
 
                   try {
-                     cmd.func_184881_a(MCH_Utils.getServer(), player, process_cmd);
+                     cmd.execute(MCH_Utils.getServer(), player, process_cmd);
                   } catch (CommandException var11) {
                      var11.printStackTrace();
                   }
@@ -231,10 +231,19 @@ public class MCH_Multiplay {
             }
          }
       }
-
    }
 
-   public static boolean spotEntity(EntityLivingBase player, @Nullable MCH_EntityAircraft ac, double posX, double posY, double posZ, int targetFilter, float spotLength, int markTime, float angle) {
+   public static boolean spotEntity(
+      EntityLivingBase player,
+      @Nullable MCH_EntityAircraft ac,
+      double posX,
+      double posY,
+      double posZ,
+      int targetFilter,
+      float spotLength,
+      int markTime,
+      float angle
+   ) {
       boolean ret = false;
       if (!player.world.isRemote) {
          float acRoll = 0.0F;
@@ -242,27 +251,28 @@ public class MCH_Multiplay {
             acRoll = ac.getRotRoll();
          }
 
-         Vec3d vv = MCH_Lib.RotVec3(0.0D, 0.0D, 1.0D, -player.field_70177_z, -player.field_70125_A, -acRoll);
+         Vec3d vv = MCH_Lib.RotVec3(0.0, 0.0, 1.0, -player.rotationYaw, -player.rotationPitch, -acRoll);
          double tx = vv.x;
          double tz = vv.z;
-         List<Entity> list = player.world.func_72839_b(player, player.func_174813_aQ().func_72314_b((double)spotLength, (double)spotLength, (double)spotLength));
-         List<Integer> entityList = new ArrayList();
+         List<Entity> list = player.world
+            .getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().grow(spotLength, spotLength, spotLength));
+         List<Integer> entityList = new ArrayList<>();
          Vec3d pos = new Vec3d(posX, posY, posZ);
 
-         for(int i = 0; i < list.size(); ++i) {
-            Entity entity = (Entity)list.get(i);
+         for (int i = 0; i < list.size(); i++) {
+            Entity entity = list.get(i);
             if (canSpotEntityWithFilter(targetFilter, entity)) {
                MCH_TargetType stopType = canSpotEntity(player, posX, posY, posZ, entity, true);
                if (stopType != MCH_TargetType.NONE && stopType != MCH_TargetType.SAME_TEAM_PLAYER) {
-                  double dist = entity.func_70092_e(pos.x, pos.y, pos.z);
-                  if (dist > 1.0D && dist < (double)(spotLength * spotLength)) {
+                  double dist = entity.getDistanceSq(pos.x, pos.y, pos.z);
+                  if (dist > 1.0 && dist < spotLength * spotLength) {
                      double cx = entity.posX - pos.x;
                      double cy = entity.posY - pos.y;
                      double cz = entity.posZ - pos.z;
-                     double h = (double)MCH_Lib.getPosAngle(tx, tz, cx, cz);
-                     double v = Math.atan2(cy, Math.sqrt(cx * cx + cz * cz)) * 180.0D / 3.141592653589793D;
-                     v = Math.abs(v + (double)player.field_70125_A);
-                     if (h < (double)(angle * 2.0F) && v < (double)(angle * 2.0F)) {
+                     double h = MCH_Lib.getPosAngle(tx, tz, cx, cz);
+                     double v = Math.atan2(cy, Math.sqrt(cx * cx + cz * cz)) * 180.0 / Math.PI;
+                     v = Math.abs(v + player.rotationPitch);
+                     if (h < angle * 2.0F && v < angle * 2.0F) {
                         entityList.add(entity.getEntityId());
                      }
                   }
@@ -273,8 +283,8 @@ public class MCH_Multiplay {
          if (entityList.size() > 0) {
             int[] entityId = new int[entityList.size()];
 
-            for(int i = 0; i < entityId.length; ++i) {
-               entityId[i] = (Integer)entityList.get(i);
+            for (int ix = 0; ix < entityId.length; ix++) {
+               entityId[ix] = entityList.get(ix);
             }
 
             sendSpotedEntityListToSameTeam(player, markTime, entityId);
@@ -288,30 +298,22 @@ public class MCH_Multiplay {
    }
 
    public static void sendSpotedEntityListToSameTeam(EntityLivingBase player, int count, int[] entityId) {
-      PlayerList svCnf = MCH_Utils.getServer().func_184103_al();
-      Iterator var4 = svCnf.func_181057_v().iterator();
+      PlayerList svCnf = MCH_Utils.getServer().getPlayerList();
 
-      while(true) {
-         EntityPlayer notifyPlayer;
-         do {
-            if (!var4.hasNext()) {
-               return;
-            }
-
-            notifyPlayer = (EntityPlayer)var4.next();
-         } while(player != notifyPlayer && !player.func_184191_r(notifyPlayer));
-
-         MCH_PacketNotifySpotedEntity.send(notifyPlayer, count, entityId);
+      for (EntityPlayer notifyPlayer : svCnf.getPlayers()) {
+         if (player == notifyPlayer || player.isOnSameTeam(notifyPlayer)) {
+            MCH_PacketNotifySpotedEntity.send(notifyPlayer, count, entityId);
+         }
       }
    }
 
    public static boolean markPoint(EntityPlayer player, double posX, double posY, double posZ) {
       Vec3d vs = new Vec3d(posX, posY, posZ);
-      Vec3d ve = MCH_Lib.Rot2Vec3(player.field_70177_z, player.field_70125_A);
-      ve = vs.func_72441_c(ve.x * 300.0D, ve.y * 300.0D, ve.z * 300.0D);
-      RayTraceResult mop = player.world.func_72901_a(vs, ve, true);
-      if (mop != null && mop.field_72313_a == Type.BLOCK) {
-         sendMarkPointToSameTeam(player, mop.func_178782_a().func_177958_n(), mop.func_178782_a().func_177956_o(), mop.func_178782_a().func_177952_p());
+      Vec3d ve = MCH_Lib.Rot2Vec3(player.rotationYaw, player.rotationPitch);
+      ve = vs.add(ve.x * 300.0, ve.y * 300.0, ve.z * 300.0);
+      RayTraceResult mop = player.world.rayTraceBlocks(vs, ve, true);
+      if (mop != null && mop.typeOfHit == Type.BLOCK) {
+         sendMarkPointToSameTeam(player, mop.getBlockPos().getX(), mop.getBlockPos().getY() + 2, mop.getBlockPos().getZ());
          return true;
       } else {
          sendMarkPointToSameTeam(player, 0, 1000, 0);
@@ -320,24 +322,12 @@ public class MCH_Multiplay {
    }
 
    public static void sendMarkPointToSameTeam(EntityPlayer player, int x, int y, int z) {
-      PlayerList svCnf = MCH_Utils.getServer().func_184103_al();
-      Iterator var5 = svCnf.func_181057_v().iterator();
+      PlayerList svCnf = MCH_Utils.getServer().getPlayerList();
 
-      while(true) {
-         EntityPlayer notifyPlayer;
-         do {
-            if (!var5.hasNext()) {
-               return;
-            }
-
-            notifyPlayer = (EntityPlayer)var5.next();
-         } while(player != notifyPlayer && !player.func_184191_r(notifyPlayer));
-
-         MCH_PacketNotifyMarkPoint.send(notifyPlayer, x, y, z);
+      for (EntityPlayer notifyPlayer : svCnf.getPlayers()) {
+         if (player == notifyPlayer || player.isOnSameTeam(notifyPlayer)) {
+            MCH_PacketNotifyMarkPoint.send(notifyPlayer, x, y, z);
+         }
       }
-   }
-
-   static {
-      ENTITY_SPOT_TABLE = new MCH_TargetType[][]{{MCH_TargetType.NONE, MCH_TargetType.NONE}, {MCH_TargetType.OTHER_MOB, MCH_TargetType.OTHER_MOB}, {MCH_TargetType.MONSTER, MCH_TargetType.MONSTER}, {MCH_TargetType.NONE, MCH_TargetType.NO_TEAM_PLAYER}, {MCH_TargetType.NONE, MCH_TargetType.SAME_TEAM_PLAYER}, {MCH_TargetType.NONE, MCH_TargetType.OTHER_TEAM_PLAYER}, {MCH_TargetType.NONE, MCH_TargetType.NONE}, {MCH_TargetType.NONE, MCH_TargetType.NO_TEAM_PLAYER}, {MCH_TargetType.NONE, MCH_TargetType.SAME_TEAM_PLAYER}, {MCH_TargetType.NONE, MCH_TargetType.OTHER_TEAM_PLAYER}};
    }
 }

@@ -19,15 +19,17 @@ public class ContentFactories {
 
    @Nullable
    public static IContentFactory getFactory(@Nullable String dirName) {
-      return dirName == null ? null : (IContentFactory)TABLE.get(dirName);
+      return dirName == null ? null : TABLE.get(dirName);
    }
 
    private static IContentFactory createFactory(final ContentType type, final BiFunction<AddonResourceLocation, String, IContentData> function) {
       return new IContentFactory() {
+         @Override
          public IContentData create(AddonResourceLocation location, String filepath) {
-            return (IContentData)function.apply(location, filepath);
+            return function.apply(location, filepath);
          }
 
+         @Override
          public ContentType getType() {
             return type;
          }
@@ -44,6 +46,5 @@ public class ContentFactories {
       if (MCH_Utils.isClient()) {
          TABLE.put("hud", createFactory(ContentType.HUD, MCH_Hud::new));
       }
-
    }
 }

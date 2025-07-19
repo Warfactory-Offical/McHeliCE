@@ -12,7 +12,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
 import java.util.List;
 import com.norwood.mcheli.__helper.MCH_Logger;
 import com.norwood.mcheli.__helper.io.ResourceLoader;
@@ -30,7 +29,17 @@ public class AddonPack {
    private String loaderVersion;
    protected ImmutableMap<String, JsonElement> packMetaMap;
 
-   public AddonPack(String addonDomain, String addonName, String addonVersion, File addonFile, String credits, List<String> authors, String description, String loaderVersion, ImmutableMap<String, JsonElement> packMetaMap) {
+   public AddonPack(
+      String addonDomain,
+      String addonName,
+      String addonVersion,
+      File addonFile,
+      String credits,
+      List<String> authors,
+      String description,
+      String loaderVersion,
+      ImmutableMap<String, JsonElement> packMetaMap
+   ) {
       this.addonDomain = addonDomain;
       this.addonName = addonName;
       this.addonVersion = addonVersion;
@@ -80,38 +89,36 @@ public class AddonPack {
 
    public static AddonPack create(File addonFile) {
       JsonObject packMetaJson = loadPackMeta(addonFile);
-      JsonObject packJson = JsonUtils.func_151218_a(packMetaJson, "pack", new JsonObject());
-      JsonObject addonJson = JsonUtils.func_151218_a(packMetaJson, "addon", new JsonObject());
-      String addonDomain = JsonUtils.func_151219_a(addonJson, "domain", (String)null);
-      String packName = JsonUtils.func_151219_a(packJson, "description", addonFile.getName());
-      String version = JsonUtils.func_151219_a(addonJson, "version", "0.0");
+      JsonObject packJson = JsonUtils.getJsonObject(packMetaJson, "pack", new JsonObject());
+      JsonObject addonJson = JsonUtils.getJsonObject(packMetaJson, "addon", new JsonObject());
+      String addonDomain = JsonUtils.getString(addonJson, "domain", null);
+      String packName = JsonUtils.getString(packJson, "description", addonFile.getName());
+      String version = JsonUtils.getString(addonJson, "version", "0.0");
       if (addonDomain == null) {
          MCH_Logger.get().warn("A addon domain is not specified! file:{}", addonFile.getName());
          addonDomain = "<!mcheli_share_domain>";
       }
 
-      String credits = JsonUtils.func_151219_a(addonJson, "credits", "");
-      String description = JsonUtils.func_151219_a(addonJson, "description", "");
-      String loaderVersion = JsonUtils.func_151219_a(addonJson, "loader_version", "1");
+      String credits = JsonUtils.getString(addonJson, "credits", "");
+      String description = JsonUtils.getString(addonJson, "description", "");
+      String loaderVersion = JsonUtils.getString(addonJson, "loader_version", "1");
       List<String> authors = getAuthors(addonJson);
-      return new AddonPack(addonDomain, packName, version, addonFile, credits, authors, description, loaderVersion, ImmutableMap.copyOf(packMetaJson.entrySet()));
+      return new AddonPack(
+         addonDomain, packName, version, addonFile, credits, authors, description, loaderVersion, ImmutableMap.copyOf(packMetaJson.entrySet())
+      );
    }
 
    private static List<String> getAuthors(JsonObject jsonObject) {
       List<String> list = Lists.newLinkedList();
-      JsonElement jsonElement2;
       if (jsonObject.has("authors")) {
-         jsonElement2 = jsonObject.get("authors");
-         if (jsonElement2.isJsonArray()) {
-            Iterator var3 = jsonElement2.getAsJsonArray().iterator();
-
-            while(var3.hasNext()) {
-               JsonElement jsonElement1 = (JsonElement)var3.next();
+         JsonElement jsonElement = jsonObject.get("authors");
+         if (jsonElement.isJsonArray()) {
+            for (JsonElement jsonElement1 : jsonElement.getAsJsonArray()) {
                list.add(jsonElement1.getAsString());
             }
          }
       } else if (jsonObject.has("author")) {
-         jsonElement2 = jsonObject.get("author");
+         JsonElement jsonElement2 = jsonObject.get("author");
          if (jsonElement2.isJsonPrimitive()) {
             list.add(jsonElement2.getAsString());
          }
@@ -126,8 +133,7 @@ public class AddonPack {
 
       try {
          bufferedReader = new BufferedReader(new InputStreamReader(loader.getInputStream("pack.mcmeta"), StandardCharsets.UTF_8));
-         JsonObject var3 = (new JsonParser()).parse(bufferedReader).getAsJsonObject();
-         return var3;
+         return new JsonParser().parse(bufferedReader).getAsJsonObject();
       } catch (FileNotFoundException var8) {
          MCH_Logger.get().warn("'pack.mcmeta' does not found in '{}'", addonFile.getName());
       } catch (IOException var9) {

@@ -24,12 +24,35 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
       this.updateKeybind(config);
    }
 
+   @Override
    public void updateKeybind(MCH_Config config) {
       super.updateKeybind(config);
       this.KeySwitchMode = new MCH_Key(MCH_Config.KeySwitchMode.prmInt);
       this.KeyEjectSeat = new MCH_Key(MCH_Config.KeySwitchHovering.prmInt);
       this.KeyZoom = new MCH_Key(MCH_Config.KeyZoom.prmInt);
-      this.Keys = new MCH_Key[]{this.KeyUp, this.KeyDown, this.KeyRight, this.KeyLeft, this.KeySwitchMode, this.KeyEjectSeat, this.KeyUseWeapon, this.KeySwWeaponMode, this.KeySwitchWeapon1, this.KeySwitchWeapon2, this.KeyZoom, this.KeyCameraMode, this.KeyUnmount, this.KeyUnmountForce, this.KeyFlare, this.KeyExtra, this.KeyFreeLook, this.KeyGUI, this.KeyGearUpDown, this.KeyPutToRack, this.KeyDownFromRack};
+      this.Keys = new MCH_Key[]{
+         this.KeyUp,
+         this.KeyDown,
+         this.KeyRight,
+         this.KeyLeft,
+         this.KeySwitchMode,
+         this.KeyEjectSeat,
+         this.KeyUseWeapon,
+         this.KeySwWeaponMode,
+         this.KeySwitchWeapon1,
+         this.KeySwitchWeapon2,
+         this.KeyZoom,
+         this.KeyCameraMode,
+         this.KeyUnmount,
+         this.KeyUnmountForce,
+         this.KeyFlare,
+         this.KeyExtra,
+         this.KeyFreeLook,
+         this.KeyGUI,
+         this.KeyGearUpDown,
+         this.KeyPutToRack,
+         this.KeyDownFromRack
+      };
    }
 
    protected void update(EntityPlayer player, MCP_EntityPlane plane) {
@@ -41,15 +64,12 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
       }
 
       plane.updateRadar(10);
-      plane.updateCameraRotate(player.field_70177_z, player.field_70125_A);
+      plane.updateCameraRotate(player.rotationYaw, player.rotationPitch);
    }
 
+   @Override
    protected void onTick(boolean inGUI) {
-      MCH_Key[] var2 = this.Keys;
-      int var3 = var2.length;
-
-      for(int var4 = 0; var4 < var3; ++var4) {
-         MCH_Key k = var2[var4];
+      for (MCH_Key k : this.Keys) {
          k.update();
       }
 
@@ -58,16 +78,16 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
       MCP_EntityPlane plane = null;
       boolean isPilot = true;
       if (player != null) {
-         if (player.func_184187_bx() instanceof MCP_EntityPlane) {
-            plane = (MCP_EntityPlane)player.func_184187_bx();
-         } else if (player.func_184187_bx() instanceof MCH_EntitySeat) {
-            MCH_EntitySeat seat = (MCH_EntitySeat)player.func_184187_bx();
+         if (player.getRidingEntity() instanceof MCP_EntityPlane) {
+            plane = (MCP_EntityPlane)player.getRidingEntity();
+         } else if (player.getRidingEntity() instanceof MCH_EntitySeat) {
+            MCH_EntitySeat seat = (MCH_EntitySeat)player.getRidingEntity();
             if (seat.getParent() instanceof MCP_EntityPlane) {
                isPilot = false;
                plane = (MCP_EntityPlane)seat.getParent();
             }
-         } else if (player.func_184187_bx() instanceof MCH_EntityUavStation) {
-            MCH_EntityUavStation uavStation = (MCH_EntityUavStation)player.func_184187_bx();
+         } else if (player.getRidingEntity() instanceof MCH_EntityUavStation) {
+            MCH_EntityUavStation uavStation = (MCH_EntityUavStation)player.getRidingEntity();
             if (uavStation.getControlAircract() instanceof MCP_EntityPlane) {
                plane = (MCP_EntityPlane)uavStation.getControlAircract();
             }
@@ -97,7 +117,7 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
          }
 
          if (hideHand) {
-            MCH_Lib.disableFirstPersonItemRender(player.func_184614_ca());
+            MCH_Lib.disableFirstPersonItemRender(player.getHeldItemMainhand());
          }
 
          this.isRiding = true;
@@ -107,14 +127,13 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
 
       if (!this.isBeforeRiding && this.isRiding && plane != null) {
          W_Reflection.setThirdPersonDistance(plane.thirdPersonDist);
-         MCH_ViewEntityDummy.getInstance(this.mc.world).func_70107_b(plane.posX, plane.posY + 0.5D, plane.posZ);
+         MCH_ViewEntityDummy.getInstance(this.mc.world).setPosition(plane.posX, plane.posY + 0.5, plane.posZ);
       } else if (this.isBeforeRiding && !this.isRiding) {
          W_Reflection.restoreDefaultThirdPersonDistance();
          MCH_Lib.enableFirstPersonItemRender();
          MCH_Lib.setRenderViewEntity(player);
          W_Reflection.setCameraRoll(0.0F);
       }
-
    }
 
    protected void playerControlInGUI(EntityPlayer player, MCP_EntityPlane plane, boolean isPilot) {
@@ -125,7 +144,6 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
       MCP_PlanePacketPlayerControl pc = new MCP_PlanePacketPlayerControl();
       boolean send = false;
       send = this.commonPlayerControl(player, plane, isPilot, pc);
-      boolean currentMode;
       if (isPilot) {
          if (this.KeySwitchMode.isKeyDown()) {
             if (plane.getIsGunnerMode(player) && plane.canSwitchCameraPos()) {
@@ -152,7 +170,7 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
 
          if (this.KeyExtra.isKeyDown()) {
             if (plane.canSwitchVtol()) {
-               currentMode = plane.getNozzleStat();
+               boolean currentMode = plane.getNozzleStat();
                if (!currentMode) {
                   pc.switchVtol = 1;
                } else {
@@ -175,28 +193,26 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
       }
 
       if (this.KeyZoom.isKeyDown()) {
-         currentMode = plane.isUAV() && !plane.getAcInfo().haveHatch() && !plane.getPlaneInfo().haveWing();
-         if (!plane.getIsGunnerMode(player) && !currentMode) {
-            if (isPilot) {
-               if (plane.getAcInfo().haveHatch()) {
-                  if (plane.canFoldHatch()) {
-                     pc.switchHatch = 2;
-                     send = true;
-                  } else if (plane.canUnfoldHatch()) {
-                     pc.switchHatch = 1;
-                     send = true;
-                  }
-               } else if (plane.canFoldWing()) {
+         boolean isUav = plane.isUAV() && !plane.getAcInfo().haveHatch() && !plane.getPlaneInfo().haveWing();
+         if (plane.getIsGunnerMode(player) || isUav) {
+            plane.zoomCamera();
+            playSound("zoom", 0.5F, 1.0F);
+         } else if (isPilot) {
+            if (plane.getAcInfo().haveHatch()) {
+               if (plane.canFoldHatch()) {
                   pc.switchHatch = 2;
                   send = true;
-               } else if (plane.canUnfoldWing()) {
+               } else if (plane.canUnfoldHatch()) {
                   pc.switchHatch = 1;
                   send = true;
                }
+            } else if (plane.canFoldWing()) {
+               pc.switchHatch = 2;
+               send = true;
+            } else if (plane.canUnfoldWing()) {
+               pc.switchHatch = 1;
+               send = true;
             }
-         } else {
-            plane.zoomCamera();
-            playSound("zoom", 0.5F, 1.0F);
          }
       }
 
@@ -208,6 +224,5 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
       if (send) {
          W_Network.sendToServer(pc);
       }
-
    }
 }

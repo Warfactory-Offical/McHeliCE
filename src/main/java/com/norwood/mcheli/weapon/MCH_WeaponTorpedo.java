@@ -18,9 +18,9 @@ public class MCH_WeaponTorpedo extends MCH_WeaponBase {
       if (w.isRemote) {
          this.interval -= 10;
       }
-
    }
 
+   @Override
    public boolean shot(MCH_WeaponParam prm) {
       if (this.getInfo() != null) {
          return this.getInfo().isGuidedTorpedo ? this.shotGuided(prm) : this.shotNoGuided(prm);
@@ -35,67 +35,71 @@ public class MCH_WeaponTorpedo extends MCH_WeaponBase {
       } else {
          float yaw = prm.rotYaw;
          float pitch = prm.rotPitch;
-         double mx = (double)(-MathHelper.func_76126_a(yaw / 180.0F * 3.1415927F) * MathHelper.func_76134_b(pitch / 180.0F * 3.1415927F));
-         double mz = (double)(MathHelper.func_76134_b(yaw / 180.0F * 3.1415927F) * MathHelper.func_76134_b(pitch / 180.0F * 3.1415927F));
-         double my = (double)(-MathHelper.func_76126_a(pitch / 180.0F * 3.1415927F));
-         mx = mx * (double)this.getInfo().acceleration + prm.entity.field_70159_w;
-         my = my * (double)this.getInfo().acceleration + prm.entity.field_70181_x;
-         mz = mz * (double)this.getInfo().acceleration + prm.entity.field_70179_y;
-         this.acceleration = MathHelper.func_76133_a(mx * mx + my * my + mz * mz);
-         MCH_EntityTorpedo e = new MCH_EntityTorpedo(this.worldObj, prm.posX, prm.posY, prm.posZ, mx, my, mz, yaw, 0.0F, (double)this.acceleration);
+         double mx = -MathHelper.sin(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI);
+         double mz = MathHelper.cos(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI);
+         double my = -MathHelper.sin(pitch / 180.0F * (float) Math.PI);
+         mx = mx * this.getInfo().acceleration + prm.entity.motionX;
+         my = my * this.getInfo().acceleration + prm.entity.motionY;
+         mz = mz * this.getInfo().acceleration + prm.entity.motionZ;
+         this.acceleration = MathHelper.sqrt(mx * mx + my * my + mz * mz);
+         MCH_EntityTorpedo e = new MCH_EntityTorpedo(this.worldObj, prm.posX, prm.posY, prm.posZ, mx, my, mz, yaw, 0.0F, this.acceleration);
          e.setName(this.name);
          e.setParameterFromWeapon(this, prm.entity, prm.user);
-         e.field_70159_w = mx;
-         e.field_70181_x = my;
-         e.field_70179_y = mz;
-         e.accelerationInWater = this.getInfo() != null ? (double)this.getInfo().accelerationInWater : 1.0D;
-         this.worldObj.func_72838_d(e);
+         e.motionX = mx;
+         e.motionY = my;
+         e.motionZ = mz;
+         e.accelerationInWater = this.getInfo() != null ? this.getInfo().accelerationInWater : 1.0;
+         this.worldObj.spawnEntity(e);
          this.playSound(prm.entity);
          return true;
       }
    }
 
    protected boolean shotGuided(MCH_WeaponParam prm) {
-      float yaw = prm.user.field_70177_z;
-      float pitch = prm.user.field_70125_A;
-      Vec3d v = MCH_Lib.RotVec3(0.0D, 0.0D, 1.0D, -yaw, -pitch, -prm.rotRoll);
+      float yaw = prm.user.rotationYaw;
+      float pitch = prm.user.rotationPitch;
+      Vec3d v = MCH_Lib.RotVec3(0.0, 0.0, 1.0, -yaw, -pitch, -prm.rotRoll);
       double tX = v.x;
       double tZ = v.z;
       double tY = v.y;
-      double dist = (double)MathHelper.func_76133_a(tX * tX + tY * tY + tZ * tZ);
+      double dist = MathHelper.sqrt(tX * tX + tY * tY + tZ * tZ);
       if (this.worldObj.isRemote) {
-         tX = tX * 100.0D / dist;
-         tY = tY * 100.0D / dist;
-         tZ = tZ * 100.0D / dist;
+         tX = tX * 100.0 / dist;
+         tY = tY * 100.0 / dist;
+         tZ = tZ * 100.0 / dist;
       } else {
-         tX = tX * 150.0D / dist;
-         tY = tY * 150.0D / dist;
-         tZ = tZ * 150.0D / dist;
+         tX = tX * 150.0 / dist;
+         tY = tY * 150.0 / dist;
+         tZ = tZ * 150.0 / dist;
       }
 
       Vec3d src = W_WorldFunc.getWorldVec3(this.worldObj, prm.user.posX, prm.user.posY, prm.user.posZ);
       Vec3d dst = W_WorldFunc.getWorldVec3(this.worldObj, prm.user.posX + tX, prm.user.posY + tY, prm.user.posZ + tZ);
       RayTraceResult m = W_WorldFunc.clip(this.worldObj, src, dst);
-      if (m != null && W_MovingObjectPosition.isHitTypeTile(m) && MCH_Lib.isBlockInWater(this.worldObj, m.func_178782_a().func_177958_n(), m.func_178782_a().func_177956_o(), m.func_178782_a().func_177952_p())) {
+      if (m != null
+         && W_MovingObjectPosition.isHitTypeTile(m)
+         && MCH_Lib.isBlockInWater(this.worldObj, m.getBlockPos().getX(), m.getBlockPos().getY(), m.getBlockPos().getZ())) {
          if (!this.worldObj.isRemote) {
-            double mx = (double)(-MathHelper.func_76126_a(yaw / 180.0F * 3.1415927F) * MathHelper.func_76134_b(pitch / 180.0F * 3.1415927F));
-            double mz = (double)(MathHelper.func_76134_b(yaw / 180.0F * 3.1415927F) * MathHelper.func_76134_b(pitch / 180.0F * 3.1415927F));
-            double my = (double)(-MathHelper.func_76126_a(pitch / 180.0F * 3.1415927F));
-            mx = mx * (double)this.getInfo().acceleration + prm.entity.field_70159_w;
-            my = my * (double)this.getInfo().acceleration + prm.entity.field_70181_x;
-            mz = mz * (double)this.getInfo().acceleration + prm.entity.field_70179_y;
-            this.acceleration = MathHelper.func_76133_a(mx * mx + my * my + mz * mz);
-            MCH_EntityTorpedo e = new MCH_EntityTorpedo(this.worldObj, prm.posX, prm.posY, prm.posZ, prm.entity.field_70159_w, prm.entity.field_70181_x, prm.entity.field_70179_y, yaw, 0.0F, (double)this.acceleration);
+            double mx = -MathHelper.sin(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI);
+            double mz = MathHelper.cos(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI);
+            double my = -MathHelper.sin(pitch / 180.0F * (float) Math.PI);
+            mx = mx * this.getInfo().acceleration + prm.entity.motionX;
+            my = my * this.getInfo().acceleration + prm.entity.motionY;
+            mz = mz * this.getInfo().acceleration + prm.entity.motionZ;
+            this.acceleration = MathHelper.sqrt(mx * mx + my * my + mz * mz);
+            MCH_EntityTorpedo e = new MCH_EntityTorpedo(
+               this.worldObj, prm.posX, prm.posY, prm.posZ, prm.entity.motionX, prm.entity.motionY, prm.entity.motionZ, yaw, 0.0F, this.acceleration
+            );
             e.setName(this.name);
             e.setParameterFromWeapon(this, prm.entity, prm.user);
-            e.targetPosX = m.field_72307_f.x;
-            e.targetPosY = m.field_72307_f.y;
-            e.targetPosZ = m.field_72307_f.z;
-            e.field_70159_w = mx;
-            e.field_70181_x = my;
-            e.field_70179_y = mz;
-            e.accelerationInWater = this.getInfo() != null ? (double)this.getInfo().accelerationInWater : 1.0D;
-            this.worldObj.func_72838_d(e);
+            e.targetPosX = m.hitVec.x;
+            e.targetPosY = m.hitVec.y;
+            e.targetPosZ = m.hitVec.z;
+            e.motionX = mx;
+            e.motionY = my;
+            e.motionZ = mz;
+            e.accelerationInWater = this.getInfo() != null ? this.getInfo().accelerationInWater : 1.0;
+            this.worldObj.spawnEntity(e);
             this.playSound(prm.entity);
          }
 

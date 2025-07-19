@@ -28,33 +28,34 @@ public class MCH_BakedModel implements IBakedModel {
       this.overrides = new MCH_ItemOverrideList(bakedModel);
    }
 
-   public List<BakedQuad> func_188616_a(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
-      return this.bakedModel.func_188616_a(state, side, rand);
+   public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
+      return this.bakedModel.getQuads(state, side, rand);
    }
 
-   public boolean func_177555_b() {
-      return this.bakedModel.func_177555_b();
+   public boolean isAmbientOcclusion() {
+      return this.bakedModel.isAmbientOcclusion();
    }
 
-   public boolean func_177556_c() {
-      return this.bakedModel.func_177556_c();
+   public boolean isGui3d() {
+      return this.bakedModel.isGui3d();
    }
 
-   public boolean func_188618_c() {
-      return this.renderer.shouldRenderer(PooledModelParameters.getTargetRendererStack(), PooledModelParameters.getTransformType()) ? true : this.bakedModel.func_188618_c();
+   public boolean isBuiltInRenderer() {
+      return this.renderer.shouldRenderer(PooledModelParameters.getTargetRendererStack(), PooledModelParameters.getTransformType())
+         ? true
+         : this.bakedModel.isBuiltInRenderer();
    }
 
-   public TextureAtlasSprite func_177554_e() {
-      return this.bakedModel.func_177554_e();
+   public TextureAtlasSprite getParticleTexture() {
+      return this.bakedModel.getParticleTexture();
    }
 
-   /** @deprecated */
    @Deprecated
-   public ItemCameraTransforms func_177552_f() {
-      return this.bakedModel.func_177552_f();
+   public ItemCameraTransforms getItemCameraTransforms() {
+      return this.bakedModel.getItemCameraTransforms();
    }
 
-   public ItemOverrideList func_188617_f() {
+   public ItemOverrideList getOverrides() {
       return this.overrides;
    }
 

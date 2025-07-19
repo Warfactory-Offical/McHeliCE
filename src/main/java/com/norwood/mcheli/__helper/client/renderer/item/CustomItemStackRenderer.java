@@ -12,12 +12,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class CustomItemStackRenderer extends TileEntityItemStackRenderer {
    private static CustomItemStackRenderer instance;
 
-   public void func_192838_a(ItemStack p_192838_1_, float partialTicks) {
-      IItemModelRenderer renderer = MCH_ItemModelRenderers.getRenderer(p_192838_1_.func_77973_b());
+   public void renderByItem(ItemStack p_192838_1_, float partialTicks) {
+      IItemModelRenderer renderer = MCH_ItemModelRenderers.getRenderer(p_192838_1_.getItem());
       if (renderer != null) {
          renderer.renderItem(p_192838_1_, PooledModelParameters.getEntity(), PooledModelParameters.getTransformType(), Animation.getPartialTickTime());
       }
-
    }
 
    public static CustomItemStackRenderer getInstance() {

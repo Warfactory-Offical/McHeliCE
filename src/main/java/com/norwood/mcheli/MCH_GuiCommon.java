@@ -15,21 +15,23 @@ public class MCH_GuiCommon extends MCH_AircraftCommonGui {
       super(minecraft);
    }
 
+   @Override
    public boolean isDrawGui(EntityPlayer player) {
       return true;
    }
 
+   @Override
    public void drawGui(EntityPlayer player, boolean isThirdPersonView) {
-      GL11.glLineWidth((float)scaleFactor);
+      GL11.glLineWidth(scaleFactor);
       this.drawHitBullet(this.hitCount, 15, -805306369);
    }
 
+   @Override
    public void onTick() {
       super.onTick();
       if (this.hitCount > 0) {
-         --this.hitCount;
+         this.hitCount--;
       }
-
    }
 
    public void hitBullet() {

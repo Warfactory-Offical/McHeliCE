@@ -15,16 +15,16 @@ public class MCH_TankPacketHandler {
       if (!player.world.isRemote) {
          MCH_TankPacketPlayerControl pc = new MCH_TankPacketPlayerControl();
          pc.readData(data);
-         scheduler.func_152344_a(() -> {
+         scheduler.addScheduledTask(() -> {
             MCH_EntityTank tank = null;
-            if (player.func_184187_bx() instanceof MCH_EntityTank) {
-               tank = (MCH_EntityTank)player.func_184187_bx();
-            } else if (player.func_184187_bx() instanceof MCH_EntitySeat) {
-               if (((MCH_EntitySeat)player.func_184187_bx()).getParent() instanceof MCH_EntityTank) {
-                  tank = (MCH_EntityTank)((MCH_EntitySeat)player.func_184187_bx()).getParent();
+            if (player.getRidingEntity() instanceof MCH_EntityTank) {
+               tank = (MCH_EntityTank)player.getRidingEntity();
+            } else if (player.getRidingEntity() instanceof MCH_EntitySeat) {
+               if (((MCH_EntitySeat)player.getRidingEntity()).getParent() instanceof MCH_EntityTank) {
+                  tank = (MCH_EntityTank)((MCH_EntitySeat)player.getRidingEntity()).getParent();
                }
-            } else if (player.func_184187_bx() instanceof MCH_EntityUavStation) {
-               MCH_EntityUavStation uavStation = (MCH_EntityUavStation)player.func_184187_bx();
+            } else if (player.getRidingEntity() instanceof MCH_EntityUavStation) {
+               MCH_EntityUavStation uavStation = (MCH_EntityUavStation)player.getRidingEntity();
                if (uavStation.getControlAircract() instanceof MCH_EntityTank) {
                   tank = (MCH_EntityTank)uavStation.getControlAircract();
                }
@@ -79,10 +79,10 @@ public class MCH_TankPacketHandler {
                   if (tank.isPilot(player)) {
                      tank.throttleUp = pc.throttleUp;
                      tank.throttleDown = pc.throttleDown;
-                     double dx = tank.posX - tank.field_70169_q;
-                     double dz = tank.posZ - tank.field_70166_s;
+                     double dx = tank.posX - tank.prevPosX;
+                     double dz = tank.posZ - tank.prevPosZ;
                      double dist = dx * dx + dz * dz;
-                     if (pc.useBrake && tank.getCurrentThrottle() <= 0.03D && dist < 0.01D) {
+                     if (pc.useBrake && tank.getCurrentThrottle() <= 0.03 && dist < 0.01) {
                         tank.moveLeft = false;
                         tank.moveRight = false;
                      }
@@ -134,7 +134,6 @@ public class MCH_TankPacketHandler {
                      tank.setGunnerStatus(!tank.getGunnerStatus());
                   }
                }
-
             }
          });
       }

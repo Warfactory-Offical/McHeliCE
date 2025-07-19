@@ -15,7 +15,19 @@ public class MCH_SeatInfo {
    public final float maxPitch;
    public final boolean rotSeat;
 
-   public MCH_SeatInfo(Vec3d p, boolean g, MCH_AircraftInfo.CameraPosition cp, boolean icp, boolean sg, boolean fr, float yaw, float pitch, float pmin, float pmax, boolean rotSeat) {
+   public MCH_SeatInfo(
+      Vec3d p,
+      boolean g,
+      MCH_AircraftInfo.CameraPosition cp,
+      boolean icp,
+      boolean sg,
+      boolean fr,
+      float yaw,
+      float pitch,
+      float pmin,
+      float pmax,
+      boolean rotSeat
+   ) {
       this.camPos = cp;
       this.pos = p;
       this.gunner = g;
@@ -38,7 +50,7 @@ public class MCH_SeatInfo {
    }
 
    public MCH_SeatInfo(Vec3d p, boolean rotSeat) {
-      this(p, false, (MCH_AircraftInfo.CameraPosition)null, false, false, false, 0.0F, 0.0F, -30.0F, 70.0F, rotSeat);
+      this(p, false, null, false, false, false, 0.0F, 0.0F, -30.0F, 70.0F, rotSeat);
    }
 
    public MCH_AircraftInfo.CameraPosition getCamPos() {

@@ -8,36 +8,22 @@ public class MCH_ParticleParam {
    public double posX;
    public double posY;
    public double posZ;
-   public double motionX;
-   public double motionY;
-   public double motionZ;
-   public float size;
-   public float alpha;
-   public float red;
-   public float green;
-   public float blue;
-   public boolean isEffectWind;
-   public int age;
-   public boolean diffusible;
-   public boolean toWhite;
-   public float gravity;
-   public float motionYUpAge;
+   public double motionX = 0.0;
+   public double motionY = 0.0;
+   public double motionZ = 0.0;
+   public float size = 1.0F;
+   public float a = 1.0F;
+   public float r = 1.0F;
+   public float g = 1.0F;
+   public float b = 1.0F;
+   public boolean isEffectWind = false;
+   public int age = 0;
+   public boolean diffusible = false;
+   public boolean toWhite = false;
+   public float gravity = 0.0F;
+   public float motionYUpAge = 2.0F;
 
    public MCH_ParticleParam(World w, String name, double x, double y, double z) {
-      this.motionX = 0.0D;
-      this.motionY = 0.0D;
-      this.motionZ = 0.0D;
-      this.size = 1.0F;
-      this.alpha = 1.0F;
-      this.red = 1.0F;
-      this.green = 1.0F;
-      this.blue = 1.0F;
-      this.isEffectWind = false;
-      this.age = 0;
-      this.diffusible = false;
-      this.toWhite = false;
-      this.gravity = 0.0F;
-      this.motionYUpAge = 2.0F;
       this.world = w;
       this.name = name;
       this.posX = x;
@@ -54,10 +40,10 @@ public class MCH_ParticleParam {
    }
 
    public void setColor(float a, float r, float g, float b) {
-      this.alpha = a;
-      this.red = r;
-      this.green = g;
-      this.blue = b;
+      this.a = a;
+      this.r = r;
+      this.g = g;
+      this.b = b;
    }
 
    public void setMotion(double x, double y, double z) {

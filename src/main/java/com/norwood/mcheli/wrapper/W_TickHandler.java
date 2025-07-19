@@ -42,7 +42,6 @@ public abstract class W_TickHandler implements ITickHandler {
       if (event.phase == Phase.END) {
          this.onPlayerTickPost(event.player);
       }
-
    }
 
    @SubscribeEvent
@@ -54,7 +53,6 @@ public abstract class W_TickHandler implements ITickHandler {
       if (event.phase == Phase.END) {
          this.onTickPost();
       }
-
    }
 
    @SubscribeEvent
@@ -66,7 +64,6 @@ public abstract class W_TickHandler implements ITickHandler {
       if (event.phase == Phase.END) {
          this.onRenderTickPost(event.renderTickTime);
       }
-
    }
 
    static enum TickType {

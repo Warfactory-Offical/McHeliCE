@@ -20,6 +20,7 @@ public class ShareRuleValue extends Rule {
    protected List<String>[] opeList = new List[4];
    public AbstractExpression paren;
 
+   @Override
    public Expression parse(String str) {
       if (str == null) {
          return null;
@@ -49,44 +50,56 @@ public class ShareRuleValue extends Rule {
    }
 
    class EmptyExpression extends Expression {
+      @Override
       public long evalLong() {
          return 0L;
       }
 
+      @Override
       public double evalDouble() {
-         return 0.0D;
+         return 0.0;
       }
 
+      @Override
       public Object eval() {
          return null;
       }
 
+      @Override
       public void optimizeLong(Variable var) {
       }
 
+      @Override
       public void optimizeDouble(Variable var) {
       }
 
+      @Override
       public void optimize(Variable var, Operator oper) {
       }
 
+      @Override
       public void search(Search srch) {
       }
 
+      @Override
       public void refactorName(Refactor ref) {
       }
 
+      @Override
       public void refactorFunc(Refactor ref, Rule rule) {
       }
 
+      @Override
       public Expression dup() {
          return ShareRuleValue.this.new EmptyExpression();
       }
 
+      @Override
       public boolean same(Expression obj) {
          return obj instanceof ShareRuleValue.EmptyExpression;
       }
 
+      @Override
       public String toString() {
          return "";
       }

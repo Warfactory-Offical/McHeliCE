@@ -23,23 +23,27 @@ public class MCH_GuiGLTD extends MCH_Gui {
       super(minecraft);
    }
 
-   public void func_73866_w_() {
-      super.func_73866_w_();
+   @Override
+   public void initGui() {
+      super.initGui();
    }
 
-   public boolean func_73868_f() {
+   @Override
+   public boolean doesGuiPauseGame() {
       return false;
    }
 
+   @Override
    public boolean isDrawGui(EntityPlayer player) {
-      return player.func_184187_bx() != null && player.func_184187_bx() instanceof MCH_EntityGLTD;
+      return player.getRidingEntity() != null && player.getRidingEntity() instanceof MCH_EntityGLTD;
    }
 
+   @Override
    public void drawGui(EntityPlayer player, boolean isThirdPersonView) {
       if (!isThirdPersonView || MCH_Config.DisplayHUDThirdPerson.prmBool) {
-         GL11.glLineWidth((float)scaleFactor);
+         GL11.glLineWidth(scaleFactor);
          if (this.isDrawGui(player)) {
-            MCH_EntityGLTD gltd = (MCH_EntityGLTD)player.func_184187_bx();
+            MCH_EntityGLTD gltd = (MCH_EntityGLTD)player.getRidingEntity();
             if (gltd.camera.getMode(0) == 1) {
                GL11.glEnable(3042);
                GL11.glColor4f(0.0F, 1.0F, 0.0F, 0.3F);
@@ -47,7 +51,7 @@ public class MCH_GuiGLTD extends MCH_Gui {
                int dstBlend = GL11.glGetInteger(3040);
                GL11.glBlendFunc(1, 1);
                W_McClient.MOD_bindTexture("textures/gui/alpha.png");
-               this.drawTexturedModalRectRotate(0.0D, 0.0D, (double)this.field_146294_l, (double)this.field_146295_m, (double)this.rand.nextInt(256), (double)this.rand.nextInt(256), 256.0D, 256.0D, 0.0F);
+               this.drawTexturedModalRectRotate(0.0, 0.0, this.width, this.height, this.rand.nextInt(256), this.rand.nextInt(256), 256.0, 256.0, 0.0F);
                GL11.glBlendFunc(srcBlend, dstBlend);
                GL11.glDisable(3042);
             }
@@ -82,50 +86,82 @@ public class MCH_GuiGLTD extends MCH_Gui {
       this.drawString(String.format("X: %+.1f", gltd.posX), this.centerX - 145, this.centerY + 0, color);
       this.drawString(String.format("Y: %+.1f", gltd.posY), this.centerX - 145, this.centerY + 10, color);
       this.drawString(String.format("Z: %+.1f", gltd.posZ), this.centerX - 145, this.centerY + 20, color);
-      this.drawString(String.format("AX: %+.1f", riddenByEntity.field_70177_z), this.centerX - 145, this.centerY + 40, color);
-      this.drawString(String.format("AY: %+.1f", riddenByEntity.field_70125_A), this.centerX - 145, this.centerY + 50, color);
+      this.drawString(String.format("AX: %+.1f", riddenByEntity.rotationYaw), this.centerX - 145, this.centerY + 40, color);
+      this.drawString(String.format("AY: %+.1f", riddenByEntity.rotationPitch), this.centerX - 145, this.centerY + 50, color);
    }
 
    public void drawTargetPosition(MCH_EntityGLTD gltd, int color, int colorDanger) {
       Entity riddenByEntity = gltd.getRiddenByEntity();
       if (riddenByEntity != null) {
          World w = riddenByEntity.world;
-         float yaw = riddenByEntity.field_70177_z;
-         float pitch = riddenByEntity.field_70125_A;
-         double tX = (double)(-MathHelper.func_76126_a(yaw / 180.0F * 3.1415927F) * MathHelper.func_76134_b(pitch / 180.0F * 3.1415927F));
-         double tZ = (double)(MathHelper.func_76134_b(yaw / 180.0F * 3.1415927F) * MathHelper.func_76134_b(pitch / 180.0F * 3.1415927F));
-         double tY = (double)(-MathHelper.func_76126_a(pitch / 180.0F * 3.1415927F));
-         double dist = (double)MathHelper.func_76133_a(tX * tX + tY * tY + tZ * tZ);
-         tX = tX * 80.0D / dist;
-         tY = tY * 80.0D / dist;
-         tZ = tZ * 80.0D / dist;
+         float yaw = riddenByEntity.rotationYaw;
+         float pitch = riddenByEntity.rotationPitch;
+         double tX = -MathHelper.sin(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI);
+         double tZ = MathHelper.cos(yaw / 180.0F * (float) Math.PI) * MathHelper.cos(pitch / 180.0F * (float) Math.PI);
+         double tY = -MathHelper.sin(pitch / 180.0F * (float) Math.PI);
+         double dist = MathHelper.sqrt(tX * tX + tY * tY + tZ * tZ);
+         tX = tX * 80.0 / dist;
+         tY = tY * 80.0 / dist;
+         tZ = tZ * 80.0 / dist;
          MCH_Camera c = gltd.camera;
          Vec3d src = W_WorldFunc.getWorldVec3(w, c.posX, c.posY, c.posZ);
          Vec3d dst = W_WorldFunc.getWorldVec3(w, c.posX + tX, c.posY + tY, c.posZ + tZ);
          RayTraceResult m = W_WorldFunc.clip(w, src, dst);
          if (m != null) {
-            this.drawString(String.format("X: %+.2fm", m.field_72307_f.x), this.centerX + 50, this.centerY - 5 - 15, color);
-            this.drawString(String.format("Y: %+.2fm", m.field_72307_f.y), this.centerX + 50, this.centerY - 5, color);
-            this.drawString(String.format("Z: %+.2fm", m.field_72307_f.z), this.centerX + 50, this.centerY - 5 + 15, color);
-            double x = m.field_72307_f.x - c.posX;
-            double y = m.field_72307_f.y - c.posY;
-            double z = m.field_72307_f.z - c.posZ;
+            this.drawString(String.format("X: %+.2fm", m.hitVec.x), this.centerX + 50, this.centerY - 5 - 15, color);
+            this.drawString(String.format("Y: %+.2fm", m.hitVec.y), this.centerX + 50, this.centerY - 5, color);
+            this.drawString(String.format("Z: %+.2fm", m.hitVec.z), this.centerX + 50, this.centerY - 5 + 15, color);
+            double x = m.hitVec.x - c.posX;
+            double y = m.hitVec.y - c.posY;
+            double z = m.hitVec.z - c.posZ;
             double len = Math.sqrt(x * x + y * y + z * z);
-            this.drawCenteredString(String.format("[%.2fm]", len), this.centerX, this.centerY + 30, len > 20.0D ? color : colorDanger);
+            this.drawCenteredString(String.format("[%.2fm]", len), this.centerX, this.centerY + 30, len > 20.0 ? color : colorDanger);
          } else {
             this.drawString("X: --.--m", this.centerX + 50, this.centerY - 5 - 15, color);
             this.drawString("Y: --.--m", this.centerX + 50, this.centerY - 5, color);
             this.drawString("Z: --.--m", this.centerX + 50, this.centerY - 5 + 15, color);
             this.drawCenteredString("[--.--m]", this.centerX, this.centerY + 30, colorDanger);
          }
-
       }
    }
 
    private void drawSight(MCH_Camera camera, int color) {
-      double posX = (double)this.centerX;
-      double posY = (double)this.centerY;
-      double[] line2 = new double[]{posX - 30.0D, posY - 10.0D, posX - 30.0D, posY - 20.0D, posX - 30.0D, posY - 20.0D, posX - 10.0D, posY - 20.0D, posX - 30.0D, posY + 10.0D, posX - 30.0D, posY + 20.0D, posX - 30.0D, posY + 20.0D, posX - 10.0D, posY + 20.0D, posX + 30.0D, posY - 10.0D, posX + 30.0D, posY - 20.0D, posX + 30.0D, posY - 20.0D, posX + 10.0D, posY - 20.0D, posX + 30.0D, posY + 10.0D, posX + 30.0D, posY + 20.0D, posX + 30.0D, posY + 20.0D, posX + 10.0D, posY + 20.0D};
+      double posX = this.centerX;
+      double posY = this.centerY;
+      double[] line2 = new double[]{
+         posX - 30.0,
+         posY - 10.0,
+         posX - 30.0,
+         posY - 20.0,
+         posX - 30.0,
+         posY - 20.0,
+         posX - 10.0,
+         posY - 20.0,
+         posX - 30.0,
+         posY + 10.0,
+         posX - 30.0,
+         posY + 20.0,
+         posX - 30.0,
+         posY + 20.0,
+         posX - 10.0,
+         posY + 20.0,
+         posX + 30.0,
+         posY - 10.0,
+         posX + 30.0,
+         posY - 20.0,
+         posX + 30.0,
+         posY - 20.0,
+         posX + 10.0,
+         posY - 20.0,
+         posX + 30.0,
+         posY + 10.0,
+         posX + 30.0,
+         posY + 20.0,
+         posX + 30.0,
+         posY + 20.0,
+         posX + 10.0,
+         posY + 20.0
+      };
       this.drawLine(line2, color);
    }
 }

@@ -11,10 +11,12 @@ public class MCH_PacketNotifySpotedEntity extends MCH_Packet {
    public int num = 0;
    public int[] entityId = null;
 
+   @Override
    public int getMessageID() {
       return 268437761;
    }
 
+   @Override
    public void readData(ByteArrayDataInput data) {
       try {
          this.count = data.readShort();
@@ -22,7 +24,7 @@ public class MCH_PacketNotifySpotedEntity extends MCH_Packet {
          if (this.num > 0) {
             this.entityId = new int[this.num];
 
-            for(int i = 0; i < this.num; ++i) {
+            for (int i = 0; i < this.num; i++) {
                this.entityId[i] = data.readInt();
             }
          } else {
@@ -31,21 +33,20 @@ public class MCH_PacketNotifySpotedEntity extends MCH_Packet {
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       try {
          dos.writeShort(this.count);
          dos.writeShort(this.num);
 
-         for(int i = 0; i < this.num; ++i) {
+         for (int i = 0; i < this.num; i++) {
             dos.writeInt(this.entityId[i]);
          }
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
    public static void send(EntityPlayer player, int count, int[] entityId) {

@@ -13,11 +13,11 @@ public class W_Item extends Item {
    }
 
    public static int getIdFromItem(Item i) {
-      return i == null ? 0 : field_150901_e.func_148757_b(i);
+      return i == null ? 0 : REGISTRY.getIDForObject(i);
    }
 
    public static Item getItemById(int i) {
-      return Item.func_150899_d(i);
+      return Item.getItemById(i);
    }
 
    public static Item getItemByName(String nm) {
@@ -29,6 +29,6 @@ public class W_Item extends Item {
    }
 
    public static Item getItemFromBlock(Block block) {
-      return Item.func_150898_a(block);
+      return Item.getItemFromBlock(block);
    }
 }

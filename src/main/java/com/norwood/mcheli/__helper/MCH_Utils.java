@@ -39,27 +39,12 @@ public class MCH_Utils {
    }
 
    public static <T> boolean inArray(T[] objArray, @Nullable T target) {
-      Object[] var2 = objArray;
-      int var3 = objArray.length;
-      int var4 = 0;
-
-      while(true) {
-         if (var4 >= var3) {
-            return false;
+      for (T obj : objArray) {
+         if (target == null ? obj == null : target.equals(obj)) {
+            return true;
          }
-
-         T obj = var2[var4];
-         if (target == null) {
-            if (obj == null) {
-               break;
-            }
-         } else if (target.equals(obj)) {
-            break;
-         }
-
-         ++var4;
       }
 
-      return true;
+      return false;
    }
 }

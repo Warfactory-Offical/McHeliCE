@@ -21,6 +21,7 @@ public class NumberExpression extends WordExpression {
       super(from, s);
    }
 
+   @Override
    public AbstractExpression dup(ShareExpValue s) {
       return new NumberExpression(this, s);
    }
@@ -34,6 +35,7 @@ public class NumberExpression extends WordExpression {
       return n;
    }
 
+   @Override
    public long evalLong() {
       try {
          return NumberUtil.parseLong(this.word);
@@ -50,18 +52,20 @@ public class NumberExpression extends WordExpression {
       }
    }
 
+   @Override
    public double evalDouble() {
       try {
          return Double.parseDouble(this.word);
       } catch (Exception var4) {
          try {
-            return (double)NumberUtil.parseLong(this.word);
+            return NumberUtil.parseLong(this.word);
          } catch (Exception var3) {
             throw new EvalException(2003, this.word, this.string, this.pos, var4);
          }
       }
    }
 
+   @Override
    public Object evalObject() {
       try {
          return new Long(NumberUtil.parseLong(this.word));

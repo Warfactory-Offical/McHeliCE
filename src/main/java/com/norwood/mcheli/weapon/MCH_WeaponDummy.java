@@ -15,6 +15,7 @@ public class MCH_WeaponDummy extends MCH_WeaponBase {
       super(w, v, yaw, pitch, !nm.isEmpty() ? nm : "none", wi != null ? wi : dummy);
    }
 
+   @Override
    public boolean shot(MCH_WeaponParam prm) {
       return false;
    }

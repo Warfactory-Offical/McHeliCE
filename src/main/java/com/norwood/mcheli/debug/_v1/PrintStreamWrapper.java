@@ -11,7 +11,7 @@ public class PrintStreamWrapper {
 
    private PrintStreamWrapper(PrintStream stream) {
       this.ps = stream;
-      this.stack = new ArrayDeque();
+      this.stack = new ArrayDeque<>();
       this.nestStr = "  ";
    }
 
@@ -35,9 +35,7 @@ public class PrintStreamWrapper {
    }
 
    private void printNest() {
-      this.stack.forEach((str) -> {
-         this.ps.print(str);
-      });
+      this.stack.forEach(str -> this.ps.print(str));
    }
 
    public void println(Object o) {

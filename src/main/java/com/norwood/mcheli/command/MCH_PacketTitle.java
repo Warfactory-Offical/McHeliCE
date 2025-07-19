@@ -13,30 +13,31 @@ public class MCH_PacketTitle extends MCH_Packet {
    public int showTime = 1;
    public int position = 0;
 
+   @Override
    public int getMessageID() {
       return 268438272;
    }
 
+   @Override
    public void readData(ByteArrayDataInput data) {
       try {
-         this.chatComponent = Serializer.func_150699_a(data.readUTF());
+         this.chatComponent = Serializer.jsonToComponent(data.readUTF());
          this.showTime = data.readShort();
          this.position = data.readShort();
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       try {
-         dos.writeUTF(Serializer.func_150696_a(this.chatComponent));
+         dos.writeUTF(Serializer.componentToJson(this.chatComponent));
          dos.writeShort(this.showTime);
          dos.writeShort(this.position);
       } catch (IOException var3) {
          var3.printStackTrace();
       }
-
    }
 
    public static void send(ITextComponent chat, int showTime, int pos) {

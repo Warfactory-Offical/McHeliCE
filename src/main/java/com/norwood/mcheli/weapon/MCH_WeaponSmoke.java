@@ -9,6 +9,7 @@ public class MCH_WeaponSmoke extends MCH_WeaponBase {
       this.power = 0;
    }
 
+   @Override
    public boolean shot(MCH_WeaponParam prm) {
       return false;
    }

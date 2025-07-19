@@ -98,7 +98,7 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
 
    public MCH_WeaponInfo(AddonResourceLocation location, String path) {
       super(location, path);
-      this.name = location.func_110623_a();
+      this.name = location.getPath();
       this.displayName = this.name;
       this.type = "";
       this.power = 0;
@@ -117,7 +117,7 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
       this.reloadTime = 30;
       this.round = 0;
       this.suppliedNum = 1;
-      this.roundItems = new ArrayList();
+      this.roundItems = new ArrayList<>();
       this.maxAmmo = 0;
       this.soundDelay = 0;
       this.soundPattern = 0;
@@ -175,7 +175,7 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
       this.cameraRotationSpeedPitch = 1.0F;
    }
 
-   public boolean validate() throws Exception {
+   public void checkData() {
       if (this.explosionBlock < 0) {
          this.explosionBlock = this.explosion;
       }
@@ -212,10 +212,10 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
          this.delay = 1000000;
       }
 
-      this.angle = (float)(Math.atan2((double)this.radius, (double)this.length) * 180.0D / 3.141592653589793D);
-      return true;
+      this.angle = (float)(Math.atan2(this.radius, this.length) * 180.0 / Math.PI);
    }
 
+   @Override
    public void loadItemData(String item, String data) {
       if (item.compareTo("displayname") == 0) {
          this.displayName = data;
@@ -272,211 +272,233 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
          if (data.compareTo("missilesight") == 0) {
             this.sight = MCH_SightType.LOCK;
          }
-      } else {
-         String[] s;
-         int n;
-         if (item.equalsIgnoreCase("Zoom")) {
-            s = this.splitParam(data);
-            if (s.length > 0) {
-               this.zoom = new float[s.length];
+      } else if (item.equalsIgnoreCase("Zoom")) {
+         String[] s = this.splitParam(data);
+         if (s.length > 0) {
+            this.zoom = new float[s.length];
 
-               for(n = 0; n < s.length; ++n) {
-                  this.zoom[n] = this.toFloat(s[n], 0.1F, 10.0F);
+            for (int i = 0; i < s.length; i++) {
+               this.zoom[i] = this.toFloat(s[i], 0.1F, 10.0F);
+            }
+         }
+      } else if (item.compareTo("delay") == 0) {
+         this.delay = this.toInt(data, 0, 100000);
+      } else if (item.compareTo("reloadtime") == 0) {
+         this.reloadTime = this.toInt(data, 3, 1000);
+      } else if (item.compareTo("round") == 0) {
+         this.round = this.toInt(data, 1, 30000);
+      } else if (item.equalsIgnoreCase("MaxAmmo")) {
+         this.maxAmmo = this.toInt(data, 0, 30000);
+      } else if (item.equalsIgnoreCase("SuppliedNum")) {
+         this.suppliedNum = this.toInt(data, 1, 30000);
+      } else if (item.equalsIgnoreCase("Item")) {
+         String[] s = data.split("\\s*,\\s*");
+         if (s.length >= 2 && s[1].length() > 0 && this.roundItems.size() < 3) {
+            int n = this.toInt(s[0], 1, 64);
+            if (n > 0) {
+               int damage = s.length >= 3 ? this.toInt(s[2], 0, 100000000) : 0;
+               this.roundItems.add(new MCH_WeaponInfo.RoundItem(n, s[1].toLowerCase().trim(), damage));
+            }
+         }
+      } else if (item.compareTo("sounddelay") == 0) {
+         this.soundDelay = this.toInt(data, 0, 1000);
+      } else if (item.compareTo("soundpattern") != 0) {
+         if (item.compareTo("soundvolume") == 0) {
+            this.soundVolume = this.toFloat(data, 0.0F, 1000.0F);
+         } else if (item.compareTo("soundpitch") == 0) {
+            this.soundPitch = this.toFloat(data, 0.0F, 1.0F);
+         } else if (item.equalsIgnoreCase("SoundPitchRandom")) {
+            this.soundPitchRandom = this.toFloat(data, 0.0F, 1.0F);
+         } else if (item.compareTo("locktime") == 0) {
+            this.lockTime = this.toInt(data, 2, 1000);
+         } else if (item.equalsIgnoreCase("RidableOnly")) {
+            this.ridableOnly = this.toBool(data);
+         } else if (item.compareTo("proximityfusedist") == 0) {
+            this.proximityFuseDist = this.toFloat(data, 0.0F, 2000.0F);
+         } else if (item.equalsIgnoreCase("RigidityTime")) {
+            this.rigidityTime = this.toInt(data, 0, 1000000);
+         } else if (item.compareTo("accuracy") == 0) {
+            this.accuracy = this.toFloat(data, 0.0F, 1000.0F);
+         } else if (item.compareTo("bomblet") == 0) {
+            this.bomblet = this.toInt(data, 0, 1000);
+         } else if (item.compareTo("bombletstime") == 0) {
+            this.bombletSTime = this.toInt(data, 0, 1000);
+         } else if (item.equalsIgnoreCase("BombletDiff")) {
+            this.bombletDiff = this.toFloat(data, 0.0F, 1000.0F);
+         } else if (item.equalsIgnoreCase("RecoilBufCount")) {
+            String[] s = this.splitParam(data);
+            if (s.length >= 1) {
+               this.recoilBufCount = this.toInt(s[0], 1, 10000);
+            }
+
+            if (s.length >= 2 && this.recoilBufCount > 2) {
+               this.recoilBufCountSpeed = this.toInt(s[1], 1, 10000) - 1;
+               if (this.recoilBufCountSpeed > this.recoilBufCount / 2) {
+                  this.recoilBufCountSpeed = this.recoilBufCount / 2;
                }
             }
-         } else if (item.compareTo("delay") == 0) {
-            this.delay = this.toInt(data, 0, 100000);
-         } else if (item.compareTo("reloadtime") == 0) {
-            this.reloadTime = this.toInt(data, 3, 1000);
-         } else if (item.compareTo("round") == 0) {
-            this.round = this.toInt(data, 1, 30000);
-         } else if (item.equalsIgnoreCase("MaxAmmo")) {
-            this.maxAmmo = this.toInt(data, 0, 30000);
-         } else if (item.equalsIgnoreCase("SuppliedNum")) {
-            this.suppliedNum = this.toInt(data, 1, 30000);
-         } else if (item.equalsIgnoreCase("Item")) {
-            s = data.split("\\s*,\\s*");
-            if (s.length >= 2 && s[1].length() > 0 && this.roundItems.size() < 3) {
-               n = this.toInt(s[0], 1, 64);
-               if (n > 0) {
-                  int damage = s.length >= 3 ? this.toInt(s[2], 0, 100000000) : 0;
-                  this.roundItems.add(new MCH_WeaponInfo.RoundItem(n, s[1].toLowerCase().trim(), damage));
+         } else if (item.compareTo("modenum") == 0) {
+            this.modeNum = this.toInt(data, 0, 1000);
+         } else if (item.equalsIgnoreCase("FixMode")) {
+            this.fixMode = this.toInt(data, 0, 10);
+         } else if (item.compareTo("piercing") == 0) {
+            this.piercing = this.toInt(data, 0, 100000);
+         } else if (item.compareTo("heatcount") == 0) {
+            this.heatCount = this.toInt(data, 0, 100000);
+         } else if (item.compareTo("maxheatcount") == 0) {
+            this.maxHeatCount = this.toInt(data, 0, 100000);
+         } else if (item.compareTo("modelbullet") == 0) {
+            this.bulletModelName = data.toLowerCase().trim();
+         } else if (item.equalsIgnoreCase("ModelBomblet")) {
+            this.bombletModelName = data.toLowerCase().trim();
+         } else if (item.compareTo("fae") == 0) {
+            this.isFAE = this.toBool(data);
+         } else if (item.compareTo("guidedtorpedo") == 0) {
+            this.isGuidedTorpedo = this.toBool(data);
+         } else if (item.compareTo("destruct") == 0) {
+            this.destruct = this.toBool(data);
+         } else if (item.equalsIgnoreCase("AddMuzzleFlash")) {
+            String[] sx = this.splitParam(data);
+            if (sx.length >= 7) {
+               if (this.listMuzzleFlash == null) {
+                  this.listMuzzleFlash = new ArrayList<>();
+               }
+
+               this.listMuzzleFlash
+                  .add(
+                     new MCH_WeaponInfo.MuzzleFlash(
+                        this.toFloat(sx[0]),
+                        this.toFloat(sx[1]),
+                        0.0F,
+                        this.toInt(sx[2]),
+                        this.toFloat(sx[3]) / 255.0F,
+                        this.toFloat(sx[4]) / 255.0F,
+                        this.toFloat(sx[5]) / 255.0F,
+                        this.toFloat(sx[6]) / 255.0F,
+                        1
+                     )
+                  );
+            }
+         } else if (item.equalsIgnoreCase("AddMuzzleFlashSmoke")) {
+            String[] sx = this.splitParam(data);
+            if (sx.length >= 9) {
+               if (this.listMuzzleFlashSmoke == null) {
+                  this.listMuzzleFlashSmoke = new ArrayList<>();
+               }
+
+               this.listMuzzleFlashSmoke
+                  .add(
+                     new MCH_WeaponInfo.MuzzleFlash(
+                        this.toFloat(sx[0]),
+                        this.toFloat(sx[2]),
+                        this.toFloat(sx[3]),
+                        this.toInt(sx[4]),
+                        this.toFloat(sx[5]) / 255.0F,
+                        this.toFloat(sx[6]) / 255.0F,
+                        this.toFloat(sx[7]) / 255.0F,
+                        this.toFloat(sx[8]) / 255.0F,
+                        this.toInt(sx[1], 1, 1000)
+                     )
+                  );
+            }
+         } else if (item.equalsIgnoreCase("TrajectoryParticle")) {
+            this.trajectoryParticleName = data.toLowerCase().trim();
+            if (this.trajectoryParticleName.equalsIgnoreCase("none")) {
+               this.trajectoryParticleName = "";
+            }
+         } else if (item.equalsIgnoreCase("TrajectoryParticleStartTick")) {
+            this.trajectoryParticleStartTick = this.toInt(data, 0, 10000);
+         } else if (item.equalsIgnoreCase("DisableSmoke")) {
+            this.disableSmoke = this.toBool(data);
+         } else if (item.equalsIgnoreCase("SetCartridge")) {
+            String[] sx = data.split("\\s*,\\s*");
+            if (sx.length > 0 && sx[0].length() > 0) {
+               float ac = sx.length >= 2 ? this.toFloat(sx[1]) : 0.0F;
+               float yw = sx.length >= 3 ? this.toFloat(sx[2]) : 0.0F;
+               float pt = sx.length >= 4 ? this.toFloat(sx[3]) : 0.0F;
+               float sc = sx.length >= 5 ? this.toFloat(sx[4]) : 1.0F;
+               float gr = sx.length >= 6 ? this.toFloat(sx[5]) : -0.04F;
+               float bo = sx.length >= 7 ? this.toFloat(sx[6]) : 0.5F;
+               this.cartridge = new MCH_Cartridge(sx[0].toLowerCase(), ac, yw, pt, bo, gr, sc);
+            }
+         } else if (item.equalsIgnoreCase("BulletColorInWater") || item.equalsIgnoreCase("BulletColor") || item.equalsIgnoreCase("SmokeColor")) {
+            String[] sx = data.split("\\s*,\\s*");
+            if (sx.length >= 4) {
+               MCH_Color c = new MCH_Color(
+                  0.003921569F * this.toInt(sx[0], 0, 255),
+                  0.003921569F * this.toInt(sx[1], 0, 255),
+                  0.003921569F * this.toInt(sx[2], 0, 255),
+                  0.003921569F * this.toInt(sx[3], 0, 255)
+               );
+               if (item.equalsIgnoreCase("BulletColorInWater")) {
+                  this.colorInWater = c;
+               } else {
+                  this.color = c;
                }
             }
-         } else if (item.compareTo("sounddelay") == 0) {
-            this.soundDelay = this.toInt(data, 0, 1000);
-         } else if (item.compareTo("soundpattern") != 0) {
-            if (item.compareTo("soundvolume") == 0) {
-               this.soundVolume = this.toFloat(data, 0.0F, 1000.0F);
-            } else if (item.compareTo("soundpitch") == 0) {
-               this.soundPitch = this.toFloat(data, 0.0F, 1.0F);
-            } else if (item.equalsIgnoreCase("SoundPitchRandom")) {
-               this.soundPitchRandom = this.toFloat(data, 0.0F, 1.0F);
-            } else if (item.compareTo("locktime") == 0) {
-               this.lockTime = this.toInt(data, 2, 1000);
-            } else if (item.equalsIgnoreCase("RidableOnly")) {
-               this.ridableOnly = this.toBool(data);
-            } else if (item.compareTo("proximityfusedist") == 0) {
-               this.proximityFuseDist = this.toFloat(data, 0.0F, 2000.0F);
-            } else if (item.equalsIgnoreCase("RigidityTime")) {
-               this.rigidityTime = this.toInt(data, 0, 1000000);
-            } else if (item.compareTo("accuracy") == 0) {
-               this.accuracy = this.toFloat(data, 0.0F, 1000.0F);
-            } else if (item.compareTo("bomblet") == 0) {
-               this.bomblet = this.toInt(data, 0, 1000);
-            } else if (item.compareTo("bombletstime") == 0) {
-               this.bombletSTime = this.toInt(data, 0, 1000);
-            } else if (item.equalsIgnoreCase("BombletDiff")) {
-               this.bombletDiff = this.toFloat(data, 0.0F, 1000.0F);
-            } else if (item.equalsIgnoreCase("RecoilBufCount")) {
-               s = this.splitParam(data);
-               if (s.length >= 1) {
-                  this.recoilBufCount = this.toInt(s[0], 1, 10000);
-               }
+         } else if (item.equalsIgnoreCase("SmokeSize")) {
+            this.smokeSize = this.toFloat(data, 0.0F, 100.0F);
+         } else if (item.equalsIgnoreCase("SmokeNum")) {
+            this.smokeNum = this.toInt(data, 1, 100);
+         } else if (item.equalsIgnoreCase("SmokeMaxAge")) {
+            this.smokeMaxAge = this.toInt(data, 2, 1000);
+         } else if (item.equalsIgnoreCase("DispenseItem")) {
+            String[] sx = data.split("\\s*,\\s*");
+            if (sx.length >= 2) {
+               this.dispenseDamege = this.toInt(sx[1], 0, 100000000);
+            }
 
-               if (s.length >= 2 && this.recoilBufCount > 2) {
-                  this.recoilBufCountSpeed = this.toInt(s[1], 1, 10000) - 1;
-                  if (this.recoilBufCountSpeed > this.recoilBufCount / 2) {
-                     this.recoilBufCountSpeed = this.recoilBufCount / 2;
-                  }
-               }
-            } else if (item.compareTo("modenum") == 0) {
-               this.modeNum = this.toInt(data, 0, 1000);
-            } else if (item.equalsIgnoreCase("FixMode")) {
-               this.fixMode = this.toInt(data, 0, 10);
-            } else if (item.compareTo("piercing") == 0) {
-               this.piercing = this.toInt(data, 0, 100000);
-            } else if (item.compareTo("heatcount") == 0) {
-               this.heatCount = this.toInt(data, 0, 100000);
-            } else if (item.compareTo("maxheatcount") == 0) {
-               this.maxHeatCount = this.toInt(data, 0, 100000);
-            } else if (item.compareTo("modelbullet") == 0) {
-               this.bulletModelName = data.toLowerCase().trim();
-            } else if (item.equalsIgnoreCase("ModelBomblet")) {
-               this.bombletModelName = data.toLowerCase().trim();
-            } else if (item.compareTo("fae") == 0) {
-               this.isFAE = this.toBool(data);
-            } else if (item.compareTo("guidedtorpedo") == 0) {
-               this.isGuidedTorpedo = this.toBool(data);
-            } else if (item.compareTo("destruct") == 0) {
-               this.destruct = this.toBool(data);
-            } else if (item.equalsIgnoreCase("AddMuzzleFlash")) {
-               s = this.splitParam(data);
-               if (s.length >= 7) {
-                  if (this.listMuzzleFlash == null) {
-                     this.listMuzzleFlash = new ArrayList();
-                  }
-
-                  this.listMuzzleFlash.add(new MCH_WeaponInfo.MuzzleFlash(this.toFloat(s[0]), this.toFloat(s[1]), 0.0F, this.toInt(s[2]), this.toFloat(s[3]) / 255.0F, this.toFloat(s[4]) / 255.0F, this.toFloat(s[5]) / 255.0F, this.toFloat(s[6]) / 255.0F, 1));
-               }
-            } else if (item.equalsIgnoreCase("AddMuzzleFlashSmoke")) {
-               s = this.splitParam(data);
-               if (s.length >= 9) {
-                  if (this.listMuzzleFlashSmoke == null) {
-                     this.listMuzzleFlashSmoke = new ArrayList();
-                  }
-
-                  this.listMuzzleFlashSmoke.add(new MCH_WeaponInfo.MuzzleFlash(this.toFloat(s[0]), this.toFloat(s[2]), this.toFloat(s[3]), this.toInt(s[4]), this.toFloat(s[5]) / 255.0F, this.toFloat(s[6]) / 255.0F, this.toFloat(s[7]) / 255.0F, this.toFloat(s[8]) / 255.0F, this.toInt(s[1], 1, 1000)));
-               }
-            } else if (item.equalsIgnoreCase("TrajectoryParticle")) {
-               this.trajectoryParticleName = data.toLowerCase().trim();
-               if (this.trajectoryParticleName.equalsIgnoreCase("none")) {
-                  this.trajectoryParticleName = "";
-               }
-            } else if (item.equalsIgnoreCase("TrajectoryParticleStartTick")) {
-               this.trajectoryParticleStartTick = this.toInt(data, 0, 10000);
-            } else if (item.equalsIgnoreCase("DisableSmoke")) {
-               this.disableSmoke = this.toBool(data);
-            } else if (item.equalsIgnoreCase("SetCartridge")) {
-               s = data.split("\\s*,\\s*");
-               if (s.length > 0 && s[0].length() > 0) {
-                  float ac = s.length >= 2 ? this.toFloat(s[1]) : 0.0F;
-                  float yw = s.length >= 3 ? this.toFloat(s[2]) : 0.0F;
-                  float pt = s.length >= 4 ? this.toFloat(s[3]) : 0.0F;
-                  float sc = s.length >= 5 ? this.toFloat(s[4]) : 1.0F;
-                  float gr = s.length >= 6 ? this.toFloat(s[5]) : -0.04F;
-                  float bo = s.length >= 7 ? this.toFloat(s[6]) : 0.5F;
-                  this.cartridge = new MCH_Cartridge(s[0].toLowerCase(), ac, yw, pt, bo, gr, sc);
-               }
-            } else if (!item.equalsIgnoreCase("BulletColorInWater") && !item.equalsIgnoreCase("BulletColor") && !item.equalsIgnoreCase("SmokeColor")) {
-               if (item.equalsIgnoreCase("SmokeSize")) {
-                  this.smokeSize = this.toFloat(data, 0.0F, 100.0F);
-               } else if (item.equalsIgnoreCase("SmokeNum")) {
-                  this.smokeNum = this.toInt(data, 1, 100);
-               } else if (item.equalsIgnoreCase("SmokeMaxAge")) {
-                  this.smokeMaxAge = this.toInt(data, 2, 1000);
-               } else if (item.equalsIgnoreCase("DispenseItem")) {
-                  s = data.split("\\s*,\\s*");
-                  if (s.length >= 2) {
-                     this.dispenseDamege = this.toInt(s[1], 0, 100000000);
-                  }
-
-                  this.dispenseItem = W_Item.getItemByName(s[0]);
-               } else if (item.equalsIgnoreCase("DispenseRange")) {
-                  this.dispenseRange = this.toInt(data, 1, 100);
-               } else if (item.equalsIgnoreCase("Length")) {
-                  this.length = (float)this.toInt(data, 1, 300);
-               } else if (item.equalsIgnoreCase("Radius")) {
-                  this.radius = (float)this.toInt(data, 1, 1000);
-               } else if (item.equalsIgnoreCase("Target")) {
-                  if (data.indexOf("block") >= 0) {
-                     this.target = 64;
-                  } else {
-                     this.target = 0;
-                     this.target |= data.indexOf("planes") >= 0 ? 32 : 0;
-                     this.target |= data.indexOf("helicopters") >= 0 ? 16 : 0;
-                     this.target |= data.indexOf("vehicles") >= 0 ? 8 : 0;
-                     this.target |= data.indexOf("tanks") >= 0 ? 8 : 0;
-                     this.target |= data.indexOf("players") >= 0 ? 4 : 0;
-                     this.target |= data.indexOf("monsters") >= 0 ? 2 : 0;
-                     this.target |= data.indexOf("others") >= 0 ? 1 : 0;
-                  }
-               } else if (item.equalsIgnoreCase("MarkTime")) {
-                  this.markTime = this.toInt(data, 1, 30000) + 1;
-               } else if (item.equalsIgnoreCase("Recoil")) {
-                  this.recoil = this.toFloat(data, 0.0F, 100.0F);
-               } else if (item.equalsIgnoreCase("DamageFactor")) {
-                  s = this.splitParam(data);
-                  if (s.length >= 2) {
-                     Class<? extends Entity> c = null;
-                     String className = s[0].toLowerCase();
-                     if (className.equals("player")) {
-                        c = EntityPlayer.class;
-                     } else if (!className.equals("heli") && !className.equals("helicopter")) {
-                        if (className.equals("plane")) {
-                           c = MCP_EntityPlane.class;
-                        } else if (className.equals("tank")) {
-                           c = MCH_EntityTank.class;
-                        } else if (className.equals("vehicle")) {
-                           c = MCH_EntityVehicle.class;
-                        }
-                     } else {
-                        c = MCH_EntityHeli.class;
-                     }
-
-                     if (c != null) {
-                        if (this.damageFactor == null) {
-                           this.damageFactor = new MCH_DamageFactor();
-                        }
-
-                        this.damageFactor.add(c, this.toFloat(s[1], 0.0F, 1000000.0F));
-                     }
-                  }
-               }
+            this.dispenseItem = W_Item.getItemByName(sx[0]);
+         } else if (item.equalsIgnoreCase("DispenseRange")) {
+            this.dispenseRange = this.toInt(data, 1, 100);
+         } else if (item.equalsIgnoreCase("Length")) {
+            this.length = this.toInt(data, 1, 300);
+         } else if (item.equalsIgnoreCase("Radius")) {
+            this.radius = this.toInt(data, 1, 1000);
+         } else if (item.equalsIgnoreCase("Target")) {
+            if (data.indexOf("block") >= 0) {
+               this.target = 64;
             } else {
-               s = data.split("\\s*,\\s*");
-               if (s.length >= 4) {
-                  MCH_Color c = new MCH_Color(0.003921569F * (float)this.toInt(s[0], 0, 255), 0.003921569F * (float)this.toInt(s[1], 0, 255), 0.003921569F * (float)this.toInt(s[2], 0, 255), 0.003921569F * (float)this.toInt(s[3], 0, 255));
-                  if (item.equalsIgnoreCase("BulletColorInWater")) {
-                     this.colorInWater = c;
-                  } else {
-                     this.color = c;
+               this.target = 0;
+               this.target = this.target | (data.indexOf("planes") >= 0 ? 32 : 0);
+               this.target = this.target | (data.indexOf("helicopters") >= 0 ? 16 : 0);
+               this.target = this.target | (data.indexOf("vehicles") >= 0 ? 8 : 0);
+               this.target = this.target | (data.indexOf("tanks") >= 0 ? 8 : 0);
+               this.target = this.target | (data.indexOf("players") >= 0 ? 4 : 0);
+               this.target = this.target | (data.indexOf("monsters") >= 0 ? 2 : 0);
+               this.target = this.target | (data.indexOf("others") >= 0 ? 1 : 0);
+            }
+         } else if (item.equalsIgnoreCase("MarkTime")) {
+            this.markTime = this.toInt(data, 1, 30000) + 1;
+         } else if (item.equalsIgnoreCase("Recoil")) {
+            this.recoil = this.toFloat(data, 0.0F, 100.0F);
+         } else if (item.equalsIgnoreCase("DamageFactor")) {
+            String[] sx = this.splitParam(data);
+            if (sx.length >= 2) {
+               Class<? extends Entity> c = null;
+               String className = sx[0].toLowerCase();
+               if (className.equals("player")) {
+                  c = EntityPlayer.class;
+               } else if (className.equals("heli") || className.equals("helicopter")) {
+                  c = MCH_EntityHeli.class;
+               } else if (className.equals("plane")) {
+                  c = MCP_EntityPlane.class;
+               } else if (className.equals("tank")) {
+                  c = MCH_EntityTank.class;
+               } else if (className.equals("vehicle")) {
+                  c = MCH_EntityVehicle.class;
+               }
+
+               if (c != null) {
+                  if (this.damageFactor == null) {
+                     this.damageFactor = new MCH_DamageFactor();
                   }
+
+                  this.damageFactor.add(c, this.toFloat(sx[1], 0.0F, 1000000.0F));
                }
             }
          }
       }
-
    }
 
    public float getDamageFactor(Entity e) {
@@ -519,20 +541,6 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
       }
    }
 
-   public class RoundItem {
-      public final int num;
-      public final String itemName;
-      public final int damage;
-      public ItemStack itemStack;
-
-      public RoundItem(int n, String name, int damage) {
-         this.itemStack = ItemStack.field_190927_a;
-         this.num = n;
-         this.itemName = name;
-         this.damage = damage;
-      }
-   }
-
    public class MuzzleFlash {
       public final float dist;
       public final float size;
@@ -554,6 +562,19 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
          this.g = g;
          this.b = b;
          this.num = num;
+      }
+   }
+
+   public class RoundItem {
+      public final int num;
+      public final String itemName;
+      public final int damage;
+      public ItemStack itemStack = ItemStack.EMPTY;
+
+      public RoundItem(int n, String name, int damage) {
+         this.num = n;
+         this.itemName = name;
+         this.damage = damage;
       }
    }
 }

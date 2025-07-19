@@ -9,7 +9,7 @@ public class MCH_FileSearch {
    public static final int TYPE_FILE_OR_DIR = 1;
    public static final int TYPE_FILE = 2;
    public static final int TYPE_DIR = 3;
-   private TreeSet<File> set = new TreeSet();
+   private TreeSet<File> set = new TreeSet<>();
 
    public File[] listFiles(String directoryPath, String fileName) {
       if (fileName != null) {
@@ -27,7 +27,7 @@ public class MCH_FileSearch {
       } else {
          File[] files = dir.listFiles();
 
-         for(int i = 0; i < files.length; ++i) {
+         for (int i = 0; i < files.length; i++) {
             File file = files[i];
             this.addFile(type, fileNamePattern, this.set, file, period);
             if (isRecursive && file.isDirectory()) {
@@ -40,26 +40,26 @@ public class MCH_FileSearch {
    }
 
    private void addFile(int type, String match, TreeSet<File> set, File file, int period) {
-      switch(type) {
-      case 2:
-         if (!file.isFile()) {
-            return;
-         }
-         break;
-      case 3:
-         if (!file.isDirectory()) {
-            return;
-         }
+      switch (type) {
+         case 2:
+            if (!file.isFile()) {
+               return;
+            }
+            break;
+         case 3:
+            if (!file.isDirectory()) {
+               return;
+            }
       }
 
       if (match == null || file.getName().matches(match)) {
          if (period != 0) {
             Date lastModifiedDate = new Date(file.lastModified());
-            String lastModifiedDateStr = (new SimpleDateFormat("yyyyMMdd")).format(lastModifiedDate);
+            String lastModifiedDateStr = new SimpleDateFormat("yyyyMMdd").format(lastModifiedDate);
             long oneDayTime = 86400000L;
-            long periodTime = oneDayTime * (long)Math.abs(period);
+            long periodTime = oneDayTime * Math.abs(period);
             Date designatedDate = new Date(System.currentTimeMillis() - periodTime);
-            String designatedDateStr = (new SimpleDateFormat("yyyyMMdd")).format(designatedDate);
+            String designatedDateStr = new SimpleDateFormat("yyyyMMdd").format(designatedDate);
             if (period > 0) {
                if (lastModifiedDateStr.compareTo(designatedDateStr) >= 0) {
                }

@@ -12,13 +12,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-/** @deprecated */
 @Deprecated
 public class MCH_ItemLightWeaponRender implements _IItemRenderer {
+   @Override
    public boolean handleRenderType(ItemStack item, _IItemRenderer.ItemRenderType type) {
       return type == _IItemRenderer.ItemRenderType.EQUIPPED || type == _IItemRenderer.ItemRenderType.EQUIPPED_FIRST_PERSON;
    }
 
+   @Override
    public boolean shouldUseRenderHelper(_IItemRenderer.ItemRenderType type, ItemStack item, _IItemRenderer.ItemRendererHelper helper) {
       return false;
    }
@@ -27,6 +28,7 @@ public class MCH_ItemLightWeaponRender implements _IItemRenderer {
       return false;
    }
 
+   @Override
    public void renderItem(_IItemRenderer.ItemRenderType type, ItemStack item, Object... data) {
       boolean isRender = false;
       if (type == _IItemRenderer.ItemRenderType.EQUIPPED_FIRST_PERSON || type == _IItemRenderer.ItemRenderType.EQUIPPED) {
@@ -42,12 +44,11 @@ public class MCH_ItemLightWeaponRender implements _IItemRenderer {
       if (isRender) {
          renderItem(item, W_Lib.castEntityLivingBase(data[1]), type == _IItemRenderer.ItemRenderType.EQUIPPED_FIRST_PERSON);
       }
-
    }
 
    @SideOnly(Side.CLIENT)
    public static void renderItem(ItemStack pitem, Entity entity, boolean isFirstPerson) {
-      if (pitem != null && pitem.func_77973_b() != null) {
+      if (pitem != null && pitem.getItem() != null) {
          String name = MCH_ItemLightWeaponBase.getName(pitem);
          GL11.glEnable(32826);
          GL11.glEnable(2903);

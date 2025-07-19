@@ -1,7 +1,6 @@
 package com.norwood.mcheli.__helper;
 
 import com.google.common.collect.Sets;
-import java.util.Iterator;
 import java.util.Set;
 import net.minecraft.block.Block;
 import net.minecraftforge.event.RegistryEvent.Register;
@@ -16,13 +15,9 @@ public class MCH_Blocks {
 
    @SubscribeEvent
    static void onBlockRegisterEvent(Register<Block> event) {
-      Iterator var1 = registryWrapper.iterator();
-
-      while(var1.hasNext()) {
-         Block block = (Block)var1.next();
+      for (Block block : registryWrapper) {
          event.getRegistry().register(block);
       }
-
    }
 
    public static void register(Block block, String name) {

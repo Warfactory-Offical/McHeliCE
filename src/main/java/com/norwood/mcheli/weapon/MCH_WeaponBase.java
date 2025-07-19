@@ -117,9 +117,8 @@ public abstract class MCH_WeaponBase {
 
    public void update(int countWait) {
       if (countWait != 0) {
-         ++this.tick;
+         this.tick++;
       }
-
    }
 
    public boolean isCooldownCountReloadTime() {
@@ -157,9 +156,9 @@ public abstract class MCH_WeaponBase {
 
    public boolean use(MCH_WeaponParam prm) {
       Vec3d v = this.getShotPos(prm.entity);
-      prm.posX += v.x;
-      prm.posY += v.y;
-      prm.posZ += v.z;
+      prm.posX = prm.posX + v.x;
+      prm.posY = prm.posY + v.y;
+      prm.posZ = prm.posZ + v.z;
       if (this.shot(prm)) {
          this.tick = 0;
          return true;
@@ -174,7 +173,7 @@ public abstract class MCH_WeaponBase {
       } else {
          Vec3d v = new Vec3d(this.position.x, this.position.y, this.position.z);
          float roll = entity instanceof MCH_EntityAircraft ? ((MCH_EntityAircraft)entity).getRotRoll() : 0.0F;
-         return MCH_Lib.RotVec3(v, -entity.field_70177_z, -entity.field_70125_A, -roll);
+         return MCH_Lib.RotVec3(v, -entity.rotationYaw, -entity.rotationPitch, -roll);
       }
    }
 
@@ -185,58 +184,55 @@ public abstract class MCH_WeaponBase {
    public void playSound(Entity e, String snd) {
       if (!e.world.isRemote && this.canPlaySound && this.getInfo() != null) {
          float prnd = this.getInfo().soundPitchRandom;
-         W_WorldFunc.MOD_playSoundEffect(this.worldObj, e.posX, e.posY, e.posZ, snd, this.getInfo().soundVolume, this.getInfo().soundPitch * (1.0F - prnd) + rand.nextFloat() * prnd);
+         W_WorldFunc.MOD_playSoundEffect(
+            this.worldObj, e.posX, e.posY, e.posZ, snd, this.getInfo().soundVolume, this.getInfo().soundPitch * (1.0F - prnd) + rand.nextFloat() * prnd
+         );
       }
-
    }
 
    public void playSoundClient(Entity e, float volume, float pitch) {
       if (e.world.isRemote && this.getInfo() != null) {
          W_McClient.MOD_playSoundFX(this.getInfo().soundFileName, volume, pitch);
       }
-
    }
 
    public double getLandInDistance(MCH_WeaponParam prm) {
       if (this.weaponInfo == null) {
-         return -1.0D;
+         return -1.0;
       } else if (this.weaponInfo.gravity >= 0.0F) {
-         return -1.0D;
+         return -1.0;
       } else {
-         Vec3d v = MCH_Lib.RotVec3(0.0D, 0.0D, 1.0D, -prm.rotYaw, -prm.rotPitch, -prm.rotRoll);
+         Vec3d v = MCH_Lib.RotVec3(0.0, 0.0, 1.0, -prm.rotYaw, -prm.rotPitch, -prm.rotRoll);
          double s = Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
-         double acc = this.acceleration < 4.0F ? (double)this.acceleration : 4.0D;
-         double accFac = (double)this.acceleration / acc;
-         double my = v.y * (double)this.acceleration / s;
-         if (my <= 0.0D) {
-            return -1.0D;
+         double acc = this.acceleration < 4.0F ? this.acceleration : 4.0;
+         double accFac = this.acceleration / acc;
+         double my = v.y * this.acceleration / s;
+         if (my <= 0.0) {
+            return -1.0;
          } else {
-            double mx = v.x * (double)this.acceleration / s;
-            double mz = v.z * (double)this.acceleration / s;
-            double ls = my / (double)this.weaponInfo.gravity;
-            double gravity = (double)this.weaponInfo.gravity * accFac;
-            double spx;
-            if (ls < -12.0D) {
-               spx = ls / -12.0D;
-               mx *= spx;
-               my *= spx;
-               mz *= spx;
-               gravity *= spx * spx * 0.95D;
+            double mx = v.x * this.acceleration / s;
+            double mz = v.z * this.acceleration / s;
+            double ls = my / this.weaponInfo.gravity;
+            double gravity = this.weaponInfo.gravity * accFac;
+            if (ls < -12.0) {
+               double f = ls / -12.0;
+               mx *= f;
+               my *= f;
+               mz *= f;
+               gravity *= f * f * 0.95;
             }
 
-            spx = prm.posX;
-            double spy = prm.posY + 3.0D;
+            double spx = prm.posX;
+            double spy = prm.posY + 3.0;
             double spz = prm.posZ;
 
-            for(int i = 0; i < 50; ++i) {
+            for (int i = 0; i < 50; i++) {
                Vec3d vs = new Vec3d(spx, spy, spz);
                Vec3d ve = new Vec3d(spx + mx, spy + my, spz + mz);
-               RayTraceResult mop = this.worldObj.func_72933_a(vs, ve);
-               double dx;
-               double dz;
-               if (mop != null && mop.field_72313_a == Type.BLOCK) {
-                  dx = (double)mop.func_178782_a().func_177958_n() - prm.posX;
-                  dz = (double)mop.func_178782_a().func_177952_p() - prm.posZ;
+               RayTraceResult mop = this.worldObj.rayTraceBlocks(vs, ve);
+               if (mop != null && mop.typeOfHit == Type.BLOCK) {
+                  double dx = mop.getBlockPos().getX() - prm.posX;
+                  double dz = mop.getBlockPos().getZ() - prm.posZ;
                   return Math.sqrt(dx * dx + dz * dz);
                }
 
@@ -245,13 +241,13 @@ public abstract class MCH_WeaponBase {
                spy += my;
                spz += mz;
                if (spy < prm.posY) {
-                  dx = spx - prm.posX;
-                  dz = spz - prm.posZ;
+                  double dx = spx - prm.posX;
+                  double dz = spz - prm.posZ;
                   return Math.sqrt(dx * dx + dz * dz);
                }
             }
 
-            return -1.0D;
+            return -1.0;
          }
       }
    }

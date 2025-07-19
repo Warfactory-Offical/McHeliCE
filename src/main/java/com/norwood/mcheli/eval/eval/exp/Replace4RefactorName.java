@@ -4,7 +4,6 @@ import com.norwood.mcheli.eval.eval.EvalException;
 import com.norwood.mcheli.eval.eval.ref.Refactor;
 import com.norwood.mcheli.eval.eval.repl.ReplaceAdapter;
 
-/** @deprecated */
 @Deprecated
 public class Replace4RefactorName extends ReplaceAdapter {
    protected Refactor ref;
@@ -14,25 +13,23 @@ public class Replace4RefactorName extends ReplaceAdapter {
    }
 
    protected void var(VariableExpression exp) {
-      String name = this.ref.getNewName((Object)null, exp.getWord());
+      String name = this.ref.getNewName(null, exp.getWord());
       if (name != null) {
          exp.setWord(name);
       }
-
    }
 
    protected void field(FieldExpression exp) {
       AbstractExpression exp1 = exp.expl;
       Object obj = exp1.getVariable();
       if (obj == null) {
-         throw new EvalException(2104, this.toString(), exp1.string, exp1.pos, (Throwable)null);
+         throw new EvalException(2104, this.toString(), exp1.string, exp1.pos, null);
       } else {
          AbstractExpression exp2 = exp.expr;
          String name = this.ref.getNewName(obj, exp2.getWord());
          if (name != null) {
             exp2.setWord(name);
          }
-
       }
    }
 
@@ -46,9 +43,9 @@ public class Replace4RefactorName extends ReplaceAdapter {
       if (name != null) {
          exp.name = name;
       }
-
    }
 
+   @Override
    public AbstractExpression replace0(WordExpression exp) {
       if (exp instanceof VariableExpression) {
          this.var((VariableExpression)exp);
@@ -57,6 +54,7 @@ public class Replace4RefactorName extends ReplaceAdapter {
       return exp;
    }
 
+   @Override
    public AbstractExpression replace2(Col2Expression exp) {
       if (exp instanceof FieldExpression) {
          this.field((FieldExpression)exp);
@@ -65,6 +63,7 @@ public class Replace4RefactorName extends ReplaceAdapter {
       return exp;
    }
 
+   @Override
    public AbstractExpression replaceFunc(FunctionExpression exp) {
       this.func(exp);
       return exp;

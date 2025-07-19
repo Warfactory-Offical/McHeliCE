@@ -11,8 +11,8 @@ import net.minecraft.world.World;
 
 public class MCH_Radar {
    private World worldObj;
-   private ArrayList<MCH_Vector2> entityList = new ArrayList();
-   private ArrayList<MCH_Vector2> enemyList = new ArrayList();
+   private ArrayList<MCH_Vector2> entityList = new ArrayList<>();
+   private ArrayList<MCH_Vector2> enemyList = new ArrayList<>();
 
    public ArrayList<MCH_Vector2> getEntityList() {
       return this.entityList;
@@ -34,24 +34,24 @@ public class MCH_Radar {
    public void updateXZ(Entity centerEntity, int range) {
       if (this.worldObj.isRemote) {
          this.clear();
-         List<Entity> list = centerEntity.world.func_72839_b(centerEntity, centerEntity.func_174813_aQ().func_72314_b((double)range, (double)range, (double)range));
+         List<Entity> list = centerEntity.world
+            .getEntitiesWithinAABBExcludingEntity(centerEntity, centerEntity.getEntityBoundingBox().grow(range, range, range));
 
-         for(int i = 0; i < list.size(); ++i) {
-            Entity entity = (Entity)list.get(i);
+         for (int i = 0; i < list.size(); i++) {
+            Entity entity = list.get(i);
             if (entity instanceof EntityLiving) {
                double x = entity.posX - centerEntity.posX;
                double z = entity.posZ - centerEntity.posZ;
-               if (x * x + z * z < (double)(range * range)) {
+               if (x * x + z * z < range * range) {
                   int y = 1 + (int)entity.posY;
                   if (y < 0) {
                      y = 1;
                   }
 
                   int blockCnt;
-                  for(blockCnt = 0; y < 200; ++y) {
+                  for (blockCnt = 0; y < 200; y++) {
                      if (W_WorldFunc.getBlockId(this.worldObj, (int)entity.posX, y, (int)entity.posZ) != 0) {
-                        ++blockCnt;
-                        if (blockCnt >= 5) {
+                        if (++blockCnt >= 5) {
                            break;
                         }
                      }
@@ -67,7 +67,6 @@ public class MCH_Radar {
                }
             }
          }
-
       }
    }
 }

@@ -31,8 +31,8 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
    private static FloatBuffer matModel = BufferUtils.createFloatBuffer(16);
    private static FloatBuffer matProjection = BufferUtils.createFloatBuffer(16);
    private static IntBuffer matViewport = BufferUtils.createIntBuffer(16);
-   private static ArrayList<MCH_MarkEntityPos> entityPos = new ArrayList();
-   private static HashMap<Integer, Integer> spotedEntity = new HashMap();
+   private static ArrayList<MCH_MarkEntityPos> entityPos = new ArrayList<>();
+   private static HashMap<Integer, Integer> spotedEntity = new HashMap<>();
    private static Minecraft s_minecraft;
    private static int spotedEntityCountdown = 0;
 
@@ -41,44 +41,44 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
       s_minecraft = minecraft;
    }
 
-   public void func_73866_w_() {
-      super.func_73866_w_();
+   @Override
+   public void initGui() {
+      super.initGui();
    }
 
-   public boolean func_73868_f() {
+   @Override
+   public boolean doesGuiPauseGame() {
       return false;
    }
 
+   @Override
    public boolean isDrawGui(EntityPlayer player) {
       return player != null && player.world != null;
    }
 
    public static void onClientTick() {
-      if (!Minecraft.getMinecraft().func_147113_T()) {
-         ++spotedEntityCountdown;
+      if (!Minecraft.getMinecraft().isGamePaused()) {
+         spotedEntityCountdown++;
       }
 
       if (spotedEntityCountdown >= 20) {
          spotedEntityCountdown = 0;
-         Iterator var1 = spotedEntity.keySet().iterator();
 
-         while(var1.hasNext()) {
-            Integer key = (Integer)var1.next();
-            int count = (Integer)spotedEntity.get(key);
+         for (Integer key : spotedEntity.keySet()) {
+            int count = spotedEntity.get(key);
             if (count > 0) {
                spotedEntity.put(key, count - 1);
             }
          }
 
-         Iterator i = spotedEntity.values().iterator();
+         Iterator<Integer> i = spotedEntity.values().iterator();
 
-         while(i.hasNext()) {
-            if ((Integer)i.next() <= 0) {
+         while (i.hasNext()) {
+            if (i.next() <= 0) {
                i.remove();
             }
          }
       }
-
    }
 
    public static boolean isSpotedEntity(@Nullable Entity entity) {
@@ -86,31 +86,26 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
          return false;
       } else {
          int entityId = entity.getEntityId();
-         Iterator i$ = spotedEntity.keySet().iterator();
 
-         int key;
-         do {
-            if (!i$.hasNext()) {
-               return false;
+         for (int key : spotedEntity.keySet()) {
+            if (key == entityId) {
+               return true;
             }
+         }
 
-            key = (Integer)i$.next();
-         } while(key != entityId);
-
-         return true;
+         return false;
       }
    }
 
    public static void addSpotedEntity(int entityId, int count) {
       if (spotedEntity.containsKey(entityId)) {
-         int now = (Integer)spotedEntity.get(entityId);
+         int now = spotedEntity.get(entityId);
          if (count > now) {
             spotedEntity.put(entityId, count);
          }
       } else {
          spotedEntity.put(entityId, count);
       }
-
    }
 
    public static void addMarkEntityPos(int reserve, ITargetMarkerObject target, double x, double y, double z) {
@@ -119,7 +114,7 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
 
    public static void addMarkEntityPos(int reserve, ITargetMarkerObject target, double x, double y, double z, boolean nazo) {
       if (isEnableEntityMarker()) {
-         com.norwood.mcheli.multiplay.MCH_TargetType spotType = MCH_TargetType.NONE;
+         MCH_TargetType spotType = MCH_TargetType.NONE;
          EntityPlayer clientPlayer = s_minecraft.player;
          Entity entity = target.getEntity();
          if (entity instanceof MCH_EntityAircraft) {
@@ -132,17 +127,19 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
                spotType = MCH_TargetType.SAME_TEAM_PLAYER;
             }
          } else if (entity instanceof EntityPlayer) {
-            if (entity == clientPlayer || entity.func_184187_bx() instanceof MCH_EntitySeat || entity.func_184187_bx() instanceof MCH_EntityAircraft) {
+            if (entity == clientPlayer || entity.getRidingEntity() instanceof MCH_EntitySeat || entity.getRidingEntity() instanceof MCH_EntityAircraft) {
                return;
             }
 
-            if (clientPlayer.getTeam() != null && clientPlayer.func_184191_r(entity)) {
+            if (clientPlayer.getTeam() != null && clientPlayer.isOnSameTeam(entity)) {
                spotType = MCH_TargetType.SAME_TEAM_PLAYER;
             }
          }
 
          if (spotType == MCH_TargetType.NONE && isSpotedEntity(entity)) {
-            spotType = MCH_Multiplay.canSpotEntity(clientPlayer, clientPlayer.posX, clientPlayer.posY + (double)clientPlayer.func_70047_e(), clientPlayer.posZ, entity, false);
+            spotType = MCH_Multiplay.canSpotEntity(
+               clientPlayer, clientPlayer.posX, clientPlayer.posY + clientPlayer.getEyeHeight(), clientPlayer.posZ, entity, false
+            );
          }
 
          if (reserve == 100) {
@@ -165,7 +162,6 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
 
             entityPos.add(e);
          }
-
       }
    }
 
@@ -174,17 +170,19 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
    }
 
    public static boolean isEnableEntityMarker() {
-      return MCH_Config.DisplayEntityMarker.prmBool && (Minecraft.getMinecraft().func_71356_B() || MCH_ServerSettings.enableEntityMarker) && MCH_Config.EntityMarkerSize.prmDouble > 0.0D;
+      return MCH_Config.DisplayEntityMarker.prmBool
+         && (Minecraft.getMinecraft().isSingleplayer() || MCH_ServerSettings.enableEntityMarker)
+         && MCH_Config.EntityMarkerSize.prmDouble > 0.0;
    }
 
+   @Override
    public void drawGui(EntityPlayer player, boolean isThirdPersonView) {
-      GL11.glLineWidth((float)(scaleFactor * 2));
+      GL11.glLineWidth(scaleFactor * 2);
       if (this.isDrawGui(player)) {
          GL11.glDisable(3042);
          if (isEnableEntityMarker()) {
             this.drawMark();
          }
-
       }
    }
 
@@ -196,83 +194,76 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
       GL11.glBlendFunc(770, 771);
       GL11.glColor4b((byte)-1, (byte)-1, (byte)-1, (byte)-1);
       GL11.glDepthMask(false);
-      int DW = this.field_146297_k.field_71443_c;
-      int DSW = this.field_146297_k.field_71443_c / scale;
-      int DSH = this.field_146297_k.field_71440_d / scale;
-      double x = 9999.0D;
-      double z = 9999.0D;
-      double y = 9999.0D;
+      int DW = this.mc.displayWidth;
+      int DSW = this.mc.displayWidth / scale;
+      int DSH = this.mc.displayHeight / scale;
+      double x = 9999.0;
+      double z = 9999.0;
+      double y = 9999.0;
       Tessellator tessellator = Tessellator.getInstance();
       BufferBuilder builder = tessellator.getBuffer();
 
-      for(int i = 0; i < 2; ++i) {
+      for (int i = 0; i < 2; i++) {
          if (i == 0) {
-            builder.begin(i == 0 ? 4 : 1, DefaultVertexFormats.field_181706_f);
+            builder.begin(i == 0 ? 4 : 1, DefaultVertexFormats.POSITION_COLOR);
          }
 
-         Iterator var15 = entityPos.iterator();
-
-         while(true) {
-            while(var15.hasNext()) {
-               MCH_MarkEntityPos e = (MCH_MarkEntityPos)var15.next();
-               int color = COLOR_TABLE[e.type];
-               x = (double)(e.pos.get(0) / (float)scale);
-               z = (double)e.pos.get(2);
-               y = (double)(e.pos.get(1) / (float)scale);
-               if (z < 1.0D) {
-                  y = (double)DSH - y;
-               } else if (x < (double)(DW / 2)) {
-                  x = 10000.0D;
-               } else if (x >= (double)(DW / 2)) {
-                  x = -10000.0D;
-               }
-
-               if (i == 0) {
-                  double size = MCH_Config.EntityMarkerSize.prmDouble;
-                  if (e.type < MCH_TargetType.POINT.ordinal() && z < 1.0D && x >= 0.0D && x <= (double)DSW && y >= 0.0D && y <= (double)DSH) {
-                     this.drawTriangle1(builder, x, y, size, color);
-                  }
-               } else if (e.type == MCH_TargetType.POINT.ordinal() && e.getTarget() != null) {
-                  ITargetMarkerObject target = e.getTarget();
-                  double MARK_SIZE = MCH_Config.BlockMarkerSize.prmDouble;
-                  double S;
-                  if (z < 1.0D && x >= 0.0D && x <= (double)(DSW - 20) && y >= 0.0D && y <= (double)(DSH - 40)) {
-                     S = this.field_146297_k.player.func_70011_f(target.getX(), target.getY(), target.getZ());
-                     GL11.glEnable(3553);
-                     this.drawCenteredString(String.format("%.0fm", S), (int)x, (int)(y + MARK_SIZE * 1.1D + 16.0D), color);
-                     if (x >= (double)(DSW / 2 - 20) && x <= (double)(DSW / 2 + 20) && y >= (double)(DSH / 2 - 20) && y <= (double)(DSH / 2 + 20)) {
-                        this.drawString(String.format("x : %.0f", target.getX()), (int)(x + MARK_SIZE + 18.0D), (int)y - 12, color);
-                        this.drawString(String.format("y : %.0f", target.getY()), (int)(x + MARK_SIZE + 18.0D), (int)y - 4, color);
-                        this.drawString(String.format("z : %.0f", target.getZ()), (int)(x + MARK_SIZE + 18.0D), (int)y + 4, color);
-                     }
-
-                     GL11.glDisable(3553);
-                     builder.begin(1, DefaultVertexFormats.field_181706_f);
-                     drawRhombus(builder, 15, x, y, (double)this.field_73735_i, MARK_SIZE, color);
-                  } else {
-                     builder.begin(1, DefaultVertexFormats.field_181706_f);
-                     S = 30.0D;
-                     if (x < S) {
-                        drawRhombus(builder, 1, S, (double)(DSH / 2), (double)this.field_73735_i, MARK_SIZE, color);
-                     } else if (x > (double)DSW - S) {
-                        drawRhombus(builder, 4, (double)DSW - S, (double)(DSH / 2), (double)this.field_73735_i, MARK_SIZE, color);
-                     }
-
-                     if (y < S) {
-                        drawRhombus(builder, 8, (double)(DSW / 2), S, (double)this.field_73735_i, MARK_SIZE, color);
-                     } else if (y > (double)DSH - S * 2.0D) {
-                        drawRhombus(builder, 2, (double)(DSW / 2), (double)DSH - S * 2.0D, (double)this.field_73735_i, MARK_SIZE, color);
-                     }
-                  }
-
-                  tessellator.draw();
-               }
+         for (MCH_MarkEntityPos e : entityPos) {
+            int color = COLOR_TABLE[e.type];
+            x = e.pos.get(0) / scale;
+            z = e.pos.get(2);
+            y = e.pos.get(1) / scale;
+            if (z < 1.0) {
+               y = DSH - y;
+            } else if (x < DW / 2) {
+               x = 10000.0;
+            } else if (x >= DW / 2) {
+               x = -10000.0;
             }
 
             if (i == 0) {
+               double size = MCH_Config.EntityMarkerSize.prmDouble;
+               if (e.type < MCH_TargetType.POINT.ordinal() && z < 1.0 && x >= 0.0 && x <= DSW && y >= 0.0 && y <= DSH) {
+                  this.drawTriangle1(builder, x, y, size, color);
+               }
+            } else if (e.type == MCH_TargetType.POINT.ordinal() && e.getTarget() != null) {
+               ITargetMarkerObject target = e.getTarget();
+               double MARK_SIZE = MCH_Config.BlockMarkerSize.prmDouble;
+               if (z < 1.0 && x >= 0.0 && x <= DSW - 20 && y >= 0.0 && y <= DSH - 40) {
+                  double dist = this.mc.player.getDistance(target.getX(), target.getY(), target.getZ());
+                  GL11.glEnable(3553);
+                  this.drawCenteredString(String.format("%.0fm", dist), (int)x, (int)(y + MARK_SIZE * 1.1 + 16.0), color);
+                  if (x >= DSW / 2 - 20 && x <= DSW / 2 + 20 && y >= DSH / 2 - 20 && y <= DSH / 2 + 20) {
+                     this.drawString(String.format("x : %.0f", target.getX()), (int)(x + MARK_SIZE + 18.0), (int)y - 12, color);
+                     this.drawString(String.format("y : %.0f", target.getY()), (int)(x + MARK_SIZE + 18.0), (int)y - 4, color);
+                     this.drawString(String.format("z : %.0f", target.getZ()), (int)(x + MARK_SIZE + 18.0), (int)y + 4, color);
+                  }
+
+                  GL11.glDisable(3553);
+                  builder.begin(1, DefaultVertexFormats.POSITION_COLOR);
+                  drawRhombus(builder, 15, x, y, this.zLevel, MARK_SIZE, color);
+               } else {
+                  builder.begin(1, DefaultVertexFormats.POSITION_COLOR);
+                  double S = 30.0;
+                  if (x < S) {
+                     drawRhombus(builder, 1, S, DSH / 2, this.zLevel, MARK_SIZE, color);
+                  } else if (x > DSW - S) {
+                     drawRhombus(builder, 4, DSW - S, DSH / 2, this.zLevel, MARK_SIZE, color);
+                  }
+
+                  if (y < S) {
+                     drawRhombus(builder, 8, DSW / 2, S, this.zLevel, MARK_SIZE, color);
+                  } else if (y > DSH - S * 2.0) {
+                     drawRhombus(builder, 2, DSW / 2, DSH - S * 2.0, this.zLevel, MARK_SIZE, color);
+                  }
+               }
+
                tessellator.draw();
             }
-            break;
+         }
+
+         if (i == 0) {
+            tessellator.draw();
          }
       }
 
@@ -282,61 +273,59 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
    }
 
    public static void drawRhombus(BufferBuilder builder, int dir, double x, double y, double z, double size, int color) {
-      size *= 2.0D;
-      int red = color >> 16 & 255;
-      int green = color >> 8 & 255;
-      int blue = color >> 0 & 255;
-      int alpha = color >> 24 & 255;
-      double M = size / 3.0D;
+      size *= 2.0;
+      int red = color >> 16 & 0xFF;
+      int green = color >> 8 & 0xFF;
+      int blue = color >> 0 & 0xFF;
+      int alpha = color >> 24 & 0xFF;
+      double M = size / 3.0;
       if ((dir & 1) != 0) {
-         builder.pos(x - size, y, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.pos(x - size + M, y - M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.pos(x - size, y, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.pos(x - size + M, y + M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x - size, y, z).color(red, green, blue, alpha).endVertex();
+         builder.pos(x - size + M, y - M, z).color(red, green, blue, alpha).endVertex();
+         builder.pos(x - size, y, z).color(red, green, blue, alpha).endVertex();
+         builder.pos(x - size + M, y + M, z).color(red, green, blue, alpha).endVertex();
       }
 
       if ((dir & 4) != 0) {
-         builder.pos(x + size, y, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.pos(x + size - M, y - M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.pos(x + size, y, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.pos(x + size - M, y + M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x + size, y, z).color(red, green, blue, alpha).endVertex();
+         builder.pos(x + size - M, y - M, z).color(red, green, blue, alpha).endVertex();
+         builder.pos(x + size, y, z).color(red, green, blue, alpha).endVertex();
+         builder.pos(x + size - M, y + M, z).color(red, green, blue, alpha).endVertex();
       }
 
       if ((dir & 8) != 0) {
-         builder.pos(x, y - size, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.pos(x + M, y - size + M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.pos(x, y - size, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.pos(x - M, y - size + M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x, y - size, z).color(red, green, blue, alpha).endVertex();
+         builder.pos(x + M, y - size + M, z).color(red, green, blue, alpha).endVertex();
+         builder.pos(x, y - size, z).color(red, green, blue, alpha).endVertex();
+         builder.pos(x - M, y - size + M, z).color(red, green, blue, alpha).endVertex();
       }
 
       if ((dir & 2) != 0) {
-         builder.pos(x, y + size, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.pos(x + M, y + size - M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.pos(x, y + size, z).func_181669_b(red, green, blue, alpha).func_181675_d();
-         builder.pos(x - M, y + size - M, z).func_181669_b(red, green, blue, alpha).func_181675_d();
+         builder.pos(x, y + size, z).color(red, green, blue, alpha).endVertex();
+         builder.pos(x + M, y + size - M, z).color(red, green, blue, alpha).endVertex();
+         builder.pos(x, y + size, z).color(red, green, blue, alpha).endVertex();
+         builder.pos(x - M, y + size - M, z).color(red, green, blue, alpha).endVertex();
       }
-
    }
 
    public void drawTriangle1(BufferBuilder builder, double x, double y, double size, int color) {
-      int red = color >> 16 & 255;
-      int green = color >> 8 & 255;
-      int blue = color >> 0 & 255;
-      int alpha = color >> 24 & 255;
-      builder.pos(x + size / 2.0D, y - 10.0D - size, (double)this.field_73735_i).func_181669_b(red, green, blue, alpha).func_181675_d();
-      builder.pos(x - size / 2.0D, y - 10.0D - size, (double)this.field_73735_i).func_181669_b(red, green, blue, alpha).func_181675_d();
-      builder.pos(x + 0.0D, y - 10.0D, (double)this.field_73735_i).func_181669_b(red, green, blue, alpha).func_181675_d();
+      int red = color >> 16 & 0xFF;
+      int green = color >> 8 & 0xFF;
+      int blue = color >> 0 & 0xFF;
+      int alpha = color >> 24 & 0xFF;
+      builder.pos(x + size / 2.0, y - 10.0 - size, this.zLevel).color(red, green, blue, alpha).endVertex();
+      builder.pos(x - size / 2.0, y - 10.0 - size, this.zLevel).color(red, green, blue, alpha).endVertex();
+      builder.pos(x + 0.0, y - 10.0, this.zLevel).color(red, green, blue, alpha).endVertex();
    }
 
    public static void markPoint(int px, int py, int pz) {
       EntityPlayer player = Minecraft.getMinecraft().player;
       if (player != null && player.world != null) {
          if (py < 1000) {
-            MCH_ParticlesUtil.spawnMarkPoint(player, 0.5D + (double)px, 1.0D + (double)py, 0.5D + (double)pz);
+            MCH_ParticlesUtil.spawnMarkPoint(player, 0.5 + px, 1.0 + py, 0.5 + pz);
          } else {
             MCH_ParticlesUtil.clearMarkPoint();
          }
       }
-
    }
 }

@@ -11,10 +11,12 @@ public class MCH_UavPacketStatus extends MCH_Packet {
    public byte posUavZ = 0;
    public boolean continueControl = false;
 
+   @Override
    public int getMessageID() {
       return 537133072;
    }
 
+   @Override
    public void readData(ByteArrayDataInput data) {
       try {
          this.posUavX = data.readByte();
@@ -24,9 +26,9 @@ public class MCH_UavPacketStatus extends MCH_Packet {
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       try {
          dos.writeByte(this.posUavX);
@@ -36,6 +38,5 @@ public class MCH_UavPacketStatus extends MCH_Packet {
       } catch (IOException var3) {
          var3.printStackTrace();
       }
-
    }
 }

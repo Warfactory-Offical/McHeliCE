@@ -14,7 +14,7 @@ public class FunctionExpression extends Col1Expression {
          obj = null;
       } else {
          if (!(x instanceof FieldExpression)) {
-            throw new EvalException(1101, x.toString(), x.string, x.pos, (Throwable)null);
+            throw new EvalException(1101, x.toString(), x.string, x.pos, null);
          }
 
          FieldExpression f = (FieldExpression)x;
@@ -51,21 +51,23 @@ public class FunctionExpression extends Col1Expression {
       this.name = from.name;
    }
 
+   @Override
    public AbstractExpression dup(ShareExpValue s) {
       return new FunctionExpression(this, s);
    }
 
+   @Override
    public long evalLong() {
       Object obj = null;
       if (this.target != null) {
          obj = this.target.getVariable();
       }
 
-      List args = this.evalArgsLong();
+      List<Long> args = this.evalArgsLong();
 
       try {
          Long[] arr = new Long[args.size()];
-         return this.share.func.evalLong(obj, this.name, (Long[])args.toArray(arr));
+         return this.share.func.evalLong(obj, this.name, args.toArray(arr));
       } catch (EvalException var4) {
          throw var4;
       } catch (Throwable var5) {
@@ -73,17 +75,18 @@ public class FunctionExpression extends Col1Expression {
       }
    }
 
+   @Override
    public double evalDouble() {
       Object obj = null;
       if (this.target != null) {
          obj = this.target.getVariable();
       }
 
-      List args = this.evalArgsDouble();
+      List<Double> args = this.evalArgsDouble();
 
       try {
          Double[] arr = new Double[args.size()];
-         return this.share.func.evalDouble(obj, this.name, (Double[])args.toArray(arr));
+         return this.share.func.evalDouble(obj, this.name, args.toArray(arr));
       } catch (EvalException var4) {
          throw var4;
       } catch (Throwable var5) {
@@ -91,13 +94,14 @@ public class FunctionExpression extends Col1Expression {
       }
    }
 
+   @Override
    public Object evalObject() {
       Object obj = null;
       if (this.target != null) {
          obj = this.target.getVariable();
       }
 
-      List args = this.evalArgsObject();
+      List<Object> args = this.evalArgsObject();
 
       try {
          Object[] arr = new Object[args.size()];
@@ -110,7 +114,7 @@ public class FunctionExpression extends Col1Expression {
    }
 
    private List<Long> evalArgsLong() {
-      List<Long> args = new ArrayList();
+      List<Long> args = new ArrayList<>();
       if (this.exp != null) {
          this.exp.evalArgsLong(args);
       }
@@ -119,7 +123,7 @@ public class FunctionExpression extends Col1Expression {
    }
 
    private List<Double> evalArgsDouble() {
-      List<Double> args = new ArrayList();
+      List<Double> args = new ArrayList<>();
       if (this.exp != null) {
          this.exp.evalArgsDouble(args);
       }
@@ -128,7 +132,7 @@ public class FunctionExpression extends Col1Expression {
    }
 
    private List<Object> evalArgsObject() {
-      List<Object> args = new ArrayList();
+      List<Object> args = new ArrayList<>();
       if (this.exp != null) {
          this.exp.evalArgsObject(args);
       }
@@ -136,18 +140,22 @@ public class FunctionExpression extends Col1Expression {
       return args;
    }
 
+   @Override
    protected Object getVariable() {
       return this.evalObject();
    }
 
+   @Override
    protected long operateLong(long val) {
       throw new RuntimeException("この関数が呼ばれてはいけない。サブクラスで実装要");
    }
 
+   @Override
    protected double operateDouble(double val) {
       throw new RuntimeException("この関数が呼ばれてはいけない。サブクラスで実装要");
    }
 
+   @Override
    protected void search() {
       this.share.srch.search(this);
       if (!this.share.srch.end()) {
@@ -177,6 +185,7 @@ public class FunctionExpression extends Col1Expression {
       }
    }
 
+   @Override
    protected AbstractExpression replace() {
       if (this.target != null) {
          this.target = this.target.replace();
@@ -189,6 +198,7 @@ public class FunctionExpression extends Col1Expression {
       return this.share.repl.replaceFunc(this);
    }
 
+   @Override
    public boolean equals(Object obj) {
       if (!(obj instanceof FunctionExpression)) {
          return false;
@@ -206,12 +216,14 @@ public class FunctionExpression extends Col1Expression {
       }
    }
 
+   @Override
    public int hashCode() {
       int t = this.target != null ? this.target.hashCode() : 0;
       int a = this.exp != null ? this.exp.hashCode() : 0;
       return this.name.hashCode() ^ t ^ a * 2;
    }
 
+   @Override
    public String toString() {
       StringBuffer sb = new StringBuffer();
       if (this.target != null) {

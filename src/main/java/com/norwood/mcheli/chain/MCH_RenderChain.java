@@ -26,16 +26,20 @@ public class MCH_RenderChain extends W_Render<MCH_EntityChain> {
             GL11.glPushMatrix();
             GL11.glEnable(2884);
             GL11.glColor4f(0.5F, 0.5F, 0.5F, 1.0F);
-            GL11.glTranslated(e.towedEntity.field_70142_S - TileEntityRendererDispatcher.field_147554_b, e.towedEntity.field_70137_T - TileEntityRendererDispatcher.field_147555_c, e.towedEntity.field_70136_U - TileEntityRendererDispatcher.field_147552_d);
+            GL11.glTranslated(
+               e.towedEntity.lastTickPosX - TileEntityRendererDispatcher.staticPlayerX,
+               e.towedEntity.lastTickPosY - TileEntityRendererDispatcher.staticPlayerY,
+               e.towedEntity.lastTickPosZ - TileEntityRendererDispatcher.staticPlayerZ
+            );
             this.bindTexture("textures/chain.png");
-            double dx = e.towEntity.field_70142_S - e.towedEntity.field_70142_S;
-            double dy = e.towEntity.field_70137_T - e.towedEntity.field_70137_T;
-            double dz = e.towEntity.field_70136_U - e.towedEntity.field_70136_U;
+            double dx = e.towEntity.lastTickPosX - e.towedEntity.lastTickPosX;
+            double dy = e.towEntity.lastTickPosY - e.towedEntity.lastTickPosY;
+            double dz = e.towEntity.lastTickPosZ - e.towedEntity.lastTickPosZ;
             double diff = Math.sqrt(dx * dx + dy * dy + dz * dz);
-            double x = dx * 0.949999988079071D / diff;
-            double y = dy * 0.949999988079071D / diff;
+            double x = dx * 0.95F / diff;
+            double y = dy * 0.95F / diff;
 
-            for(double z = dz * 0.949999988079071D / diff; diff > 0.949999988079071D; diff -= 0.949999988079071D) {
+            for (double z = dz * 0.95F / diff; diff > 0.95F; diff -= 0.95F) {
                GL11.glTranslated(x, y, z);
                GL11.glPushMatrix();
                Vec3d v = MCH_Lib.getYawPitchFromVec(x, y, z);

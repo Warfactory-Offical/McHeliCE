@@ -17,9 +17,10 @@ public class BuiltinAddonPack extends AddonPack {
    }
 
    private BuiltinAddonPack() {
-      super("@builtin", "MCHeli-Builtin", "1.0", (File)null, "EMB4-MCHeli", ImmutableList.of("EMB4", "Murachiki27"), "Builtin addon", "1", ImmutableMap.of());
+      super("@builtin", "MCHeli-Builtin", "1.0", null, "EMB4-MCHeli", ImmutableList.of("EMB4", "Murachiki27"), "Builtin addon", "1", ImmutableMap.of());
    }
 
+   @Override
    public File getFile() {
       return MCH_Utils.getSource();
    }

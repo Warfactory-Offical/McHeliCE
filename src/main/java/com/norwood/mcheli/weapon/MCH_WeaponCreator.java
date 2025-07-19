@@ -71,26 +71,26 @@ public class MCH_WeaponCreator {
          }
 
          if (weapon != null) {
-            ((MCH_WeaponBase)weapon).displayName = info.displayName;
-            ((MCH_WeaponBase)weapon).power = info.power;
-            ((MCH_WeaponBase)weapon).acceleration = info.acceleration;
-            ((MCH_WeaponBase)weapon).explosionPower = info.explosion;
-            ((MCH_WeaponBase)weapon).explosionPowerInWater = info.explosionInWater;
+            weapon.displayName = info.displayName;
+            weapon.power = info.power;
+            weapon.acceleration = info.acceleration;
+            weapon.explosionPower = info.explosion;
+            weapon.explosionPowerInWater = info.explosionInWater;
             int interval = info.delay;
-            ((MCH_WeaponBase)weapon).interval = info.delay;
-            ((MCH_WeaponBase)weapon).delayedInterval = info.delay;
-            ((MCH_WeaponBase)weapon).setLockCountMax(info.lockTime);
-            ((MCH_WeaponBase)weapon).setLockChecker(lockChecker);
-            ((MCH_WeaponBase)weapon).numMode = info.modeNum;
-            ((MCH_WeaponBase)weapon).piercing = info.piercing;
-            ((MCH_WeaponBase)weapon).heatCount = info.heatCount;
-            ((MCH_WeaponBase)weapon).onTurret = onTurret;
-            if (info.maxHeatCount > 0 && ((MCH_WeaponBase)weapon).heatCount < 2) {
-               ((MCH_WeaponBase)weapon).heatCount = 2;
+            weapon.interval = info.delay;
+            weapon.delayedInterval = info.delay;
+            weapon.setLockCountMax(info.lockTime);
+            weapon.setLockChecker(lockChecker);
+            weapon.numMode = info.modeNum;
+            weapon.piercing = info.piercing;
+            weapon.heatCount = info.heatCount;
+            weapon.onTurret = onTurret;
+            if (info.maxHeatCount > 0 && weapon.heatCount < 2) {
+               weapon.heatCount = 2;
             }
 
             if (interval < 4) {
-               ++interval;
+               interval++;
             } else if (interval < 7) {
                interval += 2;
             } else if (interval < 10) {
@@ -104,17 +104,17 @@ public class MCH_WeaponCreator {
                }
             }
 
-            ((MCH_WeaponBase)weapon).delayedInterval = interval;
+            weapon.delayedInterval = interval;
             if (w.isRemote) {
-               ((MCH_WeaponBase)weapon).interval = interval;
-               ++((MCH_WeaponBase)weapon).heatCount;
-               ((MCH_WeaponBase)weapon).cartridge = info.cartridge;
+               weapon.interval = interval;
+               weapon.heatCount++;
+               weapon.cartridge = info.cartridge;
             }
 
-            ((MCH_WeaponBase)weapon).modifyCommonParameters();
+            weapon.modifyCommonParameters();
          }
 
-         return (MCH_WeaponBase)weapon;
+         return weapon;
       } else {
          return null;
       }

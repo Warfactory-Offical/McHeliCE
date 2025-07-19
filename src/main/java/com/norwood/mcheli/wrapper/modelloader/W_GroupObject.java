@@ -2,7 +2,6 @@ package com.norwood.mcheli.wrapper.modelloader;
 
 import com.google.common.base.Joiner;
 import java.util.ArrayList;
-import java.util.Iterator;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -12,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class W_GroupObject {
    public String name;
-   public ArrayList<W_Face> faces;
+   public ArrayList<W_Face> faces = new ArrayList<>();
    public int glDrawingMode;
 
    public W_GroupObject() {
@@ -24,7 +23,6 @@ public class W_GroupObject {
    }
 
    public W_GroupObject(String name, int glDrawingMode) {
-      this.faces = new ArrayList();
       this.name = name;
       this.glDrawingMode = glDrawingMode;
    }
@@ -33,25 +31,21 @@ public class W_GroupObject {
       if (this.faces.size() > 0) {
          Tessellator tessellator = Tessellator.getInstance();
          BufferBuilder builder = tessellator.getBuffer();
-         builder.begin(this.glDrawingMode, DefaultVertexFormats.field_181710_j);
+         builder.begin(this.glDrawingMode, DefaultVertexFormats.POSITION_TEX_NORMAL);
          this.render(tessellator);
          tessellator.draw();
       }
-
    }
 
    public void render(Tessellator tessellator) {
       if (this.faces.size() > 0) {
-         Iterator var2 = this.faces.iterator();
-
-         while(var2.hasNext()) {
-            W_Face face = (W_Face)var2.next();
+         for (W_Face face : this.faces) {
             face.addFaceForRender(tessellator);
          }
       }
-
    }
 
+   @Override
    public String toString() {
       return "W_GroupObject[size=" + this.faces.size() + ",values=[" + Joiner.on('\n').join(this.faces) + "]]";
    }

@@ -29,18 +29,22 @@ public interface ITargetMarkerObject {
          this.target = entity;
       }
 
+      @Override
       public double getX() {
          return this.target.posX;
       }
 
+      @Override
       public double getY() {
          return this.target.posY;
       }
 
+      @Override
       public double getZ() {
          return this.target.posZ;
       }
 
+      @Override
       public Entity getEntity() {
          return this.target;
       }

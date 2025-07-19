@@ -25,22 +25,22 @@ public class MCH_AircraftPacketHandler {
          MCH_PacketIndRotation req = new MCH_PacketIndRotation();
          req.readData(data);
          if (req.entityID_Ac > 0) {
-            scheduler.func_152344_a(() -> {
-               Entity e = player.world.func_73045_a(req.entityID_Ac);
+            scheduler.addScheduledTask(() -> {
+               Entity e = player.world.getEntityByID(req.entityID_Ac);
                if (e instanceof MCH_EntityAircraft) {
                   MCH_EntityAircraft ac = (MCH_EntityAircraft)e;
                   ac.setRotRoll(req.roll);
                   if (req.rollRev) {
                      MCH_Lib.DbgLog(ac.world, "onPacketIndRotation Error:req.rollRev y=%.2f, p=%.2f, r=%.2f", req.yaw, req.pitch, req.roll);
                      if (ac.getRiddenByEntity() != null) {
-                        ac.getRiddenByEntity().field_70177_z = req.yaw;
-                        ac.getRiddenByEntity().field_70126_B = req.yaw;
+                        ac.getRiddenByEntity().rotationYaw = req.yaw;
+                        ac.getRiddenByEntity().prevRotationYaw = req.yaw;
                      }
 
-                     for(int sid = 0; sid < ac.getSeatNum(); ++sid) {
+                     for (int sid = 0; sid < ac.getSeatNum(); sid++) {
                         Entity entity = ac.getEntityBySeatId(1 + sid);
                         if (entity != null) {
-                           entity.field_70177_z += entity.field_70177_z <= 0.0F ? 180.0F : -180.0F;
+                           entity.rotationYaw = entity.rotationYaw + (entity.rotationYaw <= 0.0F ? 180.0F : -180.0F);
                         }
                      }
                   }
@@ -48,33 +48,39 @@ public class MCH_AircraftPacketHandler {
                   ac.setRotYaw(req.yaw);
                   ac.setRotPitch(req.pitch);
                }
-
             });
          }
       }
    }
 
-   /** @deprecated */
    @Deprecated
    @HandleSide({Side.SERVER})
    public static void onPacketOnMountEntity(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
       if (player != null && player.world.isRemote) {
          MCH_PacketNotifyOnMountEntity req = new MCH_PacketNotifyOnMountEntity();
          req.readData(data);
-         scheduler.func_152344_a(() -> {
-            MCH_Lib.DbgLog(player.world, "onPacketOnMountEntity.rcv:%d, %d, %d, %d", W_Entity.getEntityId(player), req.entityID_Ac, req.entityID_rider, req.seatID);
-            if (req.entityID_Ac > 0) {
-               if (req.entityID_rider > 0) {
-                  if (req.seatID >= 0) {
-                     Entity e = player.world.func_73045_a(req.entityID_Ac);
-                     if (e instanceof MCH_EntityAircraft) {
-                        MCH_Lib.DbgLog(player.world, "onPacketOnMountEntity:" + W_Entity.getEntityId(player));
+         scheduler.addScheduledTask(
+            () -> {
+               MCH_Lib.DbgLog(
+                  player.world,
+                  "onPacketOnMountEntity.rcv:%d, %d, %d, %d",
+                  W_Entity.getEntityId(player),
+                  req.entityID_Ac,
+                  req.entityID_rider,
+                  req.seatID
+               );
+               if (req.entityID_Ac > 0) {
+                  if (req.entityID_rider > 0) {
+                     if (req.seatID >= 0) {
+                        Entity e = player.world.getEntityByID(req.entityID_Ac);
+                        if (e instanceof MCH_EntityAircraft) {
+                           MCH_Lib.DbgLog(player.world, "onPacketOnMountEntity:" + W_Entity.getEntityId(player));
+                        }
                      }
-
                   }
                }
             }
-         });
+         );
       }
    }
 
@@ -84,8 +90,8 @@ public class MCH_AircraftPacketHandler {
          MCH_PacketNotifyAmmoNum status = new MCH_PacketNotifyAmmoNum();
          status.readData(data);
          if (status.entityID_Ac > 0) {
-            scheduler.func_152344_a(() -> {
-               Entity e = player.world.func_73045_a(status.entityID_Ac);
+            scheduler.addScheduledTask(() -> {
+               Entity e = player.world.getEntityByID(status.entityID_Ac);
                if (e instanceof MCH_EntityAircraft) {
                   MCH_EntityAircraft ac = (MCH_EntityAircraft)e;
                   String msg = "onPacketNotifyAmmoNum:";
@@ -93,7 +99,7 @@ public class MCH_AircraftPacketHandler {
                   if (status.all) {
                      msg = msg + "All=true, Num=" + status.num;
 
-                     for(int i = 0; i < ac.getWeaponNum() && i < status.num; ++i) {
+                     for (int i = 0; i < ac.getWeaponNum() && i < status.num; i++) {
                         ac.getWeapon(i).setAmmoNum(status.ammo[i]);
                         ac.getWeapon(i).setRestAllAmmoNum(status.restAmmo[i]);
                         msg = msg + ", [" + status.ammo[i] + "/" + status.restAmmo[i] + "]";
@@ -109,7 +115,6 @@ public class MCH_AircraftPacketHandler {
                      MCH_Lib.DbgLog(e.world, "Error:" + status.weaponID);
                   }
                }
-
             });
          }
       }
@@ -121,12 +126,11 @@ public class MCH_AircraftPacketHandler {
          MCH_PacketStatusRequest req = new MCH_PacketStatusRequest();
          req.readData(data);
          if (req.entityID_AC > 0) {
-            scheduler.func_152344_a(() -> {
-               Entity e = player.world.func_73045_a(req.entityID_AC);
+            scheduler.addScheduledTask(() -> {
+               Entity e = player.world.getEntityByID(req.entityID_AC);
                if (e instanceof MCH_EntityAircraft) {
                   MCH_PacketStatusResponse.sendStatus((MCH_EntityAircraft)e, player);
                }
-
             });
          }
       }
@@ -138,8 +142,8 @@ public class MCH_AircraftPacketHandler {
          MCH_PacketIndNotifyAmmoNum req = new MCH_PacketIndNotifyAmmoNum();
          req.readData(data);
          if (req.entityID_Ac > 0) {
-            scheduler.func_152344_a(() -> {
-               Entity e = player.world.func_73045_a(req.entityID_Ac);
+            scheduler.addScheduledTask(() -> {
+               Entity e = player.world.getEntityByID(req.entityID_Ac);
                if (e instanceof MCH_EntityAircraft) {
                   if (req.weaponID >= 0) {
                      MCH_PacketNotifyAmmoNum.sendAmmoNum((MCH_EntityAircraft)e, player, req.weaponID);
@@ -147,7 +151,6 @@ public class MCH_AircraftPacketHandler {
                      MCH_PacketNotifyAmmoNum.sendAllAmmoNum((MCH_EntityAircraft)e, player);
                   }
                }
-
             });
          }
       }
@@ -159,14 +162,13 @@ public class MCH_AircraftPacketHandler {
          MCH_PacketIndReload ind = new MCH_PacketIndReload();
          ind.readData(data);
          if (ind.entityID_Ac > 0) {
-            scheduler.func_152344_a(() -> {
-               Entity e = player.world.func_73045_a(ind.entityID_Ac);
+            scheduler.addScheduledTask(() -> {
+               Entity e = player.world.getEntityByID(ind.entityID_Ac);
                if (e instanceof MCH_EntityAircraft) {
                   MCH_EntityAircraft ac = (MCH_EntityAircraft)e;
                   MCH_Lib.DbgLog(e.world, "onPacketIndReload :%s", ac.getAcInfo().displayName);
                   ac.supplyAmmo(ind.weaponID);
                }
-
             });
          }
       }
@@ -178,15 +180,15 @@ public class MCH_AircraftPacketHandler {
          MCH_PacketStatusResponse status = new MCH_PacketStatusResponse();
          status.readData(data);
          if (status.entityID_AC > 0) {
-            scheduler.func_152344_a(() -> {
+            scheduler.addScheduledTask(() -> {
                String msg = "onPacketStatusResponse:EID=" + status.entityID_AC + ":";
-               Entity e = player.world.func_73045_a(status.entityID_AC);
+               Entity e = player.world.getEntityByID(status.entityID_AC);
                if (e instanceof MCH_EntityAircraft) {
                   MCH_EntityAircraft ac = (MCH_EntityAircraft)e;
                   if (status.seatNum > 0 && status.weaponIDs != null && status.weaponIDs.length == status.seatNum) {
                      msg = msg + "seatNum=" + status.seatNum + ":";
 
-                     for(int i = 0; i < status.seatNum; ++i) {
+                     for (int i = 0; i < status.seatNum; i++) {
                         ac.updateWeaponID(i, status.weaponIDs[i]);
                         msg = msg + "[" + i + "," + status.weaponIDs[i] + "]";
                      }
@@ -207,8 +209,8 @@ public class MCH_AircraftPacketHandler {
          MCH_PacketNotifyWeaponID status = new MCH_PacketNotifyWeaponID();
          status.readData(data);
          if (status.entityID_Ac > 0) {
-            scheduler.func_152344_a(() -> {
-               Entity e = player.world.func_73045_a(status.entityID_Ac);
+            scheduler.addScheduledTask(() -> {
+               Entity e = player.world.getEntityByID(status.entityID_Ac);
                if (e instanceof MCH_EntityAircraft) {
                   MCH_EntityAircraft ac = (MCH_EntityAircraft)e;
                   if (ac.isValidSeatID(status.seatID)) {
@@ -223,7 +225,6 @@ public class MCH_AircraftPacketHandler {
                      }
                   }
                }
-
             });
          }
       }
@@ -234,16 +235,15 @@ public class MCH_AircraftPacketHandler {
       if (player.world.isRemote) {
          MCH_PacketNotifyHitBullet status = new MCH_PacketNotifyHitBullet();
          status.readData(data);
-         scheduler.func_152344_a(() -> {
+         scheduler.addScheduledTask(() -> {
             if (status.entityID_Ac <= 0) {
                MCH_MOD.proxy.hitBullet();
             } else {
-               Entity e = player.world.func_73045_a(status.entityID_Ac);
+               Entity e = player.world.getEntityByID(status.entityID_Ac);
                if (e instanceof MCH_EntityAircraft) {
                   ((MCH_EntityAircraft)e).hitBullet();
                }
             }
-
          });
       }
    }
@@ -254,12 +254,11 @@ public class MCH_AircraftPacketHandler {
          MCH_PacketSeatListRequest req = new MCH_PacketSeatListRequest();
          req.readData(data);
          if (req.entityID_AC > 0) {
-            scheduler.func_152344_a(() -> {
-               Entity e = player.world.func_73045_a(req.entityID_AC);
+            scheduler.addScheduledTask(() -> {
+               Entity e = player.world.getEntityByID(req.entityID_AC);
                if (e instanceof MCH_EntityAircraft) {
                   MCH_PacketSeatListResponse.sendSeatList((MCH_EntityAircraft)e, player);
                }
-
             });
          }
       }
@@ -278,11 +277,11 @@ public class MCH_AircraftPacketHandler {
             return;
          }
 
-         scheduler.func_152344_a(() -> {
-            Entity e = player.world.func_73045_a(packet.entityID_Ac);
+         scheduler.addScheduledTask(() -> {
+            Entity e = player.world.getEntityByID(packet.entityID_Ac);
             if (e != null && e instanceof MCH_EntityAircraft) {
                MCH_EntityAircraft ac = (MCH_EntityAircraft)e;
-               e = player.world.func_73045_a(packet.entityID_TVMissile);
+               e = player.world.getEntityByID(packet.entityID_TVMissile);
                if (e != null && e instanceof MCH_EntityTvMissile) {
                   ((MCH_EntityTvMissile)e).shootingEntity = player;
                   ac.setTVMissile((MCH_EntityTvMissile)e);
@@ -290,7 +289,6 @@ public class MCH_AircraftPacketHandler {
             }
          });
       }
-
    }
 
    @HandleSide({Side.CLIENT})
@@ -299,25 +297,29 @@ public class MCH_AircraftPacketHandler {
          MCH_PacketSeatListResponse seatList = new MCH_PacketSeatListResponse();
          seatList.readData(data);
          if (seatList.entityID_AC > 0) {
-            scheduler.func_152344_a(() -> {
-               Entity e = player.world.func_73045_a(seatList.entityID_AC);
-               if (e instanceof MCH_EntityAircraft) {
-                  MCH_EntityAircraft ac = (MCH_EntityAircraft)e;
-                  if (seatList.seatNum > 0 && seatList.seatNum == ac.getSeats().length && seatList.seatEntityID != null && seatList.seatEntityID.length == seatList.seatNum) {
-                     for(int i = 0; i < seatList.seatNum; ++i) {
-                        Entity entity = player.world.func_73045_a(seatList.seatEntityID[i]);
-                        if (entity instanceof MCH_EntitySeat) {
-                           MCH_EntitySeat seat = (MCH_EntitySeat)entity;
-                           seat.seatID = i;
-                           seat.parentUniqueID = ac.getCommonUniqueId();
-                           ac.setSeat(i, seat);
-                           seat.setParent(ac);
+            scheduler.addScheduledTask(
+               () -> {
+                  Entity e = player.world.getEntityByID(seatList.entityID_AC);
+                  if (e instanceof MCH_EntityAircraft) {
+                     MCH_EntityAircraft ac = (MCH_EntityAircraft)e;
+                     if (seatList.seatNum > 0
+                        && seatList.seatNum == ac.getSeats().length
+                        && seatList.seatEntityID != null
+                        && seatList.seatEntityID.length == seatList.seatNum) {
+                        for (int i = 0; i < seatList.seatNum; i++) {
+                           Entity entity = player.world.getEntityByID(seatList.seatEntityID[i]);
+                           if (entity instanceof MCH_EntitySeat) {
+                              MCH_EntitySeat seat = (MCH_EntitySeat)entity;
+                              seat.seatID = i;
+                              seat.parentUniqueID = ac.getCommonUniqueId();
+                              ac.setSeat(i, seat);
+                              seat.setParent(ac);
+                           }
                         }
                      }
                   }
                }
-
-            });
+            );
          }
       }
    }
@@ -327,10 +329,10 @@ public class MCH_AircraftPacketHandler {
       if (!player.world.isRemote) {
          MCH_PacketSeatPlayerControl pc = new MCH_PacketSeatPlayerControl();
          pc.readData(data);
-         scheduler.func_152344_a(() -> {
+         scheduler.addScheduledTask(() -> {
             MCH_EntityAircraft ac = null;
-            if (player.func_184187_bx() instanceof MCH_EntitySeat) {
-               MCH_EntitySeat seat = (MCH_EntitySeat)player.func_184187_bx();
+            if (player.getRidingEntity() instanceof MCH_EntitySeat) {
+               MCH_EntitySeat seat = (MCH_EntitySeat)player.getRidingEntity();
                ac = seat.getParent();
             } else {
                ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
@@ -341,7 +343,7 @@ public class MCH_AircraftPacketHandler {
                   ac.unmountEntityFromSeat(player);
                } else if (pc.switchSeat > 0) {
                   if (pc.switchSeat == 3) {
-                     player.func_184210_p();
+                     player.dismountRidingEntity();
                      ac.keepOnRideRotation = true;
                      ac.processInitialInteract(player, true, EnumHand.MAIN_HAND);
                   }
@@ -356,7 +358,6 @@ public class MCH_AircraftPacketHandler {
                } else if (pc.parachuting) {
                   ac.unmount(player);
                }
-
             }
          });
       }
@@ -367,7 +368,7 @@ public class MCH_AircraftPacketHandler {
       if (!player.world.isRemote) {
          MCH_PacketNotifyClientSetting pc = new MCH_PacketNotifyClientSetting();
          pc.readData(data);
-         scheduler.func_152344_a(() -> {
+         scheduler.addScheduledTask(() -> {
             MCH_EntityAircraft ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
             if (ac != null) {
                int sid = ac.getSeatIdByEntity(player);
@@ -380,7 +381,6 @@ public class MCH_AircraftPacketHandler {
 
                ac.camera.setShaderSupport(sid, pc.shaderSupport);
             }
-
          });
       }
    }
@@ -390,55 +390,46 @@ public class MCH_AircraftPacketHandler {
       if (!player.world.isRemote) {
          MCH_PacketNotifyInfoReloaded pc = new MCH_PacketNotifyInfoReloaded();
          pc.readData(data);
-         scheduler.func_152344_a(() -> {
-            MCH_EntityAircraft ac;
-            int var5;
-            switch(pc.type) {
-            case 0:
-               ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
-               if (ac != null && ac.getAcInfo() != null) {
-                  String name = ac.getAcInfo().name;
-                  WorldServer[] var11 = MCH_Utils.getServer().field_71305_c;
-                  var5 = var11.length;
+         scheduler.addScheduledTask(() -> {
+            switch (pc.type) {
+               case 0:
+                  MCH_EntityAircraft ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
+                  if (ac != null && ac.getAcInfo() != null) {
+                     String name = ac.getAcInfo().name;
 
-                  for(int var12 = 0; var12 < var5; ++var12) {
-                     WorldServer world = var11[var12];
-                     List<Entity> list = world.field_72996_f;
+                     for (WorldServer world : MCH_Utils.getServer().worlds) {
+                        List<Entity> list = world.loadedEntityList;
 
-                     for(int ix = 0; ix < list.size(); ++ix) {
-                        if (list.get(ix) instanceof MCH_EntityAircraft) {
-                           ac = (MCH_EntityAircraft)list.get(ix);
-                           if (ac.getAcInfo() != null && ac.getAcInfo().name.equals(name)) {
-                              ac.changeType(name);
-                              ac.createSeats(UUID.randomUUID().toString());
-                              ac.onAcInfoReloaded();
+                        for (int ix = 0; ix < list.size(); ix++) {
+                           if (list.get(ix) instanceof MCH_EntityAircraft) {
+                              ac = (MCH_EntityAircraft)list.get(ix);
+                              if (ac.getAcInfo() != null && ac.getAcInfo().name.equals(name)) {
+                                 ac.changeType(name);
+                                 ac.createSeats(UUID.randomUUID().toString());
+                                 ac.onAcInfoReloaded();
+                              }
                            }
                         }
                      }
                   }
-               }
-               break;
-            case 1:
-               ContentRegistries.weapon().reloadAll();
-               WorldServer[] var3 = MCH_Utils.getServer().field_71305_c;
-               int var4 = var3.length;
+                  break;
+               case 1:
+                  ContentRegistries.weapon().reloadAll();
 
-               for(var5 = 0; var5 < var4; ++var5) {
-                  WorldServer worldx = var3[var5];
-                  List<Entity> listx = worldx.field_72996_f;
+                  for (WorldServer world : MCH_Utils.getServer().worlds) {
+                     List<Entity> list = world.loadedEntityList;
 
-                  for(int i = 0; i < listx.size(); ++i) {
-                     if (listx.get(i) instanceof MCH_EntityAircraft) {
-                        ac = (MCH_EntityAircraft)listx.get(i);
-                        if (ac.getAcInfo() != null) {
-                           ac.changeType(ac.getAcInfo().name);
-                           ac.createSeats(UUID.randomUUID().toString());
+                     for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i) instanceof MCH_EntityAircraft) {
+                           MCH_EntityAircraft entityAircraft = (MCH_EntityAircraft)list.get(i);
+                           if (entityAircraft.getAcInfo() != null) {
+                              entityAircraft.changeType(entityAircraft.getAcInfo().name);
+                              entityAircraft.createSeats(UUID.randomUUID().toString());
+                           }
                         }
                      }
                   }
-               }
             }
-
          });
       }
    }

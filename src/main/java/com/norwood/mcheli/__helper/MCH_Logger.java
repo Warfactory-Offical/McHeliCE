@@ -9,7 +9,6 @@ public class MCH_Logger {
       if (logger == null) {
          logger = loggerIn;
       }
-
    }
 
    public static Logger get() {

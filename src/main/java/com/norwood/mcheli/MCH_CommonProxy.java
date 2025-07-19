@@ -1,7 +1,6 @@
 package com.norwood.mcheli;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.List;
 import com.norwood.mcheli.__helper.MCH_SoundEvents;
 import com.norwood.mcheli.__helper.MCH_Utils;
@@ -27,7 +26,7 @@ public class MCH_CommonProxy {
    public String lastConfigFileName;
 
    public String getDataDir() {
-      return MCH_Utils.getServer().func_71270_I();
+      return MCH_Utils.getServer().getFolderName();
    }
 
    public void registerRenderer() {
@@ -90,50 +89,34 @@ public class MCH_CommonProxy {
       MCH_SoundEvents.registerSoundEventName("fim92_reload");
       MCH_SoundEvents.registerSoundEventName("lockon");
       MCH_SoundEvents.registerSoundEventName("wrench");
-      Iterator var1 = ContentRegistries.weapon().values().iterator();
 
-      while(var1.hasNext()) {
-         MCH_WeaponInfo info = (MCH_WeaponInfo)var1.next();
+      for (MCH_WeaponInfo info : ContentRegistries.weapon().values()) {
          MCH_SoundEvents.registerSoundEventName(info.soundFileName);
       }
 
-      var1 = ContentRegistries.plane().values().iterator();
-
-      MCH_AircraftInfo info;
-      while(var1.hasNext()) {
-         info = (MCH_AircraftInfo)var1.next();
+      for (MCH_AircraftInfo info : ContentRegistries.plane().values()) {
          if (!info.soundMove.isEmpty()) {
             MCH_SoundEvents.registerSoundEventName(info.soundMove);
          }
       }
 
-      var1 = ContentRegistries.heli().values().iterator();
-
-      while(var1.hasNext()) {
-         info = (MCH_AircraftInfo)var1.next();
-         if (!info.soundMove.isEmpty()) {
-            MCH_SoundEvents.registerSoundEventName(info.soundMove);
+      for (MCH_AircraftInfo infox : ContentRegistries.heli().values()) {
+         if (!infox.soundMove.isEmpty()) {
+            MCH_SoundEvents.registerSoundEventName(infox.soundMove);
          }
       }
 
-      var1 = ContentRegistries.tank().values().iterator();
-
-      while(var1.hasNext()) {
-         info = (MCH_AircraftInfo)var1.next();
-         if (!info.soundMove.isEmpty()) {
-            MCH_SoundEvents.registerSoundEventName(info.soundMove);
+      for (MCH_AircraftInfo infoxx : ContentRegistries.tank().values()) {
+         if (!infoxx.soundMove.isEmpty()) {
+            MCH_SoundEvents.registerSoundEventName(infoxx.soundMove);
          }
       }
 
-      var1 = ContentRegistries.vehicle().values().iterator();
-
-      while(var1.hasNext()) {
-         info = (MCH_AircraftInfo)var1.next();
-         if (!info.soundMove.isEmpty()) {
-            MCH_SoundEvents.registerSoundEventName(info.soundMove);
+      for (MCH_AircraftInfo infoxxx : ContentRegistries.vehicle().values()) {
+         if (!infoxxx.soundMove.isEmpty()) {
+            MCH_SoundEvents.registerSoundEventName(infoxxx.soundMove);
          }
       }
-
    }
 
    public void loadConfig(String fileName) {
@@ -171,7 +154,7 @@ public class MCH_CommonProxy {
    }
 
    public boolean isSinglePlayer() {
-      return MCH_Utils.getServer().func_71264_H();
+      return MCH_Utils.getServer().isSinglePlayer();
    }
 
    public void readClientModList() {
@@ -225,6 +208,7 @@ public class MCH_CommonProxy {
       W_LanguageRegistry.clear();
    }
 
-   public void registerRecipeDescriptions() {
+   @Deprecated
+   public void updateSoundsJson() {
    }
 }

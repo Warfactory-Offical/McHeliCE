@@ -11,7 +11,7 @@ public class MCH_VehicleInfoManager extends MCH_AircraftInfoManager<MCH_VehicleI
 
    @Nullable
    public static MCH_VehicleInfo get(String name) {
-      return (MCH_VehicleInfo)ContentRegistries.vehicle().get(name);
+      return ContentRegistries.vehicle().get(name);
    }
 
    public static MCH_VehicleInfoManager getInstance() {
@@ -29,15 +29,15 @@ public class MCH_VehicleInfoManager extends MCH_AircraftInfoManager<MCH_VehicleI
 
    @Nullable
    public MCH_VehicleInfo getAcInfoFromItem(Item item) {
-      return (MCH_VehicleInfo)ContentRegistries.vehicle().findFirst((info) -> {
-         return info.item == item;
-      });
+      return ContentRegistries.vehicle().findFirst(info -> info.item == item);
    }
 
+   @Override
    protected boolean contains(String name) {
       return ContentRegistries.vehicle().contains(name);
    }
 
+   @Override
    protected int size() {
       return ContentRegistries.vehicle().size();
    }

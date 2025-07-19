@@ -13,7 +13,7 @@ import com.norwood.mcheli.eval.eval.lex.Lex;
 public abstract class AbstractRule {
    public AbstractRule nextRule;
    protected ShareRuleValue share;
-   private final Map<String, AbstractExpression> opes = new HashMap();
+   private final Map<String, AbstractExpression> opes = new HashMap<>();
    public int prio;
 
    public AbstractRule(ShareRuleValue share) {
@@ -28,7 +28,6 @@ public abstract class AbstractRule {
          if (exp instanceof ParenExpression) {
             this.share.paren = exp;
          }
-
       }
    }
 
@@ -38,21 +37,21 @@ public abstract class AbstractRule {
    }
 
    public final String[] getOperators() {
-      List<String> list = new ArrayList();
-      Iterator i = this.opes.keySet().iterator();
+      List<String> list = new ArrayList<>();
+      Iterator<String> i = this.opes.keySet().iterator();
 
-      while(i.hasNext()) {
+      while (i.hasNext()) {
          list.add(i.next());
       }
 
-      return (String[])list.toArray(new String[list.size()]);
+      return list.toArray(new String[list.size()]);
    }
 
    public final void addLexOperator(String ope) {
       if (ope != null) {
          int n = ope.length() - 1;
          if (this.share.opeList[n] == null) {
-            this.share.opeList[n] = new ArrayList();
+            this.share.opeList[n] = new ArrayList<>();
          }
 
          this.share.opeList[n].add(ope);
@@ -65,7 +64,7 @@ public abstract class AbstractRule {
 
    protected final AbstractExpression newExpression(String ope, ShareExpValue share) {
       try {
-         AbstractExpression org = (AbstractExpression)this.opes.get(ope);
+         AbstractExpression org = this.opes.get(ope);
          AbstractExpression n = org.dup(share);
          n.setPriority(this.prio);
          n.share = share;
@@ -82,7 +81,6 @@ public abstract class AbstractRule {
       if (this.nextRule != null) {
          this.nextRule.initPriority(prio + 1);
       }
-
    }
 
    protected abstract AbstractExpression parse(Lex var1);

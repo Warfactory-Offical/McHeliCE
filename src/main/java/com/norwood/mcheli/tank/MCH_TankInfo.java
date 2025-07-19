@@ -14,6 +14,7 @@ public class MCH_TankInfo extends MCH_AircraftInfo {
    public int weightType = 0;
    public float weightedCenterZ = 0.0F;
 
+   @Override
    public Item getItem() {
       return this.item;
    }
@@ -22,17 +23,20 @@ public class MCH_TankInfo extends MCH_AircraftInfo {
       super(location, path);
    }
 
+   @Override
    public List<MCH_AircraftInfo.Wheel> getDefaultWheelList() {
-      List<MCH_AircraftInfo.Wheel> list = new ArrayList();
-      list.add(new MCH_AircraftInfo.Wheel(this, new Vec3d(1.5D, -0.24D, 2.0D)));
-      list.add(new MCH_AircraftInfo.Wheel(this, new Vec3d(1.5D, -0.24D, -2.0D)));
+      List<MCH_AircraftInfo.Wheel> list = new ArrayList<>();
+      list.add(new MCH_AircraftInfo.Wheel(this, new Vec3d(1.5, -0.24, 2.0)));
+      list.add(new MCH_AircraftInfo.Wheel(this, new Vec3d(1.5, -0.24, -2.0)));
       return list;
    }
 
+   @Override
    public float getDefaultSoundRange() {
       return 50.0F;
    }
 
+   @Override
    public float getDefaultRotorSpeed() {
       return 47.94F;
    }
@@ -41,14 +45,17 @@ public class MCH_TankInfo extends MCH_AircraftInfo {
       return 0.6F;
    }
 
+   @Override
    public float getMaxSpeed() {
       return 1.8F;
    }
 
+   @Override
    public int getDefaultMaxZoom() {
       return 8;
    }
 
+   @Override
    public String getDefaultHudName(int seatId) {
       if (seatId <= 0) {
          return "tank";
@@ -57,11 +64,13 @@ public class MCH_TankInfo extends MCH_AircraftInfo {
       }
    }
 
+   @Override
    public boolean validate() throws Exception {
-      this.speed = (float)((double)this.speed * MCH_Config.AllTankSpeed.prmDouble);
+      this.speed = (float)(this.speed * MCH_Config.AllTankSpeed.prmDouble);
       return super.validate();
    }
 
+   @Override
    public void loadItemData(String item, String data) {
       super.loadItemData(item, data);
       if (item.equalsIgnoreCase("WeightType")) {
@@ -70,17 +79,19 @@ public class MCH_TankInfo extends MCH_AircraftInfo {
       } else if (item.equalsIgnoreCase("WeightedCenterZ")) {
          this.weightedCenterZ = this.toFloat(data, -1000.0F, 1000.0F);
       }
-
    }
 
+   @Override
    public String getDirectoryName() {
       return "tanks";
    }
 
+   @Override
    public String getKindName() {
       return "tank";
    }
 
+   @Override
    public void onPostReload() {
       MCH_MOD.proxy.registerModelsTank(this, true);
    }

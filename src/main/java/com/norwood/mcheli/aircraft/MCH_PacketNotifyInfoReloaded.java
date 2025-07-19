@@ -9,26 +9,27 @@ import com.norwood.mcheli.wrapper.W_Network;
 public class MCH_PacketNotifyInfoReloaded extends MCH_Packet {
    public int type = -1;
 
+   @Override
    public int getMessageID() {
       return 536875063;
    }
 
+   @Override
    public void readData(ByteArrayDataInput data) {
       try {
          this.type = data.readInt();
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       try {
          dos.writeInt(this.type);
       } catch (IOException var3) {
          var3.printStackTrace();
       }
-
    }
 
    public static void sendRealodAc() {

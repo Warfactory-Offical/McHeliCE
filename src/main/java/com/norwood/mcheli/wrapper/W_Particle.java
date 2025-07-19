@@ -8,13 +8,17 @@ import net.minecraft.world.World;
 
 public class W_Particle {
    public static W_Particle.BlockParticleParam getParticleTileCrackName(World w, int blockX, int blockY, int blockZ) {
-      IBlockState iblockstate = w.func_180495_p(new BlockPos(blockX, blockY, blockZ));
-      return iblockstate.func_185904_a() != Material.field_151579_a ? new W_Particle.BlockParticleParam("blockcrack", Block.func_176210_f(iblockstate)) : W_Particle.BlockParticleParam.EMPTY;
+      IBlockState iblockstate = w.getBlockState(new BlockPos(blockX, blockY, blockZ));
+      return iblockstate.getMaterial() != Material.AIR
+         ? new W_Particle.BlockParticleParam("blockcrack", Block.getStateId(iblockstate))
+         : W_Particle.BlockParticleParam.EMPTY;
    }
 
    public static W_Particle.BlockParticleParam getParticleTileDustName(World w, int blockX, int blockY, int blockZ) {
-      IBlockState iblockstate = w.func_180495_p(new BlockPos(blockX, blockY, blockZ));
-      return iblockstate.func_185904_a() != Material.field_151579_a ? new W_Particle.BlockParticleParam("blockdust", Block.func_176210_f(iblockstate)) : W_Particle.BlockParticleParam.EMPTY;
+      IBlockState iblockstate = w.getBlockState(new BlockPos(blockX, blockY, blockZ));
+      return iblockstate.getMaterial() != Material.AIR
+         ? new W_Particle.BlockParticleParam("blockdust", Block.getStateId(iblockstate))
+         : W_Particle.BlockParticleParam.EMPTY;
    }
 
    public static class BlockParticleParam {

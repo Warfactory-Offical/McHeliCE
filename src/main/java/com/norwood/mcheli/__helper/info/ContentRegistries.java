@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import java.io.File;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 import com.norwood.mcheli.MCH_BaseInfo;
@@ -60,19 +59,19 @@ public class ContentRegistries {
 
    public static <T extends MCH_BaseInfo> ContentRegistry<T> get(Class<T> clazz) {
       if (clazz == MCH_HeliInfo.class) {
-         return REGISTORY_HELI;
+         return (ContentRegistry<T>)REGISTORY_HELI;
       } else if (clazz == MCP_PlaneInfo.class) {
-         return REGISTORY_PLANE;
+         return (ContentRegistry<T>)REGISTORY_PLANE;
       } else if (clazz == MCH_TankInfo.class) {
-         return REGISTORY_TANK;
+         return (ContentRegistry<T>)REGISTORY_TANK;
       } else if (clazz == MCH_VehicleInfo.class) {
-         return REGISTORY_VEHICLE;
+         return (ContentRegistry<T>)REGISTORY_VEHICLE;
       } else if (clazz == MCH_WeaponInfo.class) {
-         return REGISTORY_WEAPON;
+         return (ContentRegistry<T>)REGISTORY_WEAPON;
       } else if (clazz == MCH_ThrowableInfo.class) {
-         return REGISTORY_THROWABLE;
+         return (ContentRegistry<T>)REGISTORY_THROWABLE;
       } else if (clazz == MCH_Hud.class) {
-         return REGISTORY_HUD;
+         return (ContentRegistry<T>)REGISTORY_HUD;
       } else {
          throw new RuntimeException("Unknown type:" + clazz);
       }
@@ -83,10 +82,8 @@ public class ContentRegistries {
       List<AddonPack> addons = MCH_MOD.proxy.loadAddonPacks(addonDir);
       MCH_MOD.proxy.onLoadStartAddons(addons.size());
       contents.putAll(loadAddonContents(BuiltinAddonPack.instance()));
-      Iterator var3 = addons.iterator();
 
-      while(var3.hasNext()) {
-         AddonPack pack = (AddonPack)var3.next();
+      for (AddonPack pack : addons) {
          contents.putAll(loadAddonContents(pack));
       }
 
@@ -112,10 +109,8 @@ public class ContentRegistries {
 
    static <T extends MCH_BaseInfo> List<T> reloadAllAddonContents(ContentRegistry<T> registry) {
       List<T> list = Lists.newLinkedList();
-      Iterator var2 = AddonManager.getLoadedAddons().iterator();
 
-      while(var2.hasNext()) {
-         AddonPack addon = (AddonPack)var2.next();
+      for (AddonPack addon : AddonManager.getLoadedAddons()) {
          ContentLoader packLoader = getPackLoader(addon, getFilterOnly(registry.getDirectoryName()));
          list.addAll(packLoader.reloadAndParse(registry.getType(), registry.values(), ContentFactories.getFactory(registry.getDirectoryName())));
       }
@@ -132,13 +127,11 @@ public class ContentRegistries {
    private static <T extends MCH_BaseInfo> ContentRegistry<T> parseContents(Class<T> clazz, String dir, Collection<ContentLoader.ContentEntry> values) {
       ContentRegistry.Builder<T> builder = ContentRegistry.builder(clazz, dir);
       MCH_MOD.proxy.onLoadStartContents(dir, values.size());
-      Iterator var4 = values.iterator();
 
-      while(var4.hasNext()) {
-         ContentLoader.ContentEntry entry = (ContentLoader.ContentEntry)var4.next();
+      for (ContentLoader.ContentEntry entry : values) {
          IContentData content = entry.parse();
          if (content != null) {
-            builder.put((MCH_BaseInfo)clazz.cast(content));
+            builder.put(clazz.cast(content));
          }
       }
 
@@ -152,7 +145,9 @@ public class ContentRegistries {
 
    public static ContentLoader getPackLoader(AddonPack pack, Predicate<String> fileFilter) {
       String loaderVersion = pack.getLoaderVersion();
-      return (ContentLoader)(pack.getFile().isDirectory() ? new FolderContentLoader(pack.getDomain(), pack.getFile(), loaderVersion, fileFilter) : new FileContentLoader(pack.getDomain(), pack.getFile(), loaderVersion, fileFilter));
+      return (ContentLoader)(pack.getFile().isDirectory()
+         ? new FolderContentLoader(pack.getDomain(), pack.getFile(), loaderVersion, fileFilter)
+         : new FileContentLoader(pack.getDomain(), pack.getFile(), loaderVersion, fileFilter));
    }
 
    private static boolean filter(String filepath) {
@@ -168,7 +163,7 @@ public class ContentRegistries {
    }
 
    private static Predicate<String> getFilterOnly(String dir) {
-      return (filepath) -> {
+      return filepath -> {
          String[] split = filepath.split("/");
          String lootDir = split.length >= 2 ? split[0] : "";
          if (lootDir.equals("assets") && split.length == 4) {

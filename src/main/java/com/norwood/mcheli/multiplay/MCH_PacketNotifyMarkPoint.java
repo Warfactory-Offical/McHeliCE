@@ -16,10 +16,12 @@ public class MCH_PacketNotifyMarkPoint extends MCH_Packet {
       this.py = 0;
    }
 
+   @Override
    public int getMessageID() {
       return 268437762;
    }
 
+   @Override
    public void readData(ByteArrayDataInput data) {
       try {
          this.px = data.readInt();
@@ -28,9 +30,9 @@ public class MCH_PacketNotifyMarkPoint extends MCH_Packet {
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       try {
          dos.writeInt(this.px);
@@ -39,7 +41,6 @@ public class MCH_PacketNotifyMarkPoint extends MCH_Packet {
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
    public static void send(EntityPlayer player, int x, int y, int z) {

@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.MCH_PacketNotifyServerSettings;
 import com.norwood.mcheli.__helper.MCH_Utils;
@@ -18,7 +17,6 @@ import net.minecraft.command.server.CommandScoreboard;
 import net.minecraft.command.server.CommandSummon;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.util.text.TextComponentString;
@@ -32,7 +30,7 @@ public class MCH_MultiplayPacketHandler {
    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
    private static byte[] imageData = null;
    private static String lastPlayerName = "";
-   private static double lastDataPercent = 0.0D;
+   private static double lastDataPercent = 0.0;
    public static EntityPlayer modListRequestPlayer = null;
    private static int playerInfoId = 0;
 
@@ -41,50 +39,45 @@ public class MCH_MultiplayPacketHandler {
       if (!player.world.isRemote) {
          MCH_PacketIndMultiplayCommand pc = new MCH_PacketIndMultiplayCommand();
          pc.readData(data);
-         scheduler.func_152344_a(() -> {
+         scheduler.addScheduledTask(() -> {
             MinecraftServer minecraftServer = MCH_Utils.getServer();
             MCH_Lib.DbgLog(false, "MCH_MultiplayPacketHandler.onPacket_Command cmd:%d:%s", pc.CmdID, pc.CmdStr);
-            switch(pc.CmdID) {
-            case 256:
-               MCH_Multiplay.shuffleTeam(player);
-               break;
-            case 512:
-               MCH_Multiplay.jumpSpawnPoint(player);
-               break;
-            case 768:
-               ICommandManager icommandmanager = minecraftServer.func_71187_D();
-               icommandmanager.func_71556_a(player, pc.CmdStr);
-               break;
-            case 1024:
-               if ((new CommandScoreboard()).func_184882_a(minecraftServer, player)) {
-                  minecraftServer.func_71188_g(!minecraftServer.func_71219_W());
-                  MCH_PacketNotifyServerSettings.send((EntityPlayerMP)null);
-               }
-               break;
-            case 1280:
-               destoryAllAircraft(player);
-               break;
-            default:
-               MCH_Lib.DbgLog(false, "MCH_MultiplayPacketHandler.onPacket_Command unknown cmd:%d:%s", pc.CmdID, pc.CmdStr);
+            switch (pc.CmdID) {
+               case 256:
+                  MCH_Multiplay.shuffleTeam(player);
+                  break;
+               case 512:
+                  MCH_Multiplay.jumpSpawnPoint(player);
+                  break;
+               case 768:
+                  ICommandManager icommandmanager = minecraftServer.getCommandManager();
+                  icommandmanager.executeCommand(player, pc.CmdStr);
+                  break;
+               case 1024:
+                  if (new CommandScoreboard().checkPermission(minecraftServer, player)) {
+                     minecraftServer.setAllowPvp(!minecraftServer.isPVPEnabled());
+                     MCH_PacketNotifyServerSettings.send(null);
+                  }
+                  break;
+               case 1280:
+                  destoryAllAircraft(player);
+                  break;
+               default:
+                  MCH_Lib.DbgLog(false, "MCH_MultiplayPacketHandler.onPacket_Command unknown cmd:%d:%s", pc.CmdID, pc.CmdStr);
             }
-
          });
       }
    }
 
    private static void destoryAllAircraft(EntityPlayer player) {
       CommandSummon cmd = new CommandSummon();
-      if (cmd.func_184882_a(MCH_Utils.getServer(), player)) {
-         Iterator var2 = player.world.field_72996_f.iterator();
-
-         while(var2.hasNext()) {
-            Entity e = (Entity)var2.next();
+      if (cmd.checkPermission(MCH_Utils.getServer(), player)) {
+         for (Entity e : player.world.loadedEntityList) {
             if (e instanceof MCH_EntityAircraft) {
-               ((MCH_EntityAircraft)e).func_70106_y();
+               ((MCH_EntityAircraft)e).setDead();
             }
          }
       }
-
    }
 
    @HandleSide({Side.CLIENT})
@@ -92,13 +85,12 @@ public class MCH_MultiplayPacketHandler {
       if (player.world.isRemote) {
          MCH_PacketNotifySpotedEntity pc = new MCH_PacketNotifySpotedEntity();
          pc.readData(data);
-         scheduler.func_152344_a(() -> {
+         scheduler.addScheduledTask(() -> {
             if (pc.count > 0) {
-               for(int i = 0; i < pc.num; ++i) {
+               for (int i = 0; i < pc.num; i++) {
                   MCH_GuiTargetMarker.addSpotedEntity(pc.entityId[i], pc.count);
                }
             }
-
          });
       }
    }
@@ -108,9 +100,7 @@ public class MCH_MultiplayPacketHandler {
       if (player.world.isRemote) {
          MCH_PacketNotifyMarkPoint pc = new MCH_PacketNotifyMarkPoint();
          pc.readData(data);
-         scheduler.func_152344_a(() -> {
-            MCH_GuiTargetMarker.markPoint(pc.px, pc.py, pc.pz);
-         });
+         scheduler.addScheduledTask(() -> MCH_GuiTargetMarker.markPoint(pc.px, pc.py, pc.pz));
       }
    }
 
@@ -119,65 +109,72 @@ public class MCH_MultiplayPacketHandler {
       if (!player.world.isRemote) {
          MCH_PacketLargeData pc = new MCH_PacketLargeData();
          pc.readData(data);
-         scheduler.func_152344_a(() -> {
-            try {
-               if (pc.imageDataIndex < 0 || pc.imageDataTotalSize <= 0) {
-                  return;
-               }
-
-               if (pc.imageDataIndex == 0) {
-                  if (imageData != null && !lastPlayerName.isEmpty()) {
-                     LogError("[mcheli]Err1:Saving the %s screen shot to server FAILED!!!", lastPlayerName);
+         scheduler.addScheduledTask(
+            () -> {
+               try {
+                  if (pc.imageDataIndex < 0 || pc.imageDataTotalSize <= 0) {
+                     return;
                   }
 
-                  imageData = new byte[pc.imageDataTotalSize];
-                  lastPlayerName = player.func_145748_c_().func_150254_d();
-                  lastDataPercent = 0.0D;
-               }
+                  if (pc.imageDataIndex == 0) {
+                     if (imageData != null && !lastPlayerName.isEmpty()) {
+                        LogError("[mcheli]Err1:Saving the %s screen shot to server FAILED!!!", lastPlayerName);
+                     }
 
-               double dataPercent = (double)((pc.imageDataIndex + pc.imageDataSize) / pc.imageDataTotalSize) * 100.0D;
-               if (dataPercent - lastDataPercent >= 10.0D || lastDataPercent == 0.0D) {
-                  LogInfo("[mcheli]Saving the %s screen shot to server. %.0f%% : %dbyte / %dbyte", player.func_145748_c_(), dataPercent, pc.imageDataIndex, pc.imageDataTotalSize);
-                  lastDataPercent = dataPercent;
-               }
-
-               if (imageData == null) {
-                  if (imageData != null && lastPlayerName.isEmpty()) {
-                     LogError("[mcheli]Err2:Saving the %s screen shot to server FAILED!!!", player.func_145748_c_());
+                     imageData = new byte[pc.imageDataTotalSize];
+                     lastPlayerName = player.getDisplayName().getFormattedText();
+                     lastDataPercent = 0.0;
                   }
 
-                  imageData = null;
-                  lastPlayerName = "";
-                  lastDataPercent = 0.0D;
-                  return;
-               }
+                  double dataPercent = (pc.imageDataIndex + pc.imageDataSize) / pc.imageDataTotalSize * 100.0;
+                  if (dataPercent - lastDataPercent >= 10.0 || lastDataPercent == 0.0) {
+                     LogInfo(
+                        "[mcheli]Saving the %s screen shot to server. %.0f%% : %dbyte / %dbyte",
+                        player.getDisplayName(),
+                        dataPercent,
+                        pc.imageDataIndex,
+                        pc.imageDataTotalSize
+                     );
+                     lastDataPercent = dataPercent;
+                  }
 
-               for(int i = 0; i < pc.imageDataSize; ++i) {
-                  imageData[pc.imageDataIndex + i] = pc.buf[i];
-               }
+                  if (imageData == null) {
+                     if (imageData != null && lastPlayerName.isEmpty()) {
+                        LogError("[mcheli]Err2:Saving the %s screen shot to server FAILED!!!", player.getDisplayName());
+                     }
 
-               if (pc.imageDataIndex + pc.imageDataSize >= pc.imageDataTotalSize) {
-                  DataOutputStream dos = null;
-                  String dt = dateFormat.format(new Date()).toString();
-                  File file = new File("screenshots_op");
-                  file.mkdir();
-                  file = new File(file, player.func_145748_c_() + "_" + dt + ".png");
-                  String s = file.getAbsolutePath();
-                  LogInfo("[mcheli]Save Screenshot has been completed: %s", s);
-                  FileOutputStream fos = new FileOutputStream(s);
-                  dos = new DataOutputStream(fos);
-                  dos.write(imageData);
-                  dos.flush();
-                  dos.close();
-                  imageData = null;
-                  lastPlayerName = "";
-                  lastDataPercent = 0.0D;
+                     imageData = null;
+                     lastPlayerName = "";
+                     lastDataPercent = 0.0;
+                     return;
+                  }
+
+                  for (int i = 0; i < pc.imageDataSize; i++) {
+                     imageData[pc.imageDataIndex + i] = pc.buf[i];
+                  }
+
+                  if (pc.imageDataIndex + pc.imageDataSize >= pc.imageDataTotalSize) {
+                     DataOutputStream dos = null;
+                     String dt = dateFormat.format(new Date()).toString();
+                     File file = new File("screenshots_op");
+                     file.mkdir();
+                     file = new File(file, player.getDisplayName() + "_" + dt + ".png");
+                     String s = file.getAbsolutePath();
+                     LogInfo("[mcheli]Save Screenshot has been completed: %s", s);
+                     FileOutputStream fos = new FileOutputStream(s);
+                     dos = new DataOutputStream(fos);
+                     dos.write(imageData);
+                     dos.flush();
+                     dos.close();
+                     imageData = null;
+                     lastPlayerName = "";
+                     lastDataPercent = 0.0;
+                  }
+               } catch (Exception var9) {
+                  var9.printStackTrace();
                }
-            } catch (Exception var9) {
-               var9.printStackTrace();
             }
-
-         });
+         );
       }
    }
 
@@ -194,20 +191,23 @@ public class MCH_MultiplayPacketHandler {
       if (player.world.isRemote) {
          MCH_PacketIndClient pc = new MCH_PacketIndClient();
          pc.readData(data);
-         scheduler.func_152344_a(() -> {
-            if (pc.CmdID == 1) {
-               MCH_MultiplayClient.startSendImageData();
-            } else if (pc.CmdID == 2) {
-               MCH_MultiplayClient.sendModsInfo(player.func_145748_c_().func_150254_d(), player.func_145748_c_().func_150260_c(), Integer.parseInt(pc.CmdStr));
+         scheduler.addScheduledTask(
+            () -> {
+               if (pc.CmdID == 1) {
+                  MCH_MultiplayClient.startSendImageData();
+               } else if (pc.CmdID == 2) {
+                  MCH_MultiplayClient.sendModsInfo(
+                     player.getDisplayName().getFormattedText(), player.getDisplayName().getUnformattedText(), Integer.parseInt(pc.CmdStr)
+                  );
+               }
             }
-
-         });
+         );
       }
    }
 
    public static int getPlayerInfoId(EntityPlayer player) {
       modListRequestPlayer = player;
-      ++playerInfoId;
+      playerInfoId++;
       if (playerInfoId > 1000000) {
          playerInfoId = 1;
       }
@@ -220,40 +220,31 @@ public class MCH_MultiplayPacketHandler {
       MCH_PacketModList pc = new MCH_PacketModList();
       pc.readData(data);
       if (player.world.isRemote) {
-         scheduler.func_152344_a(() -> {
+         scheduler.addScheduledTask(() -> {
             MCH_Lib.DbgLog(player.world, "MCH_MultiplayPacketHandler.onPacket_ModList : ID=%d, Num=%d", pc.id, pc.num);
             if (pc.firstData) {
-               MCH_Lib.Log(TextFormatting.RED + "###### " + player.func_145748_c_() + " ######");
+               MCH_Lib.Log(TextFormatting.RED + "###### " + player.getDisplayName() + " ######");
             }
 
-            Iterator var2 = pc.list.iterator();
-
-            while(var2.hasNext()) {
-               String s = (String)var2.next();
+            for (String s : pc.list) {
                MCH_Lib.Log(s);
-               player.func_145747_a(new TextComponentString(s));
+               player.sendMessage(new TextComponentString(s));
             }
-
          });
       } else if (pc.id == playerInfoId) {
-         scheduler.func_152344_a(() -> {
+         scheduler.addScheduledTask(() -> {
             if (modListRequestPlayer != null) {
                MCH_PacketModList.send(modListRequestPlayer, pc);
             } else {
                if (pc.firstData) {
-                  LogInfo("###### " + player.func_145748_c_() + " ######");
+                  LogInfo("###### " + player.getDisplayName() + " ######");
                }
 
-               Iterator var2 = pc.list.iterator();
-
-               while(var2.hasNext()) {
-                  String s = (String)var2.next();
+               for (String s : pc.list) {
                   LogInfo(s);
                }
             }
-
          });
       }
-
    }
 }

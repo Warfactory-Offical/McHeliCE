@@ -3,8 +3,8 @@ package com.norwood.mcheli.wrapper;
 import java.util.HashMap;
 
 public class W_ItemList {
-   public static final HashMap<String, Integer> map = new HashMap();
-   public static final HashMap<Integer, String> map2 = new HashMap();
+   public static final HashMap<String, Integer> map = new HashMap<>();
+   public static final HashMap<Integer, String> map2 = new HashMap<>();
 
    public static void init() {
       init1();

@@ -1,6 +1,5 @@
 package com.norwood.mcheli.weapon;
 
-import java.util.Iterator;
 import javax.annotation.Nullable;
 import com.norwood.mcheli.__helper.info.ContentRegistries;
 import com.norwood.mcheli.wrapper.W_Item;
@@ -12,24 +11,17 @@ public class MCH_WeaponInfoManager {
    }
 
    public static void setRoundItems() {
-      Iterator var0 = ContentRegistries.weapon().values().iterator();
-
-      while(var0.hasNext()) {
-         MCH_WeaponInfo w = (MCH_WeaponInfo)var0.next();
-
-         MCH_WeaponInfo.RoundItem r;
-         Item item;
-         for(Iterator var2 = w.roundItems.iterator(); var2.hasNext(); r.itemStack = new ItemStack(item, 1, r.damage)) {
-            r = (MCH_WeaponInfo.RoundItem)var2.next();
-            item = W_Item.getItemByName(r.itemName);
+      for (MCH_WeaponInfo w : ContentRegistries.weapon().values()) {
+         for (MCH_WeaponInfo.RoundItem r : w.roundItems) {
+            Item item = W_Item.getItemByName(r.itemName);
+            r.itemStack = new ItemStack(item, 1, r.damage);
          }
       }
-
    }
 
    @Nullable
    public static MCH_WeaponInfo get(String name) {
-      return (MCH_WeaponInfo)ContentRegistries.weapon().get(name);
+      return ContentRegistries.weapon().get(name);
    }
 
    public static boolean contains(String name) {

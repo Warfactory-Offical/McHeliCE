@@ -11,22 +11,23 @@ public class Search4RefactorName extends SearchAdapter {
       this.ref = ref;
    }
 
+   @Override
    public void search0(WordExpression exp) {
       if (exp instanceof VariableExpression) {
-         String name = this.ref.getNewName((Object)null, exp.getWord());
+         String name = this.ref.getNewName(null, exp.getWord());
          if (name != null) {
             exp.setWord(name);
          }
       }
-
    }
 
+   @Override
    public boolean search2_2(Col2Expression exp) {
       if (exp instanceof FieldExpression) {
          AbstractExpression exp1 = exp.expl;
          Object obj = exp1.getVariable();
          if (obj == null) {
-            throw new EvalException(2104, this.toString(), exp1.string, exp1.pos, (Throwable)null);
+            throw new EvalException(2104, this.toString(), exp1.string, exp1.pos, null);
          } else {
             AbstractExpression exp2 = exp.expr;
             String name = this.ref.getNewName(obj, exp2.getWord());
@@ -41,6 +42,7 @@ public class Search4RefactorName extends SearchAdapter {
       }
    }
 
+   @Override
    public boolean searchFunc_2(FunctionExpression exp) {
       Object obj = null;
       if (exp.target != null) {

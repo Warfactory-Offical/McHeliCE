@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
@@ -29,21 +28,20 @@ public class FileContentLoader extends ContentLoader implements Closeable {
       return this.resourcePackZipFile;
    }
 
+   @Override
    protected List<ContentLoader.ContentEntry> getEntries() {
       return this.walkEntries("2".equals(this.loaderVersion));
    }
 
    private List<ContentLoader.ContentEntry> walkEntries(boolean findDeep) {
-      LinkedList list = Lists.newLinkedList();
+      List<ContentLoader.ContentEntry> list = Lists.newLinkedList();
 
       try {
          ZipFile zipfile = this.getResourcePackZipFile();
-         Iterator itr = zipfile.stream().filter((e) -> {
-            return this.filter(e, findDeep);
-         }).iterator();
+         Iterator<? extends ZipEntry> itr = zipfile.stream().filter(ex -> this.filter(ex, findDeep)).iterator();
 
-         while(itr.hasNext()) {
-            String name = ((ZipEntry)itr.next()).getName();
+         while (itr.hasNext()) {
+            String name = itr.next().getName();
             String[] s = name.split("/");
             String typeDirName = s.length >= 3 ? s[2] : null;
             IContentFactory factory = this.getFactory(typeDirName);
@@ -65,6 +63,7 @@ public class FileContentLoader extends ContentLoader implements Closeable {
       return zipEntry.isDirectory() || !deep && !"assets".equals(lootDir) && split.length > 2 ? false : this.isReadable(name);
    }
 
+   @Override
    protected InputStream getInputStreamByName(String name) throws IOException {
       ZipFile zipfile = this.getResourcePackZipFile();
       ZipEntry zipentry = zipfile.getEntry(name);
@@ -75,16 +74,17 @@ public class FileContentLoader extends ContentLoader implements Closeable {
       }
    }
 
+   @Override
    protected void finalize() throws Throwable {
       this.close();
       super.finalize();
    }
 
+   @Override
    public void close() throws IOException {
       if (this.resourcePackZipFile != null) {
          this.resourcePackZipFile.close();
          this.resourcePackZipFile = null;
       }
-
    }
 }

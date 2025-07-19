@@ -31,7 +31,7 @@ public enum EnumDirection8 implements IStringSerializable {
       return this.index;
    }
 
-   public String func_176610_l() {
+   public String getName() {
       return this.name;
    }
 
@@ -44,25 +44,20 @@ public enum EnumDirection8 implements IStringSerializable {
    }
 
    public float getAngle() {
-      return (float)((this.index & 7) * 45);
+      return (this.index & 7) * 45;
    }
 
    public static EnumDirection8 getFront(int index) {
-      return VALUES[MathHelper.func_76130_a(index % VALUES.length)];
+      return VALUES[MathHelper.abs(index % VALUES.length)];
    }
 
    public static EnumDirection8 fromAngle(double angle) {
-      return getFront(MathHelper.func_76128_c(angle / 45.0D + 0.5D) & 7);
+      return getFront(MathHelper.floor(angle / 45.0 + 0.5) & 7);
    }
 
    static {
-      EnumDirection8[] var0 = values();
-      int var1 = var0.length;
-
-      for(int var2 = 0; var2 < var1; ++var2) {
-         EnumDirection8 value = var0[var2];
+      for (EnumDirection8 value : values()) {
          VALUES[value.index] = value;
       }
-
    }
 }

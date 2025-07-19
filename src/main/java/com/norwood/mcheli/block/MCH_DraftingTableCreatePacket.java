@@ -12,25 +12,26 @@ import net.minecraft.item.crafting.IRecipe;
 public class MCH_DraftingTableCreatePacket extends MCH_Packet {
    public IRecipe recipe;
 
+   @Override
    public int getMessageID() {
       return 537395216;
    }
 
+   @Override
    public void readData(ByteArrayDataInput data) {
       try {
          this.recipe = PacketHelper.readRecipe(data);
       } catch (Exception var3) {
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       try {
          PacketHelper.writeRecipe(dos, this.recipe);
       } catch (IOException var3) {
          var3.printStackTrace();
       }
-
    }
 
    public static void send(IRecipe recipe) {
@@ -40,6 +41,5 @@ public class MCH_DraftingTableCreatePacket extends MCH_Packet {
          W_Network.sendToServer(s);
          MCH_Lib.DbgLog(true, "MCH_DraftingTableCreatePacket.send recipe = " + recipe.getRegistryName());
       }
-
    }
 }

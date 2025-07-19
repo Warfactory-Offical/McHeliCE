@@ -8,10 +8,12 @@ import com.norwood.mcheli.aircraft.MCH_PacketPlayerControlBase;
 public class MCH_TankPacketPlayerControl extends MCH_PacketPlayerControlBase {
    public byte switchVtol = -1;
 
+   @Override
    public int getMessageID() {
       return 537919504;
    }
 
+   @Override
    public void readData(ByteArrayDataInput data) {
       super.readData(data);
 
@@ -20,9 +22,9 @@ public class MCH_TankPacketPlayerControl extends MCH_PacketPlayerControlBase {
       } catch (Exception var3) {
          var3.printStackTrace();
       }
-
    }
 
+   @Override
    public void writeData(DataOutputStream dos) {
       super.writeData(dos);
 
@@ -31,6 +33,5 @@ public class MCH_TankPacketPlayerControl extends MCH_PacketPlayerControlBase {
       } catch (IOException var3) {
          var3.printStackTrace();
       }
-
    }
 }

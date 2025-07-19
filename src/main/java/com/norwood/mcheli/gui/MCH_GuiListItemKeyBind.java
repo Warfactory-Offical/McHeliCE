@@ -24,16 +24,18 @@ public class MCH_GuiListItemKeyBind extends MCH_GuiListItem {
       this.setKeycode(prm.prmInt);
    }
 
+   @Override
    public void mouseReleased(int x, int y) {
-      this.button.func_146118_a(x, y);
-      this.buttonReset.func_146118_a(x, y);
+      this.button.mouseReleased(x, y);
+      this.buttonReset.mouseReleased(x, y);
    }
 
+   @Override
    public boolean mousePressed(Minecraft mc, int x, int y) {
-      if (this.button.func_146116_c(mc, x, y)) {
+      if (this.button.mousePressed(mc, x, y)) {
          this.lastPushButton = this.button;
          return true;
-      } else if (this.buttonReset.func_146116_c(mc, x, y)) {
+      } else if (this.buttonReset.mousePressed(mc, x, y)) {
          this.lastPushButton = this.buttonReset;
          return true;
       } else {
@@ -41,14 +43,15 @@ public class MCH_GuiListItemKeyBind extends MCH_GuiListItem {
       }
    }
 
+   @Override
    public void draw(Minecraft mc, int mouseX, int mouseY, int posX, int posY, float partialTicks) {
       int y = 6;
-      this.button.func_73731_b(mc.field_71466_p, this.displayString, posX + 10, posY + y, -1);
-      this.button.field_146129_i = posY;
-      this.button.func_191745_a(mc, mouseX, mouseY, partialTicks);
-      this.buttonReset.field_146124_l = this.keycode != this.defaultKeycode;
-      this.buttonReset.field_146129_i = posY;
-      this.buttonReset.func_191745_a(mc, mouseX, mouseY, partialTicks);
+      this.button.drawString(mc.fontRenderer, this.displayString, posX + 10, posY + y, -1);
+      this.button.y = posY;
+      this.button.drawButton(mc, mouseX, mouseY, partialTicks);
+      this.buttonReset.enabled = this.keycode != this.defaultKeycode;
+      this.buttonReset.y = posY;
+      this.buttonReset.drawButton(mc, mouseX, mouseY, partialTicks);
    }
 
    public void applyKeycode() {
@@ -62,8 +65,7 @@ public class MCH_GuiListItemKeyBind extends MCH_GuiListItem {
    public void setKeycode(int k) {
       if (k != 0 && !MCH_KeyName.getDescOrName(k).isEmpty()) {
          this.keycode = k;
-         this.button.field_146126_j = MCH_KeyName.getDescOrName(k);
+         this.button.displayString = MCH_KeyName.getDescOrName(k);
       }
-
    }
 }

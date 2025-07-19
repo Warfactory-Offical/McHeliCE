@@ -23,11 +23,34 @@ public class MCH_ClientTankTickHandler extends MCH_AircraftClientTickHandler {
       this.updateKeybind(config);
    }
 
+   @Override
    public void updateKeybind(MCH_Config config) {
       super.updateKeybind(config);
       this.KeySwitchMode = new MCH_Key(MCH_Config.KeySwitchMode.prmInt);
       this.KeyZoom = new MCH_Key(MCH_Config.KeyZoom.prmInt);
-      this.Keys = new MCH_Key[]{this.KeyUp, this.KeyDown, this.KeyRight, this.KeyLeft, this.KeySwitchMode, this.KeyUseWeapon, this.KeySwWeaponMode, this.KeySwitchWeapon1, this.KeySwitchWeapon2, this.KeyZoom, this.KeyCameraMode, this.KeyUnmount, this.KeyUnmountForce, this.KeyFlare, this.KeyExtra, this.KeyFreeLook, this.KeyGUI, this.KeyGearUpDown, this.KeyBrake, this.KeyPutToRack, this.KeyDownFromRack};
+      this.Keys = new MCH_Key[]{
+         this.KeyUp,
+         this.KeyDown,
+         this.KeyRight,
+         this.KeyLeft,
+         this.KeySwitchMode,
+         this.KeyUseWeapon,
+         this.KeySwWeaponMode,
+         this.KeySwitchWeapon1,
+         this.KeySwitchWeapon2,
+         this.KeyZoom,
+         this.KeyCameraMode,
+         this.KeyUnmount,
+         this.KeyUnmountForce,
+         this.KeyFlare,
+         this.KeyExtra,
+         this.KeyFreeLook,
+         this.KeyGUI,
+         this.KeyGearUpDown,
+         this.KeyBrake,
+         this.KeyPutToRack,
+         this.KeyDownFromRack
+      };
    }
 
    protected void update(EntityPlayer player, MCH_EntityTank tank) {
@@ -39,15 +62,12 @@ public class MCH_ClientTankTickHandler extends MCH_AircraftClientTickHandler {
       }
 
       tank.updateRadar(10);
-      tank.updateCameraRotate(player.field_70177_z, player.field_70125_A);
+      tank.updateCameraRotate(player.rotationYaw, player.rotationPitch);
    }
 
+   @Override
    protected void onTick(boolean inGUI) {
-      MCH_Key[] var2 = this.Keys;
-      int var3 = var2.length;
-
-      for(int var4 = 0; var4 < var3; ++var4) {
-         MCH_Key k = var2[var4];
+      for (MCH_Key k : this.Keys) {
          k.update();
       }
 
@@ -56,16 +76,16 @@ public class MCH_ClientTankTickHandler extends MCH_AircraftClientTickHandler {
       MCH_EntityTank tank = null;
       boolean isPilot = true;
       if (player != null) {
-         if (player.func_184187_bx() instanceof MCH_EntityTank) {
-            tank = (MCH_EntityTank)player.func_184187_bx();
-         } else if (player.func_184187_bx() instanceof MCH_EntitySeat) {
-            MCH_EntitySeat seat = (MCH_EntitySeat)player.func_184187_bx();
+         if (player.getRidingEntity() instanceof MCH_EntityTank) {
+            tank = (MCH_EntityTank)player.getRidingEntity();
+         } else if (player.getRidingEntity() instanceof MCH_EntitySeat) {
+            MCH_EntitySeat seat = (MCH_EntitySeat)player.getRidingEntity();
             if (seat.getParent() instanceof MCH_EntityTank) {
                isPilot = false;
                tank = (MCH_EntityTank)seat.getParent();
             }
-         } else if (player.func_184187_bx() instanceof MCH_EntityUavStation) {
-            MCH_EntityUavStation uavStation = (MCH_EntityUavStation)player.func_184187_bx();
+         } else if (player.getRidingEntity() instanceof MCH_EntityUavStation) {
+            MCH_EntityUavStation uavStation = (MCH_EntityUavStation)player.getRidingEntity();
             if (uavStation.getControlAircract() instanceof MCH_EntityTank) {
                tank = (MCH_EntityTank)uavStation.getControlAircract();
             }
@@ -95,7 +115,7 @@ public class MCH_ClientTankTickHandler extends MCH_AircraftClientTickHandler {
          }
 
          if (hideHand) {
-            MCH_Lib.disableFirstPersonItemRender(player.func_184614_ca());
+            MCH_Lib.disableFirstPersonItemRender(player.getHeldItemMainhand());
          }
 
          this.isRiding = true;
@@ -105,14 +125,13 @@ public class MCH_ClientTankTickHandler extends MCH_AircraftClientTickHandler {
 
       if (!this.isBeforeRiding && this.isRiding && tank != null) {
          W_Reflection.setThirdPersonDistance(tank.thirdPersonDist);
-         MCH_ViewEntityDummy.getInstance(this.mc.world).func_70107_b(tank.posX, tank.posY + 0.5D, tank.posZ);
+         MCH_ViewEntityDummy.getInstance(this.mc.world).setPosition(tank.posX, tank.posY + 0.5, tank.posZ);
       } else if (this.isBeforeRiding && !this.isRiding) {
          W_Reflection.restoreDefaultThirdPersonDistance();
          MCH_Lib.enableFirstPersonItemRender();
          MCH_Lib.setRenderViewEntity(player);
          W_Reflection.setCameraRoll(0.0F);
       }
-
    }
 
    protected void playerControlInGUI(EntityPlayer player, MCH_EntityTank tank, boolean isPilot) {
@@ -161,25 +180,22 @@ public class MCH_ClientTankTickHandler extends MCH_AircraftClientTickHandler {
 
       if (this.KeyZoom.isKeyDown()) {
          boolean isUav = tank.isUAV() && !tank.getAcInfo().haveHatch();
-         if (!tank.getIsGunnerMode(player) && !isUav) {
-            if (isPilot && tank.getAcInfo().haveHatch()) {
-               if (tank.canFoldHatch()) {
-                  pc.switchHatch = 2;
-                  send = true;
-               } else if (tank.canUnfoldHatch()) {
-                  pc.switchHatch = 1;
-                  send = true;
-               }
-            }
-         } else {
+         if (tank.getIsGunnerMode(player) || isUav) {
             tank.zoomCamera();
             playSound("zoom", 0.5F, 1.0F);
+         } else if (isPilot && tank.getAcInfo().haveHatch()) {
+            if (tank.canFoldHatch()) {
+               pc.switchHatch = 2;
+               send = true;
+            } else if (tank.canUnfoldHatch()) {
+               pc.switchHatch = 1;
+               send = true;
+            }
          }
       }
 
       if (send) {
          W_Network.sendToServer(pc);
       }
-
    }
 }

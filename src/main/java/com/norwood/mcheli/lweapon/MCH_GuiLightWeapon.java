@@ -25,17 +25,20 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
       super(minecraft);
    }
 
-   public void func_73866_w_() {
-      super.func_73866_w_();
+   @Override
+   public void initGui() {
+      super.initGui();
    }
 
-   public boolean func_73868_f() {
+   @Override
+   public boolean doesGuiPauseGame() {
       return false;
    }
 
+   @Override
    public boolean isDrawGui(EntityPlayer player) {
       if (MCH_ItemLightWeaponBase.isHeld(player)) {
-         Entity re = player.func_184187_bx();
+         Entity re = player.getRidingEntity();
          if (!(re instanceof MCH_EntityAircraft) && !(re instanceof MCH_EntityGLTD)) {
             return true;
          }
@@ -44,13 +47,14 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
       return false;
    }
 
+   @Override
    public void drawGui(EntityPlayer player, boolean isThirdPersonView) {
       if (!isThirdPersonView) {
-         GL11.glLineWidth((float)scaleFactor);
+         GL11.glLineWidth(scaleFactor);
          if (this.isDrawGui(player)) {
             MCH_WeaponGuidanceSystem gs = MCH_ClientLightWeaponTickHandler.gs;
             if (gs != null && MCH_ClientLightWeaponTickHandler.weapon != null && MCH_ClientLightWeaponTickHandler.weapon.getInfo() != null) {
-               PotionEffect pe = player.func_70660_b(MobEffects.field_76439_r);
+               PotionEffect pe = player.getActivePotionEffect(MobEffects.NIGHT_VISION);
                if (pe != null) {
                   this.drawNightVisionNoise();
                }
@@ -60,31 +64,28 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
                int srcBlend = GL11.glGetInteger(3041);
                int dstBlend = GL11.glGetInteger(3040);
                GL11.glBlendFunc(770, 771);
-               double dist = 0.0D;
+               double dist = 0.0;
                if (gs.getTargetEntity() != null) {
                   double dx = gs.getTargetEntity().posX - player.posX;
                   double dz = gs.getTargetEntity().posZ - player.posZ;
                   dist = Math.sqrt(dx * dx + dz * dz);
                }
 
-               boolean canFire = MCH_ClientLightWeaponTickHandler.weaponMode == 0 || dist >= 40.0D || gs.getLockCount() <= 0;
-               if ("fgm148".equalsIgnoreCase(MCH_ItemLightWeaponBase.getName(player.func_184614_ca()))) {
-                  this.drawGuiFGM148(player, gs, canFire, player.func_184614_ca());
+               boolean canFire = MCH_ClientLightWeaponTickHandler.weaponMode == 0 || dist >= 40.0 || gs.getLockCount() <= 0;
+               if ("fgm148".equalsIgnoreCase(MCH_ItemLightWeaponBase.getName(player.getHeldItemMainhand()))) {
+                  this.drawGuiFGM148(player, gs, canFire, player.getHeldItemMainhand());
                   this.drawKeyBind(-805306369, true);
                } else {
                   GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                   W_McClient.MOD_bindTexture("textures/gui/stinger.png");
-                  double size = 512.0D;
+                  double size = 512.0;
 
-                  while(true) {
-                     if (!(size < (double)this.field_146294_l) && !(size < (double)this.field_146295_m)) {
-                        this.drawTexturedModalRectRotate(-(size - (double)this.field_146294_l) / 2.0D, -(size - (double)this.field_146295_m) / 2.0D - 20.0D, size, size, 0.0D, 0.0D, 256.0D, 256.0D, 0.0F);
-                        this.drawKeyBind(-805306369, false);
-                        break;
-                     }
-
-                     size *= 2.0D;
+                  while (size < this.width || size < this.height) {
+                     size *= 2.0;
                   }
+
+                  this.drawTexturedModalRectRotate(-(size - this.width) / 2.0, -(size - this.height) / 2.0 - 20.0, size, size, 0.0, 0.0, 256.0, 256.0, 0.0F);
+                  this.drawKeyBind(-805306369, false);
                }
 
                GL11.glBlendFunc(srcBlend, dstBlend);
@@ -92,7 +93,6 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
                this.drawLock(-14101432, -2161656, gs.getLockCount(), gs.getLockCountMax());
                this.drawRange(player, gs, canFire, -14101432, -2161656);
             }
-
          }
       }
    }
@@ -104,7 +104,7 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
       int dstBlend = GL11.glGetInteger(3040);
       GL11.glBlendFunc(1, 1);
       W_McClient.MOD_bindTexture("textures/gui/alpha.png");
-      this.drawTexturedModalRectRotate(0.0D, 0.0D, (double)this.field_146294_l, (double)this.field_146295_m, (double)this.rand.nextInt(256), (double)this.rand.nextInt(256), 256.0D, 256.0D, 0.0F);
+      this.drawTexturedModalRectRotate(0.0, 0.0, this.width, this.height, this.rand.nextInt(256), this.rand.nextInt(256), 256.0, 256.0, 0.0F);
       GL11.glBlendFunc(srcBlend, dstBlend);
       GL11.glDisable(3042);
    }
@@ -112,9 +112,9 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
    void drawLock(int color, int colorLock, int cntLock, int cntMax) {
       int posX = this.centerX;
       int posY = this.centerY + 20;
-      func_73734_a(posX - 20, posY + 20 + 1, posX - 20 + 40, posY + 20 + 1 + 1 + 3 + 1, color);
-      float lock = (float)cntLock / (float)cntMax;
-      func_73734_a(posX - 20 + 1, posY + 20 + 1 + 1, posX - 20 + 1 + (int)(38.0D * (double)lock), posY + 20 + 1 + 1 + 3, -2161656);
+      drawRect(posX - 20, posY + 20 + 1, posX - 20 + 40, posY + 20 + 1 + 1 + 3 + 1, color);
+      float lock = (float)cntLock / cntMax;
+      drawRect(posX - 20 + 1, posY + 20 + 1 + 1, posX - 20 + 1 + (int)(38.0 * lock), posY + 20 + 1 + 1 + 3, -2161656);
    }
 
    void drawRange(EntityPlayer player, MCH_WeaponGuidanceSystem gs, boolean canFire, int color1, int color2) {
@@ -139,156 +139,159 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
 
    void drawGuiFGM148(EntityPlayer player, MCH_WeaponGuidanceSystem gs, boolean canFire, ItemStack itemStack) {
       GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-      double fac = (double)this.field_146294_l / 800.0D < (double)this.field_146295_m / 700.0D ? (double)this.field_146294_l / 800.0D : (double)this.field_146295_m / 700.0D;
-      int size = (int)(1024.0D * fac);
+      double fac = this.width / 800.0 < this.height / 700.0 ? this.width / 800.0 : this.height / 700.0;
+      int size = (int)(1024.0 * fac);
       size = size / 64 * 64;
-      fac = (double)size / 1024.0D;
-      double left = (double)(-(size - this.field_146294_l) / 2);
-      double top = (double)(-(size - this.field_146295_m) / 2 - 20);
-      double right = left + (double)size;
-      double bottom = top + (double)size;
+      fac = size / 1024.0;
+      double left = -(size - this.width) / 2;
+      double top = -(size - this.height) / 2 - 20;
+      double right = left + size;
+      double bottom = top + size;
       Vec3d pos = MCH_ClientLightWeaponTickHandler.getMartEntityPos();
-      double x;
-      double y;
-      double w;
-      double h;
       if (gs.getLockCount() > 0) {
          int scale = scaleFactor > 0 ? scaleFactor : 2;
          if (pos == null) {
-            pos = new Vec3d((double)(this.field_146294_l / 2 * scale), (double)(this.field_146295_m / 2 * scale), 0.0D);
+            pos = new Vec3d(this.width / 2 * scale, this.height / 2 * scale, 0.0);
          }
 
-         x = 280.0D * fac;
-         y = 370.0D * fac;
-         w = pos.x / (double)scale;
-         h = (double)this.field_146295_m - pos.y / (double)scale;
-         double sx = MCH_Lib.RNG(w, left + x, right - x);
-         double sy = MCH_Lib.RNG(h, top + y, bottom - y);
+         double IX = 280.0 * fac;
+         double IY = 370.0 * fac;
+         double cx = pos.x / scale;
+         double cy = this.height - pos.y / scale;
+         double sx = MCH_Lib.RNG(cx, left + IX, right - IX);
+         double sy = MCH_Lib.RNG(cy, top + IY, bottom - IY);
          if (gs.getLockCount() >= gs.getLockCountMax() / 2) {
-            this.drawLine(new double[]{-1.0D, sy, (double)(this.field_146294_l + 1), sy, sx, -1.0D, sx, (double)(this.field_146295_m + 1)}, -1593835521);
+            this.drawLine(new double[]{-1.0, sy, this.width + 1, sy, sx, -1.0, sx, this.height + 1}, -1593835521);
          }
 
-         if (player.field_70173_aa % 6 >= 3) {
+         if (player.ticksExisted % 6 >= 3) {
             pos = MCH_ClientLightWeaponTickHandler.getMartEntityBBPos();
             if (pos == null) {
-               pos = new Vec3d((double)((this.field_146294_l / 2 - 65) * scale), (double)((this.field_146295_m / 2 + 50) * scale), 0.0D);
+               pos = new Vec3d((this.width / 2 - 65) * scale, (this.height / 2 + 50) * scale, 0.0);
             }
 
-            double bx = pos.x / (double)scale;
-            double by = (double)this.field_146295_m - pos.y / (double)scale;
-            double dx = Math.abs(w - bx);
-            double dy = Math.abs(h - by);
-            double p = 1.0D - (double)gs.getLockCount() / (double)gs.getLockCountMax();
-            dx = MCH_Lib.RNG(dx, 25.0D, 70.0D);
-            dy = MCH_Lib.RNG(dy, 15.0D, 70.0D);
-            dx += (70.0D - dx) * p;
-            dy += (70.0D - dy) * p;
+            double bx = pos.x / scale;
+            double by = this.height - pos.y / scale;
+            double dx = Math.abs(cx - bx);
+            double dy = Math.abs(cy - by);
+            double p = 1.0 - (double)gs.getLockCount() / gs.getLockCountMax();
+            dx = MCH_Lib.RNG(dx, 25.0, 70.0);
+            dy = MCH_Lib.RNG(dy, 15.0, 70.0);
+            dx += (70.0 - dx) * p;
+            dy += (70.0 - dy) * p;
             int lx = 10;
             int ly = 6;
-            this.drawLine(new double[]{sx - dx, sy - dy + (double)ly, sx - dx, sy - dy, sx - dx + (double)lx, sy - dy}, -1593835521, 3);
-            this.drawLine(new double[]{sx + dx, sy - dy + (double)ly, sx + dx, sy - dy, sx + dx - (double)lx, sy - dy}, -1593835521, 3);
-            dy /= 6.0D;
-            this.drawLine(new double[]{sx - dx, sy + dy - (double)ly, sx - dx, sy + dy, sx - dx + (double)lx, sy + dy}, -1593835521, 3);
-            this.drawLine(new double[]{sx + dx, sy + dy - (double)ly, sx + dx, sy + dy, sx + dx - (double)lx, sy + dy}, -1593835521, 3);
+            this.drawLine(new double[]{sx - dx, sy - dy + ly, sx - dx, sy - dy, sx - dx + lx, sy - dy}, -1593835521, 3);
+            this.drawLine(new double[]{sx + dx, sy - dy + ly, sx + dx, sy - dy, sx + dx - lx, sy - dy}, -1593835521, 3);
+            dy /= 6.0;
+            this.drawLine(new double[]{sx - dx, sy + dy - ly, sx - dx, sy + dy, sx - dx + lx, sy + dy}, -1593835521, 3);
+            this.drawLine(new double[]{sx + dx, sy + dy - ly, sx + dx, sy + dy, sx + dx - lx, sy + dy}, -1593835521, 3);
          }
       }
 
-      func_73734_a(-1, -1, (int)left + 1, this.field_146295_m + 1, -16777216);
-      func_73734_a((int)right - 1, -1, this.field_146294_l + 1, this.field_146295_m + 1, -16777216);
-      func_73734_a(-1, -1, this.field_146294_l + 1, (int)top + 1, -16777216);
-      func_73734_a(-1, (int)bottom - 1, this.field_146294_l + 1, this.field_146295_m + 1, -16777216);
+      drawRect(-1, -1, (int)left + 1, this.height + 1, -16777216);
+      drawRect((int)right - 1, -1, this.width + 1, this.height + 1, -16777216);
+      drawRect(-1, -1, this.width + 1, (int)top + 1, -16777216);
+      drawRect(-1, (int)bottom - 1, this.width + 1, this.height + 1, -16777216);
       GL11.glEnable(3042);
       GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
       W_McClient.MOD_bindTexture("textures/gui/javelin.png");
-      this.drawTexturedModalRectRotate(left, top, (double)size, (double)size, 0.0D, 0.0D, 256.0D, 256.0D, 0.0F);
+      this.drawTexturedModalRectRotate(left, top, size, size, 0.0, 0.0, 256.0, 256.0, 0.0F);
       W_McClient.MOD_bindTexture("textures/gui/javelin2.png");
-      PotionEffect pe = player.func_70660_b(MobEffects.field_76439_r);
+      PotionEffect pe = player.getActivePotionEffect(MobEffects.NIGHT_VISION);
       if (pe == null) {
-         x = 247.0D;
-         y = 211.0D;
-         w = 380.0D;
-         h = 350.0D;
-         this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0D, 1024.0D);
+         double x = 247.0;
+         double y = 211.0;
+         double w = 380.0;
+         double h = 350.0;
+         this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0, 1024.0);
       }
 
-      if (player.func_184612_cw() <= 60) {
-         x = 130.0D;
-         y = 334.0D;
-         w = 257.0D;
-         h = 455.0D;
-         this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0D, 1024.0D);
+      if (player.getItemInUseMaxCount() <= 60) {
+         double x = 130.0;
+         double y = 334.0;
+         double w = 257.0;
+         double h = 455.0;
+         this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0, 1024.0);
       }
 
       if (MCH_ClientLightWeaponTickHandler.selectedZoom == 0) {
-         x = 387.0D;
-         y = 211.0D;
-         w = 510.0D;
-         h = 350.0D;
-         this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0D, 1024.0D);
+         double x = 387.0;
+         double y = 211.0;
+         double w = 510.0;
+         double h = 350.0;
+         this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0, 1024.0);
       }
 
       if (MCH_ClientLightWeaponTickHandler.selectedZoom == MCH_ClientLightWeaponTickHandler.weapon.getInfo().zoom.length - 1) {
-         x = 511.0D;
-         y = 211.0D;
-         w = 645.0D;
-         h = 350.0D;
-         this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0D, 1024.0D);
+         double x = 511.0;
+         double y = 211.0;
+         double w = 645.0;
+         double h = 350.0;
+         this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0, 1024.0);
       }
 
       if (gs.getLockCount() > 0) {
-         x = 643.0D;
-         y = 211.0D;
-         w = 775.0D;
-         h = 350.0D;
-         this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0D, 1024.0D);
+         double x = 643.0;
+         double y = 211.0;
+         double w = 775.0;
+         double h = 350.0;
+         this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0, 1024.0);
       }
 
       if (MCH_ClientLightWeaponTickHandler.weaponMode == 1) {
-         x = 768.0D;
-         y = 340.0D;
-         w = 890.0D;
-         h = 455.0D;
-         this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0D, 1024.0D);
+         double x = 768.0;
+         double y = 340.0;
+         double w = 890.0;
+         double h = 455.0;
+         this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0, 1024.0);
       } else {
-         x = 768.0D;
-         y = 456.0D;
-         w = 890.0D;
-         h = 565.0D;
-         this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0D, 1024.0D);
+         double x = 768.0;
+         double y = 456.0;
+         double w = 890.0;
+         double h = 565.0;
+         this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0, 1024.0);
       }
 
       if (!canFire) {
-         x = 379.0D;
-         y = 670.0D;
-         w = 511.0D;
-         h = 810.0D;
-         this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0D, 1024.0D);
+         double var53 = 379.0;
+         double var64 = 670.0;
+         double var75 = 511.0;
+         double var86 = 810.0;
+         this.drawTexturedRect(
+            left + var53 * fac, top + var64 * fac, (var75 - var53) * fac, (var86 - var64) * fac, var53, var64, var75 - var53, var86 - var64, 1024.0, 1024.0
+         );
       }
 
-      if (itemStack.func_77960_j() >= itemStack.func_77958_k()) {
-         x = 512.0D;
-         y = 670.0D;
-         w = 645.0D;
-         h = 810.0D;
-         this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0D, 1024.0D);
+      if (itemStack.getMetadata() >= itemStack.getMaxDamage()) {
+         double var54 = 512.0;
+         double var65 = 670.0;
+         double var76 = 645.0;
+         double var87 = 810.0;
+         this.drawTexturedRect(
+            left + var54 * fac, top + var65 * fac, (var76 - var54) * fac, (var87 - var65) * fac, var54, var65, var76 - var54, var87 - var65, 1024.0, 1024.0
+         );
       }
 
       if (gs.getLockCount() < gs.getLockCountMax()) {
-         x = 646.0D;
-         y = 670.0D;
-         w = 776.0D;
-         h = 810.0D;
-         this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0D, 1024.0D);
+         double var55 = 646.0;
+         double var66 = 670.0;
+         double var77 = 776.0;
+         double var88 = 810.0;
+         this.drawTexturedRect(
+            left + var55 * fac, top + var66 * fac, (var77 - var55) * fac, (var88 - var66) * fac, var55, var66, var77 - var55, var88 - var66, 1024.0, 1024.0
+         );
       }
 
       if (pe != null) {
-         x = 768.0D;
-         y = 562.0D;
-         w = 890.0D;
-         h = 694.0D;
-         this.drawTexturedRect(left + x * fac, top + y * fac, (w - x) * fac, (h - y) * fac, x, y, w - x, h - y, 1024.0D, 1024.0D);
+         double var56 = 768.0;
+         double var67 = 562.0;
+         double var78 = 890.0;
+         double var89 = 694.0;
+         this.drawTexturedRect(
+            left + var56 * fac, top + var67 * fac, (var78 - var56) * fac, (var89 - var67) * fac, var56, var67, var78 - var56, var89 - var67, 1024.0, 1024.0
+         );
       }
-
    }
 
    public void drawKeyBind(int color, boolean canSwitchMode) {
@@ -306,6 +309,5 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
       if (canSwitchMode) {
          this.drawString(MCH_KeyName.getDescOrName(MCH_Config.KeySwWeaponMode.prmInt), OffX, OffY + 30, color);
       }
-
    }
 }

@@ -17,65 +17,66 @@ public class MCH_EntityHitBox extends W_Entity {
 
    public MCH_EntityHitBox(World world) {
       super(world);
-      this.func_70105_a(1.0F, 1.0F);
-      this.field_70159_w = 0.0D;
-      this.field_70181_x = 0.0D;
-      this.field_70179_y = 0.0D;
+      this.setSize(1.0F, 1.0F);
+      this.motionX = 0.0;
+      this.motionY = 0.0;
+      this.motionZ = 0.0;
       this.parent = null;
-      this.noClip = true;
-      this.field_70178_ae = true;
+      this.ignoreFrustumCheck = true;
+      this.isImmuneToFire = true;
    }
 
    public MCH_EntityHitBox(World world, MCH_EntityAircraft ac, float w, float h) {
       this(world);
-      this.func_70107_b(ac.posX, ac.posY + 1.0D, ac.posZ);
-      this.field_70169_q = ac.posX;
-      this.field_70167_r = ac.posY + 1.0D;
-      this.field_70166_s = ac.posZ;
+      this.setPosition(ac.posX, ac.posY + 1.0, ac.posZ);
+      this.prevPosX = ac.posX;
+      this.prevPosY = ac.posY + 1.0;
+      this.prevPosZ = ac.posZ;
       this.parent = ac;
-      this.func_70105_a(w, h);
+      this.setSize(w, h);
    }
 
-   protected boolean func_70041_e_() {
+   protected boolean canTriggerWalking() {
       return false;
    }
 
-   public AxisAlignedBB func_70114_g(Entity par1Entity) {
-      return par1Entity.func_174813_aQ();
+   public AxisAlignedBB getCollisionBox(Entity par1Entity) {
+      return par1Entity.getEntityBoundingBox();
    }
 
-   public AxisAlignedBB func_70046_E() {
-      return this.func_174813_aQ();
+   public AxisAlignedBB getCollisionBoundingBox() {
+      return this.getEntityBoundingBox();
    }
 
-   public boolean func_70104_M() {
+   public boolean canBePushed() {
       return false;
    }
 
-   public double func_70042_X() {
-      return -0.3D;
+   public double getMountedYOffset() {
+      return -0.3;
    }
 
-   public boolean func_70097_a(DamageSource par1DamageSource, float par2) {
-      return this.parent != null ? this.parent.func_70097_a(par1DamageSource, par2) : false;
+   @Override
+   public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
+      return this.parent != null ? this.parent.attackEntityFrom(par1DamageSource, par2) : false;
    }
 
-   public boolean func_70067_L() {
-      return !this.field_70128_L;
+   public boolean canBeCollidedWith() {
+      return !this.isDead;
    }
 
-   public void func_70106_y() {
-      super.func_70106_y();
+   public void setDead() {
+      super.setDead();
    }
 
-   public void func_70071_h_() {
-      super.func_70071_h_();
+   public void onUpdate() {
+      super.onUpdate();
    }
 
-   protected void func_70014_b(NBTTagCompound par1NBTTagCompound) {
+   protected void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
    }
 
-   protected void func_70037_a(NBTTagCompound par1NBTTagCompound) {
+   protected void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
    }
 
    @SideOnly(Side.CLIENT)
@@ -83,7 +84,7 @@ public class MCH_EntityHitBox extends W_Entity {
       return 0.0F;
    }
 
-   public boolean func_184230_a(EntityPlayer player, EnumHand hand) {
-      return this.parent != null ? this.parent.func_184230_a(player, hand) : false;
+   public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
+      return this.parent != null ? this.parent.processInitialInteract(player, hand) : false;
    }
 }

@@ -1,7 +1,6 @@
 package com.norwood.mcheli.__helper.criterion;
 
 import com.google.common.collect.Sets;
-import java.util.Iterator;
 import java.util.Set;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.advancements.ICriterionTrigger.Listener;
@@ -29,13 +28,9 @@ public class MCH_SimpleListeners {
    }
 
    public void trigger() {
-      Iterator var1 = this.listeners.iterator();
-
-      while(var1.hasNext()) {
-         Listener<MCH_SimpleListeners.SimpleInstance> listener = (Listener)var1.next();
-         listener.func_192159_a(this.playerAdvancements);
+      for (Listener<MCH_SimpleListeners.SimpleInstance> listener : this.listeners) {
+         listener.grantCriterion(this.playerAdvancements);
       }
-
    }
 
    static class SimpleInstance extends AbstractCriterionInstance {

@@ -14,8 +14,8 @@ import javax.annotation.Nullable;
 import org.jline.utils.OSUtils;
 
 public class FolderContentLoader extends ContentLoader {
-   private static final boolean ON_WINDOWS;
-   private static final CharMatcher BACKSLASH_MATCHER;
+   private static final boolean ON_WINDOWS = OSUtils.IS_WINDOWS;
+   private static final CharMatcher BACKSLASH_MATCHER = CharMatcher.is('\\');
    private File addonFolder;
 
    public FolderContentLoader(String domain, File addonDir, String loaderVersion, Predicate<String> fileFilter) {
@@ -23,8 +23,9 @@ public class FolderContentLoader extends ContentLoader {
       this.addonFolder = addonDir.getParentFile();
    }
 
+   @Override
    protected List<ContentLoader.ContentEntry> getEntries() {
-      return this.walkDir(this.dir, (IContentFactory)null, this.loaderVersion.equals("2"), 0);
+      return this.walkDir(this.dir, null, this.loaderVersion.equals("2"), 0);
    }
 
    private List<ContentLoader.ContentEntry> walkDir(File dir, @Nullable IContentFactory factory, boolean loadDeep, int depth) {
@@ -32,11 +33,7 @@ public class FolderContentLoader extends ContentLoader {
       if (dir != null && dir.exists()) {
          if (dir.isDirectory()) {
             if (loadDeep || depth <= 1) {
-               File[] var6 = dir.listFiles();
-               int var7 = var6.length;
-
-               for(int var8 = 0; var8 < var7; ++var8) {
-                  File f = var6[var8];
+               for (File f : dir.listFiles()) {
                   IContentFactory contentFactory = factory;
                   boolean flag = loadDeep || depth == 0 && "assets".equals(f.getName());
                   if (factory == null) {
@@ -78,6 +75,7 @@ public class FolderContentLoader extends ContentLoader {
       }
    }
 
+   @Override
    protected InputStream getInputStreamByName(String name) throws IOException {
       File file1 = this.getFile(name);
       if (file1 == null) {
@@ -107,10 +105,5 @@ public class FolderContentLoader extends ContentLoader {
       }
 
       return s.endsWith(filepath);
-   }
-
-   static {
-      ON_WINDOWS = OSUtils.IS_WINDOWS;
-      BACKSLASH_MATCHER = CharMatcher.is('\\');
    }
 }

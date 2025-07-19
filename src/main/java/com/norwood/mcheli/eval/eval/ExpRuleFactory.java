@@ -111,7 +111,7 @@ public class ExpRuleFactory {
       rule = this.add(rule, this.createSignRule(share));
       rule = this.add(rule, this.createPowerRule(share));
       rule = this.add(rule, this.createCol1AfterRule(share));
-      this.add(rule, this.createPrimaryRule(share));
+      rule = this.add(rule, this.createPrimaryRule(share));
       this.topRule.initPriority(1);
       share.topRule = this.topRule;
       this.initFuncArgRule(share);
@@ -124,8 +124,8 @@ public class ExpRuleFactory {
       boolean match = false;
 
       label27:
-      for(int i = 0; i < a_opes.length; ++i) {
-         for(int j = 0; j < t_opes.length; ++j) {
+      for (int i = 0; i < a_opes.length; i++) {
+         for (int j = 0; j < t_opes.length; j++) {
             if (a_opes[i].equals(t_opes[j])) {
                match = true;
                break label27;

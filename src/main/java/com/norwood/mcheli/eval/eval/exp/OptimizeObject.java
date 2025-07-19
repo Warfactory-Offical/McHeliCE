@@ -24,10 +24,12 @@ public class OptimizeObject extends ReplaceAdapter {
       }
    }
 
+   @Override
    public AbstractExpression replace0(WordExpression exp) {
       return (AbstractExpression)(exp instanceof VariableExpression ? this.toConst(exp) : exp);
    }
 
+   @Override
    public AbstractExpression replace1(Col1Expression exp) {
       if (exp instanceof ParenExpression) {
          return exp.exp;
@@ -38,12 +40,14 @@ public class OptimizeObject extends ReplaceAdapter {
       }
    }
 
+   @Override
    public AbstractExpression replace2(Col2Expression exp) {
       boolean const_l = this.isConst(exp.expl);
       boolean const_r = this.isConst(exp.expr);
       return (AbstractExpression)(const_l && const_r ? this.toConst(exp) : exp);
    }
 
+   @Override
    public AbstractExpression replace2(Col2OpeExpression exp) {
       if (exp instanceof ArrayExpression) {
          return (AbstractExpression)(this.isConst(exp.expr) ? this.toConst(exp) : exp);
@@ -71,6 +75,7 @@ public class OptimizeObject extends ReplaceAdapter {
       }
    }
 
+   @Override
    public AbstractExpression replace3(Col3Expression exp) {
       if (this.isConst(exp.exp1)) {
          return this.isTrue(exp.exp1) ? exp.exp2 : exp.exp3;

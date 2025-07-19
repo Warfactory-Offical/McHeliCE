@@ -19,16 +19,16 @@ public class MCH_RenderContainer extends W_Render<MCH_EntityContainer> {
 
    public MCH_RenderContainer(RenderManager renderManager) {
       super(renderManager);
-      this.field_76989_e = 0.5F;
+      this.shadowSize = 0.5F;
    }
 
    public void doRender(MCH_EntityContainer entity, double posX, double posY, double posZ, float par8, float tickTime) {
       if (!MCH_RenderAircraft.shouldSkipRender(entity)) {
          GL11.glPushMatrix();
          GL11.glEnable(2884);
-         GL11.glTranslated(posX, posY - 0.2D + 0.5D, posZ);
-         float yaw = MCH_Lib.smoothRot(entity.field_70177_z, entity.field_70126_B, tickTime);
-         float pitch = MCH_Lib.smoothRot(entity.field_70125_A, entity.field_70127_C, tickTime);
+         GL11.glTranslated(posX, posY - 0.2 + 0.5, posZ);
+         float yaw = MCH_Lib.smoothRot(entity.rotationYaw, entity.prevRotationYaw, tickTime);
+         float pitch = MCH_Lib.smoothRot(entity.rotationPitch, entity.prevRotationPitch, tickTime);
          GL11.glRotatef(yaw, 0.0F, -1.0F, 0.0F);
          GL11.glRotatef(pitch, 1.0F, 0.0F, 0.0F);
          GL11.glColor4f(0.75F, 0.75F, 0.75F, 1.0F);

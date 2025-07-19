@@ -7,7 +7,7 @@ public class MCH_ColorInt {
    public final int a;
 
    public MCH_ColorInt(int color) {
-      this(color >> 16 & 255, color >> 8 & 255, color & 255, color >> 24 & 255);
+      this(color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF, color >> 24 & 0xFF);
    }
 
    public MCH_ColorInt(int r, int g, int b, int a) {

@@ -11,15 +11,15 @@ public class MCH_ConfigGuiContainer extends Container {
       this.player = player;
    }
 
-   public void func_75142_b() {
-      super.func_75142_b();
+   public void detectAndSendChanges() {
+      super.detectAndSendChanges();
    }
 
-   public boolean func_75145_c(EntityPlayer player) {
+   public boolean canInteractWith(EntityPlayer player) {
       return true;
    }
 
-   public ItemStack func_82846_b(EntityPlayer par1EntityPlayer, int par2) {
-      return ItemStack.field_190927_a;
+   public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2) {
+      return ItemStack.EMPTY;
    }
 }

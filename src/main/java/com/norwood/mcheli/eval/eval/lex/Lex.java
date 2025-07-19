@@ -30,7 +30,6 @@ public class Lex {
       if (this.expShare.paren == null) {
          this.expShare.paren = paren;
       }
-
    }
 
    protected boolean isSpace(int pos) {
@@ -61,15 +60,15 @@ public class Lex {
    }
 
    protected String isOperator(int pos) {
-      for(int i = this.opeList.length - 1; i >= 0; --i) {
+      for (int i = this.opeList.length - 1; i >= 0; i--) {
          if (pos + i < this.string.length()) {
             List<String> list = this.opeList[i];
             if (list != null) {
                label36:
-               for(int j = 0; j < list.size(); ++j) {
-                  String ope = (String)list.get(j);
+               for (int j = 0; j < list.size(); j++) {
+                  String ope = list.get(j);
 
-                  for(int k = 0; k <= i; ++k) {
+                  for (int k = 0; k <= i; k++) {
                      char c = this.string.charAt(pos + k);
                      char o = ope.charAt(k);
                      if (c != o) {
@@ -113,14 +112,14 @@ public class Lex {
    }
 
    public void check() {
-      while(this.isSpace(this.pos)) {
+      while (this.isSpace(this.pos)) {
          if (this.pos >= this.string.length()) {
             this.type = Integer.MAX_VALUE;
             this.len = 0;
             return;
          }
 
-         ++this.pos;
+         this.pos++;
       }
 
       if (this.isStringTop(this.pos)) {
@@ -136,10 +135,11 @@ public class Lex {
          } else {
             boolean number = this.isNumberTop(this.pos);
             this.type = number ? 2147483633 : 2147483632;
+            this.len = 1;
 
-            for(this.len = 1; !this.isSpace(this.pos + this.len) && (number && this.isSpecialNumber(this.pos + this.len) || this.isOperator(this.pos + this.len) == null); ++this.len) {
+            while (!this.isSpace(this.pos + this.len) && (number && this.isSpecialNumber(this.pos + this.len) || this.isOperator(this.pos + this.len) == null)) {
+               this.len++;
             }
-
          }
       }
    }
@@ -150,14 +150,14 @@ public class Lex {
       this.len = 1;
 
       do {
-         this.len += this.getCharLen(this.pos + this.len, ret);
+         this.len = this.len + this.getCharLen(this.pos + this.len, ret);
          if (this.pos + this.len >= this.string.length()) {
             this.type = Integer.MAX_VALUE;
             break;
          }
-      } while(!this.isStringEnd(this.pos + this.len));
+      } while (!this.isStringEnd(this.pos + this.len));
 
-      ++this.len;
+      this.len++;
    }
 
    protected void processChar() {
@@ -166,14 +166,14 @@ public class Lex {
       this.len = 1;
 
       do {
-         this.len += this.getCharLen(this.pos + this.len, ret);
+         this.len = this.len + this.getCharLen(this.pos + this.len, ret);
          if (this.pos + this.len >= this.string.length()) {
             this.type = Integer.MAX_VALUE;
             break;
          }
-      } while(!this.isCharEnd(this.pos + this.len));
+      } while (!this.isCharEnd(this.pos + this.len));
 
-      ++this.len;
+      this.len++;
    }
 
    protected int getCharLen(int pos, int[] ret) {
@@ -182,7 +182,7 @@ public class Lex {
    }
 
    public Lex next() {
-      this.pos += this.len;
+      this.pos = this.pos + this.len;
       this.check();
       return this;
    }

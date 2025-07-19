@@ -52,6 +52,7 @@ public abstract class Expression {
 
    public abstract Expression dup();
 
+   @Override
    public boolean equals(Object obj) {
       if (obj instanceof Expression) {
          AbstractExpression e = ((Expression)obj).ae;
@@ -65,23 +66,21 @@ public abstract class Expression {
       }
    }
 
+   @Override
    public int hashCode() {
       return this.ae == null ? 0 : this.ae.hashCode();
    }
 
    public boolean same(Expression obj) {
       AbstractExpression e = obj.ae;
-      if (this.ae == null) {
-         return e == null;
-      } else {
-         return this.ae.same(e);
-      }
+      return this.ae == null ? e == null : this.ae.same(e);
    }
 
    public boolean isEmpty() {
       return this.ae == null;
    }
 
+   @Override
    public String toString() {
       return this.ae == null ? "" : this.ae.toString();
    }

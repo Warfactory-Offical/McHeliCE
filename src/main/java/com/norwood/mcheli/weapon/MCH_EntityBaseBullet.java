@@ -1,6 +1,5 @@
 package com.norwood.mcheli.weapon;
 
-import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Nullable;
 import com.norwood.mcheli.MCH_Config;
@@ -40,13 +39,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class MCH_EntityBaseBullet extends W_Entity {
-   private static final DataParameter<Integer> TARGET_ID;
-   private static final DataParameter<String> INFO_NAME;
-   private static final DataParameter<String> BULLET_MODEL;
-   private static final DataParameter<Byte> BOMBLET_FLAG;
+   private static final DataParameter<Integer> TARGET_ID = EntityDataManager.createKey(MCH_EntityBaseBullet.class, DataSerializers.VARINT);
+   private static final DataParameter<String> INFO_NAME = EntityDataManager.createKey(MCH_EntityBaseBullet.class, DataSerializers.STRING);
+   private static final DataParameter<String> BULLET_MODEL = EntityDataManager.createKey(MCH_EntityBaseBullet.class, DataSerializers.STRING);
+   private static final DataParameter<Byte> BOMBLET_FLAG = EntityDataManager.createKey(MCH_EntityBaseBullet.class, DataSerializers.BYTE);
    public Entity shootingEntity;
    public Entity shootingAircraft;
-   private int countOnUpdate;
+   private int countOnUpdate = 0;
    public int explosionPower;
    public int explosionPowerInWater;
    private int power;
@@ -68,14 +67,13 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
 
    public MCH_EntityBaseBullet(World par1World) {
       super(par1World);
-      this.countOnUpdate = 0;
-      this.func_70105_a(1.0F, 1.0F);
-      this.field_70126_B = this.field_70177_z;
-      this.field_70127_C = this.field_70125_A;
+      this.setSize(1.0F, 1.0F);
+      this.prevRotationYaw = this.rotationYaw;
+      this.prevRotationPitch = this.rotationPitch;
       this.targetEntity = null;
       this.setPower(1);
-      this.acceleration = 1.0D;
-      this.accelerationFactor = 1.0D;
+      this.acceleration = 1.0;
+      this.accelerationFactor = 1.0;
       this.piercing = 0;
       this.explosionPower = 0;
       this.explosionPowerInWater = 0;
@@ -83,55 +81,55 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
       this.sprinkleTime = 0;
       this.isBomblet = -1;
       this.weaponInfo = null;
-      this.noClip = true;
+      this.ignoreFrustumCheck = true;
       if (par1World.isRemote) {
          this.model = null;
       }
-
    }
 
    public MCH_EntityBaseBullet(World par1World, double px, double py, double pz, double mx, double my, double mz, float yaw, float pitch, double acceleration) {
       this(par1World);
-      this.func_70105_a(1.0F, 1.0F);
-      this.func_70012_b(px, py, pz, yaw, pitch);
-      this.func_70107_b(px, py, pz);
-      this.field_70126_B = yaw;
-      this.field_70127_C = pitch;
-      if (acceleration > 3.9D) {
-         acceleration = 3.9D;
+      this.setSize(1.0F, 1.0F);
+      this.setLocationAndAngles(px, py, pz, yaw, pitch);
+      this.setPosition(px, py, pz);
+      this.prevRotationYaw = yaw;
+      this.prevRotationPitch = pitch;
+      if (acceleration > 3.9) {
+         acceleration = 3.9;
       }
 
-      double d = (double)MathHelper.func_76133_a(mx * mx + my * my + mz * mz);
-      this.field_70159_w = mx * acceleration / d;
-      this.field_70181_x = my * acceleration / d;
-      this.field_70179_y = mz * acceleration / d;
-      this.prevMotionX = this.field_70159_w;
-      this.prevMotionY = this.field_70181_x;
-      this.prevMotionZ = this.field_70179_y;
+      double d = MathHelper.sqrt(mx * mx + my * my + mz * mz);
+      this.motionX = mx * acceleration / d;
+      this.motionY = my * acceleration / d;
+      this.motionZ = mz * acceleration / d;
+      this.prevMotionX = this.motionX;
+      this.prevMotionY = this.motionY;
+      this.prevMotionZ = this.motionZ;
       this.acceleration = acceleration;
    }
 
-   public void func_70012_b(double par1, double par3, double par5, float par7, float par8) {
-      super.func_70012_b(par1, par3, par5, par7, par8);
+   public void setLocationAndAngles(double par1, double par3, double par5, float par7, float par8) {
+      super.setLocationAndAngles(par1, par3, par5, par7, par8);
       this.prevPosX2 = par1;
       this.prevPosY2 = par3;
       this.prevPosZ2 = par5;
    }
 
-   public void func_70080_a(double x, double y, double z, float yaw, float pitch) {
-      super.func_70080_a(x, y, z, yaw, pitch);
+   public void setPositionAndRotation(double x, double y, double z, float yaw, float pitch) {
+      super.setPositionAndRotation(x, y, z, yaw, pitch);
    }
 
-   protected void func_70101_b(float yaw, float pitch) {
-      super.func_70101_b(yaw, this.field_70125_A);
+   protected void setRotation(float yaw, float pitch) {
+      super.setRotation(yaw, this.rotationPitch);
    }
 
    @SideOnly(Side.CLIENT)
-   public void func_180426_a(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
-      this.func_70107_b(x, (y + this.posY * 2.0D) / 3.0D, z);
-      this.func_70101_b(yaw, pitch);
+   public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
+      this.setPosition(x, (y + this.posY * 2.0) / 3.0, z);
+      this.setRotation(yaw, pitch);
    }
 
+   @Override
    protected void entityInit() {
       super.entityInit();
       this.dataManager.register(TARGET_ID, 0);
@@ -145,17 +143,16 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
          this.weaponInfo = MCH_WeaponInfoManager.get(s);
          if (this.weaponInfo != null) {
             if (!this.world.isRemote) {
-               this.dataManager.func_187227_b(INFO_NAME, s);
+               this.dataManager.set(INFO_NAME, s);
             }
 
             this.onSetWeasponInfo();
          }
       }
-
    }
 
-   public String func_70005_c_() {
-      return (String)this.dataManager.func_187225_a(INFO_NAME);
+   public String getName() {
+      return (String)this.dataManager.get(INFO_NAME);
    }
 
    @Nullable
@@ -175,49 +172,49 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
       this.piercing = this.getInfo().piercing;
       if (this instanceof MCH_EntityBullet) {
          if (this.getInfo().acceleration > 4.0F) {
-            this.accelerationFactor = (double)(this.getInfo().acceleration / 4.0F);
+            this.accelerationFactor = this.getInfo().acceleration / 4.0F;
          }
       } else if (this instanceof MCH_EntityRocket && this.isBomblet == 0 && this.getInfo().acceleration > 4.0F) {
-         this.accelerationFactor = (double)(this.getInfo().acceleration / 4.0F);
+         this.accelerationFactor = this.getInfo().acceleration / 4.0F;
       }
-
    }
 
-   public void func_70106_y() {
-      super.func_70106_y();
+   public void setDead() {
+      super.setDead();
    }
 
    public void setBomblet() {
       this.isBomblet = 1;
       this.sprinkleTime = 0;
-      this.dataManager.func_187227_b(BOMBLET_FLAG, (byte)1);
+      this.dataManager.set(BOMBLET_FLAG, (byte)1);
    }
 
    public byte getBomblet() {
-      return (Byte)this.dataManager.func_187225_a(BOMBLET_FLAG);
+      return (Byte)this.dataManager.get(BOMBLET_FLAG);
    }
 
    public void setTargetEntity(@Nullable Entity entity) {
       this.targetEntity = entity;
       if (!this.world.isRemote) {
          if (this.targetEntity instanceof EntityPlayerMP) {
-            MCH_Lib.DbgLog(this.world, "MCH_EntityBaseBullet.setTargetEntity alert" + this.targetEntity + " / " + this.targetEntity.func_184187_bx());
-            if (this.targetEntity.func_184187_bx() != null && !(this.targetEntity.func_184187_bx() instanceof MCH_EntityAircraft) && !(this.targetEntity.func_184187_bx() instanceof MCH_EntitySeat)) {
+            MCH_Lib.DbgLog(this.world, "MCH_EntityBaseBullet.setTargetEntity alert" + this.targetEntity + " / " + this.targetEntity.getRidingEntity());
+            if (this.targetEntity.getRidingEntity() != null
+               && !(this.targetEntity.getRidingEntity() instanceof MCH_EntityAircraft)
+               && !(this.targetEntity.getRidingEntity() instanceof MCH_EntitySeat)) {
                W_WorldFunc.MOD_playSoundAtEntity(this.targetEntity, "alert", 2.0F, 1.0F);
             }
          }
 
          if (entity != null) {
-            this.dataManager.func_187227_b(TARGET_ID, W_Entity.getEntityId(entity));
+            this.dataManager.set(TARGET_ID, W_Entity.getEntityId(entity));
          } else {
-            this.dataManager.func_187227_b(TARGET_ID, 0);
+            this.dataManager.set(TARGET_ID, 0);
          }
       }
-
    }
 
    public int getTargetEntityID() {
-      return this.targetEntity != null ? W_Entity.getEntityId(this.targetEntity) : (Integer)this.dataManager.func_187225_a(TARGET_ID);
+      return this.targetEntity != null ? W_Entity.getEntityId(this.targetEntity) : (Integer)this.dataManager.get(TARGET_ID);
    }
 
    public MCH_BulletModel getBulletModel() {
@@ -253,26 +250,39 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
             return;
          }
 
-         double x = (this.posX - this.field_70169_q) / (double)num;
-         double y = (this.posY - this.field_70167_r) / (double)num;
-         double z = (this.posZ - this.field_70166_s) / (double)num;
-         double x2 = (this.field_70169_q - this.prevPosX2) / (double)num;
-         double y2 = (this.field_70167_r - this.prevPosY2) / (double)num;
-         double z2 = (this.field_70166_s - this.prevPosZ2) / (double)num;
-         int i;
+         double x = (this.posX - this.prevPosX) / num;
+         double y = (this.posY - this.prevPosY) / num;
+         double z = (this.posZ - this.prevPosZ) / num;
+         double x2 = (this.prevPosX - this.prevPosX2) / num;
+         double y2 = (this.prevPosY - this.prevPosY2) / num;
+         double z2 = (this.prevPosZ - this.prevPosZ2) / num;
          if (name.equals("explode")) {
-            for(i = 0; i < num; ++i) {
-               MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "smoke", (this.field_70169_q + x * (double)i + this.prevPosX2 + x2 * (double)i) / 2.0D, (this.field_70167_r + y * (double)i + this.prevPosY2 + y2 * (double)i) / 2.0D, (this.field_70166_s + z * (double)i + this.prevPosZ2 + z2 * (double)i) / 2.0D);
-               prm.size = size + this.field_70146_Z.nextFloat();
+            for (int i = 0; i < num; i++) {
+               MCH_ParticleParam prm = new MCH_ParticleParam(
+                  this.world,
+                  "smoke",
+                  (this.prevPosX + x * i + (this.prevPosX2 + x2 * i)) / 2.0,
+                  (this.prevPosY + y * i + (this.prevPosY2 + y2 * i)) / 2.0,
+                  (this.prevPosZ + z * i + (this.prevPosZ2 + z2 * i)) / 2.0
+               );
+               prm.size = size + this.rand.nextFloat();
                MCH_ParticlesUtil.spawnParticle(prm);
             }
          } else {
-            for(i = 0; i < num; ++i) {
-               MCH_ParticlesUtil.DEF_spawnParticle(name, (this.field_70169_q + x * (double)i + this.prevPosX2 + x2 * (double)i) / 2.0D, (this.field_70167_r + y * (double)i + this.prevPosY2 + y2 * (double)i) / 2.0D, (this.field_70166_s + z * (double)i + this.prevPosZ2 + z2 * (double)i) / 2.0D, 0.0D, 0.0D, 0.0D, 50.0F);
+            for (int i = 0; i < num; i++) {
+               MCH_ParticlesUtil.DEF_spawnParticle(
+                  name,
+                  (this.prevPosX + x * i + (this.prevPosX2 + x2 * i)) / 2.0,
+                  (this.prevPosY + y * i + (this.prevPosY2 + y2 * i)) / 2.0,
+                  (this.prevPosZ + z * i + (this.prevPosZ2 + z2 * i)) / 2.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  50.0F
+               );
             }
          }
       }
-
    }
 
    public void DEF_spawnParticle(String name, int num, float size) {
@@ -281,18 +291,26 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
             return;
          }
 
-         double x = (this.posX - this.field_70169_q) / (double)num;
-         double y = (this.posY - this.field_70167_r) / (double)num;
-         double z = (this.posZ - this.field_70166_s) / (double)num;
-         double x2 = (this.field_70169_q - this.prevPosX2) / (double)num;
-         double y2 = (this.field_70167_r - this.prevPosY2) / (double)num;
-         double z2 = (this.field_70166_s - this.prevPosZ2) / (double)num;
+         double x = (this.posX - this.prevPosX) / num;
+         double y = (this.posY - this.prevPosY) / num;
+         double z = (this.posZ - this.prevPosZ) / num;
+         double x2 = (this.prevPosX - this.prevPosX2) / num;
+         double y2 = (this.prevPosY - this.prevPosY2) / num;
+         double z2 = (this.prevPosZ - this.prevPosZ2) / num;
 
-         for(int i = 0; i < num; ++i) {
-            MCH_ParticlesUtil.DEF_spawnParticle(name, (this.field_70169_q + x * (double)i + this.prevPosX2 + x2 * (double)i) / 2.0D, (this.field_70167_r + y * (double)i + this.prevPosY2 + y2 * (double)i) / 2.0D, (this.field_70166_s + z * (double)i + this.prevPosZ2 + z2 * (double)i) / 2.0D, 0.0D, 0.0D, 0.0D, 150.0F);
+         for (int i = 0; i < num; i++) {
+            MCH_ParticlesUtil.DEF_spawnParticle(
+               name,
+               (this.prevPosX + x * i + (this.prevPosX2 + x2 * i)) / 2.0,
+               (this.prevPosY + y * i + (this.prevPosY2 + y2 * i)) / 2.0,
+               (this.prevPosZ + z * i + (this.prevPosZ2 + z2 * i)) / 2.0,
+               0.0,
+               0.0,
+               0.0,
+               150.0F
+            );
          }
       }
-
    }
 
    public int getCountOnUpdate() {
@@ -304,9 +322,10 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
    }
 
    @SideOnly(Side.CLIENT)
-   public boolean func_70112_a(double par1) {
-      double d1 = this.func_174813_aQ().func_72320_b() * 4.0D;
-      d1 *= 64.0D;
+   @Override
+   public boolean isInRangeToRenderDist(double par1) {
+      double d1 = this.getEntityBoundingBox().getAverageEdgeLength() * 4.0;
+      d1 *= 64.0;
       return par1 < d1 * d1;
    }
 
@@ -329,18 +348,18 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
    }
 
    public void setMotion(double targetX, double targetY, double targetZ) {
-      double d6 = (double)MathHelper.func_76133_a(targetX * targetX + targetY * targetY + targetZ * targetZ);
-      this.field_70159_w = targetX * this.acceleration / d6;
-      this.field_70181_x = targetY * this.acceleration / d6;
-      this.field_70179_y = targetZ * this.acceleration / d6;
+      double d6 = MathHelper.sqrt(targetX * targetX + targetY * targetY + targetZ * targetZ);
+      this.motionX = targetX * this.acceleration / d6;
+      this.motionY = targetY * this.acceleration / d6;
+      this.motionZ = targetZ * this.acceleration / d6;
    }
 
    public boolean usingFlareOfTarget(Entity entity) {
       if (this.getCountOnUpdate() % 3 == 0) {
-         List<Entity> list = this.world.func_72839_b(this, entity.func_174813_aQ().func_72314_b(15.0D, 15.0D, 15.0D));
+         List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, entity.getEntityBoundingBox().grow(15.0, 15.0, 15.0));
 
-         for(int i = 0; i < list.size(); ++i) {
-            if (((Entity)list.get(i)).getEntityData().getBoolean("FlareUsing")) {
+         for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getEntityData().getBoolean("FlareUsing")) {
                return true;
             }
          }
@@ -357,27 +376,29 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
       double tx = targetPosX - this.posX;
       double ty = targetPosY - this.posY;
       double tz = targetPosZ - this.posZ;
-      double d = (double)MathHelper.func_76133_a(tx * tx + ty * ty + tz * tz);
+      double d = MathHelper.sqrt(tx * tx + ty * ty + tz * tz);
       double mx = tx * this.acceleration / d;
       double my = ty * this.acceleration / d;
       double mz = tz * this.acceleration / d;
-      this.field_70159_w = (this.field_70159_w * 6.0D + mx) / 7.0D;
-      this.field_70181_x = (this.field_70181_x * 6.0D + my) / 7.0D;
-      this.field_70179_y = (this.field_70179_y * 6.0D + mz) / 7.0D;
-      double a = (double)((float)Math.atan2(this.field_70179_y, this.field_70159_w));
-      this.field_70177_z = (float)(a * 180.0D / 3.141592653589793D) - 90.0F;
-      double r = Math.sqrt(this.field_70159_w * this.field_70159_w + this.field_70179_y * this.field_70179_y);
-      this.field_70125_A = -((float)(Math.atan2(this.field_70181_x, r) * 180.0D / 3.141592653589793D));
+      this.motionX = (this.motionX * 6.0 + mx) / 7.0;
+      this.motionY = (this.motionY * 6.0 + my) / 7.0;
+      this.motionZ = (this.motionZ * 6.0 + mz) / 7.0;
+      double a = (float)Math.atan2(this.motionZ, this.motionX);
+      this.rotationYaw = (float)(a * 180.0 / Math.PI) - 90.0F;
+      double r = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+      this.rotationPitch = -((float)(Math.atan2(this.motionY, r) * 180.0 / Math.PI));
    }
 
    public boolean checkValid() {
       if (this.shootingEntity == null && this.shootingAircraft == null) {
          return false;
       } else {
-         Entity shooter = this.shootingAircraft != null && this.shootingAircraft.field_70128_L && this.shootingEntity == null ? this.shootingAircraft : this.shootingEntity;
+         Entity shooter = this.shootingAircraft != null && this.shootingAircraft.isDead && this.shootingEntity == null
+            ? this.shootingAircraft
+            : this.shootingEntity;
          double x = this.posX - shooter.posX;
          double z = this.posZ - shooter.posZ;
-         return x * x + z * z < 3.38724E7D && this.posY > -10.0D;
+         return x * x + z * z < 3.38724E7 && this.posY > -10.0;
       }
    }
 
@@ -389,56 +410,61 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
       return this.getInfo() != null ? this.getInfo().gravityInWater : 0.0F;
    }
 
-   public void func_70071_h_() {
+   public void onUpdate() {
       if (this.world.isRemote && this.countOnUpdate == 0) {
          int tgtEttId = this.getTargetEntityID();
          if (tgtEttId > 0) {
-            this.setTargetEntity(this.world.func_73045_a(tgtEttId));
+            this.setTargetEntity(this.world.getEntityByID(tgtEttId));
          }
       }
 
       if (!this.world.isRemote && this.getCountOnUpdate() % 20 == 19 && this.targetEntity instanceof EntityPlayerMP) {
-         MCH_Lib.DbgLog(this.world, "MCH_EntityBaseBullet.onUpdate alert" + this.targetEntity + " / " + this.targetEntity.func_184187_bx());
-         if (this.targetEntity.func_184187_bx() != null && !(this.targetEntity.func_184187_bx() instanceof MCH_EntityAircraft) && !(this.targetEntity.func_184187_bx() instanceof MCH_EntitySeat)) {
+         MCH_Lib.DbgLog(this.world, "MCH_EntityBaseBullet.onUpdate alert" + this.targetEntity + " / " + this.targetEntity.getRidingEntity());
+         if (this.targetEntity.getRidingEntity() != null
+            && !(this.targetEntity.getRidingEntity() instanceof MCH_EntityAircraft)
+            && !(this.targetEntity.getRidingEntity() instanceof MCH_EntitySeat)) {
             W_WorldFunc.MOD_playSoundAtEntity(this.targetEntity, "alert", 2.0F, 1.0F);
          }
       }
 
-      this.prevMotionX = this.field_70159_w;
-      this.prevMotionY = this.field_70181_x;
-      this.prevMotionZ = this.field_70179_y;
-      ++this.countOnUpdate;
+      this.prevMotionX = this.motionX;
+      this.prevMotionY = this.motionY;
+      this.prevMotionZ = this.motionZ;
+      this.countOnUpdate++;
       if (this.countOnUpdate > 10000000) {
          this.clearCountOnUpdate();
       }
 
-      this.prevPosX2 = this.field_70169_q;
-      this.prevPosY2 = this.field_70167_r;
-      this.prevPosZ2 = this.field_70166_s;
-      super.func_70071_h_();
-      if ((this.prevMotionX != this.field_70159_w || this.prevMotionY != this.field_70181_x || this.prevMotionZ != this.field_70179_y) && this.field_70159_w * this.field_70159_w + this.field_70181_x * this.field_70181_x + this.field_70179_y * this.field_70179_y > 0.1D) {
-         double a = (double)((float)Math.atan2(this.field_70179_y, this.field_70159_w));
-         this.field_70177_z = (float)(a * 180.0D / 3.141592653589793D) - 90.0F;
-         double r = Math.sqrt(this.field_70159_w * this.field_70159_w + this.field_70179_y * this.field_70179_y);
-         this.field_70125_A = -((float)(Math.atan2(this.field_70181_x, r) * 180.0D / 3.141592653589793D));
+      this.prevPosX2 = this.prevPosX;
+      this.prevPosY2 = this.prevPosY;
+      this.prevPosZ2 = this.prevPosZ;
+      super.onUpdate();
+      if ((this.prevMotionX != this.motionX || this.prevMotionY != this.motionY || this.prevMotionZ != this.motionZ)
+         && this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ > 0.1) {
+         double a = (float)Math.atan2(this.motionZ, this.motionX);
+         this.rotationYaw = (float)(a * 180.0 / Math.PI) - 90.0F;
+         double r = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+         this.rotationPitch = -((float)(Math.atan2(this.motionY, r) * 180.0 / Math.PI));
       }
 
       if (this.getInfo() == null) {
          if (this.countOnUpdate >= 2) {
-            MCH_Lib.Log((Entity)this, "##### MCH_EntityBaseBullet onUpdate() Weapon info null %d, %s, Name=%s", W_Entity.getEntityId(this), this.getEntityName(), this.func_70005_c_());
-            this.func_70106_y();
+            MCH_Lib.Log(
+               this, "##### MCH_EntityBaseBullet onUpdate() Weapon info null %d, %s, Name=%s", W_Entity.getEntityId(this), this.getEntityName(), this.getName()
+            );
+            this.setDead();
             return;
          }
 
-         this.setName(this.func_70005_c_());
+         this.setName(this.getName());
          if (this.getInfo() == null) {
             return;
          }
       }
 
-      if (this.getInfo().bound <= 0.0F && this.field_70122_E) {
-         this.field_70159_w *= 0.9D;
-         this.field_70179_y *= 0.9D;
+      if (this.getInfo().bound <= 0.0F && this.onGround) {
+         this.motionX *= 0.9;
+         this.motionZ *= 0.9;
       }
 
       if (this.world.isRemote && this.isBomblet < 0) {
@@ -447,9 +473,9 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
 
       if (!this.world.isRemote) {
          BlockPos blockpos = new BlockPos(this.posX, this.posY, this.posZ);
-         if ((int)this.posY <= 255 && !this.world.func_175667_e(blockpos)) {
+         if ((int)this.posY <= 255 && !this.world.isBlockLoaded(blockpos)) {
             if (this.getInfo().delayFuse <= 0) {
-               this.func_70106_y();
+               this.setDead();
                return;
             }
 
@@ -459,22 +485,22 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
          }
 
          if (this.delayFuse > 0) {
-            --this.delayFuse;
+            this.delayFuse--;
             if (this.delayFuse == 0) {
                this.onUpdateTimeout();
-               this.func_70106_y();
+               this.setDead();
                return;
             }
          }
 
          if (!this.checkValid()) {
-            this.func_70106_y();
+            this.setDead();
             return;
          }
 
          if (this.getInfo().timeFuse > 0 && this.getCountOnUpdate() > this.getInfo().timeFuse) {
             this.onUpdateTimeout();
-            this.func_70106_y();
+            this.setDead();
             return;
          }
 
@@ -484,166 +510,181 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
          }
       }
 
-      if (!this.func_70090_H()) {
-         this.field_70181_x += (double)this.getGravity();
+      if (!this.isInWater()) {
+         this.motionY = this.motionY + this.getGravity();
       } else {
-         this.field_70181_x += (double)this.getGravityInWater();
+         this.motionY = this.motionY + this.getGravityInWater();
       }
 
-      if (!this.field_70128_L) {
+      if (!this.isDead) {
          this.onUpdateCollided();
       }
 
-      this.posX += this.field_70159_w * this.accelerationFactor;
-      this.posY += this.field_70181_x * this.accelerationFactor;
-      this.posZ += this.field_70179_y * this.accelerationFactor;
+      this.posX = this.posX + this.motionX * this.accelerationFactor;
+      this.posY = this.posY + this.motionY * this.accelerationFactor;
+      this.posZ = this.posZ + this.motionZ * this.accelerationFactor;
       if (this.world.isRemote) {
          this.updateSplash();
       }
 
-      if (this.func_70090_H()) {
+      if (this.isInWater()) {
          float f3 = 0.25F;
-         this.world.func_175688_a(EnumParticleTypes.WATER_BUBBLE, this.posX - this.field_70159_w * (double)f3, this.posY - this.field_70181_x * (double)f3, this.posZ - this.field_70179_y * (double)f3, this.field_70159_w, this.field_70181_x, this.field_70179_y, new int[0]);
+         this.world
+            .spawnParticle(
+               EnumParticleTypes.WATER_BUBBLE,
+               this.posX - this.motionX * f3,
+               this.posY - this.motionY * f3,
+               this.posZ - this.motionZ * f3,
+               this.motionX,
+               this.motionY,
+               this.motionZ,
+               new int[0]
+            );
       }
 
-      this.func_70107_b(this.posX, this.posY, this.posZ);
+      this.setPosition(this.posX, this.posY, this.posZ);
    }
 
    public void updateSplash() {
       if (this.getInfo() != null) {
          if (this.getInfo().power > 0) {
-            if (!W_WorldFunc.isBlockWater(this.world, (int)(this.field_70169_q + 0.5D), (int)(this.field_70167_r + 0.5D), (int)(this.field_70166_s + 0.5D)) && W_WorldFunc.isBlockWater(this.world, (int)(this.posX + 0.5D), (int)(this.posY + 0.5D), (int)(this.posZ + 0.5D))) {
-               double x = this.posX - this.field_70169_q;
-               double y = this.posY - this.field_70167_r;
-               double z = this.posZ - this.field_70166_s;
+            if (!W_WorldFunc.isBlockWater(this.world, (int)(this.prevPosX + 0.5), (int)(this.prevPosY + 0.5), (int)(this.prevPosZ + 0.5))
+               && W_WorldFunc.isBlockWater(this.world, (int)(this.posX + 0.5), (int)(this.posY + 0.5), (int)(this.posZ + 0.5))) {
+               double x = this.posX - this.prevPosX;
+               double y = this.posY - this.prevPosY;
+               double z = this.posZ - this.prevPosZ;
                double d = Math.sqrt(x * x + y * y + z * z);
-               if (d <= 0.15D) {
+               if (d <= 0.15) {
                   return;
                }
 
                x /= d;
                y /= d;
                z /= d;
-               double px = this.field_70169_q;
-               double py = this.field_70167_r;
-               double pz = this.field_70166_s;
+               double px = this.prevPosX;
+               double py = this.prevPosY;
+               double pz = this.prevPosZ;
 
-               for(int i = 0; (double)i <= d; ++i) {
+               for (int i = 0; i <= d; i++) {
                   px += x;
                   py += y;
                   pz += z;
-                  if (W_WorldFunc.isBlockWater(this.world, (int)(px + 0.5D), (int)(py + 0.5D), (int)(pz + 0.5D))) {
-                     float pwr = this.getInfo().power < 20 ? (float)this.getInfo().power : 20.0F;
-                     int n = this.field_70146_Z.nextInt(1 + (int)pwr / 3) + (int)pwr / 2 + 1;
+                  if (W_WorldFunc.isBlockWater(this.world, (int)(px + 0.5), (int)(py + 0.5), (int)(pz + 0.5))) {
+                     float pwr = this.getInfo().power < 20 ? this.getInfo().power : 20.0F;
+                     int n = this.rand.nextInt(1 + (int)pwr / 3) + (int)pwr / 2 + 1;
                      pwr *= 0.03F;
 
-                     for(int j = 0; j < n; ++j) {
-                        MCH_ParticleParam prm = new MCH_ParticleParam(this.world, "splash", px, py + 0.5D, pz, (double)pwr * (this.field_70146_Z.nextDouble() - 0.5D) * 0.3D, (double)pwr * (this.field_70146_Z.nextDouble() * 0.5D + 0.5D) * 1.8D, (double)pwr * (this.field_70146_Z.nextDouble() - 0.5D) * 0.3D, pwr * 5.0F);
+                     for (int j = 0; j < n; j++) {
+                        MCH_ParticleParam prm = new MCH_ParticleParam(
+                           this.world,
+                           "splash",
+                           px,
+                           py + 0.5,
+                           pz,
+                           pwr * (this.rand.nextDouble() - 0.5) * 0.3,
+                           pwr * (this.rand.nextDouble() * 0.5 + 0.5) * 1.8,
+                           pwr * (this.rand.nextDouble() - 0.5) * 0.3,
+                           pwr * 5.0F
+                        );
                         MCH_ParticlesUtil.spawnParticle(prm);
                      }
-
-                     return;
+                     break;
                   }
                }
             }
-
          }
       }
    }
 
    public void onUpdateTimeout() {
-      if (this.func_70090_H()) {
+      if (this.isInWater()) {
          if (this.explosionPowerInWater > 0) {
-            this.newExplosion(this.posX, this.posY, this.posZ, (float)this.explosionPowerInWater, (float)this.explosionPowerInWater, true);
+            this.newExplosion(this.posX, this.posY, this.posZ, this.explosionPowerInWater, this.explosionPowerInWater, true);
          }
       } else if (this.explosionPower > 0) {
-         this.newExplosion(this.posX, this.posY, this.posZ, (float)this.explosionPower, (float)this.getInfo().explosionBlock, false);
+         this.newExplosion(this.posX, this.posY, this.posZ, this.explosionPower, this.getInfo().explosionBlock, false);
       } else if (this.explosionPower < 0) {
          this.playExplosionSound();
       }
-
    }
 
    public void onUpdateBomblet() {
-      if (!this.world.isRemote && this.sprinkleTime > 0 && !this.field_70128_L) {
-         --this.sprinkleTime;
+      if (!this.world.isRemote && this.sprinkleTime > 0 && !this.isDead) {
+         this.sprinkleTime--;
          if (this.sprinkleTime == 0) {
-            for(int i = 0; i < this.getInfo().bomblet; ++i) {
+            for (int i = 0; i < this.getInfo().bomblet; i++) {
                this.sprinkleBomblet();
             }
 
-            this.func_70106_y();
+            this.setDead();
          }
       }
-
    }
 
    public void boundBullet(EnumFacing sideHit) {
-      switch(sideHit) {
-      case DOWN:
-         if (this.field_70181_x > 0.0D) {
-            this.field_70181_x = -this.field_70181_x * (double)this.getInfo().bound;
-         }
-         break;
-      case UP:
-         if (this.field_70181_x < 0.0D) {
-            this.field_70181_x = -this.field_70181_x * (double)this.getInfo().bound;
-         }
-         break;
-      case NORTH:
-         if (this.field_70179_y > 0.0D) {
-            this.field_70179_y = -this.field_70179_y * (double)this.getInfo().bound;
-         } else {
-            this.posZ += this.field_70179_y;
-         }
-         break;
-      case SOUTH:
-         if (this.field_70179_y < 0.0D) {
-            this.field_70179_y = -this.field_70179_y * (double)this.getInfo().bound;
-         } else {
-            this.posZ += this.field_70179_y;
-         }
-         break;
-      case WEST:
-         if (this.field_70159_w > 0.0D) {
-            this.field_70159_w = -this.field_70159_w * (double)this.getInfo().bound;
-         } else {
-            this.posX += this.field_70159_w;
-         }
-         break;
-      case EAST:
-         if (this.field_70159_w < 0.0D) {
-            this.field_70159_w = -this.field_70159_w * (double)this.getInfo().bound;
-         } else {
-            this.posX += this.field_70159_w;
-         }
+      switch (sideHit) {
+         case DOWN:
+            if (this.motionY > 0.0) {
+               this.motionY = -this.motionY * this.getInfo().bound;
+            }
+            break;
+         case UP:
+            if (this.motionY < 0.0) {
+               this.motionY = -this.motionY * this.getInfo().bound;
+            }
+            break;
+         case NORTH:
+            if (this.motionZ > 0.0) {
+               this.motionZ = -this.motionZ * this.getInfo().bound;
+            } else {
+               this.posZ = this.posZ + this.motionZ;
+            }
+            break;
+         case SOUTH:
+            if (this.motionZ < 0.0) {
+               this.motionZ = -this.motionZ * this.getInfo().bound;
+            } else {
+               this.posZ = this.posZ + this.motionZ;
+            }
+            break;
+         case WEST:
+            if (this.motionX > 0.0) {
+               this.motionX = -this.motionX * this.getInfo().bound;
+            } else {
+               this.posX = this.posX + this.motionX;
+            }
+            break;
+         case EAST:
+            if (this.motionX < 0.0) {
+               this.motionX = -this.motionX * this.getInfo().bound;
+            } else {
+               this.posX = this.posX + this.motionX;
+            }
       }
 
       if (this.getInfo().bound <= 0.0F) {
-         this.field_70159_w *= 0.25D;
-         this.field_70181_x *= 0.25D;
-         this.field_70179_y *= 0.25D;
+         this.motionX *= 0.25;
+         this.motionY *= 0.25;
+         this.motionZ *= 0.25;
       }
-
    }
 
    protected void onUpdateCollided() {
       float damageFator = 1.0F;
-      double mx = this.field_70159_w * this.accelerationFactor;
-      double my = this.field_70181_x * this.accelerationFactor;
-      double mz = this.field_70179_y * this.accelerationFactor;
+      double mx = this.motionX * this.accelerationFactor;
+      double my = this.motionY * this.accelerationFactor;
+      double mz = this.motionZ * this.accelerationFactor;
       RayTraceResult m = null;
 
-      Vec3d vec31;
-      for(int i = 0; i < 5; ++i) {
-         vec31 = W_WorldFunc.getWorldVec3(this.world, this.posX, this.posY, this.posZ);
+      for (int i = 0; i < 5; i++) {
+         Vec3d vec3 = W_WorldFunc.getWorldVec3(this.world, this.posX, this.posY, this.posZ);
          Vec3d vec31 = W_WorldFunc.getWorldVec3(this.world, this.posX + mx, this.posY + my, this.posZ + mz);
-         m = W_WorldFunc.clip(this.world, vec31, vec31);
+         m = W_WorldFunc.clip(this.world, vec3, vec31);
          boolean continueClip = false;
          if (this.shootingEntity != null && W_MovingObjectPosition.isHitTypeTile(m)) {
-            Block block = W_WorldFunc.getBlock(this.world, m.func_178782_a());
+            Block block = W_WorldFunc.getBlock(this.world, m.getBlockPos());
             if (MCH_Config.bulletBreakableBlocks.contains(block)) {
-               W_WorldFunc.destroyBlock(this.world, m.func_178782_a(), true);
+               W_WorldFunc.destroyBlock(this.world, m.getBlockPos(), true);
                continueClip = true;
             }
          }
@@ -653,34 +694,33 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
          }
       }
 
-      Vec3d vec3 = W_WorldFunc.getWorldVec3(this.world, this.posX, this.posY, this.posZ);
-      vec31 = W_WorldFunc.getWorldVec3(this.world, this.posX + mx, this.posY + my, this.posZ + mz);
+      Vec3d vec3x = W_WorldFunc.getWorldVec3(this.world, this.posX, this.posY, this.posZ);
+      Vec3d vec31x = W_WorldFunc.getWorldVec3(this.world, this.posX + mx, this.posY + my, this.posZ + mz);
       if (this.getInfo().delayFuse > 0) {
          if (m != null) {
-            this.boundBullet(m.field_178784_b);
+            this.boundBullet(m.sideHit);
             if (this.delayFuse == 0) {
                this.delayFuse = this.getInfo().delayFuse;
             }
          }
-
       } else {
          if (m != null) {
-            vec31 = W_WorldFunc.getWorldVec3(this.world, m.field_72307_f.x, m.field_72307_f.y, m.field_72307_f.z);
+            vec31x = W_WorldFunc.getWorldVec3(this.world, m.hitVec.x, m.hitVec.y, m.hitVec.z);
          }
 
          Entity entity = null;
-         List<Entity> list = this.world.func_72839_b(this, this.func_174813_aQ().func_72321_a(mx, my, mz).func_72314_b(21.0D, 21.0D, 21.0D));
-         double d0 = 0.0D;
+         List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(mx, my, mz).grow(21.0, 21.0, 21.0));
+         double d0 = 0.0;
 
-         for(int j = 0; j < list.size(); ++j) {
-            Entity entity1 = (Entity)list.get(j);
+         for (int j = 0; j < list.size(); j++) {
+            Entity entity1 = list.get(j);
             if (this.canBeCollidedEntity(entity1)) {
                float f = 0.3F;
-               AxisAlignedBB axisalignedbb = entity1.func_174813_aQ().func_72314_b((double)f, (double)f, (double)f);
-               RayTraceResult m1 = axisalignedbb.func_72327_a(vec3, vec31);
+               AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().grow(f, f, f);
+               RayTraceResult m1 = axisalignedbb.calculateIntercept(vec3x, vec31x);
                if (m1 != null) {
-                  double d1 = vec3.func_72438_d(m1.field_72307_f);
-                  if (d1 < d0 || d0 == 0.0D) {
+                  double d1 = vec3x.distanceTo(m1.hitVec);
+                  if (d1 < d0 || d0 == 0.0) {
                      entity = entity1;
                      d0 = d1;
                   }
@@ -695,14 +735,13 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
          if (m != null) {
             this.onImpact(m, damageFator);
          }
-
       }
    }
 
    public boolean canBeCollidedEntity(Entity entity) {
       if (entity instanceof MCH_EntityChain) {
          return false;
-      } else if (!entity.func_70067_L()) {
+      } else if (!entity.canBeCollidedWith()) {
          return false;
       } else {
          if (entity instanceof MCH_EntityBaseBullet) {
@@ -737,18 +776,13 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
                }
             }
 
-            Iterator var4 = MCH_Config.IgnoreBulletHitList.iterator();
-
-            String s;
-            do {
-               if (!var4.hasNext()) {
-                  return true;
+            for (String s : MCH_Config.IgnoreBulletHitList) {
+               if (entity.getClass().getName().toLowerCase().indexOf(s.toLowerCase()) >= 0) {
+                  return false;
                }
+            }
 
-               s = (String)var4.next();
-            } while(entity.getClass().getName().toLowerCase().indexOf(s.toLowerCase()) < 0);
-
-            return false;
+            return true;
          }
       }
    }
@@ -759,79 +793,92 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
       }
 
       if (W_EntityPlayer.isPlayer(this.shootingEntity)) {
-         MCH_PacketNotifyHitBullet.send((MCH_EntityAircraft)null, (EntityPlayer)this.shootingEntity);
+         MCH_PacketNotifyHitBullet.send(null, (EntityPlayer)this.shootingEntity);
       }
-
    }
 
    protected void onImpact(RayTraceResult m, float damageFactor) {
-      float expPower;
       if (!this.world.isRemote) {
-         if (m.field_72308_g != null) {
-            this.onImpactEntity(m.field_72308_g, damageFactor);
+         if (m.entityHit != null) {
+            this.onImpactEntity(m.entityHit, damageFactor);
             this.piercing = 0;
          }
 
-         expPower = (float)this.explosionPower * damageFactor;
-         float expPowerInWater = (float)this.explosionPowerInWater * damageFactor;
-         double dx = 0.0D;
-         double dy = 0.0D;
-         double dz = 0.0D;
+         float expPower = this.explosionPower * damageFactor;
+         float expPowerInWater = this.explosionPowerInWater * damageFactor;
+         double dx = 0.0;
+         double dy = 0.0;
+         double dz = 0.0;
          if (this.piercing > 0) {
-            --this.piercing;
+            this.piercing--;
             if (expPower > 0.0F) {
-               this.newExplosion(m.field_72307_f.x + dx, m.field_72307_f.y + dy, m.field_72307_f.z + dz, 1.0F, 1.0F, false);
+               this.newExplosion(m.hitVec.x + dx, m.hitVec.y + dy, m.hitVec.z + dz, 1.0F, 1.0F, false);
             }
          } else {
             if (expPowerInWater == 0.0F) {
                if (this.getInfo().isFAE) {
-                  this.newFAExplosion(this.posX, this.posY, this.posZ, expPower, (float)this.getInfo().explosionBlock);
+                  this.newFAExplosion(this.posX, this.posY, this.posZ, expPower, this.getInfo().explosionBlock);
                } else if (expPower > 0.0F) {
-                  this.newExplosion(m.field_72307_f.x + dx, m.field_72307_f.y + dy, m.field_72307_f.z + dz, expPower, (float)this.getInfo().explosionBlock, false);
+                  this.newExplosion(m.hitVec.x + dx, m.hitVec.y + dy, m.hitVec.z + dz, expPower, this.getInfo().explosionBlock, false);
                } else if (expPower < 0.0F) {
                   this.playExplosionSound();
                }
-            } else if (m.field_72308_g != null) {
-               if (this.func_70090_H()) {
-                  this.newExplosion(m.field_72307_f.x + dx, m.field_72307_f.y + dy, m.field_72307_f.z + dz, expPowerInWater, expPowerInWater, true);
+            } else if (m.entityHit != null) {
+               if (this.isInWater()) {
+                  this.newExplosion(m.hitVec.x + dx, m.hitVec.y + dy, m.hitVec.z + dz, expPowerInWater, expPowerInWater, true);
                } else {
-                  this.newExplosion(m.field_72307_f.x + dx, m.field_72307_f.y + dy, m.field_72307_f.z + dz, expPower, (float)this.getInfo().explosionBlock, false);
+                  this.newExplosion(m.hitVec.x + dx, m.hitVec.y + dy, m.hitVec.z + dz, expPower, this.getInfo().explosionBlock, false);
                }
-            } else if (!this.func_70090_H() && !MCH_Lib.isBlockInWater(this.world, m.func_178782_a().func_177958_n(), m.func_178782_a().func_177956_o(), m.func_178782_a().func_177952_p())) {
-               if (expPower > 0.0F) {
-                  this.newExplosion(m.field_72307_f.x + dx, m.field_72307_f.y + dy, m.field_72307_f.z + dz, expPower, (float)this.getInfo().explosionBlock, false);
-               } else if (expPower < 0.0F) {
-                  this.playExplosionSound();
-               }
-            } else {
-               this.newExplosion((double)m.func_178782_a().func_177958_n(), (double)m.func_178782_a().func_177956_o(), (double)m.func_178782_a().func_177952_p(), expPowerInWater, expPowerInWater, true);
+            } else if (this.isInWater()
+               || MCH_Lib.isBlockInWater(this.world, m.getBlockPos().getX(), m.getBlockPos().getY(), m.getBlockPos().getZ())) {
+               this.newExplosion(
+                  m.getBlockPos().getX(), m.getBlockPos().getY(), m.getBlockPos().getZ(), expPowerInWater, expPowerInWater, true
+               );
+            } else if (expPower > 0.0F) {
+               this.newExplosion(m.hitVec.x + dx, m.hitVec.y + dy, m.hitVec.z + dz, expPower, this.getInfo().explosionBlock, false);
+            } else if (expPower < 0.0F) {
+               this.playExplosionSound();
             }
 
-            this.func_70106_y();
+            this.setDead();
          }
       } else if (this.getInfo() != null && (this.getInfo().explosion == 0 || this.getInfo().modeNum >= 2) && W_MovingObjectPosition.isHitTypeTile(m)) {
-         expPower = (float)this.getInfo().power;
+         float p = this.getInfo().power;
 
-         for(int i = 0; (float)i < expPower / 3.0F; ++i) {
-            MCH_ParticlesUtil.spawnParticleTileCrack(this.world, m.func_178782_a().func_177958_n(), m.func_178782_a().func_177956_o(), m.func_178782_a().func_177952_p(), m.field_72307_f.x + ((double)this.field_70146_Z.nextFloat() - 0.5D) * (double)expPower / 10.0D, m.field_72307_f.y + 0.1D, m.field_72307_f.z + ((double)this.field_70146_Z.nextFloat() - 0.5D) * (double)expPower / 10.0D, -this.field_70159_w * (double)expPower / 2.0D, (double)(expPower / 2.0F), -this.field_70179_y * (double)expPower / 2.0D);
+         for (int i = 0; i < p / 3.0F; i++) {
+            MCH_ParticlesUtil.spawnParticleTileCrack(
+               this.world,
+               m.getBlockPos().getX(),
+               m.getBlockPos().getY(),
+               m.getBlockPos().getZ(),
+               m.hitVec.x + (this.rand.nextFloat() - 0.5) * p / 10.0,
+               m.hitVec.y + 0.1,
+               m.hitVec.z + (this.rand.nextFloat() - 0.5) * p / 10.0,
+               -this.motionX * p / 2.0,
+               p / 2.0F,
+               -this.motionZ * p / 2.0
+            );
          }
       }
-
    }
 
    public void onImpactEntity(Entity entity, float damageFactor) {
-      if (!entity.field_70128_L) {
+      if (!entity.isDead) {
          MCH_Lib.DbgLog(this.world, "MCH_EntityBaseBullet.onImpactEntity:Damage=%d:" + entity.getClass(), this.getPower());
          MCH_Lib.applyEntityHurtResistantTimeConfig(entity);
-         DamageSource ds = DamageSource.func_76356_a(this, this.shootingEntity);
-         float damage = MCH_Config.applyDamageVsEntity(entity, ds, (float)this.getPower() * damageFactor);
+         DamageSource ds = DamageSource.causeThrownDamage(this, this.shootingEntity);
+         float damage = MCH_Config.applyDamageVsEntity(entity, ds, this.getPower() * damageFactor);
          damage *= this.getInfo() != null ? this.getInfo().getDamageFactor(entity) : 1.0F;
-         entity.func_70097_a(ds, damage);
-         if (this instanceof MCH_EntityBullet && entity instanceof EntityVillager && this.shootingEntity != null && this.shootingEntity instanceof EntityPlayerMP && this.shootingEntity.func_184187_bx() instanceof MCH_EntitySeat) {
+         entity.attackEntityFrom(ds, damage);
+         if (this instanceof MCH_EntityBullet
+            && entity instanceof EntityVillager
+            && this.shootingEntity != null
+            && this.shootingEntity instanceof EntityPlayerMP
+            && this.shootingEntity.getRidingEntity() instanceof MCH_EntitySeat) {
             MCH_CriteriaTriggers.VILLAGER_HURT_BULLET.trigger((EntityPlayerMP)this.shootingEntity);
          }
 
-         if (!entity.field_70128_L) {
+         if (!entity.isDead) {
          }
       }
 
@@ -839,53 +886,84 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
    }
 
    public void newFAExplosion(double x, double y, double z, float exp, float expBlock) {
-      MCH_Explosion.ExplosionResult result = MCH_Explosion.newExplosion(this.world, this, this.shootingEntity, x, y, z, exp, expBlock, true, true, this.getInfo().flaming, false, 15);
+      MCH_Explosion.ExplosionResult result = MCH_Explosion.newExplosion(
+         this.world, this, this.shootingEntity, x, y, z, exp, expBlock, true, true, this.getInfo().flaming, false, 15
+      );
       if (result != null && result.hitEntity) {
          this.notifyHitBullet();
       }
-
    }
 
    public void newExplosion(double x, double y, double z, float exp, float expBlock, boolean inWater) {
       MCH_Explosion.ExplosionResult result;
       if (!inWater) {
-         result = MCH_Explosion.newExplosion(this.world, this, this.shootingEntity, x, y, z, exp, expBlock, this.field_70146_Z.nextInt(3) == 0, true, this.getInfo().flaming, true, 0, this.getInfo() != null ? this.getInfo().damageFactor : null);
+         result = MCH_Explosion.newExplosion(
+            this.world,
+            this,
+            this.shootingEntity,
+            x,
+            y,
+            z,
+            exp,
+            expBlock,
+            this.rand.nextInt(3) == 0,
+            true,
+            this.getInfo().flaming,
+            true,
+            0,
+            this.getInfo() != null ? this.getInfo().damageFactor : null
+         );
       } else {
-         result = MCH_Explosion.newExplosionInWater(this.world, this, this.shootingEntity, x, y, z, exp, expBlock, this.field_70146_Z.nextInt(3) == 0, true, this.getInfo().flaming, true, 0, this.getInfo() != null ? this.getInfo().damageFactor : null);
+         result = MCH_Explosion.newExplosionInWater(
+            this.world,
+            this,
+            this.shootingEntity,
+            x,
+            y,
+            z,
+            exp,
+            expBlock,
+            this.rand.nextInt(3) == 0,
+            true,
+            this.getInfo().flaming,
+            true,
+            0,
+            this.getInfo() != null ? this.getInfo().damageFactor : null
+         );
       }
 
       if (result != null && result.hitEntity) {
          this.notifyHitBullet();
       }
-
    }
 
    public void playExplosionSound() {
       MCH_Explosion.playExplosionSound(this.world, this.posX, this.posY, this.posZ);
    }
 
-   public void func_70014_b(NBTTagCompound par1NBTTagCompound) {
-      par1NBTTagCompound.func_74782_a("direction", this.func_70087_a(new double[]{this.field_70159_w, this.field_70181_x, this.field_70179_y}));
-      par1NBTTagCompound.setString("WeaponName", this.func_70005_c_());
+   public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
+      par1NBTTagCompound.setTag("direction", this.newDoubleNBTList(new double[]{this.motionX, this.motionY, this.motionZ}));
+      par1NBTTagCompound.setString("WeaponName", this.getName());
    }
 
-   public void func_70037_a(NBTTagCompound par1NBTTagCompound) {
-      this.func_70106_y();
+   public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
+      this.setDead();
    }
 
-   public boolean func_70067_L() {
+   public boolean canBeCollidedWith() {
       return true;
    }
 
-   public float func_70111_Y() {
+   public float getCollisionBorderSize() {
       return 1.0F;
    }
 
-   public boolean func_70097_a(DamageSource ds, float par2) {
-      if (this.func_180431_b(ds)) {
+   @Override
+   public boolean attackEntityFrom(DamageSource ds, float par2) {
+      if (this.isEntityInvulnerable(ds)) {
          return false;
-      } else if (!this.world.isRemote && par2 > 0.0F && ds.func_76355_l().equalsIgnoreCase("thrown")) {
-         this.func_70018_K();
+      } else if (!this.world.isRemote && par2 > 0.0F && ds.getDamageType().equalsIgnoreCase("thrown")) {
+         this.markVelocityChanged();
          Vec3d pos = new Vec3d(this.posX, this.posY, this.posZ);
          RayTraceResult m = new RayTraceResult(pos, EnumFacing.DOWN, new BlockPos(pos));
          this.onImpact(m, 1.0F);
@@ -915,12 +993,5 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
 
    public void setPower(int power) {
       this.power = power;
-   }
-
-   static {
-      TARGET_ID = EntityDataManager.createKey(MCH_EntityBaseBullet.class, DataSerializers.VARINT);
-      INFO_NAME = EntityDataManager.createKey(MCH_EntityBaseBullet.class, DataSerializers.STRING);
-      BULLET_MODEL = EntityDataManager.createKey(MCH_EntityBaseBullet.class, DataSerializers.STRING);
-      BOMBLET_FLAG = EntityDataManager.createKey(MCH_EntityBaseBullet.class, DataSerializers.field_187191_a);
    }
 }

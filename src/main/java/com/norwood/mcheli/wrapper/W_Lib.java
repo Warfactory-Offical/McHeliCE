@@ -21,9 +21,9 @@ public class W_Lib {
 
    public static double getEntityMoveDist(@Nullable Entity entity) {
       if (entity == null) {
-         return 0.0D;
+         return 0.0;
       } else {
-         return entity instanceof EntityLivingBase ? (double)((EntityLivingBase)entity).field_191988_bg : 0.0D;
+         return entity instanceof EntityLivingBase ? ((EntityLivingBase)entity).moveForward : 0.0;
       }
    }
 

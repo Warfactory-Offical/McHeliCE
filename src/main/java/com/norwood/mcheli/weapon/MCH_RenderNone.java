@@ -15,6 +15,7 @@ public class MCH_RenderNone extends MCH_RenderBulletBase<W_Entity> {
       super(renderManager);
    }
 
+   @Override
    public void renderBullet(W_Entity entity, double posX, double posY, double posZ, float yaw, float partialTickTime) {
    }
 
