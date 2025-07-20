@@ -81,14 +81,12 @@ public class MCH_ClientHeliTickHandler extends MCH_AircraftClientTickHandler {
         if (player != null) {
             if (player.getRidingEntity() instanceof MCH_EntityHeli) {
                 heli = (MCH_EntityHeli) player.getRidingEntity();
-            } else if (player.getRidingEntity() instanceof MCH_EntitySeat) {
-                MCH_EntitySeat seat = (MCH_EntitySeat) player.getRidingEntity();
+            } else if (player.getRidingEntity() instanceof MCH_EntitySeat seat) {
                 if (seat.getParent() instanceof MCH_EntityHeli) {
                     isPilot = false;
                     heli = (MCH_EntityHeli) seat.getParent();
                 }
-            } else if (player.getRidingEntity() instanceof MCH_EntityUavStation) {
-                MCH_EntityUavStation uavStation = (MCH_EntityUavStation) player.getRidingEntity();
+            } else if (player.getRidingEntity() instanceof MCH_EntityUavStation uavStation) {
                 if (uavStation.getControlAircract() instanceof MCH_EntityHeli) {
                     heli = (MCH_EntityHeli) uavStation.getControlAircract();
                 }

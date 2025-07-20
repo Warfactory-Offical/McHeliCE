@@ -28,8 +28,7 @@ public class MCH_AircraftPacketHandler {
             if (req.entityID_Ac > 0) {
                 scheduler.addScheduledTask(() -> {
                     Entity e = player.world.getEntityByID(req.entityID_Ac);
-                    if (e instanceof MCH_EntityAircraft) {
-                        MCH_EntityAircraft ac = (MCH_EntityAircraft) e;
+                    if (e instanceof MCH_EntityAircraft ac) {
                         ac.setRotRoll(req.roll);
                         if (req.rollRev) {
                             MCH_Lib.DbgLog(ac.world, "onPacketIndRotation Error:req.rollRev y=%.2f, p=%.2f, r=%.2f", req.yaw, req.pitch, req.roll);
@@ -93,8 +92,7 @@ public class MCH_AircraftPacketHandler {
             if (status.entityID_Ac > 0) {
                 scheduler.addScheduledTask(() -> {
                     Entity e = player.world.getEntityByID(status.entityID_Ac);
-                    if (e instanceof MCH_EntityAircraft) {
-                        MCH_EntityAircraft ac = (MCH_EntityAircraft) e;
+                    if (e instanceof MCH_EntityAircraft ac) {
                         StringBuilder msg = new StringBuilder("onPacketNotifyAmmoNum:");
                         msg.append(ac.getAcInfo() != null ? ac.getAcInfo().displayName : "null").append(":");
                         if (status.all) {
@@ -165,8 +163,7 @@ public class MCH_AircraftPacketHandler {
             if (ind.entityID_Ac > 0) {
                 scheduler.addScheduledTask(() -> {
                     Entity e = player.world.getEntityByID(ind.entityID_Ac);
-                    if (e instanceof MCH_EntityAircraft) {
-                        MCH_EntityAircraft ac = (MCH_EntityAircraft) e;
+                    if (e instanceof MCH_EntityAircraft ac) {
                         MCH_Lib.DbgLog(e.world, "onPacketIndReload :%s", ac.getAcInfo().displayName);
                         ac.supplyAmmo(ind.weaponID);
                     }
@@ -184,8 +181,7 @@ public class MCH_AircraftPacketHandler {
                 scheduler.addScheduledTask(() -> {
                     StringBuilder msg = new StringBuilder("onPacketStatusResponse:EID=" + status.entityID_AC + ":");
                     Entity e = player.world.getEntityByID(status.entityID_AC);
-                    if (e instanceof MCH_EntityAircraft) {
-                        MCH_EntityAircraft ac = (MCH_EntityAircraft) e;
+                    if (e instanceof MCH_EntityAircraft ac) {
                         if (status.seatNum > 0 && status.weaponIDs != null && status.weaponIDs.length == status.seatNum) {
                             msg.append("seatNum=").append(status.seatNum).append(":");
 
@@ -212,8 +208,7 @@ public class MCH_AircraftPacketHandler {
             if (status.entityID_Ac > 0) {
                 scheduler.addScheduledTask(() -> {
                     Entity e = player.world.getEntityByID(status.entityID_Ac);
-                    if (e instanceof MCH_EntityAircraft) {
-                        MCH_EntityAircraft ac = (MCH_EntityAircraft) e;
+                    if (e instanceof MCH_EntityAircraft ac) {
                         if (ac.isValidSeatID(status.seatID)) {
                             ac.getWeapon(status.weaponID).setAmmoNum(status.ammo);
                             ac.getWeapon(status.weaponID).setRestAllAmmoNum(status.restAmmo);
@@ -280,8 +275,7 @@ public class MCH_AircraftPacketHandler {
 
             scheduler.addScheduledTask(() -> {
                 Entity e = player.world.getEntityByID(packet.entityID_Ac);
-                if (e instanceof MCH_EntityAircraft) {
-                    MCH_EntityAircraft ac = (MCH_EntityAircraft) e;
+                if (e instanceof MCH_EntityAircraft ac) {
                     e = player.world.getEntityByID(packet.entityID_TVMissile);
                     if (e instanceof MCH_EntityTvMissile) {
                         ((MCH_EntityTvMissile) e).shootingEntity = player;
@@ -301,16 +295,14 @@ public class MCH_AircraftPacketHandler {
                 scheduler.addScheduledTask(
                         () -> {
                             Entity e = player.world.getEntityByID(seatList.entityID_AC);
-                            if (e instanceof MCH_EntityAircraft) {
-                                MCH_EntityAircraft ac = (MCH_EntityAircraft) e;
+                            if (e instanceof MCH_EntityAircraft ac) {
                                 if (seatList.seatNum > 0
                                         && seatList.seatNum == ac.getSeats().length
                                         && seatList.seatEntityID != null
                                         && seatList.seatEntityID.length == seatList.seatNum) {
                                     for (int i = 0; i < seatList.seatNum; i++) {
                                         Entity entity = player.world.getEntityByID(seatList.seatEntityID[i]);
-                                        if (entity instanceof MCH_EntitySeat) {
-                                            MCH_EntitySeat seat = (MCH_EntitySeat) entity;
+                                        if (entity instanceof MCH_EntitySeat seat) {
                                             seat.seatID = i;
                                             seat.parentUniqueID = ac.getCommonUniqueId();
                                             ac.setSeat(i, seat);
@@ -332,8 +324,7 @@ public class MCH_AircraftPacketHandler {
             pc.readData(data);
             scheduler.addScheduledTask(() -> {
                 MCH_EntityAircraft ac;
-                if (player.getRidingEntity() instanceof MCH_EntitySeat) {
-                    MCH_EntitySeat seat = (MCH_EntitySeat) player.getRidingEntity();
+                if (player.getRidingEntity() instanceof MCH_EntitySeat seat) {
                     ac = seat.getParent();
                 } else {
                     ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
@@ -421,8 +412,7 @@ public class MCH_AircraftPacketHandler {
                             List<Entity> list = world.loadedEntityList;
 
                             for (Entity entity : list) {
-                                if (entity instanceof MCH_EntityAircraft) {
-                                    MCH_EntityAircraft entityAircraft = (MCH_EntityAircraft) entity;
+                                if (entity instanceof MCH_EntityAircraft entityAircraft) {
                                     if (entityAircraft.getAcInfo() != null) {
                                         entityAircraft.changeType(entityAircraft.getAcInfo().name);
                                         entityAircraft.createSeats(UUID.randomUUID().toString());

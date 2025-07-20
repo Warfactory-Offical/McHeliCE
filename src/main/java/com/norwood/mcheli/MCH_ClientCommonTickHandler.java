@@ -322,8 +322,7 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
                 ridingAircraft = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
                 if (ridingAircraft != null) {
                     cameraMode = ridingAircraft.getCameraMode(player);
-                } else if (player.getRidingEntity() instanceof MCH_EntityGLTD) {
-                    MCH_EntityGLTD gltd = (MCH_EntityGLTD) player.getRidingEntity();
+                } else if (player.getRidingEntity() instanceof MCH_EntityGLTD gltd) {
                     cameraMode = gltd.camera.getMode(0);
                 } else {
                     cameraMode = 0;
@@ -336,8 +335,7 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
                     ac = (MCH_EntityAircraft) player.getRidingEntity();
                 } else if (player.getRidingEntity() instanceof MCH_EntityUavStation) {
                     ac = ((MCH_EntityUavStation) player.getRidingEntity()).getControlAircract();
-                } else if (player.getRidingEntity() instanceof MCH_EntityVehicle) {
-                    MCH_EntityAircraft vehicle = (MCH_EntityAircraft) player.getRidingEntity();
+                } else if (player.getRidingEntity() instanceof MCH_EntityVehicle vehicle) {
                     vehicle.setupAllRiderRenderPosition(partialTicks, player);
                 }
 

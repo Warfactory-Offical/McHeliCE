@@ -52,8 +52,7 @@ public abstract class WordExpression extends AbstractExpression {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof WordExpression) {
-            WordExpression e = (WordExpression) obj;
+        if (obj instanceof WordExpression e) {
             if (this.getClass() == e.getClass()) {
                 return this.word.equals(e.word);
             }

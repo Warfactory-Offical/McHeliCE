@@ -48,7 +48,7 @@ public class JavaExOperator implements Operator {
         } else if (x instanceof BigDecimal) {
             return BigDecimal.valueOf(n);
         } else {
-            return x instanceof String ? String.valueOf(n) : new Long(n);
+            return x instanceof String ? String.valueOf(n) : Long.valueOf(n);
         }
     }
 
@@ -70,7 +70,7 @@ public class JavaExOperator implements Operator {
         } else if (x instanceof Double || y instanceof Double) {
             return (double) n;
         } else {
-            return !(x instanceof String) && !(y instanceof String) ? new Long(n) : String.valueOf(n);
+            return !(x instanceof String) && !(y instanceof String) ? Long.valueOf(n) : String.valueOf(n);
         }
     }
 
@@ -96,7 +96,7 @@ public class JavaExOperator implements Operator {
         if (x instanceof BigDecimal) {
             return BigDecimal.valueOf(n);
         } else {
-            return x instanceof BigInteger ? BigInteger.valueOf(n) : new Long(n);
+            return x instanceof BigInteger ? BigInteger.valueOf(n) : Long.valueOf(n);
         }
     }
 
@@ -104,16 +104,16 @@ public class JavaExOperator implements Operator {
         if (x instanceof BigDecimal || y instanceof BigDecimal) {
             return BigDecimal.valueOf(n);
         } else {
-            return !(x instanceof BigInteger) && !(y instanceof BigInteger) ? new Long(n) : BigInteger.valueOf(n);
+            return !(x instanceof BigInteger) && !(y instanceof BigInteger) ? Long.valueOf(n) : BigInteger.valueOf(n);
         }
     }
 
     Object nn(double n, Object x) {
-        return this.inLong(x) ? new Long((long) n) : new Double(n);
+        return this.inLong(x) ? Long.valueOf((long) n) : new Double(n);
     }
 
     Object nn(double n, Object x, Object y) {
-        return this.inLong(x) && this.inLong(y) ? new Long((long) n) : new Double(n);
+        return this.inLong(x) && this.inLong(y) ? Long.valueOf((long) n) : new Double(n);
     }
 
     RuntimeException undefined(Object x) {
@@ -238,9 +238,7 @@ public class JavaExOperator implements Operator {
             return this.nn(this.l(x) / this.l(y), x);
         } else if (this.inDouble(x) && this.inDouble(y)) {
             return this.nn(this.d(x) / this.d(y), x);
-        } else if (x instanceof String && y instanceof String) {
-            String s = (String) x;
-            String r = (String) y;
+        } else if (x instanceof String s && y instanceof String r) {
             return s.split(r);
         } else {
             throw this.undefined(x, y);

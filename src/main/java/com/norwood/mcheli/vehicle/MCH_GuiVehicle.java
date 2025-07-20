@@ -26,8 +26,7 @@ public class MCH_GuiVehicle extends MCH_AircraftCommonGui {
 
     @Override
     public void drawGui(EntityPlayer player, boolean isThirdPersonView) {
-        if (player.getRidingEntity() != null && player.getRidingEntity() instanceof MCH_EntityVehicle) {
-            MCH_EntityVehicle vehicle = (MCH_EntityVehicle) player.getRidingEntity();
+        if (player.getRidingEntity() != null && player.getRidingEntity() instanceof MCH_EntityVehicle vehicle) {
             if (!vehicle.isDestroyed()) {
                 int seatID = vehicle.getSeatIdByEntity(player);
                 GL11.glLineWidth(scaleFactor);

@@ -375,8 +375,7 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
             int id = this.getLastControlAircraftEntityId();
             if (id > 0) {
                 Entity entity = this.world.getEntityByID(id);
-                if (entity instanceof MCH_EntityAircraft) {
-                    MCH_EntityAircraft ac = (MCH_EntityAircraft) entity;
+                if (entity instanceof MCH_EntityAircraft ac) {
                     if (ac.isUAV()) {
                         this.setLastControlAircraft(ac);
                     }

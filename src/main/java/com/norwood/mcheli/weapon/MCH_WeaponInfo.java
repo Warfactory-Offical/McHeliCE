@@ -478,24 +478,14 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
                 if (sx.length >= 2) {
                     Class<? extends Entity> c = null;
                     String className = sx[0].toLowerCase();
-                    switch (className) {
-                        case "player":
-                            c = EntityPlayer.class;
-                            break;
-                        case "heli":
-                        case "helicopter":
-                            c = MCH_EntityHeli.class;
-                            break;
-                        case "plane":
-                            c = MCP_EntityPlane.class;
-                            break;
-                        case "tank":
-                            c = MCH_EntityTank.class;
-                            break;
-                        case "vehicle":
-                            c = MCH_EntityVehicle.class;
-                            break;
-                    }
+                    c = switch (className) {
+                        case "player" -> EntityPlayer.class;
+                        case "heli", "helicopter" -> MCH_EntityHeli.class;
+                        case "plane" -> MCP_EntityPlane.class;
+                        case "tank" -> MCH_EntityTank.class;
+                        case "vehicle" -> MCH_EntityVehicle.class;
+                        default -> c;
+                    };
 
                     if (c != null) {
                         if (this.damageFactor == null) {

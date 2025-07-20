@@ -22,16 +22,14 @@ public class Replace4RefactorGetter extends ReplaceAdapter {
     protected AbstractExpression field(FieldExpression exp) {
         AbstractExpression exp1 = exp.expl;
         Object obj = exp1.getVariable();
-        if (obj == null) {
-            return exp;
-        } else {
+        if (obj != null) {
             AbstractExpression exp2 = exp.expr;
             String name = this.ref.getNewName(obj, exp2.getWord());
             if (name != null) {
                 exp.expr = this.rule.parse(name, exp2.share);
             }
-            return exp;
         }
+        return exp;
     }
 
     @Override

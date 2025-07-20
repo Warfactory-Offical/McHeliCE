@@ -33,8 +33,7 @@ public class MCH_ItemThrowable extends W_Item {
     }
 
     public void onPlayerStoppedUsing(@NotNull ItemStack itemStack, @NotNull World world, @NotNull EntityLivingBase entityLiving, int par4) {
-        if (entityLiving instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) entityLiving;
+        if (entityLiving instanceof EntityPlayer player) {
             if (!itemStack.isEmpty() && itemStack.getCount() > 0) {
                 MCH_ThrowableInfo info = MCH_ThrowableInfoManager.get(itemStack.getItem());
                 if (info != null) {

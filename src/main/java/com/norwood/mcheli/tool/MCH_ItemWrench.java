@@ -151,8 +151,7 @@ public class MCH_ItemWrench extends W_Item {
     }
 
     public void onUpdate(@NotNull ItemStack item, @NotNull World world, @NotNull Entity entity, int n, boolean b) {
-        if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) entity;
+        if (entity instanceof EntityPlayer player) {
             ItemStack itemStack = player.getHeldItemMainhand();
             if (itemStack == item) {
                 MCH_MOD.proxy.setCreativeDigDelay(0);
@@ -166,8 +165,7 @@ public class MCH_ItemWrench extends W_Item {
         if (m != null) {
             if (m.entityHit instanceof MCH_EntityAircraft) {
                 ac = (MCH_EntityAircraft) m.entityHit;
-            } else if (m.entityHit instanceof MCH_EntitySeat) {
-                MCH_EntitySeat seat = (MCH_EntitySeat) m.entityHit;
+            } else if (m.entityHit instanceof MCH_EntitySeat seat) {
                 if (seat.getParent() != null) {
                     ac = seat.getParent();
                 }

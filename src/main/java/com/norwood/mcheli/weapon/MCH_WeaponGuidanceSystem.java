@@ -258,8 +258,7 @@ public class MCH_WeaponGuidanceSystem {
     }
 
     public Entity getLockEntity(Entity entity) {
-        if (entity.getRidingEntity() instanceof MCH_EntityUavStation) {
-            MCH_EntityUavStation us = (MCH_EntityUavStation) entity.getRidingEntity();
+        if (entity.getRidingEntity() instanceof MCH_EntityUavStation us) {
             if (us.getControlAircract() != null) {
                 return us.getControlAircract();
             }

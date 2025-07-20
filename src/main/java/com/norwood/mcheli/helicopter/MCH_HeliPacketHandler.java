@@ -30,8 +30,7 @@ public class MCH_HeliPacketHandler {
                             if (((MCH_EntitySeat) player.getRidingEntity()).getParent() instanceof MCH_EntityHeli) {
                                 heli = (MCH_EntityHeli) ((MCH_EntitySeat) player.getRidingEntity()).getParent();
                             }
-                        } else if (player.getRidingEntity() instanceof MCH_EntityUavStation) {
-                            MCH_EntityUavStation uavStation = (MCH_EntityUavStation) player.getRidingEntity();
+                        } else if (player.getRidingEntity() instanceof MCH_EntityUavStation uavStation) {
                             if (uavStation.getControlAircract() instanceof MCH_EntityHeli) {
                                 heli = (MCH_EntityHeli) uavStation.getControlAircract();
                             }

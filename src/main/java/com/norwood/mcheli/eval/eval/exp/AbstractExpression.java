@@ -88,7 +88,7 @@ public abstract class AbstractExpression {
     }
 
     protected void let(long val, int pos) {
-        this.let(new Long(val), pos);
+        this.let(Long.valueOf(val), pos);
     }
 
     protected void let(double val, int pos) {

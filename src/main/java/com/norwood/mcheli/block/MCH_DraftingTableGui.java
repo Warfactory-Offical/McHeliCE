@@ -253,114 +253,80 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
         if (this.buttonClickWait <= 0) {
             if (button.enabled) {
                 this.buttonClickWait = 3;
-                int index;
-                int page = this.current.getDescCurrentPage();
                 switch (button.id) {
-                    case 10:
+                    case 10 -> {
                         initModelTransform();
                         modelRotX = 180.0F;
                         modelRotY = 90.0F;
                         this.switchRecipeList(MCH_HeliInfoManager.getInstance());
                         this.switchScreen(1);
-                        break;
-                    case 11:
+                    }
+                    case 11 -> {
                         initModelTransform();
                         modelRotX = 90.0F;
                         modelRotY = 180.0F;
                         this.switchRecipeList(MCP_PlaneInfoManager.getInstance());
                         this.switchScreen(1);
-                        break;
-                    case 12:
+                    }
+                    case 12 -> {
                         initModelTransform();
                         modelRotX = 180.0F;
                         modelRotY = 90.0F;
                         this.switchRecipeList(MCH_VehicleInfoManager.getInstance());
                         this.switchScreen(1);
-                        break;
-                    case 13:
+                    }
+                    case 13 -> {
                         initModelTransform();
                         modelRotX = 180.0F;
                         modelRotY = 90.0F;
                         this.switchRecipeList(MCH_TankInfoManager.getInstance());
                         this.switchScreen(1);
-                        break;
-                    case 14:
+                    }
+                    case 14 -> {
                         this.switchRecipeList(MCH_ItemRecipe.getInstance());
                         this.switchScreen(1);
-                    case 15:
-                    case 16:
-                    case 17:
-                    case 18:
-                    case 19:
-                    case 22:
-                    case 23:
-                    case 24:
-                    case 25:
-                    case 26:
-                    case 27:
-                    case 28:
-                    case 29:
-                    case 31:
-                    case 32:
-                    case 33:
-                    case 34:
-                    case 35:
-                    case 36:
-                    case 37:
-                    case 38:
-                    case 39:
-                    case 46:
-                    case 47:
-                    case 48:
-                    case 49:
-                    default:
-                        break;
-                    case 20:
+                    }
+                    case 20 -> {
+                        int page = this.current.getDescCurrentPage();
                         if (this.current.isCurrentPageTexture()) {
                             page = 0;
                         }
-
-                        index = (this.current.index + 1) % this.getCurrentList().getRecipeListSize();
+                        int index = (this.current.index + 1) % this.getCurrentList().getRecipeListSize();
                         this.setCurrentRecipe(new MCH_CurrentRecipe(this.getCurrentList(), index));
                         this.current.setDescCurrentPage(page);
-                        break;
-                    case 21:
+                    }
+                    case 21 -> {
+                        int page = this.current.getDescCurrentPage();
                         if (this.current.isCurrentPageTexture()) {
                             page = 0;
                         }
-
-                        index = this.current.index - 1;
+                        int index = this.current.index - 1;
                         if (index < 0) {
                             index = this.getCurrentList().getRecipeListSize() - 1;
                         }
-
                         this.setCurrentRecipe(new MCH_CurrentRecipe(this.getCurrentList(), index));
                         this.current.setDescCurrentPage(page);
-                        break;
-                    case 30:
-                        MCH_DraftingTableCreatePacket.send(this.current.recipe);
-                        break;
-                    case 40:
-                    case 41:
-                    case 42:
-                    case 43:
-                    case 44:
-                    case 45:
-                        index = (int) this.listSlider.getSliderValue() * 2 + (button.id - 40);
+                    }
+                    case 30 -> MCH_DraftingTableCreatePacket.send(this.current.recipe);
+                    case 40, 41, 42, 43, 44, 45 -> {
+                        int index = (int) this.listSlider.getSliderValue() * 2 + (button.id - 40);
                         if (index < this.getCurrentList().getRecipeListSize()) {
                             this.setCurrentRecipe(new MCH_CurrentRecipe(this.getCurrentList(), index));
                             this.switchScreen(0);
                         }
-                        break;
-                    case 50:
+                    }
+                    case 50 -> {
                         if (this.current != null) {
                             this.current.switchNextPage();
                         }
-                        break;
-                    case 51:
+                    }
+                    case 51 -> {
                         if (this.current != null) {
                             this.current.switchPrevPage();
                         }
+                    }
+                    default -> {
+                    }
                 }
             }
         }

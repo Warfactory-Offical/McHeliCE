@@ -76,8 +76,7 @@ public class MCH_ClientGLTDTickHandler extends MCH_ClientTickHandlerBase {
         this.isBeforeRiding = this.isRiding;
         EntityPlayer player = this.mc.player;
         MCH_ViewEntityDummy viewEntityDummy = null;
-        if (player != null && player.getRidingEntity() instanceof MCH_EntityGLTD) {
-            MCH_EntityGLTD gltd = (MCH_EntityGLTD) player.getRidingEntity();
+        if (player != null && player.getRidingEntity() instanceof MCH_EntityGLTD gltd) {
             this.updateGLTD(player, gltd);
             MCH_Lib.disableFirstPersonItemRender(player.getHeldItemMainhand());
             viewEntityDummy = MCH_ViewEntityDummy.getInstance(this.mc.world);

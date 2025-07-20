@@ -165,24 +165,13 @@ public class MCH_GuiTitle extends MCH_Gui {
         float charAlpha = this.mc.gameSettings.chatOpacity * 0.9F + 0.1F;
         float scale = this.mc.gameSettings.chatScale * 2.0F;
         GL11.glPushMatrix();
-        float posY;
-        switch (this.position) {
-            case 0:
-            default:
-                posY = (float) this.mc.displayHeight / 2 / scaleFactor - this.chatLines.size() / 2.0F * 9.0F * scale;
-                break;
-            case 1:
-                posY = 0.0F;
-                break;
-            case 2:
-                posY = (float) this.mc.displayHeight / scaleFactor - this.chatLines.size() * 9.0F * scale;
-                break;
-            case 3:
-                posY = (float) this.mc.displayHeight / 3 / scaleFactor - this.chatLines.size() / 2.0F * 9.0F * scale;
-                break;
-            case 4:
-                posY = (float) (this.mc.displayHeight * 2) / 3 / scaleFactor - this.chatLines.size() / 2.0F * 9.0F * scale;
-        }
+        float posY = switch (this.position) {
+            case 1 -> 0.0F;
+            case 2 -> (float) this.mc.displayHeight / scaleFactor - this.chatLines.size() * 9.0F * scale;
+            case 3 -> (float) this.mc.displayHeight / 3 / scaleFactor - this.chatLines.size() / 2.0F * 9.0F * scale;
+            case 4 -> (float) (this.mc.displayHeight * 2) / 3 / scaleFactor - this.chatLines.size() / 2.0F * 9.0F * scale;
+            default -> (float) this.mc.displayHeight / 2 / scaleFactor - this.chatLines.size() / 2.0F * 9.0F * scale;
+        };
 
         GL11.glTranslatef(0.0F, posY, 0.0F);
         GL11.glScalef(scale, scale, 1.0F);

@@ -10,12 +10,11 @@ import net.minecraftforge.fml.relauncher.Side;
 public class MCH_GLTDPacketHandler {
     @HandleSide({Side.SERVER})
     public static void onPacket_GLTDPlayerControl(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-        if (player.getRidingEntity() instanceof MCH_EntityGLTD) {
+        if (player.getRidingEntity() instanceof MCH_EntityGLTD gltd) {
             if (!player.world.isRemote) {
                 MCH_PacketGLTDPlayerControl pc = new MCH_PacketGLTDPlayerControl();
                 pc.readData(data);
                 scheduler.addScheduledTask(() -> {
-                    MCH_EntityGLTD gltd = (MCH_EntityGLTD) player.getRidingEntity();
                     if (pc.unmount) {
                         Entity riddenByEntity = gltd.getRiddenByEntity();
                         if (riddenByEntity != null) {

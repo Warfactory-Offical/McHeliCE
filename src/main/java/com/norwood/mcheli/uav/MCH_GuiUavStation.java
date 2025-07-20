@@ -17,8 +17,6 @@ import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
-import java.io.IOException;
-
 public class MCH_GuiUavStation extends W_GuiContainer {
     static final int BX = 20;
     static final int BY = 22;

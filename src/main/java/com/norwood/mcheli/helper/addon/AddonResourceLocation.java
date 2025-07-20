@@ -106,8 +106,7 @@ public class AddonResourceLocation extends ResourceLocation {
     public boolean equals(Object p_equals_1_) {
         if (this == p_equals_1_) {
             return true;
-        } else if (p_equals_1_ instanceof AddonResourceLocation && super.equals(p_equals_1_)) {
-            AddonResourceLocation location = (AddonResourceLocation) p_equals_1_;
+        } else if (p_equals_1_ instanceof AddonResourceLocation location && super.equals(p_equals_1_)) {
             return location.addonDomain.equals(this.addonDomain) && location.isEmpty == this.isEmpty;
         } else {
             return false;
@@ -120,8 +119,7 @@ public class AddonResourceLocation extends ResourceLocation {
         } else if (super.equals(location)) {
             if (this.isShareDomain()) {
                 return true;
-            } else if (location instanceof AddonResourceLocation) {
-                AddonResourceLocation other = (AddonResourceLocation) location;
+            } else if (location instanceof AddonResourceLocation other) {
                 return other.isShareDomain() || other.addonDomain.equals(this.addonDomain);
             } else {
                 return false;

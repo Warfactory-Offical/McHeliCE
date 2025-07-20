@@ -27,8 +27,7 @@ public class MCH_GuiHeli extends MCH_AircraftCommonGui {
     @Override
     public void drawGui(EntityPlayer player, boolean isThirdPersonView) {
         MCH_EntityAircraft ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
-        if (ac instanceof MCH_EntityHeli && !ac.isDestroyed()) {
-            MCH_EntityHeli heli = (MCH_EntityHeli) ac;
+        if (ac instanceof MCH_EntityHeli heli && !ac.isDestroyed()) {
             int seatID = ac.getSeatIdByEntity(player);
             GL11.glLineWidth(scaleFactor);
             if (heli.getCameraMode(player) == 1) {

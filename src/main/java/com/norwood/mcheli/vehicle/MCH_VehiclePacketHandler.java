@@ -12,12 +12,11 @@ import net.minecraftforge.fml.relauncher.Side;
 public class MCH_VehiclePacketHandler {
     @HandleSide({Side.SERVER})
     public static void onPacket_PlayerControl(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-        if (player.getRidingEntity() instanceof MCH_EntityVehicle) {
+        if (player.getRidingEntity() instanceof MCH_EntityVehicle vehicle) {
             if (!player.world.isRemote) {
                 MCH_PacketVehiclePlayerControl pc = new MCH_PacketVehiclePlayerControl();
                 pc.readData(data);
                 scheduler.addScheduledTask(() -> {
-                    MCH_EntityVehicle vehicle = (MCH_EntityVehicle) player.getRidingEntity();
                     if (pc.isUnmount == 1) {
                         vehicle.unmountEntity();
                     } else if (pc.isUnmount == 2) {

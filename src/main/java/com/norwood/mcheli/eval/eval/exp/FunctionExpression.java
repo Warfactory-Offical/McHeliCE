@@ -34,11 +34,10 @@ public class FunctionExpression extends Col1Expression {
         if (x instanceof VariableExpression) {
             obj = null;
         } else {
-            if (!(x instanceof FieldExpression)) {
+            if (!(x instanceof FieldExpression f)) {
                 throw new EvalException(1101, x.toString(), x.string, x.pos, null);
             }
 
-            FieldExpression f = (FieldExpression) x;
             obj = f.expl;
             x = f.expr;
         }
@@ -209,10 +208,9 @@ public class FunctionExpression extends Col1Expression {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof FunctionExpression)) {
+        if (!(obj instanceof FunctionExpression e)) {
             return false;
         } else {
-            FunctionExpression e = (FunctionExpression) obj;
             return this.name.equals(e.name) && equals(this.target, e.target) && equals(this.exp, e.exp);
         }
     }

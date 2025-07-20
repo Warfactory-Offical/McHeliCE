@@ -50,8 +50,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
     }
 
     public static boolean shouldSkipRender(Entity entity) {
-        if (entity instanceof MCH_IEntityCanRideAircraft) {
-            MCH_IEntityCanRideAircraft e = (MCH_IEntityCanRideAircraft) entity;
+        if (entity instanceof MCH_IEntityCanRideAircraft e) {
             if (e.isSkipNormalRender()) {
                 return !renderingEntity;
             }

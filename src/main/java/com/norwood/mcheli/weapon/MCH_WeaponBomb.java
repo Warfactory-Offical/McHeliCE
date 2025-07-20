@@ -21,8 +21,7 @@ public class MCH_WeaponBomb extends MCH_WeaponBase {
     @Override
     public boolean shot(MCH_WeaponParam prm) {
         if (this.getInfo() != null && this.getInfo().destruct) {
-            if (prm.entity instanceof MCH_EntityHeli) {
-                MCH_EntityAircraft ac = (MCH_EntityAircraft) prm.entity;
+            if (prm.entity instanceof MCH_EntityHeli ac) {
                 if (ac.isUAV() && ac.getSeatNum() == 0) {
                     if (!this.worldObj.isRemote) {
                         MCH_Explosion.newExplosion(

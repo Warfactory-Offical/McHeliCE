@@ -124,8 +124,7 @@ public class MCH_GuiScoreboard extends W_GuiContainer implements MCH_IGuiScorebo
         this.getCurrentScreen().drawGuiContainerForegroundLayerScreen(x, y);
 
         for (Object o : this.buttonList) {
-            if (o instanceof W_GuiButton) {
-                W_GuiButton btn = (W_GuiButton) o;
+            if (o instanceof W_GuiButton btn) {
                 if (btn.isOnMouseOver() && btn.hoverStringList != null) {
                     this.drawHoveringText(btn.hoverStringList, x, y, this.fontRenderer);
                     break;

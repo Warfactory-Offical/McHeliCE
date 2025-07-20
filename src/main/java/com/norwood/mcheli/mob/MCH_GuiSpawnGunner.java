@@ -69,9 +69,7 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
             }
         }
 
-        if (target != null) {
-            return target;
-        } else {
+        if (target == null) {
             MCH_ItemSpawnGunner item = (MCH_ItemSpawnGunner) player.getHeldItemMainhand().getItem();
             if (item.targetType == 1 && !player.world.isRemote) {
                 player.getTeam();
@@ -109,8 +107,8 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
                 }
             }
 
-            return target;
         }
+        return target;
     }
 
     void draw(EntityPlayer player, Entity entity) {
@@ -135,8 +133,7 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
             double px = (CX - 0.0) / SCALE_FACTOR;
             double py = (CY + 0.0) / SCALE_FACTOR;
             GL11.glPushMatrix();
-            if (entity instanceof MCH_EntityGunner) {
-                MCH_EntityGunner gunner = (MCH_EntityGunner) entity;
+            if (entity instanceof MCH_EntityGunner gunner) {
                 String seatName = "";
                 if (gunner.getRidingEntity() instanceof MCH_EntitySeat) {
                     seatName = "(seat " + (((MCH_EntitySeat) gunner.getRidingEntity()).seatID + 2) + ")";
@@ -147,8 +144,7 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
                 this.drawCenteredString(gunner.getTeamName() + " Gunner " + seatName, (int) px, (int) py + 20, -8355840);
                 int S = 10;
                 this.drawLine(new double[]{px - S, py - S, px + S, py - S, px + S, py + S, px - S, py + S}, -8355840, 2);
-            } else if (entity instanceof MCH_EntitySeat) {
-                MCH_EntitySeat seat = (MCH_EntitySeat) entity;
+            } else if (entity instanceof MCH_EntitySeat seat) {
                 if (seat.getRiddenByEntity() == null) {
                     this.drawCenteredString("seat " + (seat.seatID + 2), (int) px, (int) py + 20, -16711681);
                     int S = 10;
@@ -160,8 +156,7 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
                     this.drawLine(new double[]{px - S, py - S, px + S, py + S}, -65536);
                     this.drawLine(new double[]{px + S, py - S, px - S, py + S}, -65536);
                 }
-            } else if (entity instanceof MCH_EntityAircraft) {
-                MCH_EntityAircraft ac = (MCH_EntityAircraft) entity;
+            } else if (entity instanceof MCH_EntityAircraft ac) {
                 if (ac.getRiddenByEntity() == null) {
                     this.drawCenteredString("seat 1", (int) px, (int) py + 20, -16711681);
                     int S = 10;

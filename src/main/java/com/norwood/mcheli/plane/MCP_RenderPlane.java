@@ -22,8 +22,7 @@ public class MCP_RenderPlane extends MCH_RenderAircraft<MCP_EntityPlane> {
     @Override
     public void renderAircraft(MCH_EntityAircraft entity, double posX, double posY, double posZ, float yaw, float pitch, float roll, float tickTime) {
         MCP_PlaneInfo planeInfo;
-        if (entity instanceof MCP_EntityPlane) {
-            MCP_EntityPlane plane = (MCP_EntityPlane) entity;
+        if (entity instanceof MCP_EntityPlane plane) {
             planeInfo = plane.getPlaneInfo();
             if (planeInfo != null) {
                 posY += 0.35F;

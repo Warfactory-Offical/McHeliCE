@@ -131,8 +131,7 @@ public class MCH_ClientLightWeaponTickHandler extends MCH_ClientTickHandlerBase 
             markEntity = null;
         }
 
-        if (!is.isEmpty() && is.getItem() instanceof MCH_ItemLightWeaponBase) {
-            MCH_ItemLightWeaponBase lweapon = (MCH_ItemLightWeaponBase) is.getItem();
+        if (!is.isEmpty() && is.getItem() instanceof MCH_ItemLightWeaponBase lweapon) {
             if (this.prevItemStack.isEmpty() || !this.prevItemStack.isItemEqual(is) && !this.prevItemStack.getTranslationKey().equals(is.getTranslationKey())) {
                 this.initWeaponParam(player);
                 weapon = MCH_WeaponCreator.createWeapon(player.world, MCH_ItemLightWeaponBase.getName(is), Vec3d.ZERO, 0.0F, 0.0F, null, false);

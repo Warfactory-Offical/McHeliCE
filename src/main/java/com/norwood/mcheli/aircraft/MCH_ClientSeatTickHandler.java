@@ -43,8 +43,7 @@ public class MCH_ClientSeatTickHandler extends MCH_ClientTickHandlerBase {
         this.isBeforeRiding = this.isRiding;
         EntityPlayer player = this.mc.player;
         MCH_EntityAircraft ac = null;
-        if (player != null && player.getRidingEntity() instanceof MCH_EntitySeat) {
-            MCH_EntitySeat seat = (MCH_EntitySeat) player.getRidingEntity();
+        if (player != null && player.getRidingEntity() instanceof MCH_EntitySeat seat) {
             if (seat.getParent() == null || seat.getParent().getAcInfo() == null) {
                 return;
             }

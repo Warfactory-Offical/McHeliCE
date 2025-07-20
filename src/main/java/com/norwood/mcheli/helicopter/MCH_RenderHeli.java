@@ -23,8 +23,7 @@ public class MCH_RenderHeli extends MCH_RenderAircraft<MCH_EntityHeli> {
     @Override
     public void renderAircraft(MCH_EntityAircraft entity, double posX, double posY, double posZ, float yaw, float pitch, float roll, float tickTime) {
         MCH_HeliInfo heliInfo;
-        if (entity instanceof MCH_EntityHeli) {
-            MCH_EntityHeli heli = (MCH_EntityHeli) entity;
+        if (entity instanceof MCH_EntityHeli heli) {
             heliInfo = heli.getHeliInfo();
             if (heliInfo != null) {
                 posY += 0.35F;
