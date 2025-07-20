@@ -1,6 +1,6 @@
 package com.norwood.mcheli;
 
-import com.norwood.mcheli.__helper.entity.ITargetMarkerObject;
+import com.norwood.mcheli.helper.entity.ITargetMarkerObject;
 import org.lwjgl.BufferUtils;
 
 import javax.annotation.Nullable;

@@ -3,7 +3,7 @@ package com.norwood.mcheli.weapon;
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_Explosion;
 import com.norwood.mcheli.MCH_Lib;
-import com.norwood.mcheli.__helper.MCH_CriteriaTriggers;
+import com.norwood.mcheli.helper.MCH_CriteriaTriggers;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_EntityHitBox;
 import com.norwood.mcheli.aircraft.MCH_EntitySeat;

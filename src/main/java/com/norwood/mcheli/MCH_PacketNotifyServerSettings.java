@@ -1,7 +1,7 @@
 package com.norwood.mcheli;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.norwood.mcheli.__helper.MCH_Utils;
+import com.norwood.mcheli.helper.MCH_Utils;
 import com.norwood.mcheli.wrapper.W_Network;
 import net.minecraft.entity.player.EntityPlayerMP;
 

@@ -2,7 +2,7 @@ package com.norwood.mcheli.helicopter;
 
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_MOD;
-import com.norwood.mcheli.__helper.addon.AddonResourceLocation;
+import com.norwood.mcheli.helper.addon.AddonResourceLocation;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
 import net.minecraft.item.Item;
 

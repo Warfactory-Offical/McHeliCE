@@ -1,9 +1,9 @@
 package com.norwood.mcheli;
 
 import com.google.common.collect.Sets;
-import com.norwood.mcheli.__helper.MCH_Recipes;
-import com.norwood.mcheli.__helper.MCH_Utils;
-import com.norwood.mcheli.__helper.info.ContentRegistries;
+import com.norwood.mcheli.helper.MCH_Recipes;
+import com.norwood.mcheli.helper.MCH_Utils;
+import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfoManager;
 import com.norwood.mcheli.helicopter.MCH_HeliInfo;

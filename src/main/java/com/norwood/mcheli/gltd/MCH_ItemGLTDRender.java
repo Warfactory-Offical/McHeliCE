@@ -1,26 +1,26 @@
 package com.norwood.mcheli.gltd;
 
-import com.norwood.mcheli.__helper.client._IItemRenderer;
+import com.norwood.mcheli.helper.client.IItemRenderer;
 import com.norwood.mcheli.wrapper.W_McClient;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
 @Deprecated
-public class MCH_ItemGLTDRender implements _IItemRenderer {
+public class MCH_ItemGLTDRender implements IItemRenderer {
     @Override
-    public boolean handleRenderType(ItemStack item, _IItemRenderer.ItemRenderType type) {
-        return type == _IItemRenderer.ItemRenderType.EQUIPPED
-                || type == _IItemRenderer.ItemRenderType.EQUIPPED_FIRST_PERSON
-                || type == _IItemRenderer.ItemRenderType.ENTITY;
+    public boolean handleRenderType(ItemStack item, IItemRenderer.ItemRenderType type) {
+        return type == IItemRenderer.ItemRenderType.EQUIPPED
+                || type == IItemRenderer.ItemRenderType.EQUIPPED_FIRST_PERSON
+                || type == IItemRenderer.ItemRenderType.ENTITY;
     }
 
     @Override
-    public boolean shouldUseRenderHelper(_IItemRenderer.ItemRenderType type, ItemStack item, _IItemRenderer.ItemRendererHelper helper) {
-        return type == _IItemRenderer.ItemRenderType.ENTITY;
+    public boolean shouldUseRenderHelper(IItemRenderer.ItemRenderType type, ItemStack item, IItemRenderer.ItemRendererHelper helper) {
+        return type == IItemRenderer.ItemRenderType.ENTITY;
     }
 
     @Override
-    public void renderItem(_IItemRenderer.ItemRenderType type, ItemStack item, Object... data) {
+    public void renderItem(IItemRenderer.ItemRenderType type, ItemStack item, Object... data) {
         GL11.glPushMatrix();
         GL11.glEnable(2884);
         W_McClient.MOD_bindTexture("textures/gltd.png");

@@ -2,8 +2,8 @@ package com.norwood.mcheli.helicopter;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.norwood.mcheli.MCH_Lib;
-import com.norwood.mcheli.__helper.MCH_CriteriaTriggers;
-import com.norwood.mcheli.__helper.network.HandleSide;
+import com.norwood.mcheli.helper.MCH_CriteriaTriggers;
+import com.norwood.mcheli.helper.network.HandleSide;
 import com.norwood.mcheli.aircraft.MCH_EntitySeat;
 import com.norwood.mcheli.chain.MCH_EntityChain;
 import com.norwood.mcheli.container.MCH_EntityContainer;

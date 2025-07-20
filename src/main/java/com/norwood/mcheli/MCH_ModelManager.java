@@ -1,7 +1,7 @@
 package com.norwood.mcheli;
 
-import com.norwood.mcheli.__helper.client.MCH_Models;
-import com.norwood.mcheli.__helper.client._IModelCustom;
+import com.norwood.mcheli.helper.client.MCH_Models;
+import com.norwood.mcheli.helper.client._IModelCustom;
 import com.norwood.mcheli.wrapper.W_ModelBase;
 import com.norwood.mcheli.wrapper.modelloader.W_ModelCustom;
 import net.minecraft.client.model.ModelRenderer;

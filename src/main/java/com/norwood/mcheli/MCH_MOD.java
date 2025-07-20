@@ -1,7 +1,7 @@
 package com.norwood.mcheli;
 
-import com.norwood.mcheli.__helper.*;
-import com.norwood.mcheli.__helper.info.ContentRegistries;
+import com.norwood.mcheli.helper.*;
+import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.aircraft.*;
 import com.norwood.mcheli.block.MCH_DraftingTableBlock;
 import com.norwood.mcheli.block.MCH_DraftingTableTileEntity;
@@ -40,7 +40,10 @@ import com.norwood.mcheli.vehicle.MCH_EntityVehicle;
 import com.norwood.mcheli.vehicle.MCH_ItemVehicle;
 import com.norwood.mcheli.vehicle.MCH_VehicleInfo;
 import com.norwood.mcheli.weapon.*;
-import com.norwood.mcheli.wrapper.*;
+import com.norwood.mcheli.wrapper.NetworkMod;
+import com.norwood.mcheli.wrapper.W_Item;
+import com.norwood.mcheli.wrapper.W_LanguageRegistry;
+import com.norwood.mcheli.wrapper.W_NetworkRegistry;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
@@ -75,6 +78,7 @@ public class MCH_MOD {
     public static final String MCVER = "1.12.2";
     public static final String MOD_CH = "MCHeli_CH";
     public static final String ADDON_FOLDER_NAME = "mcheli_addons";
+    public static final MCH_PacketHandler packetHandler = new MCH_PacketHandler();
     public static String VER = "";
     @Instance("mcheli")
     public static MCH_MOD instance;
@@ -83,7 +87,6 @@ public class MCH_MOD {
             serverSide = "com.norwood.mcheli.MCH_CommonProxy"
     )
     public static MCH_CommonProxy proxy;
-    public static final MCH_PacketHandler packetHandler = new MCH_PacketHandler();
     public static MCH_Config config;
     public static String sourcePath;
     public static MCH_InvisibleItem invisibleItem;
@@ -275,7 +278,7 @@ public class MCH_MOD {
         MCH_Items.registerBlock(blockDraftingTable);
         W_LanguageRegistry.addName(blockDraftingTable, "Drafting Table");
         W_LanguageRegistry.addNameForObject(blockDraftingTable, "ja_jp", "製図台");
-        MCH_Achievement.PreInit();
+        MCH_CriteriaTriggers.registerTriggers();
         MCH_Lib.Log("Register system");
         W_NetworkRegistry.registerChannel(packetHandler, "MCHeli_CH");
         MinecraftForge.EVENT_BUS.register(new MCH_EventHook());

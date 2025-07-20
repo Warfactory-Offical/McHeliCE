@@ -1,6 +1,6 @@
 package com.norwood.mcheli;
 
-import com.norwood.mcheli.__helper.client.MCH_CameraManager;
+import com.norwood.mcheli.helper.client.MCH_CameraManager;
 import com.norwood.mcheli.aircraft.*;
 import com.norwood.mcheli.command.MCH_GuiTitle;
 import com.norwood.mcheli.gltd.MCH_ClientGLTDTickHandler;

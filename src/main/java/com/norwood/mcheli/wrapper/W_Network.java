@@ -1,6 +1,6 @@
 package com.norwood.mcheli.wrapper;
 
-import com.norwood.mcheli.__helper.network.MCH_WrapPacketData;
+import com.norwood.mcheli.helper.network.MCH_WrapPacketData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

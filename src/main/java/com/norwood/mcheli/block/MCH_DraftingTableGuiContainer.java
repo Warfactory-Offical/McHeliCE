@@ -3,7 +3,7 @@ package com.norwood.mcheli.block;
 import com.norwood.mcheli.MCH_IRecipeList;
 import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.MCH_MOD;
-import com.norwood.mcheli.__helper.MCH_Recipes;
+import com.norwood.mcheli.helper.MCH_Recipes;
 import com.norwood.mcheli.wrapper.W_Block;
 import com.norwood.mcheli.wrapper.W_EntityPlayer;
 import com.norwood.mcheli.wrapper.W_WorldFunc;

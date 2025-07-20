@@ -5,8 +5,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
-import com.norwood.mcheli.__helper.MCH_Utils;
-import com.norwood.mcheli.__helper.addon.GeneratedAddonPack;
+import com.norwood.mcheli.helper.MCH_Utils;
+import com.norwood.mcheli.helper.addon.GeneratedAddonPack;
 
 import java.io.File;
 import java.util.List;

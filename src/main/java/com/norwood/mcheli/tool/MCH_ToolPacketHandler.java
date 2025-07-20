@@ -2,7 +2,7 @@ package com.norwood.mcheli.tool;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.norwood.mcheli.MCH_Config;
-import com.norwood.mcheli.__helper.network.HandleSide;
+import com.norwood.mcheli.helper.network.HandleSide;
 import com.norwood.mcheli.multiplay.MCH_Multiplay;
 import com.norwood.mcheli.multiplay.MCH_PacketIndSpotEntity;
 import com.norwood.mcheli.tool.rangefinder.MCH_ItemRangeFinder;

@@ -1,7 +1,7 @@
 package com.norwood.mcheli.vehicle;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.norwood.mcheli.__helper.network.HandleSide;
+import com.norwood.mcheli.helper.network.HandleSide;
 import com.norwood.mcheli.chain.MCH_EntityChain;
 import com.norwood.mcheli.weapon.MCH_WeaponParam;
 import net.minecraft.entity.Entity;

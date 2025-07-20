@@ -49,7 +49,7 @@ public class MCH_GuiHeli extends MCH_AircraftCommonGui {
                     this.drawKeyBind(heli, player, seatID);
                 }
 
-                this.drawHitBullet(heli, -14101432, seatID);
+                this.drawHitMarker(heli, -14101432, seatID);
             } else {
                 if (!isThirdPersonView || MCH_Config.DisplayHUDThirdPerson.prmBool) {
                     MCH_EntityTvMissile tvmissile = heli.getTVMissile();
@@ -60,7 +60,7 @@ public class MCH_GuiHeli extends MCH_AircraftCommonGui {
                     }
                 }
 
-                this.drawHitBullet(heli, -805306369, seatID);
+                this.drawHitMarker(heli, -805306369, seatID);
             }
         }
     }

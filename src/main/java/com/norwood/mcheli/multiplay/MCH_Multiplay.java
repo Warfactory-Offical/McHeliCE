@@ -1,8 +1,8 @@
 package com.norwood.mcheli.multiplay;
 
 import com.norwood.mcheli.MCH_Lib;
-import com.norwood.mcheli.__helper.MCH_Utils;
-import com.norwood.mcheli.__helper.entity.IEntitySinglePassenger;
+import com.norwood.mcheli.helper.MCH_Utils;
+import com.norwood.mcheli.helper.entity.IEntitySinglePassenger;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.helicopter.MCH_EntityHeli;
 import com.norwood.mcheli.plane.MCP_EntityPlane;

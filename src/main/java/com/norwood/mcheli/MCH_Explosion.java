@@ -1,6 +1,6 @@
 package com.norwood.mcheli;
 
-import com.norwood.mcheli.__helper.world.MCH_ExplosionV2;
+import com.norwood.mcheli.helper.world.MCH_ExplosionV2;
 import com.norwood.mcheli.wrapper.W_Entity;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;

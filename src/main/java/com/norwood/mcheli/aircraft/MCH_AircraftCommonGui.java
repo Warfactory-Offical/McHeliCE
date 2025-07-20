@@ -21,25 +21,23 @@ public abstract class MCH_AircraftCommonGui extends MCH_Gui {
         super(minecraft);
     }
 
-    public void drawHud(MCH_EntityAircraft ac, EntityPlayer player, int seatId) {
-        MCH_AircraftInfo info = ac.getAcInfo();
-        if (info != null) {
-            if (ac.isMissileCameraMode(player) && ac.getTVMissile() != null && info.hudTvMissile != null) {
-                info.hudTvMissile.draw(ac, player, this.smoothCamPartialTicks);
-            } else {
-                if (seatId < 0) {
-                    return;
-                }
+    public void drawHud(MCH_EntityAircraft aircraft, EntityPlayer player, int seatId) {
+        MCH_AircraftInfo info = aircraft.getAcInfo();
+        if (info == null) return;
 
-                if (seatId < info.hudList.size()) {
-                    MCH_Hud hud = info.hudList.get(seatId);
-                    if (hud != null) {
-                        hud.draw(ac, player, this.smoothCamPartialTicks);
-                    }
-                }
+        if (aircraft.isMissileCameraMode(player) && aircraft.getTVMissile() != null && info.hudTvMissile != null) {
+            info.hudTvMissile.draw(aircraft, player, this.smoothCamPartialTicks);
+            return;
+        }
+
+        if (seatId >= 0 && seatId < info.hudList.size()) {
+            MCH_Hud hud = info.hudList.get(seatId);
+            if (hud != null) {
+                hud.draw(aircraft, player, this.smoothCamPartialTicks);
             }
         }
     }
+
 
     public void drawDebugtInfo(MCH_EntityAircraft ac) {
         if (MCH_Config.DebugLog) {
@@ -58,41 +56,38 @@ public abstract class MCH_AircraftCommonGui extends MCH_Gui {
         GL11.glDisable(3042);
     }
 
-    public void drawHitBullet(int hs, int hsMax, int color) {
-        if (hs > 0) {
-            int cx = this.centerX;
-            int cy = this.centerY;
-            int IVX = 10;
-            int IVY = 10;
-            int SZX = 5;
-            int SZY = 5;
-            double[] ls = new double[]{
-                    cx - IVX,
-                    cy - IVY,
-                    cx - SZX,
-                    cy - SZY,
-                    cx - IVX,
-                    cy + IVY,
-                    cx - SZX,
-                    cy + SZY,
-                    cx + IVX,
-                    cy - IVY,
-                    cx + SZX,
-                    cy - SZY,
-                    cx + IVX,
-                    cy + IVY,
-                    cx + SZX,
-                    cy + SZY
-            };
-            color = MCH_Config.hitMarkColorRGB;
-            int alpha = hs * (256 / hsMax);
-            color |= (int) (MCH_Config.hitMarkColorAlpha * alpha) << 24;
-            this.drawLine(ls, color);
-        }
+    public void drawHitMarker(int hitStrength, int maxHitStrength, int baseColor) {
+        if (hitStrength <= 0) return;
+
+        final int centerX = this.centerX;
+        final int centerY = this.centerY;
+        final int outerOffset = 10;
+        final int innerOffset = 5;
+
+        // Define crosshair-style marker line segments (4 lines from edges to center cross)
+        double[] markerLines = {
+                centerX - outerOffset, centerY - outerOffset,
+                centerX - innerOffset, centerY - innerOffset,
+
+                centerX - outerOffset, centerY + outerOffset,
+                centerX - innerOffset, centerY + innerOffset,
+
+                centerX + outerOffset, centerY - outerOffset,
+                centerX + innerOffset, centerY - innerOffset,
+
+                centerX + outerOffset, centerY + outerOffset,
+                centerX + innerOffset, centerY + innerOffset,
+        };
+
+        int alpha = hitStrength * (256 / maxHitStrength);
+        int finalColor = (int) (MCH_Config.hitMarkColorAlpha * alpha) << 24 | MCH_Config.hitMarkColorRGB;//FIXME: basecolor ignored...?
+
+        this.drawLine(markerLines, finalColor);
     }
 
-    public void drawHitBullet(MCH_EntityAircraft ac, int color, int seatID) {
-        this.drawHitBullet(ac.getHitStatus(), ac.getMaxHitStatus(), color);
+
+    public void drawHitMarker(MCH_EntityAircraft ac, int color, int seatID) {
+        this.drawHitMarker(ac.getHitStatus(), ac.getMaxHitStatus(), color);
     }
 
     protected void drawTvMissileNoise(MCH_EntityAircraft ac, MCH_EntityTvMissile tvmissile) {
@@ -107,97 +102,90 @@ public abstract class MCH_AircraftCommonGui extends MCH_Gui {
         GL11.glDisable(3042);
     }
 
-    public void drawKeyBind(MCH_EntityAircraft ac, MCH_AircraftInfo info, EntityPlayer player, int seatID, int RX, int LX, int colorActive, int colorInactive) {
-        String msg;
-        int c;
-        if (seatID == 0 && ac.canPutToRack()) {
-            msg = "PutRack : " + MCH_KeyName.getDescOrName(MCH_Config.KeyPutToRack.prmInt);
-            this.drawString(msg, LX, this.centerY - 10, colorActive);
+    public void drawKeyBind(
+            MCH_EntityAircraft aircraft,
+            MCH_AircraftInfo info,
+            EntityPlayer player,
+            int seatID,
+            int rightX,
+            int leftX,
+            int colorActive,
+            int colorInactive
+    ) {
+        if (seatID == 0) {
+            drawConditionalKeyBind(aircraft.canPutToRack(), "PutRack", MCH_Config.KeyPutToRack.prmInt, leftX, -10, colorActive);
+            drawConditionalKeyBind(aircraft.canDownFromRack(), "DownRack", MCH_Config.KeyDownFromRack.prmInt, leftX, 0, colorActive);
+            drawConditionalKeyBind(aircraft.canRideRack(), "RideRack", MCH_Config.KeyPutToRack.prmInt, leftX, 10, colorActive);
+            drawConditionalKeyBind(aircraft.getRidingEntity() != null, "DismountRack", MCH_Config.KeyDownFromRack.prmInt, leftX, 10, colorActive);
         }
 
-        if (seatID == 0 && ac.canDownFromRack()) {
-            msg = "DownRack : " + MCH_KeyName.getDescOrName(MCH_Config.KeyDownFromRack.prmInt);
-            this.drawString(msg, LX, this.centerY, colorActive);
+        boolean multipleSeats = aircraft.getSeatNum() > 1;
+        boolean freeLookPressed = Keyboard.isKeyDown(MCH_Config.KeyFreeLook.prmInt);
+        if (seatID > 0 && multipleSeats || freeLookPressed) {
+            int seatColor = seatID == 0 ? 'Ｐ' : colorActive;
+            String prefix = seatID == 0 ? MCH_KeyName.getDescOrName(MCH_Config.KeyFreeLook.prmInt) + " + " : "";
+            drawString("NextSeat : " + prefix + MCH_KeyName.getDescOrName(MCH_Config.KeyGUI.prmInt), rightX, centerY - 70, seatColor);
+            drawString("PrevSeat : " + prefix + MCH_KeyName.getDescOrName(MCH_Config.KeyExtra.prmInt), rightX, centerY - 60, seatColor);
         }
 
-        if (seatID == 0 && ac.canRideRack()) {
-            msg = "RideRack : " + MCH_KeyName.getDescOrName(MCH_Config.KeyPutToRack.prmInt);
-            this.drawString(msg, LX, this.centerY + 10, colorActive);
-        }
+        drawString(
+                "Gunner " + (aircraft.getGunnerStatus() ? "ON" : "OFF") + " : "
+                        + MCH_KeyName.getDescOrName(MCH_Config.KeyFreeLook.prmInt) + " + "
+                        + MCH_KeyName.getDescOrName(MCH_Config.KeyCameraMode.prmInt),
+                leftX, centerY - 40, colorActive
+        );
 
-        if (seatID == 0 && ac.getRidingEntity() != null) {
-            msg = "DismountRack : " + MCH_KeyName.getDescOrName(MCH_Config.KeyDownFromRack.prmInt);
-            this.drawString(msg, LX, this.centerY + 10, colorActive);
-        }
-
-        if (seatID > 0 && ac.getSeatNum() > 1 || Keyboard.isKeyDown(MCH_Config.KeyFreeLook.prmInt)) {
-            c = seatID == 0 ? 'Ｐ' : colorActive;
-            String sk = seatID == 0 ? MCH_KeyName.getDescOrName(MCH_Config.KeyFreeLook.prmInt) + " + " : "";
-            msg = "NextSeat : " + sk + MCH_KeyName.getDescOrName(MCH_Config.KeyGUI.prmInt);
-            this.drawString(msg, RX, this.centerY - 70, c);
-            msg = "PrevSeat : " + sk + MCH_KeyName.getDescOrName(MCH_Config.KeyExtra.prmInt);
-            this.drawString(msg, RX, this.centerY - 60, c);
-        }
-
-        msg = "Gunner "
-                + (ac.getGunnerStatus() ? "ON" : "OFF")
-                + " : "
-                + MCH_KeyName.getDescOrName(MCH_Config.KeyFreeLook.prmInt)
-                + " + "
-                + MCH_KeyName.getDescOrName(MCH_Config.KeyCameraMode.prmInt);
-        this.drawString(msg, LX, this.centerY - 40, colorActive);
-        if (seatID >= 0 && seatID <= 1 && ac.haveFlare()) {
-            c = ac.isFlarePreparation() ? colorInactive : colorActive;
-            msg = "Flare : " + MCH_KeyName.getDescOrName(MCH_Config.KeyFlare.prmInt);
-            this.drawString(msg, RX, this.centerY - 50, c);
+        if (seatID >= 0 && seatID <= 1 && aircraft.haveFlare()) {
+            int flareColor = aircraft.isFlarePreparation() ? colorInactive : colorActive;
+            drawString("Flare : " + MCH_KeyName.getDescOrName(MCH_Config.KeyFlare.prmInt), rightX, centerY - 50, flareColor);
         }
 
         if (seatID == 0 && info.haveLandingGear()) {
-            if (ac.canFoldLandingGear()) {
-                msg = "Gear Up : " + MCH_KeyName.getDescOrName(MCH_Config.KeyGearUpDown.prmInt);
-                this.drawString(msg, RX, this.centerY - 40, colorActive);
-            } else if (ac.canUnfoldLandingGear()) {
-                msg = "Gear Down : " + MCH_KeyName.getDescOrName(MCH_Config.KeyGearUpDown.prmInt);
-                this.drawString(msg, RX, this.centerY - 40, colorActive);
+            if (aircraft.canFoldLandingGear()) {
+                drawConditionalKeyBind(true, "Gear Up", MCH_Config.KeyGearUpDown.prmInt, rightX, -40, colorActive);
+            } else if (aircraft.canUnfoldLandingGear()) {
+                drawConditionalKeyBind(true, "Gear Down", MCH_Config.KeyGearUpDown.prmInt, rightX, -40, colorActive);
             }
         }
 
-        MCH_WeaponSet ws = ac.getCurrentWeapon(player);
-        if (ac.getWeaponNum() > 1) {
-            msg = "Weapon : " + MCH_KeyName.getDescOrName(MCH_Config.KeySwitchWeapon2.prmInt);
-            this.drawString(msg, LX, this.centerY - 70, colorActive);
+        MCH_WeaponSet weaponSet = aircraft.getCurrentWeapon(player);
+        if (aircraft.getWeaponNum() > 1) {
+            drawConditionalKeyBind(true, "Weapon", MCH_Config.KeySwitchWeapon2.prmInt, leftX, -70, colorActive);
         }
 
-        if (ws.getCurrentWeapon().numMode > 0) {
-            msg = "WeaponMode : " + MCH_KeyName.getDescOrName(MCH_Config.KeySwWeaponMode.prmInt);
-            this.drawString(msg, LX, this.centerY - 60, colorActive);
+        if (weaponSet.getCurrentWeapon().numMode > 0) {
+            drawConditionalKeyBind(true, "WeaponMode", MCH_Config.KeySwWeaponMode.prmInt, leftX, -60, colorActive);
         }
 
-        if (ac.canSwitchSearchLight(player)) {
-            msg = "SearchLight : " + MCH_KeyName.getDescOrName(MCH_Config.KeyCameraMode.prmInt);
-            this.drawString(msg, LX, this.centerY - 50, colorActive);
-        } else if (ac.canSwitchCameraMode(seatID)) {
-            msg = "CameraMode : " + MCH_KeyName.getDescOrName(MCH_Config.KeyCameraMode.prmInt);
-            this.drawString(msg, LX, this.centerY - 50, colorActive);
+        if (aircraft.canSwitchSearchLight(player)) {
+            drawConditionalKeyBind(true, "SearchLight", MCH_Config.KeyCameraMode.prmInt, leftX, -50, colorActive);
+        } else if (aircraft.canSwitchCameraMode(seatID)) {
+            drawConditionalKeyBind(true, "CameraMode", MCH_Config.KeyCameraMode.prmInt, leftX, -50, colorActive);
         }
 
-        if (seatID == 0 && ac.getSeatNum() >= 1) {
-            int color = colorActive;
-            if (info.isEnableParachuting && MCH_Lib.getBlockIdY(ac, 3, -10) == 0) {
-                msg = "Parachuting : " + MCH_KeyName.getDescOrName(MCH_Config.KeyUnmount.prmInt);
-            } else if (ac.canStartRepelling()) {
-                msg = "Repelling : " + MCH_KeyName.getDescOrName(MCH_Config.KeyUnmount.prmInt);
-                color = 65280;
-            } else {
-                msg = "Dismount : " + MCH_KeyName.getDescOrName(MCH_Config.KeyUnmount.prmInt);
+        if (seatID == 0 && aircraft.getSeatNum() >= 1) {
+            int dismountColor = colorActive;
+            String dismountLabel = "Dismount";
+            if (info.isEnableParachuting && MCH_Lib.getBlockIdY(aircraft, 3, -10) == 0) {
+                dismountLabel = "Parachuting";
+            } else if (aircraft.canStartRepelling()) {
+                dismountLabel = "Repelling";
+                dismountColor = 0x00FF00;
             }
-
-            this.drawString(msg, LX, this.centerY - 30, color);
+            drawConditionalKeyBind(true, dismountLabel, MCH_Config.KeyUnmount.prmInt, leftX, -30, dismountColor);
         }
 
-        if (seatID == 0 && ac.canSwitchFreeLook() || seatID > 0 && ac.canSwitchGunnerModeOtherSeat(player)) {
-            msg = "FreeLook : " + MCH_KeyName.getDescOrName(MCH_Config.KeyFreeLook.prmInt);
-            this.drawString(msg, LX, this.centerY - 20, colorActive);
+        boolean canFreeLook = seatID == 0 && aircraft.canSwitchFreeLook()
+                || seatID > 0 && aircraft.canSwitchGunnerModeOtherSeat(player);
+        drawConditionalKeyBind(canFreeLook, "FreeLook", MCH_Config.KeyFreeLook.prmInt, leftX, -20, colorActive);
+    }
+
+    private void drawConditionalKeyBind(boolean condition, String label, int key, int x, int yOffset, int color) {
+        if (condition) {
+            String keyName = MCH_KeyName.getDescOrName(key);
+            drawString(label + " : " + keyName, x, centerY + yOffset, color);
         }
     }
+
+
 }

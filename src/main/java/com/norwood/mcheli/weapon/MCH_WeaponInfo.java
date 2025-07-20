@@ -3,7 +3,7 @@ package com.norwood.mcheli.weapon;
 import com.norwood.mcheli.MCH_BaseInfo;
 import com.norwood.mcheli.MCH_Color;
 import com.norwood.mcheli.MCH_DamageFactor;
-import com.norwood.mcheli.__helper.addon.AddonResourceLocation;
+import com.norwood.mcheli.helper.addon.AddonResourceLocation;
 import com.norwood.mcheli.helicopter.MCH_EntityHeli;
 import com.norwood.mcheli.plane.MCP_EntityPlane;
 import com.norwood.mcheli.tank.MCH_EntityTank;

@@ -3,7 +3,7 @@ package com.norwood.mcheli.block;
 import com.norwood.mcheli.MCH_IRecipeList;
 import com.norwood.mcheli.MCH_ItemRecipe;
 import com.norwood.mcheli.MCH_Lib;
-import com.norwood.mcheli.__helper.MCH_Recipes;
+import com.norwood.mcheli.helper.MCH_Recipes;
 import com.norwood.mcheli.aircraft.MCH_RenderAircraft;
 import com.norwood.mcheli.gui.MCH_GuiSliderVertical;
 import com.norwood.mcheli.helicopter.MCH_HeliInfoManager;

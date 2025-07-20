@@ -1,6 +1,6 @@
 package com.norwood.mcheli.hud;
 
-import com.norwood.mcheli.__helper.info.ContentRegistries;
+import com.norwood.mcheli.helper.info.ContentRegistries;
 
 import javax.annotation.Nullable;
 

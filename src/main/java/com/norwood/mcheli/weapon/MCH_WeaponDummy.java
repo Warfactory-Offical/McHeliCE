@@ -1,6 +1,6 @@
 package com.norwood.mcheli.weapon;
 
-import com.norwood.mcheli.__helper.MCH_Utils;
+import com.norwood.mcheli.helper.MCH_Utils;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 

@@ -1,6 +1,6 @@
 package com.norwood.mcheli.wrapper;
 
-import com.norwood.mcheli.__helper.MCH_SoundEvents;
+import com.norwood.mcheli.helper.MCH_SoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;

@@ -1,7 +1,7 @@
 package com.norwood.mcheli.aircraft;
 
 import com.norwood.mcheli.MCH_Lib;
-import com.norwood.mcheli.__helper.entity.IEntitySinglePassenger;
+import com.norwood.mcheli.helper.entity.IEntitySinglePassenger;
 import com.norwood.mcheli.mob.MCH_ItemSpawnGunner;
 import com.norwood.mcheli.tool.MCH_ItemWrench;
 import com.norwood.mcheli.wrapper.W_Entity;

@@ -2,9 +2,9 @@ package com.norwood.mcheli.throwable;
 
 import com.norwood.mcheli.MCH_BaseInfo;
 import com.norwood.mcheli.MCH_Color;
-import com.norwood.mcheli.__helper.addon.AddonResourceLocation;
-import com.norwood.mcheli.__helper.client._IModelCustom;
-import com.norwood.mcheli.__helper.info.IItemContent;
+import com.norwood.mcheli.helper.addon.AddonResourceLocation;
+import com.norwood.mcheli.helper.client._IModelCustom;
+import com.norwood.mcheli.helper.info.IItemContent;
 import com.norwood.mcheli.wrapper.W_Item;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipe;

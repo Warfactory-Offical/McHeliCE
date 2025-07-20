@@ -1,6 +1,6 @@
 package com.norwood.mcheli.aircraft;
 
-import com.norwood.mcheli.__helper.entity.IEntitySinglePassenger;
+import com.norwood.mcheli.helper.entity.IEntitySinglePassenger;
 import com.norwood.mcheli.wrapper.W_Entity;
 import com.norwood.mcheli.wrapper.W_Lib;
 import net.minecraft.block.Block;

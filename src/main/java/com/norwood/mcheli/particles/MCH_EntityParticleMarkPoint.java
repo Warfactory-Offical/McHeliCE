@@ -1,7 +1,7 @@
 package com.norwood.mcheli.particles;
 
 import com.norwood.mcheli.MCH_Lib;
-import com.norwood.mcheli.__helper.entity.ITargetMarkerObject;
+import com.norwood.mcheli.helper.entity.ITargetMarkerObject;
 import com.norwood.mcheli.multiplay.MCH_GuiTargetMarker;
 import com.norwood.mcheli.wrapper.W_Reflection;
 import net.minecraft.client.Minecraft;

@@ -23,7 +23,7 @@ public class MCH_GuiCommon extends MCH_AircraftCommonGui {
     @Override
     public void drawGui(EntityPlayer player, boolean isThirdPersonView) {
         GL11.glLineWidth(scaleFactor);
-        this.drawHitBullet(this.hitCount, 15, -805306369);
+        this.drawHitMarker(this.hitCount, 15, -805306369);
     }
 
     @Override

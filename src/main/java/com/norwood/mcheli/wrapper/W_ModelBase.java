@@ -1,9 +1,9 @@
 package com.norwood.mcheli.wrapper;
 
-import com.norwood.mcheli.__helper.client._IModelCustom;
-import com.norwood.mcheli.__helper.client._IModelCustomLoader;
-import com.norwood.mcheli.__helper.client._ModelFormatException;
-import com.norwood.mcheli.__helper.client.model.loader.TechneModelLoader;
+import com.norwood.mcheli.helper.client._IModelCustom;
+import com.norwood.mcheli.helper.client._IModelCustomLoader;
+import com.norwood.mcheli.helper.client._ModelFormatException;
+import com.norwood.mcheli.helper.client.model.loader.TechneModelLoader;
 import com.norwood.mcheli.wrapper.modelloader.W_MqoModelLoader;
 import com.norwood.mcheli.wrapper.modelloader.W_ObjModelLoader;
 import net.minecraft.client.model.ModelBase;

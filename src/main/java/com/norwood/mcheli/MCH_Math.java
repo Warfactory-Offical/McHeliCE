@@ -225,10 +225,6 @@ public class MCH_Math {
         return x >= 0.0F ? x : -x;
     }
 
-    public static float Sqrt(float x) {
-        return (float) Math.sqrt(x);
-    }
-
     public static float InvSqrt(float x) {
         return 1.0F / (float) Math.sqrt(x);
     }
@@ -239,7 +235,7 @@ public class MCH_Math {
 
     public static float VecNormalize(MCH_Math.FVector3D lpV) {
         float len2 = lpV.x * lpV.x + lpV.y * lpV.y + lpV.z * lpV.z;
-        float length = Sqrt(len2);
+        float length = (float) Math.sqrt(len2);
         if (length == 0.0F) {
             return 0.0F;
         } else {
@@ -253,7 +249,7 @@ public class MCH_Math {
 
     public static float Vec2DNormalize(MCH_Math.FVector2D lpV) {
         float len2 = lpV.x * lpV.x + lpV.y * lpV.y;
-        float length = Sqrt(len2);
+        float length = (float) Math.sqrt(len2);
         if (length == 0.0F) {
             return 0.0F;
         } else {
@@ -613,10 +609,6 @@ public class MCH_Math {
         MCH_Math.FMatrix m = new FMatrix(this);
         MatIdentity(m);
         return m;
-    }
-
-    public float atan2(float y, float x) {
-        return Atan2(y, x);
     }
 
     public static class FMatrix {

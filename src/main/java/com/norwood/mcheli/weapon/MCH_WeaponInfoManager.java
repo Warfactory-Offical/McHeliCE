@@ -1,6 +1,6 @@
 package com.norwood.mcheli.weapon;
 
-import com.norwood.mcheli.__helper.info.ContentRegistries;
+import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.wrapper.W_Item;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

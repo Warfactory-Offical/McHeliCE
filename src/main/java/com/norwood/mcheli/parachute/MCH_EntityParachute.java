@@ -1,7 +1,7 @@
 package com.norwood.mcheli.parachute;
 
 import com.norwood.mcheli.MCH_Lib;
-import com.norwood.mcheli.__helper.entity.IEntitySinglePassenger;
+import com.norwood.mcheli.helper.entity.IEntitySinglePassenger;
 import com.norwood.mcheli.particles.MCH_ParticleParam;
 import com.norwood.mcheli.particles.MCH_ParticlesUtil;
 import com.norwood.mcheli.wrapper.*;

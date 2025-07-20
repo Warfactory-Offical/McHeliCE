@@ -1,6 +1,6 @@
 package com.norwood.mcheli.weapon;
 
-import com.norwood.mcheli.__helper.client._IModelCustom;
+import com.norwood.mcheli.helper.client._IModelCustom;
 
 public class MCH_BulletModel {
     public final String name;

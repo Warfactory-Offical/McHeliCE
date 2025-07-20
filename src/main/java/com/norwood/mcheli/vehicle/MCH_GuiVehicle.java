@@ -45,7 +45,7 @@ public class MCH_GuiVehicle extends MCH_AircraftCommonGui {
                     this.drawKeyBind(vehicle, player);
                 }
 
-                this.drawHitBullet(vehicle, 51470, seatID);
+                this.drawHitMarker(vehicle, 51470, seatID);
             }
         }
     }

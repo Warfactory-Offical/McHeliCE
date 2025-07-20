@@ -1,7 +1,7 @@
 package com.norwood.mcheli.tank;
 
 import com.norwood.mcheli.MCH_Config;
-import com.norwood.mcheli.__helper.MCH_ColorInt;
+import com.norwood.mcheli.helper.MCH_ColorInt;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_RenderAircraft;
 import net.minecraft.client.renderer.BufferBuilder;

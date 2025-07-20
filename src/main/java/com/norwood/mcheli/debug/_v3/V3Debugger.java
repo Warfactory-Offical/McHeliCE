@@ -1,6 +1,6 @@
 package com.norwood.mcheli.debug._v3;
 
-import com.norwood.mcheli.__helper.MCH_Utils;
+import com.norwood.mcheli.helper.MCH_Utils;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import org.lwjgl.input.Keyboard;

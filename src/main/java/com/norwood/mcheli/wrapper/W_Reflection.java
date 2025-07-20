@@ -1,6 +1,6 @@
 package com.norwood.mcheli.wrapper;
 
-import com.norwood.mcheli.__helper.client.MCH_CameraManager;
+import com.norwood.mcheli.helper.client.MCH_CameraManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.renderer.EntityRenderer;

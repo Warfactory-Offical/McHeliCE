@@ -1,12 +1,12 @@
 package com.norwood.mcheli;
 
-import com.norwood.mcheli.__helper.addon.AddonManager;
-import com.norwood.mcheli.__helper.addon.AddonPack;
-import com.norwood.mcheli.__helper.client.MCH_ItemModelRenderers;
-import com.norwood.mcheli.__helper.client._IModelCustom;
-import com.norwood.mcheli.__helper.client.model.LegacyModelLoader;
-import com.norwood.mcheli.__helper.client.renderer.item.*;
-import com.norwood.mcheli.__helper.info.ContentRegistries;
+import com.norwood.mcheli.helper.addon.AddonManager;
+import com.norwood.mcheli.helper.addon.AddonPack;
+import com.norwood.mcheli.helper.client.MCH_ItemModelRenderers;
+import com.norwood.mcheli.helper.client._IModelCustom;
+import com.norwood.mcheli.helper.client.model.LegacyModelLoader;
+import com.norwood.mcheli.helper.client.renderer.item.*;
+import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.aircraft.*;
 import com.norwood.mcheli.block.MCH_DraftingTableRenderer;
 import com.norwood.mcheli.block.MCH_DraftingTableTileEntity;

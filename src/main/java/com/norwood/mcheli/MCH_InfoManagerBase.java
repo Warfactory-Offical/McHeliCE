@@ -1,7 +1,7 @@
 package com.norwood.mcheli;
 
-import com.norwood.mcheli.__helper.MCH_Utils;
-import com.norwood.mcheli.__helper.addon.AddonResourceLocation;
+import com.norwood.mcheli.helper.MCH_Utils;
+import com.norwood.mcheli.helper.addon.AddonResourceLocation;
 
 import java.io.File;
 

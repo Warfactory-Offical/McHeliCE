@@ -1,7 +1,7 @@
 package com.norwood.mcheli.aircraft;
 
 import com.norwood.mcheli.MCH_Config;
-import com.norwood.mcheli.__helper.MCH_CriteriaTriggers;
+import com.norwood.mcheli.helper.MCH_CriteriaTriggers;
 import com.norwood.mcheli.wrapper.W_EntityPlayer;
 import com.norwood.mcheli.wrapper.W_Item;
 import com.norwood.mcheli.wrapper.W_MovingObjectPosition;

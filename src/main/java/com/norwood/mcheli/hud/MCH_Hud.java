@@ -2,9 +2,9 @@ package com.norwood.mcheli.hud;
 
 import com.norwood.mcheli.MCH_BaseInfo;
 import com.norwood.mcheli.MCH_Lib;
-import com.norwood.mcheli.__helper.MCH_Utils;
-import com.norwood.mcheli.__helper.addon.AddonResourceLocation;
-import com.norwood.mcheli.__helper.info.ContentParseException;
+import com.norwood.mcheli.helper.MCH_Utils;
+import com.norwood.mcheli.helper.addon.AddonResourceLocation;
+import com.norwood.mcheli.helper.info.ContentParseException;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.wrapper.W_ScaledResolution;
 import net.minecraft.client.Minecraft;

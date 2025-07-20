@@ -1,6 +1,6 @@
 package com.norwood.mcheli.wrapper;
 
-import com.norwood.mcheli.__helper.addon.GeneratedAddonPack;
+import com.norwood.mcheli.helper.addon.GeneratedAddonPack;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;

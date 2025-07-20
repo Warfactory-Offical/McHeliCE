@@ -1,7 +1,7 @@
 package com.norwood.mcheli.wrapper;
 
 import com.norwood.mcheli.MCH_Config;
-import com.norwood.mcheli.__helper.MCH_Utils;
+import com.norwood.mcheli.helper.MCH_Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;

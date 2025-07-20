@@ -1,20 +1,20 @@
 package com.norwood.mcheli.aircraft;
 
 import com.norwood.mcheli.MCH_ModelManager;
-import com.norwood.mcheli.__helper.client._IItemRenderer;
+import com.norwood.mcheli.helper.client.IItemRenderer;
 import com.norwood.mcheli.wrapper.W_McClient;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
 @Deprecated
-public class MCH_ItemAircraftRender implements _IItemRenderer {
+public class MCH_ItemAircraftRender implements IItemRenderer {
     final float size = 0.1F;
     final float x = 0.1F;
     final float y = 0.1F;
     final float z = 0.1F;
 
     @Override
-    public boolean handleRenderType(ItemStack item, _IItemRenderer.ItemRenderType type) {
+    public boolean handleRenderType(ItemStack item, IItemRenderer.ItemRenderType type) {
         if (item != null && item.getItem() instanceof MCH_ItemAircraft) {
             MCH_AircraftInfo info = ((MCH_ItemAircraft) item.getItem()).getAircraftInfo();
             if (info == null) {
@@ -22,10 +22,10 @@ public class MCH_ItemAircraftRender implements _IItemRenderer {
             }
 
             if (info.name.equalsIgnoreCase("mh-60l_dap")) {
-                return type == _IItemRenderer.ItemRenderType.EQUIPPED
-                        || type == _IItemRenderer.ItemRenderType.EQUIPPED_FIRST_PERSON
-                        || type == _IItemRenderer.ItemRenderType.ENTITY
-                        || type == _IItemRenderer.ItemRenderType.INVENTORY;
+                return type == IItemRenderer.ItemRenderType.EQUIPPED
+                        || type == IItemRenderer.ItemRenderType.EQUIPPED_FIRST_PERSON
+                        || type == IItemRenderer.ItemRenderType.ENTITY
+                        || type == IItemRenderer.ItemRenderType.INVENTORY;
             }
         }
 
@@ -33,12 +33,12 @@ public class MCH_ItemAircraftRender implements _IItemRenderer {
     }
 
     @Override
-    public boolean shouldUseRenderHelper(_IItemRenderer.ItemRenderType type, ItemStack item, _IItemRenderer.ItemRendererHelper helper) {
-        return type == _IItemRenderer.ItemRenderType.ENTITY || type == _IItemRenderer.ItemRenderType.INVENTORY;
+    public boolean shouldUseRenderHelper(IItemRenderer.ItemRenderType type, ItemStack item, IItemRenderer.ItemRendererHelper helper) {
+        return type == IItemRenderer.ItemRenderType.ENTITY || type == IItemRenderer.ItemRenderType.INVENTORY;
     }
 
     @Override
-    public void renderItem(_IItemRenderer.ItemRenderType type, ItemStack item, Object... data) {
+    public void renderItem(IItemRenderer.ItemRenderType type, ItemStack item, Object... data) {
         GL11.glPushMatrix();
         GL11.glEnable(2884);
         W_McClient.MOD_bindTexture("textures/helicopters/mh-60l_dap.png");

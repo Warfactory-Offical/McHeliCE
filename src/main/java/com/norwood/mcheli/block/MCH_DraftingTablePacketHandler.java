@@ -2,7 +2,7 @@ package com.norwood.mcheli.block;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.norwood.mcheli.MCH_Lib;
-import com.norwood.mcheli.__helper.network.HandleSide;
+import com.norwood.mcheli.helper.network.HandleSide;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
 import net.minecraftforge.fml.relauncher.Side;

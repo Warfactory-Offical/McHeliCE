@@ -2,8 +2,8 @@ package com.norwood.mcheli.gui;
 
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_Lib;
-import com.norwood.mcheli.__helper.MCH_Utils;
-import com.norwood.mcheli.__helper.network.PooledGuiParameter;
+import com.norwood.mcheli.helper.MCH_Utils;
+import com.norwood.mcheli.helper.network.PooledGuiParameter;
 import com.norwood.mcheli.aircraft.MCH_AircraftGui;
 import com.norwood.mcheli.aircraft.MCH_AircraftGuiContainer;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;

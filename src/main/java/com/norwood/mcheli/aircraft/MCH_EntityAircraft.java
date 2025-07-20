@@ -1,9 +1,9 @@
 package com.norwood.mcheli.aircraft;
 
 import com.norwood.mcheli.*;
-import com.norwood.mcheli.__helper.MCH_CriteriaTriggers;
-import com.norwood.mcheli.__helper.entity.IEntitySinglePassenger;
-import com.norwood.mcheli.__helper.entity.ITargetMarkerObject;
+import com.norwood.mcheli.helper.MCH_CriteriaTriggers;
+import com.norwood.mcheli.helper.entity.IEntitySinglePassenger;
+import com.norwood.mcheli.helper.entity.ITargetMarkerObject;
 import com.norwood.mcheli.chain.MCH_EntityChain;
 import com.norwood.mcheli.command.MCH_Command;
 import com.norwood.mcheli.flare.MCH_Flare;

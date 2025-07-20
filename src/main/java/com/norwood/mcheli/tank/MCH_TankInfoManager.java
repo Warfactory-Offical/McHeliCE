@@ -1,7 +1,7 @@
 package com.norwood.mcheli.tank;
 
-import com.norwood.mcheli.__helper.addon.AddonResourceLocation;
-import com.norwood.mcheli.__helper.info.ContentRegistries;
+import com.norwood.mcheli.helper.addon.AddonResourceLocation;
+import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfoManager;
 import net.minecraft.item.Item;
 

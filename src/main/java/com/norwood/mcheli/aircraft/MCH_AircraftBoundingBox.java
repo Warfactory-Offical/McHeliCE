@@ -21,31 +21,35 @@ public class MCH_AircraftBoundingBox extends AxisAlignedBB {
         return new MCH_AircraftBoundingBox(this.ac, new AxisAlignedBB(x1, y1, z1, x2, y2, z2));
     }
 
-    public double getDistSq(AxisAlignedBB a1, AxisAlignedBB a2) {
-        double x1 = (a1.maxX + a1.minX) / 2.0;
-        double y1 = (a1.maxY + a1.minY) / 2.0;
-        double z1 = (a1.maxZ + a1.minZ) / 2.0;
-        double x2 = (a2.maxX + a2.minX) / 2.0;
-        double y2 = (a2.maxY + a2.minY) / 2.0;
-        double z2 = (a2.maxZ + a2.minZ) / 2.0;
-        double dx = x1 - x2;
-        double dy = y1 - y2;
-        double dz = z1 - z2;
+    public double getDistanceSquareBetween  (AxisAlignedBB box1, AxisAlignedBB box2) {
+        double centerX1 = (box1.minX + box1.maxX) / 2.0;
+        double centerY1 = (box1.minY + box1.maxY) / 2.0;
+        double centerZ1 = (box1.minZ + box1.maxZ) / 2.0;
+
+        double centerX2 = (box2.minX + box2.maxX) / 2.0;
+        double centerY2 = (box2.minY + box2.maxY) / 2.0;
+        double centerZ2 = (box2.minZ + box2.maxZ) / 2.0;
+
+        double dx = centerX1 - centerX2;
+        double dy = centerY1 - centerY2;
+        double dz = centerZ1 - centerZ2;
+
         return dx * dx + dy * dy + dz * dz;
     }
+
 
     public boolean intersects(@NotNull AxisAlignedBB aabb) {
         boolean ret = false;
         double dist = 1.0E7;
         this.ac.lastBBDamageFactor = 1.0F;
         if (super.intersects(aabb)) {
-            dist = this.getDistSq(aabb, this);
+            dist = this.getDistanceSquareBetween(aabb, this);
             ret = true;
         }
 
         for (MCH_BoundingBox bb : this.ac.extraBoundingBox) {
             if (bb.getBoundingBox().intersects(aabb)) {
-                double dist2 = this.getDistSq(aabb, this);
+                double dist2 = this.getDistanceSquareBetween(aabb, this);
                 if (dist2 < dist) {
                     dist = dist2;
                     this.ac.lastBBDamageFactor = bb.damegeFactor;
@@ -57,16 +61,17 @@ public class MCH_AircraftBoundingBox extends AxisAlignedBB {
 
         return ret;
     }
-
     public @NotNull AxisAlignedBB grow(double x, double y, double z) {
-        double d3 = this.minX - x;
-        double d4 = this.minY - y;
-        double d5 = this.minZ - z;
-        double d6 = this.maxX + x;
-        double d7 = this.maxY + y;
-        double d8 = this.maxZ + z;
-        return this.NewAABB(d3, d4, d5, d6, d7, d8);
+        double newMinX = this.minX - x;
+        double newMinY = this.minY - y;
+        double newMinZ = this.minZ - z;
+        double newMaxX = this.maxX + x;
+        double newMaxY = this.maxY + y;
+        double newMaxZ = this.maxZ + z;
+
+        return this.NewAABB(newMinX, newMinY, newMinZ, newMaxX, newMaxY, newMaxZ);
     }
+
 
     public @NotNull AxisAlignedBB union(AxisAlignedBB other) {
         double d0 = Math.min(this.minX, other.minX);
@@ -79,37 +84,14 @@ public class MCH_AircraftBoundingBox extends AxisAlignedBB {
     }
 
     public @NotNull AxisAlignedBB expand(double x, double y, double z) {
-        double d3 = this.minX;
-        double d4 = this.minY;
-        double d5 = this.minZ;
-        double d6 = this.maxX;
-        double d7 = this.maxY;
-        double d8 = this.maxZ;
-        if (x < 0.0) {
-            d3 += x;
-        }
+        double minX = this.minX + Math.min(0.0, x);
+        double maxX = this.maxX + Math.max(0.0, x);
+        double minY = this.minY + Math.min(0.0, y);
+        double maxY = this.maxY + Math.max(0.0, y);
+        double minZ = this.minZ + Math.min(0.0, z);
+        double maxZ = this.maxZ + Math.max(0.0, z);
 
-        if (x > 0.0) {
-            d6 += x;
-        }
-
-        if (y < 0.0) {
-            d4 += y;
-        }
-
-        if (y > 0.0) {
-            d7 += y;
-        }
-
-        if (z < 0.0) {
-            d5 += z;
-        }
-
-        if (z > 0.0) {
-            d8 += z;
-        }
-
-        return this.NewAABB(d3, d4, d5, d6, d7, d8);
+        return this.NewAABB(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
     public @NotNull AxisAlignedBB contract(double x, double y, double z) {
@@ -130,26 +112,26 @@ public class MCH_AircraftBoundingBox extends AxisAlignedBB {
         return this.NewAABB(this.minX + x, this.minY + y, this.minZ + z, this.maxX + x, this.maxY + y, this.maxZ + z);
     }
 
-    public RayTraceResult calculateIntercept(@NotNull Vec3d v1, @NotNull Vec3d v2) {
+    public RayTraceResult calculateIntercept(@NotNull Vec3d start, @NotNull Vec3d end) {
         this.ac.lastBBDamageFactor = 1.0F;
-        RayTraceResult mop = super.calculateIntercept(v1, v2);
-        double dist = 1.0E7;
-        if (mop != null) {
-            dist = v1.distanceTo(mop.hitVec);
-        }
 
-        for (MCH_BoundingBox bb : this.ac.extraBoundingBox) {
-            RayTraceResult mop2 = bb.getBoundingBox().calculateIntercept(v1, v2);
-            if (mop2 != null) {
-                double dist2 = v1.distanceTo(mop2.hitVec);
-                if (dist2 < dist) {
-                    mop = mop2;
-                    dist = dist2;
-                    this.ac.lastBBDamageFactor = bb.damegeFactor;
+        RayTraceResult closestHit = super.calculateIntercept(start, end);
+        double closestDistance = (closestHit != null) ? start.distanceTo(closestHit.hitVec) : Double.MAX_VALUE;
+
+        for (MCH_BoundingBox extraBox : this.ac.extraBoundingBox) {
+            RayTraceResult extraHit = extraBox.getBoundingBox().calculateIntercept(start, end);
+            if (extraHit != null) {
+                double extraDistance = start.distanceTo(extraHit.hitVec);
+                if (extraDistance < closestDistance) {
+                    closestHit = extraHit;
+                    closestDistance = extraDistance;
+                    this.ac.lastBBDamageFactor = extraBox.damegeFactor;
                 }
             }
         }
 
-        return mop;
+        return closestHit;
     }
+
+
 }

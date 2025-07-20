@@ -1,8 +1,8 @@
 package com.norwood.mcheli;
 
-import com.norwood.mcheli.__helper.addon.AddonResourceLocation;
-import com.norwood.mcheli.__helper.info.ContentParseException;
-import com.norwood.mcheli.__helper.info.IContentData;
+import com.norwood.mcheli.helper.addon.AddonResourceLocation;
+import com.norwood.mcheli.helper.info.ContentParseException;
+import com.norwood.mcheli.helper.info.IContentData;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.List;

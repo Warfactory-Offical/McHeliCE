@@ -45,7 +45,7 @@ public class MCH_GuiTank extends MCH_AircraftCommonGui {
                 }
             }
 
-            this.drawHitBullet(tank, -14101432, seatID);
+            this.drawHitMarker(tank, -14101432, seatID);
         }
     }
 

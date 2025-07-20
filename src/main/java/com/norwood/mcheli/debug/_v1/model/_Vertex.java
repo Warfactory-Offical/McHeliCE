@@ -1,6 +1,6 @@
 package com.norwood.mcheli.debug._v1.model;
 
-import com.norwood.mcheli.__helper.debug.DebugInfoObject;
+import com.norwood.mcheli.helper.debug.DebugInfoObject;
 import com.norwood.mcheli.debug._v1.PrintStreamWrapper;
 
 class _Vertex implements DebugInfoObject {

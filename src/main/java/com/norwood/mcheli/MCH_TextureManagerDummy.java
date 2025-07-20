@@ -1,6 +1,6 @@
 package com.norwood.mcheli;
 
-import com.norwood.mcheli.__helper.MCH_Utils;
+import com.norwood.mcheli.helper.MCH_Utils;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.ITickableTextureObject;

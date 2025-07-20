@@ -2,8 +2,8 @@ package com.norwood.mcheli.block;
 
 import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.MCH_MOD;
-import com.norwood.mcheli.__helper.block.EnumDirection8;
-import com.norwood.mcheli.__helper.block.properties.PropertyDirection8;
+import com.norwood.mcheli.helper.block.EnumDirection8;
+import com.norwood.mcheli.helper.block.properties.PropertyDirection8;
 import com.norwood.mcheli.wrapper.W_BlockContainer;
 import com.norwood.mcheli.wrapper.W_Item;
 import net.minecraft.block.ITileEntityProvider;

@@ -1,6 +1,6 @@
 package com.norwood.mcheli.debug._v1.model;
 
-import com.norwood.mcheli.__helper.debug.DebugException;
+import com.norwood.mcheli.helper.debug.DebugException;
 
 import java.io.InputStream;
 

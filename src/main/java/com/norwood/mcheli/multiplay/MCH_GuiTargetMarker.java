@@ -3,7 +3,7 @@ package com.norwood.mcheli.multiplay;
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_MarkEntityPos;
 import com.norwood.mcheli.MCH_ServerSettings;
-import com.norwood.mcheli.__helper.entity.ITargetMarkerObject;
+import com.norwood.mcheli.helper.entity.ITargetMarkerObject;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_EntitySeat;
 import com.norwood.mcheli.gui.MCH_Gui;

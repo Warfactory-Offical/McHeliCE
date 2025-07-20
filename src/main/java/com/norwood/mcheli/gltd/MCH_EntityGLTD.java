@@ -3,7 +3,7 @@ package com.norwood.mcheli.gltd;
 import com.norwood.mcheli.MCH_Camera;
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_MOD;
-import com.norwood.mcheli.__helper.entity.IEntitySinglePassenger;
+import com.norwood.mcheli.helper.entity.IEntitySinglePassenger;
 import com.norwood.mcheli.multiplay.MCH_Multiplay;
 import com.norwood.mcheli.weapon.MCH_WeaponCAS;
 import com.norwood.mcheli.weapon.MCH_WeaponInfo;

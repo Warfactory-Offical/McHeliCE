@@ -1,7 +1,7 @@
 package com.norwood.mcheli;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.norwood.mcheli.__helper.network.HandleSide;
+import com.norwood.mcheli.helper.network.HandleSide;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_EntitySeat;
 import com.norwood.mcheli.lweapon.MCH_ClientLightWeaponTickHandler;

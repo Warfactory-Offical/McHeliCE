@@ -1,6 +1,6 @@
 package com.norwood.mcheli.wrapper.modelloader;
 
-import com.norwood.mcheli.__helper.client._ModelFormatException;
+import com.norwood.mcheli.helper.client._ModelFormatException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;

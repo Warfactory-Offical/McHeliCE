@@ -1,9 +1,9 @@
 package com.norwood.mcheli.debug._v2;
 
 import com.google.common.collect.Lists;
-import com.norwood.mcheli.__helper.debug.DebugBootstrap;
-import com.norwood.mcheli.__helper.info.ContentRegistries;
-import com.norwood.mcheli.__helper.info.IContentData;
+import com.norwood.mcheli.helper.debug.DebugBootstrap;
+import com.norwood.mcheli.helper.info.ContentRegistries;
+import com.norwood.mcheli.helper.info.IContentData;
 
 import java.io.File;
 import java.util.List;
