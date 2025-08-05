@@ -14,7 +14,7 @@ public class W_Item extends Item {
     }
 
     public static int getIdFromItem(@NotNull Item i) {
-        return i == null ? 0 : REGISTRY.getIDForObject(i);
+        return REGISTRY.getIDForObject(i);
     }
 
     public static @NotNull Item getItemById(int i) {

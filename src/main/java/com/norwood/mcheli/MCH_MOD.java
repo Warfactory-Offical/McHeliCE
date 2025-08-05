@@ -40,12 +40,10 @@ import com.norwood.mcheli.vehicle.MCH_EntityVehicle;
 import com.norwood.mcheli.vehicle.MCH_ItemVehicle;
 import com.norwood.mcheli.vehicle.MCH_VehicleInfo;
 import com.norwood.mcheli.weapon.*;
-import com.norwood.mcheli.wrapper.NetworkMod;
 import com.norwood.mcheli.wrapper.W_Item;
 import com.norwood.mcheli.wrapper.W_LanguageRegistry;
 import com.norwood.mcheli.wrapper.W_NetworkRegistry;
 import net.minecraft.command.CommandHandler;
-import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -65,10 +63,6 @@ import java.util.Map.Entry;
         modid = "mcheli",
         name = "MC Helicopter MOD",
         dependencies = "required-after:forge@[14.23.5.2847,)"
-)
-@NetworkMod(
-        clientSideRequired = true,
-        serverSideRequired = false
 )
 public class MCH_MOD {
     public static final String MOD_ID = "mcheli";
@@ -111,7 +105,6 @@ public class MCH_MOD {
     public static MCH_CreativeTabs creativeTabsVehicle;
     public static MCH_DraftingTableBlock blockDraftingTable;
     public static MCH_DraftingTableBlock blockDraftingTableLit;
-    public static Item sampleHelmet;
     private static File sourceFile;
     private static File addonDir;
 

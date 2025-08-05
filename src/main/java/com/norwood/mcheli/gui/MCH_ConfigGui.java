@@ -320,26 +320,26 @@ public class MCH_ConfigGui extends W_GuiContainer {
 
     public void applySwitchScreen() {
         switch (this.currentScreenId) {
-            case 0:
-            default:
-                for (W_GuiButton b : this.listControlButtons) {
-                    b.setVisible(true);
-                }
-                break;
-            case 1:
+            case 1 -> {
                 for (W_GuiButton b : this.listRenderButtons) {
                     b.setVisible(true);
                 }
-                break;
-            case 2:
+            }
+            case 2 -> {
                 for (W_GuiButton b : this.listKeyBindingButtons) {
                     b.setVisible(true);
                 }
-                break;
-            case 3:
+            }
+            case 3 -> {
                 for (W_GuiButton b : this.listDevelopButtons) {
                     b.setVisible(true);
                 }
+            }
+            default -> {
+                for (W_GuiButton b : this.listControlButtons) {
+                    b.setVisible(true);
+                }
+            }
         }
     }
 
@@ -482,8 +482,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
                     Set<String> reloaded = Sets.newHashSet();
 
                     for (Entity value : list) {
-                        if (value instanceof MCH_EntityAircraft) {
-                            MCH_EntityAircraft ac = (MCH_EntityAircraft) value;
+                        if (value instanceof MCH_EntityAircraft ac) {
                             if (ac.getAcInfo() != null && !reloaded.contains(ac.getAcInfo().name)) {
                                 ContentRegistries.get(ac.getAcInfo().getClass()).reload(ac.getAcInfo().name);
                                 ac.changeType(ac.getAcInfo().name);

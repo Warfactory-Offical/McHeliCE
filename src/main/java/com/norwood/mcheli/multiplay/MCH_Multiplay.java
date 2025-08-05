@@ -62,10 +62,9 @@ public class MCH_Multiplay {
     }
 
     public static MCH_TargetType canSpotEntity(Entity user, double posX, double posY, double posZ, Entity target, boolean checkSee) {
-        if (!(user instanceof EntityLivingBase)) {
+        if (!(user instanceof EntityLivingBase spotter)) {
             return MCH_TargetType.NONE;
         } else {
-            EntityLivingBase spotter = (EntityLivingBase) user;
             int col = spotter.getTeam() == null ? 0 : 1;
             int row = 0;
             if (target instanceof EntityLivingBase) {
@@ -77,16 +76,14 @@ public class MCH_Multiplay {
             }
 
             if (spotter.getTeam() != null) {
-                if (target instanceof EntityPlayer) {
-                    EntityPlayer player = (EntityPlayer) target;
+                if (target instanceof EntityPlayer player) {
                     player.getTeam();
                     if (spotter.isOnSameTeam(player)) {
                         row = 4;
                     } else {
                         row = 5;
                     }
-                } else if (target instanceof MCH_EntityAircraft) {
-                    MCH_EntityAircraft ac = (MCH_EntityAircraft) target;
+                } else if (target instanceof MCH_EntityAircraft ac) {
                     EntityPlayer rideEntity = ac.getFirstMountPlayer();
                     if (rideEntity == null) {
                         row = 6;
@@ -135,8 +132,7 @@ public class MCH_Multiplay {
                 targetPlayer = (EntityPlayer) ((IEntitySinglePassenger) target).getRiddenByEntity();
             }
 
-            if (target instanceof MCH_EntityAircraft) {
-                MCH_EntityAircraft ac = (MCH_EntityAircraft) target;
+            if (target instanceof MCH_EntityAircraft ac) {
                 if (ac.getRiddenByEntity() instanceof EntityPlayer) {
                     targetPlayer = (EntityPlayer) ac.getRiddenByEntity();
                 }

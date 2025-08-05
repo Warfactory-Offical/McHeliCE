@@ -80,8 +80,7 @@ public class MCH_CurrentRecipe {
             this.getAcInfoTextSub("NightVision", info.isEnableNightVision ? "YES" : "NO");
             this.getAcInfoTextSub("Radar", info.isEnableEntityRadar ? "YES" : "NO");
             this.getAcInfoTextSub("Inventory", "" + info.inventorySize);
-            if (info instanceof MCP_PlaneInfo) {
-                MCP_PlaneInfo pinfo = (MCP_PlaneInfo) info;
+            if (info instanceof MCP_PlaneInfo pinfo) {
                 this.getAcInfoTextSub("VTOL", pinfo.isEnableVtol ? "YES" : "NO");
             }
 

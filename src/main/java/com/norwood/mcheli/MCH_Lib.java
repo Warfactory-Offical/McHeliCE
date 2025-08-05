@@ -120,8 +120,7 @@ public class MCH_Lib {
     }
 
     public static void applyEntityHurtResistantTimeConfig(Entity entity) {
-        if (entity instanceof EntityLivingBase) {
-            EntityLivingBase elb = (EntityLivingBase) entity;
+        if (entity instanceof EntityLivingBase elb) {
             double h_time = MCH_Config.HurtResistantTime.prmDouble * elb.hurtResistantTime;
             elb.hurtResistantTime = (int) h_time;
         }
@@ -355,14 +354,10 @@ public class MCH_Lib {
 
     public static void enableFirstPersonItemRender() {
         switch (MCH_Config.DisableItemRender.prmInt) {
-            case 1:
-            default:
-                break;
-            case 2:
-                MCH_ItemRendererDummy.disableDummyItemRenderer();
-                break;
-            case 3:
-                W_Reflection.restoreCameraZoom();
+            case 2 -> MCH_ItemRendererDummy.disableDummyItemRenderer();
+            case 3 -> W_Reflection.restoreCameraZoom();
+            default -> {
+            }
         }
     }
 

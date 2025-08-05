@@ -375,7 +375,7 @@ public class MCH_Command extends CommandBase {
         }
 
         List<Entry<String, Integer>> entries = new ArrayList<>(map.entrySet());
-        entries.sort((entry1, entry2) -> entry1.getKey().compareTo(entry2.getKey()));
+        entries.sort(Comparator.comparing(Entry::getKey));
         boolean send = false;
         sender.sendMessage(new TextComponentString("--- " + title + " ---"));
 
@@ -468,8 +468,7 @@ public class MCH_Command extends CommandBase {
                                     }
 
                                     TileEntity block2 = world.getTileEntity(blockpos);
-                                    if (block2 instanceof IInventory) {
-                                        IInventory ii = (IInventory) block2;
+                                    if (block2 instanceof IInventory ii) {
 
                                         for (int i = 0; i < ii.getSizeInventory(); i++) {
                                             ItemStack is = ii.removeStackFromSlot(i);
@@ -523,8 +522,7 @@ public class MCH_Command extends CommandBase {
                 return getListOfStringsMatchingLastWord(prm, server.getOnlinePlayerNames());
             } else {
                 if (prm[0].equalsIgnoreCase("fill")) {
-                    if ((prm.length == 2 || prm.length == 5) && sender instanceof Entity) {
-                        Entity entity = (Entity) sender;
+                    if ((prm.length == 2 || prm.length == 5) && sender instanceof Entity entity) {
                         List<String> a = new ArrayList<>();
                         int x = entity.posX < 0.0 ? (int) (entity.posX - 1.0) : (int) entity.posX;
                         int z = entity.posZ < 0.0 ? (int) (entity.posZ - 1.0) : (int) entity.posZ;

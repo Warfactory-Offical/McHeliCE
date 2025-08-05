@@ -19,10 +19,9 @@ public enum LegacyModelLoader implements ICustomModelLoader {
     }
 
     public boolean accepts(@NotNull ResourceLocation modelLocation) {
-        if (!(modelLocation instanceof ModelResourceLocation)) {
+        if (!(modelLocation instanceof ModelResourceLocation location)) {
             return false;
         } else {
-            ModelResourceLocation location = (ModelResourceLocation) modelLocation;
             return location.getNamespace().equals("mcheli") && location.getVariant().equals("mcheli_legacy");
         }
     }

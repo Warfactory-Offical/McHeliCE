@@ -78,14 +78,12 @@ public class MCH_ClientTankTickHandler extends MCH_AircraftClientTickHandler {
         if (player != null) {
             if (player.getRidingEntity() instanceof MCH_EntityTank) {
                 tank = (MCH_EntityTank) player.getRidingEntity();
-            } else if (player.getRidingEntity() instanceof MCH_EntitySeat) {
-                MCH_EntitySeat seat = (MCH_EntitySeat) player.getRidingEntity();
+            } else if (player.getRidingEntity() instanceof MCH_EntitySeat seat) {
                 if (seat.getParent() instanceof MCH_EntityTank) {
                     isPilot = false;
                     tank = (MCH_EntityTank) seat.getParent();
                 }
-            } else if (player.getRidingEntity() instanceof MCH_EntityUavStation) {
-                MCH_EntityUavStation uavStation = (MCH_EntityUavStation) player.getRidingEntity();
+            } else if (player.getRidingEntity() instanceof MCH_EntityUavStation uavStation) {
                 if (uavStation.getControlAircract() instanceof MCH_EntityTank) {
                     tank = (MCH_EntityTank) uavStation.getControlAircract();
                 }

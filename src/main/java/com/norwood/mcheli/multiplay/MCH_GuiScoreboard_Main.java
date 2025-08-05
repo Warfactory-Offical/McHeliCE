@@ -6,7 +6,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.List;
 
 public class MCH_GuiScoreboard_Main extends MCH_GuiScoreboard_Base {

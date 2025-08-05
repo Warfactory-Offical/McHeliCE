@@ -23,8 +23,7 @@ public class MCH_TankPacketHandler {
                     if (((MCH_EntitySeat) player.getRidingEntity()).getParent() instanceof MCH_EntityTank) {
                         tank = (MCH_EntityTank) ((MCH_EntitySeat) player.getRidingEntity()).getParent();
                     }
-                } else if (player.getRidingEntity() instanceof MCH_EntityUavStation) {
-                    MCH_EntityUavStation uavStation = (MCH_EntityUavStation) player.getRidingEntity();
+                } else if (player.getRidingEntity() instanceof MCH_EntityUavStation uavStation) {
                     if (uavStation.getControlAircract() instanceof MCH_EntityTank) {
                         tank = (MCH_EntityTank) uavStation.getControlAircract();
                     }

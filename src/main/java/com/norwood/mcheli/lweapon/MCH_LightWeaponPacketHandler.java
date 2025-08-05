@@ -28,8 +28,7 @@ public class MCH_LightWeaponPacketHandler {
 
                 ItemStack is = player.getHeldItemMainhand();
                 if (!is.isEmpty()) {
-                    if (is.getItem() instanceof MCH_ItemLightWeaponBase) {
-                        MCH_ItemLightWeaponBase lweapon = (MCH_ItemLightWeaponBase) is.getItem();
+                    if (is.getItem() instanceof MCH_ItemLightWeaponBase lweapon) {
                         if (pc.camMode == 2 && MCH_ItemLightWeaponBase.isHeld(player)) {
                             player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 255, 0, false, false));
                         }

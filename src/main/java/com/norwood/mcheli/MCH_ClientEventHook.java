@@ -141,8 +141,7 @@ public class MCH_ClientEventHook extends W_ClientEventHook {
     @Override
     public void renderPlayerPre(net.minecraftforge.client.event.RenderPlayerEvent.Pre event) {
         if (event.getEntity() != null) {
-            if (event.getEntity().getRidingEntity() instanceof MCH_EntityAircraft) {
-                MCH_EntityAircraft v = (MCH_EntityAircraft) event.getEntity().getRidingEntity();
+            if (event.getEntity().getRidingEntity() instanceof MCH_EntityAircraft v) {
                 if (v.getAcInfo() != null && v.getAcInfo().hideEntity) {
                     event.setCanceled(true);
                 }

@@ -860,8 +860,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
                                             && !(ex instanceof MCH_EntityBaseBullet)
                                             && !(ex instanceof MCH_EntityChain)
                                             && !(ex instanceof MCH_EntitySeat)) {
-                                        if (ex instanceof MCH_EntityTank) {
-                                            MCH_EntityTank tank = (MCH_EntityTank) ex;
+                                        if (ex instanceof MCH_EntityTank tank) {
                                             if (tank.getTankInfo() != null && tank.getTankInfo().weightType == 2) {
                                                 return MCH_Config.Collision_EntityTankDamage.prmBool;
                                             }

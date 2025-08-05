@@ -25,8 +25,7 @@ public class MCP_GuiPlane extends MCH_AircraftCommonGui {
     @Override
     public void drawGui(EntityPlayer player, boolean isThirdPersonView) {
         MCH_EntityAircraft ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
-        if (ac instanceof MCP_EntityPlane && !ac.isDestroyed()) {
-            MCP_EntityPlane plane = (MCP_EntityPlane) ac;
+        if (ac instanceof MCP_EntityPlane plane && !ac.isDestroyed()) {
             int seatID = ac.getSeatIdByEntity(player);
             GL11.glLineWidth(scaleFactor);
             if (plane.getCameraMode(player) == 1) {

@@ -308,8 +308,7 @@ public abstract class MCH_EntityAircraft
                 return ((MCH_EntitySeat) rider.getRidingEntity()).getParent();
             }
 
-            if (rider.getRidingEntity() instanceof MCH_EntityUavStation) {
-                MCH_EntityUavStation uavStation = (MCH_EntityUavStation) rider.getRidingEntity();
+            if (rider.getRidingEntity() instanceof MCH_EntityUavStation uavStation) {
                 return uavStation.getControlAircract();
             }
         }
@@ -978,8 +977,7 @@ public abstract class MCH_EntityAircraft
 
                     boolean isDamegeSourcePlayer = false;
                     boolean playDamageSound = false;
-                    if (entity instanceof EntityPlayer) {
-                        EntityPlayer player = (EntityPlayer) entity;
+                    if (entity instanceof EntityPlayer player) {
                         isCreative = player.capabilities.isCreativeMode;
                         isSneaking = player.isSneaking();
                         if (dmt.equalsIgnoreCase("player")) {
@@ -2479,8 +2477,7 @@ public abstract class MCH_EntityAircraft
                 MCH_CriteriaTriggers.SUPPLY_AMMO.trigger((EntityPlayerMP) this.getRiddenByEntity());
             }
 
-            if (this.getRiddenByEntity() instanceof EntityPlayer) {
-                EntityPlayer player = (EntityPlayer) this.getRiddenByEntity();
+            if (this.getRiddenByEntity() instanceof EntityPlayer player) {
                 if (this.canPlayerSupplyAmmo(player, weaponID)) {
                     MCH_WeaponSet ws = this.getWeapon(weaponID);
 
@@ -3958,8 +3955,7 @@ public abstract class MCH_EntityAircraft
 
         for (int sid = 0; sid < this.getSeatNum(); sid++) {
             MCH_EntitySeat seat = this.getSeat(sid);
-            if (this.getSeatInfo(1 + sid) instanceof MCH_SeatRackInfo && seat != null && seat.getRiddenByEntity() == null) {
-                MCH_SeatRackInfo info = (MCH_SeatRackInfo) this.getSeatInfo(1 + sid);
+            if (this.getSeatInfo(1 + sid) instanceof MCH_SeatRackInfo info && seat != null && seat.getRiddenByEntity() == null) {
                 Vec3d v = MCH_Lib.RotVec3(
                         info.getEntryPos().x, info.getEntryPos().y, info.getEntryPos().z, -this.getRotYaw(), -this.getRotPitch(), -this.getRotRoll()
                 );
@@ -3999,8 +3995,7 @@ public abstract class MCH_EntityAircraft
     public void unmountEntityFromRack() {
         for (int sid = this.getSeatNum() - 1; sid >= 0; sid--) {
             MCH_EntitySeat seat = this.getSeat(sid);
-            if (this.getSeatInfo(sid + 1) instanceof MCH_SeatRackInfo && seat != null && seat.getRiddenByEntity() != null) {
-                MCH_SeatRackInfo info = (MCH_SeatRackInfo) this.getSeatInfo(sid + 1);
+            if (this.getSeatInfo(sid + 1) instanceof MCH_SeatRackInfo info && seat != null && seat.getRiddenByEntity() != null) {
                 Entity entity = seat.getRiddenByEntity();
                 Vec3d pos = info.getEntryPos();
                 if (entity instanceof MCH_EntityAircraft) {
@@ -4051,13 +4046,11 @@ public abstract class MCH_EntityAircraft
             List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, bb.grow(60.0, 60.0, 60.0));
 
             for (Entity entity : list) {
-                if (entity instanceof MCH_EntityAircraft) {
-                    MCH_EntityAircraft ac = (MCH_EntityAircraft) entity;
+                if (entity instanceof MCH_EntityAircraft ac) {
                     if (ac.getAcInfo() != null) {
                         for (int sid = 0; sid < ac.getSeatNum(); sid++) {
                             MCH_SeatInfo seatInfo = ac.getSeatInfo(1 + sid);
-                            if (seatInfo instanceof MCH_SeatRackInfo && ac.canRideSeatOrRack(1 + sid, entity)) {
-                                MCH_SeatRackInfo info = (MCH_SeatRackInfo) seatInfo;
+                            if (seatInfo instanceof MCH_SeatRackInfo info && ac.canRideSeatOrRack(1 + sid, entity)) {
                                 MCH_EntitySeat seat = ac.getSeat(sid);
                                 if (seat != null && seat.getRiddenByEntity() == null) {
                                     Vec3d v = ac.getTransformedPosition(info.getEntryPos());
@@ -4114,13 +4107,11 @@ public abstract class MCH_EntityAircraft
                 List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, bb.grow(60.0, 60.0, 60.0));
 
                 for (Entity entity : list) {
-                    if (entity instanceof MCH_EntityAircraft) {
-                        MCH_EntityAircraft ac = (MCH_EntityAircraft) entity;
+                    if (entity instanceof MCH_EntityAircraft ac) {
                         if (ac.getAcInfo() != null) {
                             for (int sid = 0; sid < ac.getSeatNum(); sid++) {
                                 MCH_SeatInfo seatInfo = ac.getSeatInfo(1 + sid);
-                                if (seatInfo instanceof MCH_SeatRackInfo) {
-                                    MCH_SeatRackInfo info = (MCH_SeatRackInfo) seatInfo;
+                                if (seatInfo instanceof MCH_SeatRackInfo info) {
                                     MCH_EntitySeat seat = ac.getSeat(sid);
                                     if (seat != null && seat.getRiddenByEntity() == null) {
                                         Vec3d v = ac.getTransformedPosition(info.getEntryPos());
@@ -4365,8 +4356,7 @@ public abstract class MCH_EntityAircraft
                 if (Arrays.asList(a).contains(seatId)) {
                     int len$ = a.length;
 
-                    for (int i$ = 0; i$ < len$; i$++) {
-                        int id = a[i$];
+                    for (int id : a) {
                         if (this.getEntityBySeatId(id) != null) {
                             return false;
                         }

@@ -94,8 +94,7 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
             MCH_TargetType spotType = MCH_TargetType.NONE;
             EntityPlayer clientPlayer = s_minecraft.player;
             Entity entity = target.getEntity();
-            if (entity instanceof MCH_EntityAircraft) {
-                MCH_EntityAircraft ac = (MCH_EntityAircraft) entity;
+            if (entity instanceof MCH_EntityAircraft ac) {
                 if (ac.isMountedEntity(clientPlayer)) {
                     return;
                 }

@@ -41,8 +41,7 @@ public class MCH_EventHook extends W_EventHook {
         }
 
         // Aircraft spawn: create seats
-        if (entity instanceof MCH_EntityAircraft) {
-            MCH_EntityAircraft aircraft = (MCH_EntityAircraft) entity;
+        if (entity instanceof MCH_EntityAircraft aircraft) {
             if (!aircraft.world.isRemote && !aircraft.isCreatedSeats()) {
                 aircraft.createSeats(UUID.randomUUID().toString());
             }
@@ -173,8 +172,7 @@ public class MCH_EventHook extends W_EventHook {
 
     @Override
     public void entityCanUpdate(CanUpdate event) {
-        if (event.getEntity() instanceof MCH_EntityBaseBullet) {
-            MCH_EntityBaseBullet bullet = (MCH_EntityBaseBullet) event.getEntity();
+        if (event.getEntity() instanceof MCH_EntityBaseBullet bullet) {
             bullet.setDead();
         }
     }

@@ -1,7 +1,5 @@
 package com.norwood.mcheli.eval.util;
 
-import static java.lang.Thread.yield;
-
 public class CharUtil {
     public static String escapeString(String str) {
         return escapeString(str, 0, str.length());

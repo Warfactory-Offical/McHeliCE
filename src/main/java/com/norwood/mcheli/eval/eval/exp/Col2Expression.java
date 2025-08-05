@@ -99,8 +99,7 @@ public abstract class Col2Expression extends AbstractExpression {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Col2Expression) {
-            Col2Expression e = (Col2Expression) obj;
+        if (obj instanceof Col2Expression e) {
             if (this.getClass() == e.getClass()) {
                 return this.expl.equals(e.expl) && this.expr.equals(e.expr);
             }

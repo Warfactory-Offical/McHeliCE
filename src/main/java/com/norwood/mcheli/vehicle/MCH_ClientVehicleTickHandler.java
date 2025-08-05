@@ -74,8 +74,7 @@ public class MCH_ClientVehicleTickHandler extends MCH_AircraftClientTickHandler 
         if (player != null) {
             if (player.getRidingEntity() instanceof MCH_EntityVehicle) {
                 vehicle = (MCH_EntityVehicle) player.getRidingEntity();
-            } else if (player.getRidingEntity() instanceof MCH_EntitySeat) {
-                MCH_EntitySeat seat = (MCH_EntitySeat) player.getRidingEntity();
+            } else if (player.getRidingEntity() instanceof MCH_EntitySeat seat) {
                 if (seat.getParent() instanceof MCH_EntityVehicle) {
                     isPilot = false;
                     vehicle = (MCH_EntityVehicle) seat.getParent();

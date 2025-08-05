@@ -23,8 +23,7 @@ public class MCP_PlanePacketHandler {
                     if (((MCH_EntitySeat) player.getRidingEntity()).getParent() instanceof MCP_EntityPlane) {
                         plane = (MCP_EntityPlane) ((MCH_EntitySeat) player.getRidingEntity()).getParent();
                     }
-                } else if (player.getRidingEntity() instanceof MCH_EntityUavStation) {
-                    MCH_EntityUavStation uavStation = (MCH_EntityUavStation) player.getRidingEntity();
+                } else if (player.getRidingEntity() instanceof MCH_EntityUavStation uavStation) {
                     if (uavStation.getControlAircract() instanceof MCP_EntityPlane) {
                         plane = (MCP_EntityPlane) uavStation.getControlAircract();
                     }

@@ -39,8 +39,7 @@ public class MCH_ItemRenderWrench implements IItemRenderer {
                 }
 
                 size = 2.2F;
-                if (data.length >= 2 && data[1] instanceof EntityPlayer) {
-                    EntityPlayer player = (EntityPlayer) data[1];
+                if (data.length >= 2 && data[1] instanceof EntityPlayer player) {
                     if (player.getItemInUseCount() > 0) {
                         float x = 0.8567F;
                         float y = -0.0298F;

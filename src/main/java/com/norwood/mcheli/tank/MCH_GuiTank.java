@@ -24,8 +24,7 @@ public class MCH_GuiTank extends MCH_AircraftCommonGui {
     @Override
     public void drawGui(EntityPlayer player, boolean isThirdPersonView) {
         MCH_EntityAircraft ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
-        if (ac instanceof MCH_EntityTank && !ac.isDestroyed()) {
-            MCH_EntityTank tank = (MCH_EntityTank) ac;
+        if (ac instanceof MCH_EntityTank tank && !ac.isDestroyed()) {
             int seatID = ac.getSeatIdByEntity(player);
             GL11.glLineWidth(scaleFactor);
             if (tank.getCameraMode(player) == 1) {

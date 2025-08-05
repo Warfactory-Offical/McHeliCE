@@ -740,12 +740,11 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
         } else if (!entity.canBeCollidedWith()) {
             return false;
         } else {
-            if (entity instanceof MCH_EntityBaseBullet) {
+            if (entity instanceof MCH_EntityBaseBullet blt) {
                 if (this.world.isRemote) {
                     return false;
                 }
 
-                MCH_EntityBaseBullet blt = (MCH_EntityBaseBullet) entity;
                 if (W_Entity.isEqual(blt.shootingAircraft, this.shootingAircraft)) {
                     return false;
                 }

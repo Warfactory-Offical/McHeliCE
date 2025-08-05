@@ -26,8 +26,7 @@ public class BuiltInLightWeaponItemRenderer implements IItemModelRenderer {
         boolean isRender = false;
         if (IItemModelRenderer.isFirstPerson(transformType) || IItemModelRenderer.isThirdPerson(transformType)) {
             isRender = true;
-            if (entityLivingBase instanceof EntityPlayer) {
-                EntityPlayer player = (EntityPlayer) entityLivingBase;
+            if (entityLivingBase instanceof EntityPlayer player) {
                 if (MCH_ItemLightWeaponBase.isHeld(player) && W_Lib.isFirstPerson() && W_Lib.isClientPlayer(player)) {
                     isRender = false;
                 }

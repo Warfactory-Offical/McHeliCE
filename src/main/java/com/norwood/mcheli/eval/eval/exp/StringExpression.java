@@ -77,8 +77,7 @@ public class StringExpression extends WordExpression {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof StringExpression) {
-            StringExpression e = (StringExpression) obj;
+        if (obj instanceof StringExpression e) {
             return this.word.equals(e.word);
         } else {
             return false;
