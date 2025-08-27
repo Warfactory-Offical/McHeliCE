@@ -1,0 +1,23 @@
+{
+  "parent" : "item/generated",
+  "textures": {
+    "layer0" : "mcheli:items/rangefinder"
+  },
+  "display": {
+    "ground": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 8, 6, 8 ],
+      "scale":[ 1, 1, 1 ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [ 0, 180, 0 ],
+      "translation": [ -12.5, 9.5, -8.0 ],
+      "scale": [ 1.1, 1.1, 1.1 ]
+    },
+    "firstperson_righthand": {
+      "rotation": [ 20, -170, 0 ],
+      "translation": [ -6.0, 15.2, -15.0 ],
+      "scale": [ 1.7, 1.7, 1.7 ]
+    }
+  }
+}

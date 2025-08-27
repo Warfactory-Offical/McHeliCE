@@ -1,0 +1,20 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "WWW",
+    "S S",
+    " W "
+  ],
+  "key" : {
+    "S": {
+      "item": "#STRING"
+    },
+    "W": {
+      "item": "#WOOL"
+    }
+  },
+  "result" : {
+    "item": "mcheli:parachute",
+    "count": 1
+  }
+}

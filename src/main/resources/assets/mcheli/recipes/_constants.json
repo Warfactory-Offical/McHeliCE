@@ -1,0 +1,100 @@
+[
+  {
+    "name": "PLANKS",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "plankWood"
+    }
+  },
+  {
+    "name": "WOOL",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "wool"
+    }
+  },
+  {
+    "name": "FENCE",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "fenceWood"
+    }
+  },
+  {
+    "name": "GLASS",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "blockGlass"
+    }
+  },
+  {
+    "name": "IRON_INGOT",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    }
+  },
+  {
+    "name": "IRON_BLOCK",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "blockIron"
+    }
+  },
+  {
+    "name": "GOLD_BLOCK",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "blockGold"
+    }
+  },
+  {
+    "name": "REDSTONE",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    }
+  },
+  {
+    "name": "REDSTONE_BLOCK",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "blockRedstone"
+    }
+  },
+  {
+    "name": "DIAMOND",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond"
+    }
+  },
+  {
+    "name": "GUNPOWDER",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "gunpowder"
+    }
+  },
+  {
+    "name": "STRING",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "string"
+    }
+  },
+  {
+    "name": "WORKBENCH",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "workbench"
+    }
+  },
+  {
+    "name": "EGG",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "egg"
+    }
+  }
+]

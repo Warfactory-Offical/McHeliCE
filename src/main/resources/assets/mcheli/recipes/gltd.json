@@ -1,0 +1,26 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    " B ",
+    "IDI",
+    "IRI"
+  ],
+  "key" : {
+    "B": {
+      "item": "#IRON_BLOCK"
+    },
+    "I": {
+      "item": "#IRON_INGOT"
+    },
+    "D": {
+      "item": "#DIAMOND"
+    },
+    "R": {
+      "item": "#REDSTONE"
+    }
+  },
+  "result" : {
+    "item": "mcheli:gltd",
+    "count": 1
+  }
+}

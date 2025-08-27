@@ -1,0 +1,18 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "EG"
+  ],
+  "key" : {
+    "E": {
+      "item": "#EGG"
+    },
+    "G": {
+      "item": "#GOLD_BLOCK"
+    }
+  },
+  "result" : {
+    "item": "mcheli:spawn_gunner_vs_player",
+    "count": 1
+  }
+}

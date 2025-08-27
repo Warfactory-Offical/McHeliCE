@@ -1,0 +1,23 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "III",
+    "IDI",
+    "IRI"
+  ],
+  "key" : {
+    "I": {
+      "item": "#IRON_INGOT"
+    },
+    "D": {
+      "item": "#DIAMOND"
+    },
+    "R": {
+      "item": "#REDSTONE_BLOCK"
+    }
+  },
+  "result" : {
+    "item": "mcheli:uav_station",
+    "count": 1
+  }
+}
