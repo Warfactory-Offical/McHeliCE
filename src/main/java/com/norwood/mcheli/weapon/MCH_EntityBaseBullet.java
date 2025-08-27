@@ -2,6 +2,7 @@ package com.norwood.mcheli.weapon;
 
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_Explosion;
+import com.norwood.mcheli.MCH_HBMUtil;
 import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.helper.MCH_CriteriaTriggers;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
@@ -793,7 +794,19 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
     }
 
     protected void onImpact(RayTraceResult m, float damageFactor) {
+
         if (!this.world.isRemote) {
+
+            try {
+                if(this.getInfo().chemYield > 0) {
+                    System.out.println("chem yield detected");
+                    MCH_HBMUtil.ExplosionChaos_spawnChlorine(world, posX, posY + 0.5, posZ, this.getInfo().chemYield, this.getInfo().chemSpeed, this.getInfo().chemType);
+                }
+            } catch (Exception e) {
+                MCH_Lib.Log(this, "Error in onImpact: %s", e.getMessage());
+                e.printStackTrace();
+            }
+
             if (m.entityHit != null) {
                 this.onImpactEntity(m.entityHit, damageFactor);
                 this.piercing = 0;
@@ -926,6 +939,19 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
                     this.getInfo() != null ? this.getInfo().damageFactor : null
             );
         }
+
+        if(this.getInfo().nukeYield > 0) {
+            if(!this.getInfo().nukeEffectOnly) {
+                world.spawnEntity((Entity) MCH_HBMUtil.EntityNukeExplosionMK5_statFac(world, this.getInfo().nukeYield, this.posX + 0.5, this.posY + 0.5, this.posZ + 0.5));
+            }
+            MCH_HBMUtil.EntityNukeTorex_statFac(world, this.posX + 0.5, this.posY + 0.5, this.posZ + 0.5, (float) this.getInfo().nukeYield);
+        }
+
+        //moved to onimpact
+        //if(this.getInfo().chemYield > 0) {
+        //    System.out.println("chem yield detected");
+        //    MCH_HBMUtil.ExplosionChaos_spawnChlorine(super.worldObj, posX, posY + 0.5, posZ, this.getInfo().chemYield, this.getInfo().chemSpeed, this.getInfo().chemType);
+        //}
 
         if (result != null && result.hitEntity) {
             this.notifyHitBullet();
