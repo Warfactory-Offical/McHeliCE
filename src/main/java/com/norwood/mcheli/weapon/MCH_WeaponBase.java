@@ -39,6 +39,7 @@ public abstract class MCH_WeaponBase {
     public int optionParameter2;
     public boolean canPlaySound;
     private int currentMode;
+    public int nukeYield;
 
     public MCH_WeaponBase(World w, Vec3d v, float yaw, float pitch, String nm, MCH_WeaponInfo wi) {
         this.worldObj = w;
@@ -50,6 +51,7 @@ public abstract class MCH_WeaponBase {
         this.displayName = wi != null ? wi.displayName : "";
         this.power = 0;
         this.acceleration = 0.0F;
+        this.nukeYield = wi.nukeYield;
         this.explosionPower = 0;
         this.explosionPowerInWater = 0;
         this.interval = 1;

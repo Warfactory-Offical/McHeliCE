@@ -16,9 +16,17 @@ import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MCH_WeaponInfo extends MCH_BaseInfo {
+    public static Random rand = new Random();
     public final String name;
+    public String explosionType;
+    public int nukeYield;
+    public int chemYield;
+    public double chemSpeed;
+    public int chemType;
+    public boolean nukeEffectOnly;
     public String displayName;
     public String type;
     public int power;
@@ -97,6 +105,164 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
     public List<MCH_WeaponInfo.MuzzleFlash> listMuzzleFlash;
     public List<MCH_WeaponInfo.MuzzleFlash> listMuzzleFlashSmoke;
 
+    /**
+     * 生成的方块破碎粒子数量
+     */
+    public int flakParticlesCrack = 10;
+    /**
+     * 生成的白色烟雾粒子数量
+     */
+    public int numParticlesFlak = 3;
+    /**
+     * 生成的方块破碎粒子扩散，推荐值0.1(步枪子弹) ~ 0.6(反坦克步枪)
+     */
+    public float flakParticlesDiff = 0.3F;
+    public String hitSound;
+    public String hitSoundIron = "hit_metal";
+    public float hitSoundRange;
+    public boolean hitSoundEnable = false;
+    public boolean entityHitSoundEnable = false;
+    /**
+     * 是否为红外弹，会受到热焰弹干扰
+     */
+    public boolean isHeatSeekerMissile = true;
+    /**
+     * 是否为雷达弹，会受到箔条干扰
+     */
+    public boolean isRadarMissile = false;
+    //弹药导引头最大导引角度
+    public int maxDegreeOfMissile = 60;
+    //脱锁延时，-1为永远锁定
+    public int tickEndHoming = -1;
+    /**
+     * 最大锁定距离
+     */
+    public int maxLockOnRange = 300;
+    /**
+     * 机载雷达最大锁定角度
+     */
+    public int maxLockOnAngle = 10;
+    /**
+     * 速度门雷达最大角度，超过此角度将脱锁 (也可用于红外弹尾后攻击)
+     */
+    public float pdHDNMaxDegree = 1000f;
+    /**
+     * 速度门雷达脱锁间隔，超过最大角度后，在该tick后导弹脱锁
+     */
+    public int pdHDNMaxDegreeLockOutCount = 10;
+    /**
+     * 导弹抗干扰时长，-1为不抗干扰
+     */
+    public int antiFlareCount = -1;
+    /**
+     * 雷达弹多径杂波检测高度，飞机低于这个高度将使雷达弹脱锁
+     */
+    public int lockMinHeight = 25;
+    /**
+     * 半主动雷达弹需要持续引导
+     */
+    public boolean passiveRadar = false;
+
+    /**
+     * 半主动雷达弹脱离引导后脱锁计时
+     */
+    public int passiveRadarLockOutCount = 20;
+
+    /**
+     * 对TV弹启用激光制导
+     */
+    public boolean laserGuidance = false;
+
+    /**
+     * 是否有激光吊舱
+     */
+    public boolean hasLaserGuidancePod = true;
+
+    /**
+     * 允许离轴射击 AA弹
+     */
+    public boolean enableOffAxis = true;
+
+    /**
+     * 导弹机动参数，越小越平滑，值设为1时为原版导弹机动，推荐值为0.1
+     */
+    public double turningFactor = 0.5;
+
+    /**
+     * 启用区块加载器(试验功能)
+     */
+    public boolean enableChunkLoader = false;
+
+    /**
+     * 主动雷达弹 BVR 发射后自动追踪目标
+     */
+    public boolean activeRadar = false;
+
+    /**
+     * 主动雷达弹 扫描间隔
+     */
+    public int scanInterval = 20;
+
+    /**
+     * 武器切换冷却
+     */
+    public int weaponSwitchCount = 0;
+
+    /**
+     * 武器切换音效
+     */
+    public String weaponSwitchSound = "";
+
+    /**
+     * 武器垂直后坐力
+     */
+    public float recoilPitch = 0.0F;
+    /**
+     * 武器水平后坐力（固定方向）
+     */
+    public float recoilYaw = 0.0F;
+    /**
+     * 武器随机垂直后坐力 (Recoil 2 + rndRecoil 0.5 == 1.5-2.5 Recoil range)
+     */
+    public float recoilPitchRange = 0.0F;
+    /**
+     * 武器随机水平后坐力
+     */
+    public float recoilYawRange = 0.0F;
+    /**
+     * 武器后坐力恢复速度
+     */
+    public float recoilRecoverFactor = 0.8F;
+
+    /**
+     * 每tick速度增加数值，小于0减速，大于0加速
+     */
+    public float speedFactor = 0F;
+    /**
+     * 每tick的速度乘数生效时长
+     */
+    public int speedFactorStartTick = 0;
+    /**
+     * 每tick的速度乘数结束时长
+     */
+    public int speedFactorEndTick = 0;
+    /**
+     * 速度是否跟随载机，最终速度 = 载机速度 + 子弹速度
+     */
+    public boolean speedDependsAircraft = false;
+    /**
+     * 是否可以锁定导弹实体
+     */
+    public boolean canLockMissile = false;
+    /**
+     * 允许超视距索敌
+     */
+    public boolean enableBVR = false;
+    /**
+     * 超视距索敌功能最小启用距离
+     */
+    public int minRangeBVR = 300;
+
     public MCH_WeaponInfo(AddonResourceLocation location, String path) {
         super(location, path);
         this.name = location.getPath();
@@ -174,6 +340,10 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
         this.displayMortarDistance = false;
         this.fixCameraPitch = false;
         this.cameraRotationSpeedPitch = 1.0F;
+        this.nukeYield = 0;
+        this.chemYield = 0;
+        this.chemSpeed = 1.25;
+        this.chemType = 0;
     }
 
     public void checkData() {
@@ -437,7 +607,91 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
                         this.color = c;
                     }
                 }
-            } else if (item.equalsIgnoreCase("SmokeSize")) {
+            } else if (item.equalsIgnoreCase("nukeYield")) {
+                this.nukeYield = this.toInt(data, 0, 100000);
+            } else if (item.equalsIgnoreCase("chemYield")) {
+                this.chemYield = this.toInt(data, 0, 100000);
+            } else if (item.equalsIgnoreCase("chemSpeed")) {
+                this.chemSpeed = this.toDouble(data);
+            } else if (item.equalsIgnoreCase("chemType")) {
+                this.chemType = this.toInt(data, 0, 3);
+            } else if (item.equalsIgnoreCase("NukeEffectOnly")) {
+                this.nukeEffectOnly = this.toBool(data);
+            } else if (item.equalsIgnoreCase("MaxDegreeOfMissile")) {
+                this.maxDegreeOfMissile = this.toInt(data, 0, 100000);
+            } else if (item.equalsIgnoreCase("TickEndHoming")) {
+                this.tickEndHoming = this.toInt(data, -1, 100000);
+            } else if (item.equalsIgnoreCase("FlakParticlesCrack")) {
+                this.flakParticlesCrack = this.toInt(data, 0, 300);
+            } else if (item.equalsIgnoreCase("ParticlesFlak")) {
+                this.numParticlesFlak = this.toInt(data, 0, 100);
+            } else if (item.equalsIgnoreCase("FlakParticlesDiff")) {
+                this.flakParticlesDiff = this.toFloat(data);
+            } else if (item.equalsIgnoreCase("IsRadarMissile")) {
+                this.isRadarMissile = this.toBool(data);
+            } else if (item.equalsIgnoreCase("IsHeatSeekerMissile")) {
+                this.isHeatSeekerMissile = this.toBool(data);
+            } else if (item.equalsIgnoreCase("MaxLockOnRange")) {
+                this.maxLockOnRange = this.toInt(data, 0, 2000);
+            } else if (item.equalsIgnoreCase("MaxLockOnAngle")) {
+                this.maxLockOnAngle = this.toInt(data, 0, 200);
+            } else if (item.equalsIgnoreCase("PDHDNMaxDegree")) {
+                this.pdHDNMaxDegree = this.toFloat(data, -1, 90);
+            } else if (item.equalsIgnoreCase("PDHDNMaxDegreeLockOutCount")) {
+                this.pdHDNMaxDegreeLockOutCount = this.toInt(data, 0, 200);
+            } else if (item.equalsIgnoreCase("AntiFlareCount")) {
+                this.antiFlareCount = this.toInt(data, -1, 200);
+            } else if (item.equalsIgnoreCase("LockMinHeight")) {
+                this.lockMinHeight = this.toInt(data, -1, 100);
+            } else if (item.equalsIgnoreCase("PassiveRadar")) {
+                this.passiveRadar = this.toBool(data);
+            } else if (item.equalsIgnoreCase("PassiveRadarLockOutCount")) {
+                this.passiveRadarLockOutCount = this.toInt(data, 0, 200);
+            } else if (item.equalsIgnoreCase("LaserGuidance")) {
+                this.laserGuidance = this.toBool(data);
+            } else if (item.equalsIgnoreCase("HasLaserGuidancePod")) {
+                this.hasLaserGuidancePod = this.toBool(data);
+            } else if (item.equalsIgnoreCase("ActiveRadar")) {
+                this.activeRadar = this.toBool(data);
+            } else if (item.equalsIgnoreCase("EnableOffAxis")) {
+                this.enableOffAxis = this.toBool(data);
+            } else if (item.equalsIgnoreCase("TurningFactor")) {
+                this.turningFactor = this.toDouble(data);
+            } else if (item.equalsIgnoreCase("EnableChunkLoader")) {
+                this.enableChunkLoader = this.toBool(data);
+            } else if (item.equalsIgnoreCase("ScanInterval")) {
+                this.scanInterval = this.toInt(data);
+            } else if (item.equalsIgnoreCase("WeaponSwitchCount")) {
+                this.weaponSwitchCount = this.toInt(data);
+            } else if (item.equalsIgnoreCase("WeaponSwitchSound")) {
+                this.weaponSwitchSound = data.toLowerCase().trim();
+            } else if (item.equalsIgnoreCase("RecoilPitch")) {
+                this.recoilPitch = this.toFloat(data);
+            } else if (item.equalsIgnoreCase("RecoilYaw")) {
+                this.recoilYaw = this.toFloat(data);
+            } else if (item.equalsIgnoreCase("RecoilPitchRange")) {
+                this.recoilPitchRange = this.toFloat(data);
+            } else if (item.equalsIgnoreCase("RecoilYawRange")) {
+                this.recoilYawRange = this.toFloat(data);
+            } else if (item.equalsIgnoreCase("RecoilRecoverFactor")) {
+                this.recoilRecoverFactor = this.toFloat(data);
+            } else if (item.equalsIgnoreCase("SpeedFactor")) {
+                this.speedFactor = this.toFloat(data);
+            } else if (item.equalsIgnoreCase("SpeedFactorStartTick")) {
+                this.speedFactorStartTick = this.toInt(data);
+            } else if (item.equalsIgnoreCase("SpeedFactorEndTick")) {
+                this.speedFactorEndTick = this.toInt(data);
+            } else if (item.equalsIgnoreCase("SpeedDependsAircraft")) {
+                this.speedDependsAircraft = this.toBool(data);
+            } else if (item.equalsIgnoreCase("CanLockMissile")) {
+                this.canLockMissile = this.toBool(data);
+            } else if (item.equalsIgnoreCase("EnableBVR")) {
+                this.enableBVR = this.toBool(data);
+            } else if (item.equalsIgnoreCase("MinRangeBVR")) {
+                this.minRangeBVR = this.toInt(data);
+            }
+
+            else if (item.equalsIgnoreCase("SmokeSize")) {
                 this.smokeSize = this.toFloat(data, 0.0F, 100.0F);
             } else if (item.equalsIgnoreCase("SmokeNum")) {
                 this.smokeNum = this.toInt(data, 1, 100);
