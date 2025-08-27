@@ -1,7 +1,5 @@
 package com.norwood.mcheli;
 
-import com.norwood.mcheli.helper.*;
-import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.aircraft.*;
 import com.norwood.mcheli.block.MCH_DraftingTableBlock;
 import com.norwood.mcheli.block.MCH_DraftingTableTileEntity;
@@ -17,6 +15,8 @@ import com.norwood.mcheli.gui.MCH_GuiCommonHandler;
 import com.norwood.mcheli.helicopter.MCH_EntityHeli;
 import com.norwood.mcheli.helicopter.MCH_HeliInfo;
 import com.norwood.mcheli.helicopter.MCH_ItemHeli;
+import com.norwood.mcheli.helper.*;
+import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.lweapon.MCH_ItemLightWeaponBase;
 import com.norwood.mcheli.lweapon.MCH_ItemLightWeaponBullet;
 import com.norwood.mcheli.mob.MCH_EntityGunner;
@@ -61,8 +61,7 @@ import java.util.Map.Entry;
 
 @Mod(
         modid = "mcheli",
-        name = "MC Helicopter MOD",
-        dependencies = "required-after:forge@[14.23.5.2847,)"
+        name = "MC Helicopter MOD"
 )
 public class MCH_MOD {
     public static final String MOD_ID = "mcheli";
