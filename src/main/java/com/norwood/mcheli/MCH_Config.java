@@ -130,6 +130,8 @@ public class MCH_Config {
     public static MCH_ConfigPrm MouseControlFlightSimMode;
     public static MCH_ConfigPrm SwitchWeaponWithMouseWheel;
     public static MCH_ConfigPrm AllPlaneSpeed;
+    public static MCH_ConfigPrm AllShipSpeed;
+
     public static MCH_ConfigPrm AllHeliSpeed;
     public static MCH_ConfigPrm AllTankSpeed;
     public static MCH_ConfigPrm HurtResistantTime;
@@ -387,6 +389,7 @@ public class MCH_Config {
                 BreakableOnlyPickaxe,
                 AllHeliSpeed,
                 AllPlaneSpeed,
+                AllShipSpeed,
                 AllTankSpeed,
                 HurtResistantTime,
                 StingerLockRange,
@@ -582,6 +585,7 @@ public class MCH_Config {
 
         AllHeliSpeed.prmDouble = MCH_Lib.RNG(AllHeliSpeed.prmDouble, 0.0, 1000.0);
         AllPlaneSpeed.prmDouble = MCH_Lib.RNG(AllPlaneSpeed.prmDouble, 0.0, 1000.0);
+        AllShipSpeed.prmDouble = MCH_Lib.RNG(AllPlaneSpeed.prmDouble, 0.0, 1000.0);
         AllTankSpeed.prmDouble = MCH_Lib.RNG(AllTankSpeed.prmDouble, 0.0, 1000.0);
         this.setBlockListFromString(bulletBreakableBlocks, BulletBreakableBlock.prmString);
         this.setBlockListFromString(carBreakableBlocks, Collision_Car_BreakableBlock.prmString);
