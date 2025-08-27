@@ -68,7 +68,7 @@ public abstract class MCH_ItemAircraft extends W_Item {
         double d0 = player.prevPosX + (player.posX - player.prevPosX) * f;
         double d1 = player.prevPosY + (player.posY - player.prevPosY) * f + 1.62;
         double d2 = player.prevPosZ + (player.posZ - player.prevPosZ) * f;
-        Vec3d vec3 = W_WorldFunc.getWorldVec3(world, d0, d1, d2);
+        Vec3d vec3 =new Vec3d( d0, d1, d2);
         float f3 = MathHelper.cos(-f2 * (float) (Math.PI / 180.0) - (float) Math.PI);
         float f4 = MathHelper.sin(-f2 * (float) (Math.PI / 180.0) - (float) Math.PI);
         float f5 = -MathHelper.cos(-f1 * (float) (Math.PI / 180.0));

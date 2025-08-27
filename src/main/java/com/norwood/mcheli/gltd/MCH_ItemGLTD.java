@@ -29,7 +29,7 @@ public class MCH_ItemGLTD extends W_Item {
         double d0 = par3EntityPlayer.prevPosX + (par3EntityPlayer.posX - par3EntityPlayer.prevPosX) * f;
         double d1 = par3EntityPlayer.prevPosY + (par3EntityPlayer.posY - par3EntityPlayer.prevPosY) * f + par3EntityPlayer.getEyeHeight();
         double d2 = par3EntityPlayer.prevPosZ + (par3EntityPlayer.posZ - par3EntityPlayer.prevPosZ) * f;
-        Vec3d vec3 = W_WorldFunc.getWorldVec3(par2World, d0, d1, d2);
+        Vec3d vec3 =new Vec3d( d0, d1, d2);
         float f3 = MathHelper.cos(-f2 * (float) (Math.PI / 180.0) - (float) Math.PI);
         float f4 = MathHelper.sin(-f2 * (float) (Math.PI / 180.0) - (float) Math.PI);
         float f5 = -MathHelper.cos(-f1 * (float) (Math.PI / 180.0));

@@ -18,6 +18,7 @@ import net.minecraft.entity.item.EntityExpBottle;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
@@ -209,7 +210,7 @@ public class MCH_ExplosionV2 extends Explosion {
         int i2 = MathHelper.floor(this.z - f - 1.0);
         int j2 = MathHelper.floor(this.z + f + 1.0);
         List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this.exploder, W_AxisAlignedBB.getAABB(i, kx, i2, j, l1, j2));
-        Vec3d vec3 = W_WorldFunc.getWorldVec3(this.world, this.x, this.y, this.z);
+        Vec3d vec3 =new Vec3d( this.x, this.y, this.z);
 
         for (Entity entity : list) {
             double d7 = entity.getDistance(this.x, this.y, this.z) / f;
@@ -256,7 +257,7 @@ public class MCH_ExplosionV2 extends Explosion {
                     }
 
                     if (entity instanceof EntityPlayer) {
-                        this.getPlayerKnockbackMap().put((EntityPlayer) entity, W_WorldFunc.getWorldVec3(this.world, d0 * d10, d1 * d10, d2 * d10));
+                        this.getPlayerKnockbackMap().put((EntityPlayer) entity,new Vec3d( d0 * d10, d1 * d10, d2 * d10));
                     }
 
                     if (damage > 0.0F && this.countSetFireEntity > 0) {
@@ -358,7 +359,8 @@ public class MCH_ExplosionV2 extends Explosion {
                 IBlockState iblockstate = this.world.getBlockState(chunkpositionx.down());
                 Block b = iblockstate.getBlock();
                 if (lx == 0 && iblockstate.isOpaqueCube() && explosionRNG.nextInt(3) == 0) {
-                    W_WorldFunc.setBlock(this.world, ix, jx, kx, W_Blocks.FIRE);
+                    BlockPos blockpos = new BlockPos(ix, jx, kx);
+                    this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
                 }
             }
         }

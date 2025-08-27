@@ -3,11 +3,9 @@ package com.norwood.mcheli;
 import com.norwood.mcheli.helper.world.MCH_ExplosionV2;
 import com.norwood.mcheli.wrapper.W_Entity;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 public class MCH_Explosion {
     public static MCH_Explosion.ExplosionResult newExplosion(
@@ -109,42 +107,6 @@ public class MCH_Explosion {
             MCH_PacketEffectExplosion.send(param);
             return exp.getResult();
         }
-    }
-
-    public static void playExplosionSound(World w, double x, double y, double z) {
-        MCH_ExplosionV2.playExplosionSound(w, x, y, z);
-    }
-
-    public static void effectExplosion(
-            World world,
-            Entity exploder,
-            double explosionX,
-            double explosionY,
-            double explosionZ,
-            float explosionSize,
-            boolean isSmoking,
-            List<BlockPos> affectedPositions
-    ) {
-        MCH_ExplosionV2.effectMODExplosion(world, explosionX, explosionY, explosionZ, explosionSize, affectedPositions);
-    }
-
-    public static void DEF_effectExplosion(
-            World world,
-            Entity exploder,
-            double explosionX,
-            double explosionY,
-            double explosionZ,
-            float explosionSize,
-            boolean isSmoking,
-            List<BlockPos> affectedPositions
-    ) {
-        MCH_ExplosionV2.effectVanillaExplosion(world, explosionX, explosionY, explosionZ, explosionSize, affectedPositions);
-    }
-
-    public static void effectExplosionInWater(
-            World world, Entity exploder, double explosionX, double explosionY, double explosionZ, float explosionSize, boolean isSmoking
-    ) {
-        MCH_ExplosionV2.effectExplosionInWater(world, explosionX, explosionY, explosionZ, explosionSize);
     }
 
     public static class ExplosionResult {

@@ -99,8 +99,8 @@ public class MCH_GuiGLTD extends MCH_Gui {
             tY = tY * 80.0 / dist;
             tZ = tZ * 80.0 / dist;
             MCH_Camera c = gltd.camera;
-            Vec3d src = W_WorldFunc.getWorldVec3(w, c.posX, c.posY, c.posZ);
-            Vec3d dst = W_WorldFunc.getWorldVec3(w, c.posX + tX, c.posY + tY, c.posZ + tZ);
+            Vec3d src =new Vec3d( c.posX, c.posY, c.posZ);
+            Vec3d dst =new Vec3d( c.posX + tX, c.posY + tY, c.posZ + tZ);
             RayTraceResult m = W_WorldFunc.clip(w, src, dst);
             if (m != null) {
                 this.drawString(String.format("X: %+.2fm", m.hitVec.x), this.centerX + 50, this.centerY - 5 - 15, color);

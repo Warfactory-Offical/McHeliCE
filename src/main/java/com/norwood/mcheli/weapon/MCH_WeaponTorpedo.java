@@ -71,8 +71,8 @@ public class MCH_WeaponTorpedo extends MCH_WeaponBase {
             tZ = tZ * 150.0 / dist;
         }
 
-        Vec3d src = W_WorldFunc.getWorldVec3(this.worldObj, prm.user.posX, prm.user.posY, prm.user.posZ);
-        Vec3d dst = W_WorldFunc.getWorldVec3(this.worldObj, prm.user.posX + tX, prm.user.posY + tY, prm.user.posZ + tZ);
+        Vec3d src =new Vec3d( prm.user.posX, prm.user.posY, prm.user.posZ);
+        Vec3d dst =new Vec3d( prm.user.posX + tX, prm.user.posY + tY, prm.user.posZ + tZ);
         RayTraceResult m = W_WorldFunc.clip(this.worldObj, src, dst);
         if (W_MovingObjectPosition.isHitTypeTile(m)
                 && MCH_Lib.isBlockInWater(this.worldObj, m.getBlockPos().getX(), m.getBlockPos().getY(), m.getBlockPos().getZ())) {

@@ -6,9 +6,7 @@ import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.particles.MCH_ParticlesUtil;
 import com.norwood.mcheli.wrapper.W_Block;
-import com.norwood.mcheli.wrapper.W_Blocks;
 import com.norwood.mcheli.wrapper.W_Lib;
-import com.norwood.mcheli.wrapper.W_WorldFunc;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.MoverType;
@@ -223,8 +221,9 @@ public class MCH_WheelManager {
                     ac.world.setBlockToAir(blockpos);
                 }
 
-                if (iblockstate.getBlock() == W_Blocks.WATERLILY || iblockstate.getBlock() == W_Blocks.CAKE) {
-                    W_WorldFunc.destroyBlock(ac.world, x, y, z, false);
+                if (iblockstate.getBlock() == Blocks.WATERLILY || iblockstate.getBlock() == Blocks.CAKE) {
+                    BlockPos blockpos1 = new BlockPos(x, y, z);
+                    ac.world.destroyBlock(blockpos1, false);
                 }
             }
         }

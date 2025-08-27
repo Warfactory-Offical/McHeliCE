@@ -3,9 +3,8 @@ package com.norwood.mcheli.weapon;
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.particles.MCH_ParticleParam;
 import com.norwood.mcheli.particles.MCH_ParticlesUtil;
-import com.norwood.mcheli.wrapper.W_Blocks;
 import com.norwood.mcheli.wrapper.W_MovingObjectPosition;
-import com.norwood.mcheli.wrapper.W_WorldFunc;
+import net.minecraft.init.Blocks;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -148,7 +147,7 @@ public class MCH_EntityMarkerRocket extends MCH_EntityBaseBullet {
                 blockpos = blockpos.offset(m.sideHit);
                 if (this.world.isAirBlock(blockpos)) {
                     if (MCH_Config.Explosion_FlamingBlock.prmBool) {
-                        W_WorldFunc.setBlock(this.world, blockpos, W_Blocks.FIRE);
+                        this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
                     }
 
                     int noAirBlockCount = 0;

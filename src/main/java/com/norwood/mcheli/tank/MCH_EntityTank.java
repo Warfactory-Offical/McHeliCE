@@ -429,7 +429,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
                     gmy = this.getAcInfo().mobilityYawOnGround;
                     if (!this.getAcInfo().canRotOnGround) {
                         Block block = MCH_Lib.getBlockY(this, 3, -2, false);
-                        if (!W_Block.isEqual(block, W_Block.getWater()) && !W_Block.isEqual(block, W_Blocks.AIR)) {
+                        if (!W_Block.isEqual(block, W_Block.getWater()) && !W_Block.isEqual(block, Blocks.AIR)) {
                             gmy = 0.0F;
                         }
                     }
@@ -784,7 +784,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
         boolean canMove = true;
         if (!this.getAcInfo().canMoveOnGround) {
             Block block = MCH_Lib.getBlockY(this, 3, -2, false);
-            if (!W_Block.isEqual(block, W_Block.getWater()) && !W_Block.isEqual(block, W_Blocks.AIR)) {
+            if (!W_Block.isEqual(block, W_Block.getWater()) && !W_Block.isEqual(block, Blocks.AIR)) {
                 canMove = false;
             }
         }
@@ -1018,7 +1018,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
 
     public void destroyBlock(BlockPos blockpos) {
         if (this.rand.nextInt(8) == 0) {
-            W_WorldFunc.destroyBlock(this.world, blockpos, true);
+            this.world.destroyBlock(blockpos, true);
         } else {
             this.world.setBlockToAir(blockpos);
         }

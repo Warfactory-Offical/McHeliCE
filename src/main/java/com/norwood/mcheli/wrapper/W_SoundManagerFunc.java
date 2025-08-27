@@ -1,5 +1,6 @@
 package com.norwood.mcheli.wrapper;
 
+import com.norwood.mcheli.MCH_MOD;
 import net.minecraft.client.audio.SoundManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -10,6 +11,6 @@ public class W_SoundManagerFunc {
     }
 
     public static void MOD_playEntitySound(SoundManager sm, String name, Entity entity, float volume, float pitch, boolean par5) {
-        DEF_playEntitySound(sm, W_MOD.DOMAIN + ":" + name, entity, volume, pitch, par5);
+        DEF_playEntitySound(sm, MCH_MOD.DOMAIN + ":" + name, entity, volume, pitch, par5);
     }
 }

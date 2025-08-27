@@ -13,6 +13,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -305,8 +306,9 @@ public class MCH_EntityContainer extends W_EntityContainer implements MCH_IEntit
                             int l1 = MathHelper.floor(this.posY) + k1;
                             if (W_WorldFunc.isEqualBlock(this.world, i1, l1, j1, W_Block.getSnowLayer())) {
                                 this.world.setBlockToAir(new BlockPos(i1, l1, j1));
-                            } else if (W_WorldFunc.isEqualBlock(this.world, i1, l1, j1, W_Blocks.WATERLILY)) {
-                                W_WorldFunc.destroyBlock(this.world, i1, l1, j1, true);
+                            } else if (W_WorldFunc.isEqualBlock(this.world, i1, l1, j1, Blocks.WATERLILY)) {
+                                BlockPos blockpos = new BlockPos(i1, l1, j1);
+                                this.world.destroyBlock(blockpos, true);
                             }
                         }
                     }

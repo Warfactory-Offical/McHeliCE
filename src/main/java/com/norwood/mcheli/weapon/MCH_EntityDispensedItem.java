@@ -1,12 +1,12 @@
 package com.norwood.mcheli.weapon;
 
 import com.norwood.mcheli.MCH_Config;
-import com.norwood.mcheli.wrapper.W_Blocks;
 import com.norwood.mcheli.wrapper.W_Item;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -105,7 +105,7 @@ public class MCH_EntityDispensedItem extends MCH_EntityBaseBullet {
         IBlockState iblockstate = this.world.getBlockState(blockpos);
         Block block = iblockstate.getBlock();
         Material blockMat = iblockstate.getMaterial();
-        if (block != W_Blocks.AIR && blockMat != Material.AIR) {
+        if (block != Blocks.AIR && blockMat != Material.AIR) {
             if (item == W_Item.getItemByName("water_bucket")) {
                 if (MCH_Config.Collision_DestroyBlock.prmBool) {
                     if (blockMat == Material.FIRE) {
@@ -115,12 +115,12 @@ public class MCH_EntityDispensedItem extends MCH_EntityBaseBullet {
                         if (metadata == 0) {
                             this.world
                                     .setBlockState(
-                                            blockpos, ForgeEventFactory.fireFluidPlaceBlockEvent(this.world, blockpos, blockpos, W_Blocks.OBSIDIAN.getDefaultState())
+                                            blockpos, ForgeEventFactory.fireFluidPlaceBlockEvent(this.world, blockpos, blockpos, Blocks.OBSIDIAN.getDefaultState())
                                     );
                         } else if (metadata <= 4) {
                             this.world
                                     .setBlockState(
-                                            blockpos, ForgeEventFactory.fireFluidPlaceBlockEvent(this.world, blockpos, blockpos, W_Blocks.COBBLESTONE.getDefaultState())
+                                            blockpos, ForgeEventFactory.fireFluidPlaceBlockEvent(this.world, blockpos, blockpos, Blocks.COBBLESTONE.getDefaultState())
                                     );
                         }
                     }

@@ -10,6 +10,7 @@ import com.norwood.mcheli.aircraft.MCH_EntityHitBox;
 import com.norwood.mcheli.aircraft.MCH_EntitySeat;
 import com.norwood.mcheli.aircraft.MCH_PacketNotifyHitBullet;
 import com.norwood.mcheli.chain.MCH_EntityChain;
+import com.norwood.mcheli.helper.world.MCH_ExplosionV2;
 import com.norwood.mcheli.particles.MCH_ParticleParam;
 import com.norwood.mcheli.particles.MCH_ParticlesUtil;
 import com.norwood.mcheli.wrapper.W_Entity;
@@ -675,14 +676,16 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
         RayTraceResult m = null;
 
         for (int i = 0; i < 5; i++) {
-            Vec3d vec3 = W_WorldFunc.getWorldVec3(this.world, this.posX, this.posY, this.posZ);
-            Vec3d vec31 = W_WorldFunc.getWorldVec3(this.world, this.posX + mx, this.posY + my, this.posZ + mz);
+            Vec3d vec3 =new Vec3d( this.posX, this.posY, this.posZ);
+            Vec3d vec31 =new Vec3d( this.posX + mx, this.posY + my, this.posZ + mz);
             m = W_WorldFunc.clip(this.world, vec3, vec31);
             boolean continueClip = false;
             if (this.shootingEntity != null && W_MovingObjectPosition.isHitTypeTile(m)) {
-                Block block = W_WorldFunc.getBlock(this.world, m.getBlockPos());
+                BlockPos blockpos1 = m.getBlockPos();
+                Block block = this.world.getBlockState(blockpos1).getBlock();
                 if (MCH_Config.bulletBreakableBlocks.contains(block)) {
-                    W_WorldFunc.destroyBlock(this.world, m.getBlockPos(), true);
+                    BlockPos blockpos = m.getBlockPos();
+                    this.world.destroyBlock(blockpos, true);
                     continueClip = true;
                 }
             }
@@ -692,8 +695,8 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
             }
         }
 
-        Vec3d vec3x = W_WorldFunc.getWorldVec3(this.world, this.posX, this.posY, this.posZ);
-        Vec3d vec31x = W_WorldFunc.getWorldVec3(this.world, this.posX + mx, this.posY + my, this.posZ + mz);
+        Vec3d vec3x =new Vec3d( this.posX, this.posY, this.posZ);
+        Vec3d vec31x =new Vec3d( this.posX + mx, this.posY + my, this.posZ + mz);
         if (this.getInfo().delayFuse > 0) {
             if (m != null) {
                 this.boundBullet(m.sideHit);
@@ -703,7 +706,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
             }
         } else {
             if (m != null) {
-                vec31x = W_WorldFunc.getWorldVec3(this.world, m.hitVec.x, m.hitVec.y, m.hitVec.z);
+                vec31x =new Vec3d( m.hitVec.x, m.hitVec.y, m.hitVec.z);
             }
 
             Entity entity = null;
@@ -959,7 +962,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
     }
 
     public void playExplosionSound() {
-        MCH_Explosion.playExplosionSound(this.world, this.posX, this.posY, this.posZ);
+        MCH_ExplosionV2.playExplosionSound(this.world, this.posX, this.posY, this.posZ);
     }
 
     public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {

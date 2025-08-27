@@ -32,7 +32,7 @@ public class MCH_ItemContainer extends W_Item {
         double d0 = playerIn.prevPosX + (playerIn.posX - playerIn.prevPosX) * f;
         double d1 = playerIn.prevPosY + (playerIn.posY - playerIn.prevPosY) * f + playerIn.getEyeHeight();
         double d2 = playerIn.prevPosZ + (playerIn.posZ - playerIn.prevPosZ) * f;
-        Vec3d vec3 = W_WorldFunc.getWorldVec3(worldIn, d0, d1, d2);
+        Vec3d vec3 =new Vec3d( d0, d1, d2);
         float f3 = MathHelper.cos(-f2 * (float) (Math.PI / 180.0) - (float) Math.PI);
         float f4 = MathHelper.sin(-f2 * (float) (Math.PI / 180.0) - (float) Math.PI);
         float f5 = -MathHelper.cos(-f1 * (float) (Math.PI / 180.0));

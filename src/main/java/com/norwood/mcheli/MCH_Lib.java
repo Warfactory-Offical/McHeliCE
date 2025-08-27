@@ -7,6 +7,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemMapBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -301,14 +302,14 @@ public class MCH_Lib {
 
             for (int y = 0; y < cntY; y++) {
                 if (py + y < 0 || py + y > 255) {
-                    return W_Blocks.AIR;
+                    return Blocks.AIR;
                 }
 
                 for (int x = -size / 2; x <= size / 2; x++) {
                     for (int z = -size / 2; z <= size / 2; z++) {
                         IBlockState iblockstate = world.getBlockState(new BlockPos(px + x, py + (lenY > 0 ? y : -y), pz + z));
                         Block block = W_WorldFunc.getBlock(world, px + x, py + (lenY > 0 ? y : -y), pz + z);
-                        if (block != W_Blocks.AIR) {
+                        if (block != Blocks.AIR) {
                             if (!canColliableOnly) {
                                 return block;
                             }
@@ -322,7 +323,7 @@ public class MCH_Lib {
             }
 
         }
-        return W_Blocks.AIR;
+        return Blocks.AIR;
     }
 
     public static Vec3d getYawPitchFromVec(Vec3d v) {

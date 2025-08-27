@@ -1,6 +1,7 @@
 package com.norwood.mcheli.wrapper;
 
 import com.norwood.mcheli.MCH_Config;
+import com.norwood.mcheli.MCH_MOD;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
@@ -13,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 import java.nio.FloatBuffer;
 
 public abstract class W_Render<T extends Entity> extends Render<T> {
-    protected static final ResourceLocation TEX_DEFAULT = new ResourceLocation(W_MOD.DOMAIN, "textures/default.png");
+    protected static final ResourceLocation TEX_DEFAULT = new ResourceLocation(MCH_MOD.DOMAIN, "textures/default.png");
     private static final FloatBuffer colorBuffer = GLAllocation.createDirectFloatBuffer(16);
     public int srcBlend;
     public int dstBlend;
@@ -30,7 +31,7 @@ public abstract class W_Render<T extends Entity> extends Render<T> {
     }
 
     protected void bindTexture(String path) {
-        super.bindTexture(new ResourceLocation(W_MOD.DOMAIN, path));
+        super.bindTexture(new ResourceLocation(MCH_MOD.DOMAIN, path));
     }
 
     protected ResourceLocation getEntityTexture(@NotNull T entity) {

@@ -167,8 +167,8 @@ public class MCH_WeaponGuidanceSystem {
                         double range = this.lockRange * stealth;
                         float angle = this.lockAngle * (stealth / 2.0F + 0.5F);
                         if (d < range * range && d < dist && inLockRange(entityLocker, user.rotationYaw, user.rotationPitch, entity, angle)) {
-                            Vec3d v1 = W_WorldFunc.getWorldVec3(this.worldObj, entityLocker.posX, entityLocker.posY, entityLocker.posZ);
-                            Vec3d v2 = W_WorldFunc.getWorldVec3(this.worldObj, entity.posX, entity.posY + entity.height / 2.0F, entity.posZ);
+                            Vec3d v1 =new Vec3d( entityLocker.posX, entityLocker.posY, entityLocker.posZ);
+                            Vec3d v2 =new Vec3d( entity.posX, entity.posY + entity.height / 2.0F, entity.posZ);
                             RayTraceResult m = W_WorldFunc.clip(this.worldObj, v1, v2, false, true, false);
                             if (m == null || W_MovingObjectPosition.isHitTypeEntity(m)) {
                                 tgtEnt = entity;

@@ -48,8 +48,8 @@ public class MCH_WeaponASMissile extends MCH_WeaponBase {
             tZ = tZ * 250.0 / dist;
         }
 
-        Vec3d src = W_WorldFunc.getWorldVec3(this.worldObj, prm.entity.posX, prm.entity.posY + 1.62, prm.entity.posZ);
-        Vec3d dst = W_WorldFunc.getWorldVec3(this.worldObj, prm.entity.posX + tX, prm.entity.posY + 1.62 + tY, prm.entity.posZ + tZ);
+        Vec3d src =new Vec3d( prm.entity.posX, prm.entity.posY + 1.62, prm.entity.posZ);
+        Vec3d dst =new Vec3d( prm.entity.posX + tX, prm.entity.posY + 1.62 + tY, prm.entity.posZ + tZ);
         RayTraceResult m = W_WorldFunc.clip(this.worldObj, src, dst);
         if (W_MovingObjectPosition.isHitTypeTile(m)
                 && !MCH_Lib.isBlockInWater(this.worldObj, m.getBlockPos().getX(), m.getBlockPos().getY(), m.getBlockPos().getZ())) {

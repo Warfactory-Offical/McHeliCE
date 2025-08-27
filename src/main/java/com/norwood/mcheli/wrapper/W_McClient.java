@@ -1,5 +1,6 @@
 package com.norwood.mcheli.wrapper;
 
+import com.norwood.mcheli.MCH_MOD;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,7 +22,7 @@ public class W_McClient {
     }
 
     public static void MOD_playSoundFX(String name, float volume, float pitch) {
-        DEF_playSoundFX(W_MOD.DOMAIN + ":" + name, volume, pitch);
+        DEF_playSoundFX(MCH_MOD.DOMAIN + ":" + name, volume, pitch);
     }
 
     public static void addSound(String name) {
@@ -32,7 +33,7 @@ public class W_McClient {
     }
 
     public static void MOD_bindTexture(String tex) {
-        Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(W_MOD.DOMAIN, tex));
+        Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(MCH_MOD.DOMAIN, tex));
     }
 
     public static boolean isGamePaused() {

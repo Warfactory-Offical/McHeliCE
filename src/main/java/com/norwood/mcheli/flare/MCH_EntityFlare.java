@@ -150,13 +150,13 @@ public class MCH_EntityFlare extends W_Entity implements IEntityAdditionalSpawnD
     }
 
     protected void onUpdateCollided() {
-        Vec3d vec3 = W_WorldFunc.getWorldVec3(this.world, this.posX, this.posY, this.posZ);
-        Vec3d vec31 = W_WorldFunc.getWorldVec3(this.world, this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+        Vec3d vec3 = new Vec3d(this.posX, this.posY, this.posZ);
+        Vec3d vec31 = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
         RayTraceResult mop = W_WorldFunc.clip(this.world, vec3, vec31);
-        vec3 = W_WorldFunc.getWorldVec3(this.world, this.posX, this.posY, this.posZ);
-        vec31 = W_WorldFunc.getWorldVec3(this.world, this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+        vec3 = new Vec3d(this.posX, this.posY, this.posZ);
+        vec31 = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
         if (mop != null) {
-            vec31 = W_WorldFunc.getWorldVec3(this.world, mop.hitVec.x, mop.hitVec.y, mop.hitVec.z);
+            vec31 = new Vec3d(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z);
             this.onImpact(mop);
         }
     }

@@ -2,6 +2,7 @@ package com.norwood.mcheli.wrapper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class W_Block extends Block {
@@ -14,11 +15,11 @@ public abstract class W_Block extends Block {
     }
 
     public static Block getSnowLayer() {
-        return W_Blocks.SNOW_LAYER;
+        return Blocks.SNOW_LAYER;
     }
 
     public static boolean isNull(Block block) {
-        return block == null || block == W_Blocks.AIR;
+        return block == null || block == Blocks.AIR;
     }
 
     public static boolean isEqual(int blockId, Block block) {
@@ -30,7 +31,7 @@ public abstract class W_Block extends Block {
     }
 
     public static Block getWater() {
-        return W_Blocks.WATER;
+        return Blocks.WATER;
     }
 
     public static @NotNull Block getBlockById(int i) {

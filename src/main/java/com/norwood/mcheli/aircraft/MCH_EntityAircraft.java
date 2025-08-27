@@ -5,6 +5,7 @@ import com.norwood.mcheli.chain.MCH_EntityChain;
 import com.norwood.mcheli.command.MCH_Command;
 import com.norwood.mcheli.flare.MCH_Flare;
 import com.norwood.mcheli.helper.MCH_CriteriaTriggers;
+import com.norwood.mcheli.helper.MCH_SoundEvents;
 import com.norwood.mcheli.helper.entity.IEntitySinglePassenger;
 import com.norwood.mcheli.helper.entity.ITargetMarkerObject;
 import com.norwood.mcheli.mob.MCH_EntityGunner;
@@ -4007,7 +4008,7 @@ public abstract class MCH_EntityAircraft
         }
 
         if (countRideEntity > 0) {
-            W_WorldFunc.DEF_playSoundEffect(this.world, this.posX, this.posY, this.posZ, "random.click", 1.0F, 1.0F);
+            MCH_SoundEvents.playSound(this.world, this.posX, this.posY, this.posZ, "random.click", 1.0F, 1.0F);
         }
     }
 
@@ -4081,7 +4082,7 @@ public abstract class MCH_EntityAircraft
                                             && this.posZ >= v.z - r
                                             && this.posZ <= v.z + r
                                             && this.canRideAircraft(ac, sid, info)) {
-                                        W_WorldFunc.DEF_playSoundEffect(this.world, this.posX, this.posY, this.posZ, "random.click", 1.0F, 1.0F);
+                                        MCH_SoundEvents.playSound(this.world, this.posX, this.posY, this.posZ, "random.click", 1.0F, 1.0F);
                                         this.startRiding(seat);
                                         return;
                                     }
@@ -5570,7 +5571,7 @@ public abstract class MCH_EntityAircraft
             return false;
         } else {
             Block block = MCH_Lib.getBlockY(this, 3, -10, true);
-            return !this.isLandingGearFolded() && block == W_Blocks.AIR;
+            return !this.isLandingGearFolded() && block == Blocks.AIR;
         }
     }
 

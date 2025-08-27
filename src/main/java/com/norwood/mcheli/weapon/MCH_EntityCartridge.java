@@ -117,8 +117,8 @@ public class MCH_EntityCartridge extends W_Entity {
     }
 
     public void move() {
-        Vec3d vec1 = W_WorldFunc.getWorldVec3(this.world, this.posX, this.posY, this.posZ);
-        Vec3d vec2 = W_WorldFunc.getWorldVec3(this.world, this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+        Vec3d vec1 =new Vec3d( this.posX, this.posY, this.posZ);
+        Vec3d vec2 =new Vec3d( this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
         RayTraceResult m = W_WorldFunc.clip(this.world, vec1, vec2);
         double d = Math.max(Math.abs(this.motionX), Math.abs(this.motionY));
         d = Math.max(d, Math.abs(this.motionZ));

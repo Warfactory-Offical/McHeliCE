@@ -13,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
@@ -320,7 +321,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
                     gmy = this.getAcInfo().mobilityYawOnGround;
                     if (!this.getAcInfo().canRotOnGround) {
                         Block block = MCH_Lib.getBlockY(this, 3, -2, false);
-                        if (!W_Block.isEqual(block, W_Block.getWater()) && !W_Block.isEqual(block, W_Blocks.AIR)) {
+                        if (!W_Block.isEqual(block, W_Block.getWater()) && !W_Block.isEqual(block, Blocks.AIR)) {
                             gmy = 0.0F;
                         }
                     }
@@ -705,9 +706,9 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
         if (dp == 0.0) {
             if (this.isTargetDrone() && this.canUseFuel() && !this.isDestroyed()) {
                 Block block = MCH_Lib.getBlockY(this, 3, -40, true);
-                if (block != null && !W_Block.isEqual(block, W_Blocks.AIR)) {
+                if (block != null && !W_Block.isEqual(block, Blocks.AIR)) {
                     block = MCH_Lib.getBlockY(this, 3, -5, true);
-                    if (block == null || W_Block.isEqual(block, W_Blocks.AIR)) {
+                    if (block == null || W_Block.isEqual(block, Blocks.AIR)) {
                         this.setRotYaw(this.getRotYaw() + this.getAcInfo().autoPilotRot * 2.0F);
                         if (this.getRotPitch() > -20.0F) {
                             this.setRotPitch(this.getRotPitch() - 0.5F);
@@ -771,7 +772,7 @@ public class MCP_EntityPlane extends MCH_EntityAircraft {
         boolean canMove = true;
         if (!this.getAcInfo().canMoveOnGround) {
             Block block = MCH_Lib.getBlockY(this, 3, -2, false);
-            if (!W_Block.isEqual(block, W_Block.getWater()) && !W_Block.isEqual(block, W_Blocks.AIR)) {
+            if (!W_Block.isEqual(block, W_Block.getWater()) && !W_Block.isEqual(block, Blocks.AIR)) {
                 canMove = false;
             }
         }

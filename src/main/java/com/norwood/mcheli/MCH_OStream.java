@@ -11,8 +11,8 @@ public class MCH_OStream extends ByteArrayOutputStream {
     public void write(DataOutputStream dos) {
         try {
             int datasize;
-            if (this.index + 30720 <= this.size()) {
-                datasize = 30720;
+            if (this.index + SIZE <= this.size()) {
+                datasize = SIZE;
             } else {
                 datasize = this.size() - this.index;
             }
