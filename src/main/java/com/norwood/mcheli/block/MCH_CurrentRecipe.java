@@ -84,10 +84,10 @@ public class MCH_CurrentRecipe {
                 this.getAcInfoTextSub("VTOL", pinfo.isEnableVtol ? "YES" : "NO");
             }
 
-            if (info.getWeaponNum() > 0) {
+            if (info.getWeaponCount() > 0) {
                 this.getAcInfoTextSub("Armed----------------");
 
-                for (int i = 0; i < info.getWeaponNum(); i++) {
+                for (int i = 0; i < info.getWeaponCount(); i++) {
                     String type = info.getWeaponSetById(i).type;
                     MCH_WeaponInfo winfo = MCH_WeaponInfoManager.get(type);
                     if (winfo != null) {

@@ -444,7 +444,7 @@ public class MCH_WeaponSet {
         return this.weapons != null && this.weapons.length > 0 && idx < this.weapons.length ? this.weapons[idx] : null;
     }
 
-    public int getWeaponNum() {
+    public int getWeaponsCount() {
         return this.weapons != null ? this.weapons.length : 0;
     }
 

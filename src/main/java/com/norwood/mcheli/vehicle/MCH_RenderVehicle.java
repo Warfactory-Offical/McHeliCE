@@ -73,7 +73,7 @@ public class MCH_RenderVehicle extends MCH_RenderAircraft<MCH_EntityVehicle> {
     ) {
         GL11.glPushMatrix();
         float recoilBuf = 0.0F;
-        if (index < ws.getWeaponNum()) {
+        if (index < ws.getWeaponsCount()) {
             MCH_WeaponSet.Recoil r = ws.recoilBuf[index];
             recoilBuf = r.prevRecoilBuf + (r.recoilBuf - r.prevRecoilBuf) * tickTime;
         }

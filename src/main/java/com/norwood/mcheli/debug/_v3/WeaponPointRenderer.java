@@ -52,7 +52,7 @@ public class WeaponPointRenderer {
                 BufferBuilder builder = tessellator.getBuffer();
                 builder.begin(0, DefaultVertexFormats.POSITION_COLOR);
 
-                for (int i = 0; i < ws.getWeaponNum(); i++) {
+                for (int i = 0; i < ws.getWeaponsCount(); i++) {
                     MCH_WeaponBase weapon = ws.getWeapon(i);
                     if (weapon != null) {
                         int j = 0;

@@ -484,7 +484,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         return null;
     }
 
-    public int getWeaponNum() {
+    public int getWeaponCount() {
         return this.weaponSetList.size();
     }
 
