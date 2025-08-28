@@ -2,9 +2,14 @@ package com.norwood.mcheli.multithread;
 
 import com.norwood.mcheli.MCH_ClientProxy;
 import com.norwood.mcheli.MCH_ModelManager;
+import com.norwood.mcheli.helicopter.MCH_HeliInfo;
 import com.norwood.mcheli.helicopter.MCH_HeliInfoManager;
+import com.norwood.mcheli.plane.MCP_PlaneInfo;
 import com.norwood.mcheli.plane.MCP_PlaneInfoManager;
+import com.norwood.mcheli.ship.MCH_ShipInfo;
+import com.norwood.mcheli.tank.MCH_TankInfo;
 import com.norwood.mcheli.tank.MCH_TankInfoManager;
+import com.norwood.mcheli.vehicle.MCH_VehicleInfo;
 import com.norwood.mcheli.vehicle.MCH_VehicleInfoManager;
 import com.norwood.mcheli.weapon.MCH_DefaultBulletModels;
 
@@ -41,24 +46,29 @@ public class MultiThreadModelManager {
         ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
         CompletableFuture<Void> heliFuture = CompletableFuture.runAsync(() ->
-                        MCH_HeliInfoManager.map.keySet().forEach(key -> proxy.registerModelsHeli((String) key, false)), executor)
-                .thenRun(() -> completion("helicopter"));
+                MCH_HeliInfoManager.map.values().forEach(info ->
+                        proxy.registerModelsHeli((MCH_HeliInfo) info, false)), executor
+        ).thenRun(() -> completion("helicopter"));
 
         CompletableFuture<Void> planeFuture = CompletableFuture.runAsync(() ->
-                        MCP_PlaneInfoManager.map.keySet().forEach(key -> proxy.registerModelsPlane((String) key, false)), executor)
-                .thenRun(() -> completion("plane"));
+                MCP_PlaneInfoManager.map.values().forEach(info ->
+                        proxy.registerModelsPlane((MCP_PlaneInfo) info, false)), executor
+        ).thenRun(() -> completion("plane"));
 
         CompletableFuture<Void> shipFuture = CompletableFuture.runAsync(() ->
-                        MCH_ShipInfoManager.map.keySet().forEach(key -> proxy.registerModelsShip((String) key, false)), executor)
-                .thenRun(() -> completion("ship"));
+                MCH_ShipInfoManager.map.values().forEach(info ->
+                        proxy.registerModelsShip((MCH_ShipInfo) info, false)), executor
+        ).thenRun(() -> completion("ship"));
 
         CompletableFuture<Void> tankFuture = CompletableFuture.runAsync(() ->
-                        MCH_TankInfoManager.map.keySet().forEach(key -> proxy.registerModelsTank((String) key, false)), executor)
-                .thenRun(() -> completion("tank"));
+                MCH_TankInfoManager.map.values().forEach(info ->
+                        proxy.registerModelsTank((MCH_TankInfo) info, false)), executor
+        ).thenRun(() -> completion("tank"));
 
         CompletableFuture<Void> vehicleFuture = CompletableFuture.runAsync(() ->
-                        MCH_VehicleInfoManager.map.keySet().forEach(key -> proxy.registerModelsVehicle((String) key, false)), executor)
-                .thenRun(() -> completion("vehicle"));
+                MCH_VehicleInfoManager.map.values().forEach(info ->
+                        proxy.registerModelsVehicle((MCH_VehicleInfo) info, false)), executor
+        ).thenRun(() -> completion("vehicle"));
 
         CompletableFuture<Void> bulletFuture = CompletableFuture.runAsync(() -> {
             proxy.registerModels_Bullet();

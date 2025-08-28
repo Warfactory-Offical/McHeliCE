@@ -47,6 +47,7 @@ import com.norwood.mcheli.vehicle.MCH_VehicleInfo;
 import com.norwood.mcheli.weapon.*;
 import com.norwood.mcheli.wrapper.*;
 import com.norwood.mcheli.wrapper.modelloader.W_ModelCustom;
+import com.norwood.mcheli.throwable.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.text.ITextComponent;
@@ -176,6 +177,25 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
         MCH_ModelManager.load("blocks", "drafting_table");
     }
 
+    public static void registerModels_Throwable(){
+        System.out.println("Loading throwable");
+
+        for (Object obj : MCH_ThrowableInfoManager.getValues()) {
+            if (obj instanceof MCH_ThrowableInfo) { // Ensure the object is of type MCH_ThrowableInfo
+                MCH_ThrowableInfo throwableInfo = (MCH_ThrowableInfo) obj;
+                IModelCustom modelCustom = MCH_ModelManager.load("throwable", throwableInfo.name);
+                if (modelCustom != null) {
+                    System.out.println("Adding model for " + throwableInfo.name);
+                    throwableInfo.model = modelCustom;
+                } else {
+                    System.out.println("ERROR: No model found for throwable " + throwableInfo.name);
+                }
+            } else {
+                System.out.println("ERROR: Invalid object type in throwable info manager");
+            }
+        }
+    }
+
     @Override
     public void registerModelsHeli(MCH_HeliInfo info, boolean reload) {
         MCH_ModelManager.setForceReloadMode(reload);
@@ -188,6 +208,22 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
         this.registerCommonPart("helicopters", info);
         MCH_ModelManager.setForceReloadMode(false);
     }
+
+    /*** 1.7 method
+     public void registerModelsHeli(String name, boolean reload) {
+     MCH_ModelManager.setForceReloadMode(reload);
+     MCH_HeliInfo info = (MCH_HeliInfo)MCH_HeliInfoManager.map.get(name);
+     info.model = MCH_ModelManager.load("helicopters", info.name);
+
+     MCH_HeliInfo.Rotor rotor;
+     for(Iterator i$ = info.rotorList.iterator(); i$.hasNext(); rotor.model = this.loadPartModel("helicopters", info.name, info.model, rotor.modelName)) {
+     rotor = (MCH_HeliInfo.Rotor)i$.next();
+     }
+
+     this.registerCommonPart("helicopters", info);
+     MCH_ModelManager.setForceReloadMode(false);
+     }
+     */
 
     @Override
     public void registerModelsPlane(MCP_PlaneInfo info, boolean reload) {
@@ -273,7 +309,7 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
         MCH_ModelManager.setForceReloadMode(false);
     }
 
-    private MCH_BulletModel loadBulletModel(String name) {
+    public MCH_BulletModel loadBulletModel(String name) {
         _IModelCustom m = MCH_ModelManager.load("bullets", name);
         return m != null ? new MCH_BulletModel(name, m) : null;
     }
