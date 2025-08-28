@@ -26,6 +26,7 @@ import com.norwood.mcheli.helicopter.MCH_RenderHeli;
 import com.norwood.mcheli.mob.MCH_EntityGunner;
 import com.norwood.mcheli.mob.MCH_RenderGunner;
 import com.norwood.mcheli.multiplay.MCH_MultiplayClient;
+import com.norwood.mcheli.multithread.MultiThreadModelManager;
 import com.norwood.mcheli.parachute.MCH_EntityParachute;
 import com.norwood.mcheli.parachute.MCH_RenderParachute;
 import com.norwood.mcheli.particles.MCH_ParticlesUtil;
@@ -157,8 +158,16 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
 
         MCH_ModelManager.load("wrench");
         MCH_ModelManager.load("rangefinder");
+
+        if (MCH_Config.MultiThreadedModelLoading.prmBool) {
+            System.out.println("Starting multithreaded model loading");
+            MultiThreadModelManager.start(this);
+            return;
+        }
+
         ContentRegistries.heli().forEachValue(info -> this.registerModelsHeli(info, false));
         ContentRegistries.plane().forEachValue(info -> this.registerModelsPlane(info, false));
+        ContentRegistries.ship().forEachValue(info -> this.registerModelsShip(info, false));
         ContentRegistries.tank().forEachValue(info -> this.registerModelsTank(info, false));
         ContentRegistries.vehicle().forEachValue(info -> this.registerModelsVehicle(info, false));
         registerModels_Bullet();
@@ -183,7 +192,7 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
         for (Object obj : MCH_ThrowableInfoManager.getValues()) {
             if (obj instanceof MCH_ThrowableInfo) { // Ensure the object is of type MCH_ThrowableInfo
                 MCH_ThrowableInfo throwableInfo = (MCH_ThrowableInfo) obj;
-                IModelCustom modelCustom = MCH_ModelManager.load("throwable", throwableInfo.name);
+                _IModelCustom modelCustom = MCH_ModelManager.load("throwable", throwableInfo.name);
                 if (modelCustom != null) {
                     System.out.println("Adding model for " + throwableInfo.name);
                     throwableInfo.model = modelCustom;

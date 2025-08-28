@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MCH_Config {
+
+    public static MCH_ConfigPrm MultiThreadedModelLoading;
+
     public static final List<Block> dummyBreakableBlocks = new ArrayList<>();
     public static final List<Material> dummyBreakableMaterials = new ArrayList<>();
     public static String mcPath;
@@ -242,6 +245,7 @@ public class MCH_Config {
                 KeyScoreboard,
                 KeyMultiplayManager
         };
+        MultiThreadedModelLoading = new MCH_ConfigPrm("MultiThreadedModelLoading", true);
         DamageVs = new ArrayList<>();
         CommandPermission = new ArrayList<>();
         CommandPermissionList = new ArrayList<>();
