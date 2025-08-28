@@ -1,57 +1,44 @@
 package com.norwood.mcheli.ship;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import com.norwood.mcheli.MCH_BaseInfo;
+import com.norwood.mcheli.helper.addon.AddonResourceLocation;
+import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfoManager;
-import com.norwood.mcheli.ship.MCH_ShipInfo;
 import net.minecraft.item.Item;
 
-public class MCH_ShipInfoManager extends MCH_AircraftInfoManager {
+import javax.annotation.Nullable;
 
-    private static MCH_ShipInfoManager instance = new MCH_ShipInfoManager();
-    public static HashMap map = new LinkedHashMap();
-
+public class MCH_ShipInfoManager extends MCH_AircraftInfoManager<MCH_ShipInfo> {
+    private static final MCH_ShipInfoManager instance = new MCH_ShipInfoManager();
 
     public static MCH_ShipInfo get(String name) {
-        return (MCH_ShipInfo)map.get(name);
+        return ContentRegistries.ship().get(name);
     }
 
     public static MCH_ShipInfoManager getInstance() {
         return instance;
     }
 
-    public MCH_BaseInfo newInfo(String name) {
-        return new MCH_ShipInfo(name);
-    }
-
-    public Map getMap() {
-        return map;
-    }
-
-    public static MCH_ShipInfo getFromItem(Item item) {
+    @Nullable
+    public static MCH_ShipInfo getFromItem(@Nullable Item item) {
         return getInstance().getAcInfoFromItem(item);
     }
 
-    public MCH_ShipInfo getAcInfoFromItem(Item item) {
-        if(item == null) {
-            return null;
-        } else {
-            Iterator i$ = map.values().iterator();
-
-            MCH_ShipInfo info;
-            do {
-                if(!i$.hasNext()) {
-                    return null;
-                }
-
-                info = (MCH_ShipInfo)i$.next();
-            } while(info.item != item);
-
-            return info;
-        }
+    public MCH_ShipInfo newInfo(AddonResourceLocation name, String filepath) {
+        return new MCH_ShipInfo(name, filepath);
     }
 
+    @Nullable
+    public MCH_ShipInfo getAcInfoFromItem(@Nullable Item item) {
+        return ContentRegistries.ship().findFirst(info -> info.item == item);
+    }
+
+    @Override
+    protected boolean contains(String name) {
+        return ContentRegistries.plane().contains(name);
+    }
+
+    @Override
+    protected int size() {
+        return ContentRegistries.plane().size();
+    }
 }

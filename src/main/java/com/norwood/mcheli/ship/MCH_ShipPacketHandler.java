@@ -25,7 +25,7 @@ public class MCH_ShipPacketHandler {
                         plane = (MCH_EntityShip) ((MCH_EntitySeat) player.getRidingEntity()).getParent();
                     }
                 } else if (player.getRidingEntity() instanceof MCH_EntityUavStation uavStation) {
-                    if (uavStation.getControlAircract() instanceof MCP_EntityPlane) {
+                    if (uavStation.getControlAircract() instanceof MCH_EntityShip) {
                         plane = (MCH_EntityShip) uavStation.getControlAircract();
                     }
                 }
