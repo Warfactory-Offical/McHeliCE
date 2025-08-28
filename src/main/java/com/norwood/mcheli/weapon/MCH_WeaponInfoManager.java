@@ -16,6 +16,7 @@ public class MCH_WeaponInfoManager {
         for (MCH_WeaponInfo mchWeaponInfo : ContentRegistries.weapon().values()) {
             for (MCH_WeaponInfo.RoundItem roundItem : mchWeaponInfo.roundItems) {
                 Item item = ForgeRegistries.ITEMS.getValue(roundItem.itemName);
+                if(item==null) continue;
                 roundItem.itemStack = new ItemStack(item, 1, roundItem.damage);
             }
         }
