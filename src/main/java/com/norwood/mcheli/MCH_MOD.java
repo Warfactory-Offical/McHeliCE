@@ -301,8 +301,12 @@ public class MCH_MOD {
         creativeTabsPlane.setFixedIconItem(MCH_Config.CreativeTabIconPlane.prmString);
         creativeTabsTank.setFixedIconItem(MCH_Config.CreativeTabIconTank.prmString);
         creativeTabsVehicle.setFixedIconItem(MCH_Config.CreativeTabIconVehicle.prmString);
-        MCH_WeaponInfoManager.setRoundItems();
         proxy.readClientModList();
+    }
+
+    @EventHandler
+    public void onLoadComplete(FMLPostInitializationEvent evt) {
+        MCH_WeaponInfoManager.setRoundItems();
     }
 
     @EventHandler

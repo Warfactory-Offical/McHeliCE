@@ -13,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -817,13 +818,13 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
 
     public static class RoundItem {
         public final int num;
-        public final String itemName;
+        public final ResourceLocation itemName;
         public final int damage;
         public ItemStack itemStack = ItemStack.EMPTY;
 
         public RoundItem(int n, String name, int damage) {
             this.num = n;
-            this.itemName = name;
+            this.itemName = new ResourceLocation(name);
             this.damage = damage;
         }
     }

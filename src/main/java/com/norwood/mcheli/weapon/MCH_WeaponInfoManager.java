@@ -4,6 +4,7 @@ import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.wrapper.W_Item;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import javax.annotation.Nullable;
 
@@ -12,10 +13,10 @@ public class MCH_WeaponInfoManager {
     }
 
     public static void setRoundItems() {
-        for (MCH_WeaponInfo w : ContentRegistries.weapon().values()) {
-            for (MCH_WeaponInfo.RoundItem r : w.roundItems) {
-                Item item = W_Item.getItemByName(r.itemName);
-                r.itemStack = new ItemStack(item, 1, r.damage);
+        for (MCH_WeaponInfo mchWeaponInfo : ContentRegistries.weapon().values()) {
+            for (MCH_WeaponInfo.RoundItem roundItem : mchWeaponInfo.roundItems) {
+                Item item = ForgeRegistries.ITEMS.getValue(roundItem.itemName);
+                roundItem.itemStack = new ItemStack(item, 1, roundItem.damage);
             }
         }
     }
