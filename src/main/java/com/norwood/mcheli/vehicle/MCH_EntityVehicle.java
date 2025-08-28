@@ -142,21 +142,6 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
         }
     }
 
-    public void _updateCameraRotate(float yaw, float pitch) {
-        this.camera.prevRotationYaw = this.camera.rotationYaw;
-        this.camera.prevRotationPitch = this.camera.rotationPitch;
-        if (pitch > 89.0F) {
-            pitch = 89.0F;
-        }
-
-        if (pitch < -89.0F) {
-            pitch = -89.0F;
-        }
-
-        this.camera.rotationYaw = yaw;
-        this.camera.rotationPitch = pitch;
-    }
-
     @Override
     public boolean isCameraView(Entity entity) {
         return true;
@@ -408,60 +393,59 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
     }
 
     private void onUpdate_Server() {
-        double prevMotion = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
         this.updateCameraViewers();
-        double dp = 0.0;
+
+        // --- Gravity & buoyancy ---
         if (this.canFloatWater()) {
-            dp = this.getWaterDepth();
-        }
-
-        if (dp == 0.0) {
-            this.motionY = this.motionY + (!this.isInWater() ? this.getAcInfo().gravity : this.getAcInfo().gravityInWater);
-        } else if (dp < 1.0) {
-            this.motionY -= 1.0E-4;
-            this.motionY = this.motionY + 0.007 * this.getCurrentThrottle();
-        } else {
-            if (this.motionY < 0.0) {
-                this.motionY /= 2.0;
+            double dp = this.getWaterDepth();
+            if (dp == 0.0) {
+                this.motionY += this.isInWater() ? this.getAcInfo().gravityInWater : this.getAcInfo().gravity;
+            } else if (dp < 1.0) {
+                this.motionY -= 1.0E-4;
+                this.motionY += 0.007 * this.getCurrentThrottle();
+            } else {
+                if (this.motionY < 0.0) {
+                    this.motionY *= 0.5;
+                }
+                this.motionY += 0.007;
             }
-
-            this.motionY += 0.007;
+        } else {
+            this.motionY += this.getAcInfo().gravity;
         }
 
-        double motion = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+        // --- Horizontal acceleration from throttle ---
+        if (this.getCurrentThrottle() > 0.0) {
+            double yawRad = Math.toRadians(this.rotationYaw);
+            double accel = 0.03 * this.getCurrentThrottle(); // scale throttle → accel
+            this.motionX -= Math.sin(yawRad) * accel;
+            this.motionZ += Math.cos(yawRad) * accel;
+        }
+
+        // --- Speed cap ---
+        double motionH = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
         float speedLimit = this.getAcInfo().speed;
-        if (motion > speedLimit) {
-            this.motionX *= speedLimit / motion;
-            this.motionZ *= speedLimit / motion;
-            motion = speedLimit;
+        if (motionH > speedLimit) {
+            double scale = speedLimit / motionH;
+            this.motionX *= scale;
+            this.motionZ *= scale;
         }
 
-        if (motion > prevMotion && this.currentSpeed < speedLimit) {
-            this.currentSpeed = this.currentSpeed + (speedLimit - this.currentSpeed) / 35.0;
-            if (this.currentSpeed > speedLimit) {
-                this.currentSpeed = speedLimit;
-            }
-        } else {
-            this.currentSpeed = this.currentSpeed - (this.currentSpeed - 0.07) / 35.0;
-            if (this.currentSpeed < 0.07) {
-                this.currentSpeed = 0.07;
-            }
-        }
+        // --- Friction (different on ground vs air) ---
+        double groundFriction = this.onGround ? 0.91 : 0.99;
+        this.motionX *= groundFriction;
+        this.motionZ *= groundFriction;
+        this.motionY *= 0.95; // vertical drag
 
-        if (this.onGround) {
-            this.motionX *= 0.5;
-            this.motionZ *= 0.5;
-        }
-
+        // --- Move entity ---
         this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
-        this.motionY *= 0.95;
-        this.motionX *= 0.99;
-        this.motionZ *= 0.99;
+
+        // --- Cleanup ---
         this.onUpdate_updateBlock();
         if (this.getRiddenByEntity() != null && this.getRiddenByEntity().isDead) {
             this.unmountEntity();
         }
     }
+
 
     @Override
     public void onUpdateAngles(float partialTicks) {

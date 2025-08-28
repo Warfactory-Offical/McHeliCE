@@ -391,7 +391,7 @@ public class MCH_AircraftPacketHandler {
                             String name = ac.getAcInfo().name;
 
                             for (WorldServer world : MCH_Utils.getServer().worlds) {
-                                List<Entity> list = world.loadedEntityList;
+                                List<Entity> list = new ArrayList<>(world.loadedEntityList);
 
                                 for (Entity entity : list) {
                                     if (entity instanceof MCH_EntityAircraft) {
