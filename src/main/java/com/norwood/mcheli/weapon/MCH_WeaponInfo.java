@@ -792,6 +792,13 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
         }
     }
 
+
+    @Override
+    public void onPostReload() {
+        MCH_WeaponInfoManager.setRoundItems();
+    }
+
+
     public static class MuzzleFlash {
         public final float dist;
         public final float size;

@@ -16,6 +16,7 @@ import net.minecraft.util.IThreadListener;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -409,7 +410,7 @@ public class MCH_AircraftPacketHandler {
                         ContentRegistries.weapon().reloadAll();
 
                         for (WorldServer world : MCH_Utils.getServer().worlds) {
-                            List<Entity> list = world.loadedEntityList;
+                            List<Entity> list = new ArrayList<>(world.loadedEntityList);
 
                             for (Entity entity : list) {
                                 if (entity instanceof MCH_EntityAircraft entityAircraft) {

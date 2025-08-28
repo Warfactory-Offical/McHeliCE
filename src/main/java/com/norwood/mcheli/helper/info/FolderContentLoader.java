@@ -92,13 +92,14 @@ public class FolderContentLoader extends ContentLoader {
     }
 
     @Nullable
-    private File getFile(String filepath) {
+    private File getFile(String filepath) throws IOException {
         try {
             File file1 = new File(this.dir, filepath);
             if (file1.isFile() && validatePath(file1, filepath)) {
                 return file1;
             }
         } catch (IOException var3) {
+            throw var3;
         }
 
         return null;

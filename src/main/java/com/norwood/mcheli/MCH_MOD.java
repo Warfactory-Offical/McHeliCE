@@ -233,7 +233,7 @@ public class MCH_MOD {
         MCH_Lib.Log("Start load...");
         sourcePath = evt.getSourceFile().getPath();
         sourceFile = evt.getSourceFile();
-        addonDir = new File(evt.getModConfigurationDirectory().getParentFile(), "/mcheli_addons/");
+        addonDir = new File(evt.getModConfigurationDirectory().getParentFile(), ADDON_FOLDER_NAME);
         MCH_Lib.Log("SourcePath: " + sourcePath);
         MCH_Lib.Log("CurrentDirectory:" + new File(".").getAbsolutePath());
         proxy.init();
