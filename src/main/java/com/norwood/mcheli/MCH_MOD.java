@@ -305,7 +305,7 @@ public class MCH_MOD {
     }
 
     @EventHandler
-    public void onLoadComplete(FMLPostInitializationEvent evt) {
+    public void onLoadComplete(FMLLoadCompleteEvent evt) {
         MCH_WeaponInfoManager.setRoundItems();
     }
 
