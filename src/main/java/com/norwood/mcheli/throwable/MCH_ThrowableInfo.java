@@ -98,6 +98,11 @@ public class MCH_ThrowableInfo extends MCH_BaseInfo implements IItemContent {
     }
 
     @Override
+    public void onPostReload() {
+
+    }
+
+    @Override
     public Item getItem() {
         return this.item;
     }

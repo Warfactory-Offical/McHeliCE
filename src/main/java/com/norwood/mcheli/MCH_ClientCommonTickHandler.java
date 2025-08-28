@@ -44,6 +44,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.Display;
 
+import java.util.ArrayList;
+
 @SideOnly(Side.CLIENT)
 public class MCH_ClientCommonTickHandler extends W_TickHandler {
     public static MCH_ClientCommonTickHandler instance;
@@ -304,7 +306,7 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
 
         MCH_ClientEventHook.haveSearchLightAircraft.clear();
         if (this.mc != null && this.mc.world != null) {
-            for (Object o : Minecraft.getMinecraft().world.loadedEntityList) {
+            for (Object o : new ArrayList<>(Minecraft.getMinecraft().world.loadedEntityList)) {
                 if (o instanceof MCH_EntityAircraft && ((MCH_EntityAircraft) o).haveSearchLight()) {
                     MCH_ClientEventHook.haveSearchLightAircraft.add((MCH_EntityAircraft) o);
                 }

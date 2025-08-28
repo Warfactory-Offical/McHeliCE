@@ -74,9 +74,6 @@ public abstract class MCH_BaseInfo implements IContentData {
     protected void loadItemData(String item, String data) {
     }
 
-    @Override
-    public void onPostReload() {
-    }
 
     public boolean canReloadItem(String item) {
         return false;

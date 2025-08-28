@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MCH_MultiplayPacketHandler {
@@ -73,7 +74,7 @@ public class MCH_MultiplayPacketHandler {
     private static void destoryAllAircraft(EntityPlayer player) {
         CommandSummon cmd = new CommandSummon();
         if (cmd.checkPermission(MCH_Utils.getServer(), player)) {
-            for (Entity e : player.world.loadedEntityList) {
+            for (Entity e :  new ArrayList<>(player.world.loadedEntityList)) {
                 if (e instanceof MCH_EntityAircraft) {
                     e.setDead();
                 }

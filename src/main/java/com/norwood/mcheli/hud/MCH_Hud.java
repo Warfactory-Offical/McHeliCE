@@ -47,6 +47,11 @@ public class MCH_Hud extends MCH_BaseInfo {
         }
     }
 
+    @Override
+    public void onPostReload() {
+
+    }
+
     public void loadItemData(int fileLine, String item, String data) {
         String[] prm = data.split("\\s*,\\s*");
         if (prm.length != 0) {

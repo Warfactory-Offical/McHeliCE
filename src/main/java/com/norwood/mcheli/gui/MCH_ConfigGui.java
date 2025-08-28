@@ -478,7 +478,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
                     MCH_Lib.DbgLog(true, "MCH_BaseInfo.reload all weapon info.");
                     ContentRegistries.get(MCH_WeaponInfo.class).reloadAll();
                     MCH_PacketNotifyInfoReloaded.sendRealodAllWeapon();
-                    List<Entity> list = this.mc.world.loadedEntityList;
+                    List<Entity> list = new ArrayList<>(this.mc.world.loadedEntityList);
                     Set<String> reloaded = Sets.newHashSet();
 
                     for (Entity value : list) {
@@ -502,7 +502,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
                         String name = ac.getAcInfo().name;
                         MCH_Lib.DbgLog(true, "MCH_BaseInfo.reload : " + name);
                         ContentRegistries.get(ac.getAcInfo().getClass()).reload(name);
-                        List<Entity> entityList = this.mc.world.loadedEntityList;
+                        List<Entity> entityList =  new ArrayList<>(this.mc.world.loadedEntityList);
 
                         for (Entity entity : entityList) {
                             if (entity instanceof MCH_EntityAircraft) {
