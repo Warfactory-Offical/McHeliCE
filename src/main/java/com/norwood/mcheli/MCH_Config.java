@@ -316,6 +316,7 @@ public class MCH_Config {
         SwitchWeaponWithMouseWheel = new MCH_ConfigPrm("SwitchWeaponWithMouseWheel", true);
         AllHeliSpeed = new MCH_ConfigPrm("AllHeliSpeed", 1.0);
         AllPlaneSpeed = new MCH_ConfigPrm("AllPlaneSpeed", 1.0);
+        AllShipSpeed = new MCH_ConfigPrm("AllShipSpeed", 1.0);
         AllTankSpeed = new MCH_ConfigPrm("AllTankSpeed", 1.0);
         HurtResistantTime = new MCH_ConfigPrm("HurtResistantTime", 0.0);
         DisplayHUDThirdPerson = new MCH_ConfigPrm("DisplayHUDThirdPerson", false);
