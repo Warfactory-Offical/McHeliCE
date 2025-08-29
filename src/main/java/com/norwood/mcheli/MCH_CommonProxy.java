@@ -11,6 +11,7 @@ import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_SoundUpdater;
 import com.norwood.mcheli.helicopter.MCH_HeliInfo;
 import com.norwood.mcheli.plane.MCP_PlaneInfo;
+import com.norwood.mcheli.ship.MCH_ShipInfo;
 import com.norwood.mcheli.tank.MCH_TankInfo;
 import com.norwood.mcheli.vehicle.MCH_VehicleInfo;
 import com.norwood.mcheli.weapon.MCH_WeaponInfo;
@@ -43,6 +44,9 @@ public class MCH_CommonProxy {
     }
 
     public void registerModelsPlane(MCP_PlaneInfo info, boolean reload) {
+    }
+
+    public void registerModelsShip(MCH_ShipInfo info, boolean reload) {
     }
 
     public void registerModelsVehicle(MCH_VehicleInfo info, boolean reload) {
@@ -212,4 +216,6 @@ public class MCH_CommonProxy {
     @Deprecated
     public void updateSoundsJson() {
     }
+
+
 }

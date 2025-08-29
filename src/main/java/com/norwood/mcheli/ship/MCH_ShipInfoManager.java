@@ -1,4 +1,4 @@
-package com.norwood.mcheli.plane;
+package com.norwood.mcheli.ship;
 
 import com.norwood.mcheli.helper.addon.AddonResourceLocation;
 import com.norwood.mcheli.helper.info.ContentRegistries;
@@ -9,31 +9,30 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-public class MCP_PlaneInfoManager extends MCH_AircraftInfoManager<MCP_PlaneInfo> {
-    private static final MCP_PlaneInfoManager instance = new MCP_PlaneInfoManager();
+public class MCH_ShipInfoManager extends MCH_AircraftInfoManager<MCH_ShipInfo> {
+    private static final MCH_ShipInfoManager instance = new MCH_ShipInfoManager();
     public static HashMap map = new LinkedHashMap();
 
-
-    public static MCP_PlaneInfo get(String name) {
-        return ContentRegistries.plane().get(name);
+    public static MCH_ShipInfo get(String name) {
+        return ContentRegistries.ship().get(name);
     }
 
-    public static MCP_PlaneInfoManager getInstance() {
+    public static MCH_ShipInfoManager getInstance() {
         return instance;
     }
 
     @Nullable
-    public static MCP_PlaneInfo getFromItem(@Nullable Item item) {
+    public static MCH_ShipInfo getFromItem(@Nullable Item item) {
         return getInstance().getAcInfoFromItem(item);
     }
 
-    public MCP_PlaneInfo newInfo(AddonResourceLocation name, String filepath) {
-        return new MCP_PlaneInfo(name, filepath);
+    public MCH_ShipInfo newInfo(AddonResourceLocation name, String filepath) {
+        return new MCH_ShipInfo(name, filepath);
     }
 
     @Nullable
-    public MCP_PlaneInfo getAcInfoFromItem(@Nullable Item item) {
-        return ContentRegistries.plane().findFirst(info -> info.item == item);
+    public MCH_ShipInfo getAcInfoFromItem(@Nullable Item item) {
+        return ContentRegistries.ship().findFirst(info -> info.item == item);
     }
 
     @Override
