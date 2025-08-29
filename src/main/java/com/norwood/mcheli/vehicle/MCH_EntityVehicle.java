@@ -395,7 +395,7 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
     private void onUpdate_Server() {
         this.updateCameraViewers();
 
-        // --- Gravity & buoyancy ---
+        //Gravity / buoyancy
         if (this.canFloatWater()) {
             double dp = this.getWaterDepth();
             if (dp == 0.0) {
@@ -413,7 +413,7 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
             this.motionY += this.getAcInfo().gravity;
         }
 
-        // --- Horizontal acceleration from throttle ---
+        //Horizontal aceleration
         if (this.getCurrentThrottle() > 0.0) {
             double yawRad = Math.toRadians(this.rotationYaw);
             double accel = 0.03 * this.getCurrentThrottle(); // scale throttle → accel
@@ -421,7 +421,7 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
             this.motionZ += Math.cos(yawRad) * accel;
         }
 
-        // --- Speed cap ---
+        //Speed
         double motionH = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
         float speedLimit = this.getAcInfo().speed;
         if (motionH > speedLimit) {
@@ -430,16 +430,16 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
             this.motionZ *= scale;
         }
 
-        // --- Friction (different on ground vs air) ---
+        //Friction
         double groundFriction = this.onGround ? 0.91 : 0.99;
         this.motionX *= groundFriction;
         this.motionZ *= groundFriction;
-        this.motionY *= 0.95; // vertical drag
+        this.motionY *= 0.95;
 
-        // --- Move entity ---
+        //Move
         this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 
-        // --- Cleanup ---
+        //Cleanup
         this.onUpdate_updateBlock();
         if (this.getRiddenByEntity() != null && this.getRiddenByEntity().isDead) {
             this.unmountEntity();

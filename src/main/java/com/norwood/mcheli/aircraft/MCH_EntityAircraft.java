@@ -321,6 +321,13 @@ public abstract class MCH_EntityAircraft
         return rider != null && rider.getRidingEntity() instanceof MCH_EntitySeat;
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean isInRangeToRenderDist(double dist){
+        return true;
+    }
+
+
     private static boolean getCollisionBoxes(@Nullable Entity entityIn, AxisAlignedBB aabb, List<AxisAlignedBB> outList) {
         int i = MathHelper.floor(aabb.minX) - 1;
         int j = MathHelper.ceil(aabb.maxX) + 1;

@@ -19,6 +19,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -480,6 +481,16 @@ public class MCH_EntityGLTD extends W_Entity implements IEntitySinglePassenger {
     @SideOnly(Side.CLIENT)
     public void setIsBoatEmpty(boolean par1) {
         this.isBoatEmpty = par1;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public AxisAlignedBB getRenderBoundingBox() {
+        double size = 150;
+        return new AxisAlignedBB(
+                this.posX - size, this.posY - size, this.posZ - size,
+                this.posX + size, this.posY + size, this.posZ + size
+        );
     }
 
     @Nullable

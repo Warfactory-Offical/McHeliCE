@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
@@ -24,7 +25,9 @@ public abstract class W_Entity extends Entity {
     protected double _renderDistanceWeight = 1.0;
 
     public W_Entity(World par1World) {
+
         super(par1World);
+        this.ignoreFrustumCheck = true;
     }
 
     public static boolean isEntityFallingBlock(Entity entity) {
@@ -120,4 +123,16 @@ public abstract class W_Entity extends Entity {
         d0 = d0 * 64.0 * this._renderDistanceWeight;
         return distance < d0 * d0;
     }
+
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public AxisAlignedBB getRenderBoundingBox() {
+        double huge = 1.0e6;
+        return new AxisAlignedBB(
+                posX - huge, posY - huge, posZ - huge,
+                posX + huge, posY + huge, posZ + huge
+        );
+    }
+
 }

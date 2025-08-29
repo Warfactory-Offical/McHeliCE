@@ -130,7 +130,7 @@ public class ContentRegistries {
         ContentRegistry.Builder<T> builder = ContentRegistry.builder(clazz, dir);
         MCH_MOD.proxy.onLoadStartContents(dir, values.size());
 
-        values.parallelStream().map(ContentLoader.ContentEntry::parse).filter(Objects::nonNull).map(clazz::cast).forEach(builder::put);
+        values.stream().map(ContentLoader.ContentEntry::parse).filter(Objects::nonNull).map(clazz::cast).forEach(builder::put);
 
         MCH_MOD.proxy.onLoadFinishContents(dir);
         return builder.build();
