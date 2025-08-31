@@ -45,6 +45,7 @@ import com.norwood.mcheli.wrapper.W_LanguageRegistry;
 import com.norwood.mcheli.wrapper.W_NetworkRegistry;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
@@ -291,6 +292,8 @@ public class MCH_MOD {
     @EventHandler
     public void init(FMLInitializationEvent evt) {
         GameRegistry.registerTileEntity(MCH_DraftingTableTileEntity.class, MCH_Utils.suffix("drafting_table"));
+        if (World.MAX_ENTITY_RADIUS < 5)
+            World.MAX_ENTITY_RADIUS = 5;
         proxy.registerBlockRenderer();
     }
 

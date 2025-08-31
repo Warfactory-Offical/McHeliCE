@@ -61,4 +61,5 @@ public abstract class W_Render<T extends Entity> extends Render<T> {
         GL11.glDisable(3042);
         GL11.glShadeModel(7424);
     }
+
 }

@@ -4,6 +4,7 @@ import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_Explosion;
 import com.norwood.mcheli.MCH_HBMUtil;
 import com.norwood.mcheli.MCH_Lib;
+import com.norwood.mcheli.compat.ModCompatManager;
 import com.norwood.mcheli.helper.MCH_CriteriaTriggers;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_EntityHitBox;
@@ -18,6 +19,7 @@ import com.norwood.mcheli.wrapper.W_EntityPlayer;
 import com.norwood.mcheli.wrapper.W_MovingObjectPosition;
 import com.norwood.mcheli.wrapper.W_WorldFunc;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.block.model.ModelManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -801,7 +803,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
         if (!this.world.isRemote) {
 
             try {
-                if(this.getInfo().chemYield > 0) {
+                if(this.getInfo().chemYield > 0 && ModCompatManager.isLoaded(ModCompatManager.MODID_HBM) ) {
                     System.out.println("chem yield detected");
                     MCH_HBMUtil.ExplosionChaos_spawnChlorine(world, posX, posY + 0.5, posZ, this.getInfo().chemYield, this.getInfo().chemSpeed, this.getInfo().chemType);
                 }
@@ -943,7 +945,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
             );
         }
 
-        if(this.getInfo().nukeYield > 0) {
+        if(this.getInfo().nukeYield > 0 && ModCompatManager.isLoaded(ModCompatManager.MODID_HBM)) {
             if(!this.getInfo().nukeEffectOnly) {
                 world.spawnEntity((Entity) MCH_HBMUtil.EntityNukeExplosionMK5_statFac(world, this.getInfo().nukeYield, this.posX + 0.5, this.posY + 0.5, this.posZ + 0.5));
             }
