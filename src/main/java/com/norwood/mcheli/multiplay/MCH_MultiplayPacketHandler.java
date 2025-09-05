@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class MCH_MultiplayPacketHandler {
-    private static final Logger logger = LogManager.getLogger();
     public static EntityPlayer modListRequestPlayer = null;
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
     private static byte[] imageData = null;
@@ -177,11 +176,11 @@ public class MCH_MultiplayPacketHandler {
     }
 
     public static void LogInfo(String format, Object... args) {
-        logger.info(String.format(format, args));
+        MCH_Lib.Log(String.format(format, args));
     }
 
     public static void LogError(String format, Object... args) {
-        logger.error(String.format(format, args));
+        MCH_Lib.Log(String.format(format, args));
     }
 
     @HandleSide({Side.CLIENT})

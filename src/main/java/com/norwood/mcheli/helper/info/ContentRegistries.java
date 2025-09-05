@@ -4,6 +4,7 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.norwood.mcheli.MCH_BaseInfo;
+import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.MCH_MOD;
 import com.norwood.mcheli.helper.addon.AddonManager;
 import com.norwood.mcheli.helper.addon.AddonPack;
@@ -82,7 +83,7 @@ public class ContentRegistries {
     public static void loadContents(File addonDir) {
         Multimap<ContentType, ContentLoader.ContentEntry> contents = LinkedHashMultimap.create();
         List<AddonPack> addons = MCH_MOD.proxy.loadAddonPacks(addonDir);
-        MCH_MOD.getLogger().info("Registered content packs: " + addons.toString());
+        MCH_Lib.Log("Registered content packs: " + addons.toString());
 
         MCH_MOD.proxy.onLoadStartAddons(addons.size());
         contents.putAll(loadAddonContents(BuiltinAddonPack.instance()));
