@@ -82,6 +82,8 @@ public class ContentRegistries {
     public static void loadContents(File addonDir) {
         Multimap<ContentType, ContentLoader.ContentEntry> contents = LinkedHashMultimap.create();
         List<AddonPack> addons = MCH_MOD.proxy.loadAddonPacks(addonDir);
+        MCH_MOD.getLogger().info("Registered content packs: " + addons.toString());
+
         MCH_MOD.proxy.onLoadStartAddons(addons.size());
         contents.putAll(loadAddonContents(BuiltinAddonPack.instance()));
 

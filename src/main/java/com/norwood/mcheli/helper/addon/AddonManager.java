@@ -37,10 +37,12 @@ public class AddonManager {
     }
 
     public static List<AddonPack> loadAddons(File addonDir) {
+        MCH_MOD.getLogger().info("Loading content from: " + addonDir.getAbsolutePath());
         checkExistAddonDir(addonDir);
         List<AddonPack> addons = Lists.newArrayList();
         File[] addonFiles = addonDir.listFiles();
 
+        MCH_MOD.getLogger().info("Found contents: " + addonFiles.toString() );
         for (File addonFile : addonFiles) {
             if (validAddonPath(addonFile)) {
                 AddonPack data = loadAddon(addonFile);

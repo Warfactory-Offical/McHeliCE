@@ -22,9 +22,9 @@ public class FolderContentLoader extends ContentLoader {
 
     protected static boolean validatePath(File file, String filepath) throws IOException {
         String s = file.getCanonicalPath();
-        if (ON_WINDOWS) {
-            s = BACKSLASH_MATCHER.replaceFrom(s, '/');
-        }
+//        if (ON_WINDOWS) {
+//            s = BACKSLASH_MATCHER.replaceFrom(s, '/');
+//        }
 
         return s.endsWith(filepath);
     }
@@ -69,9 +69,9 @@ public class FolderContentLoader extends ContentLoader {
     private String getDirPath(File file) throws IOException {
         String s = this.dir.getName();
         String s1 = file.getCanonicalPath();
-        if (ON_WINDOWS) {
-            s1 = BACKSLASH_MATCHER.replaceFrom(s1, '/');
-        }
+//        if (ON_WINDOWS) {
+//            s1 = BACKSLASH_MATCHER.replaceFrom(s1, '/');
+//        }
 
         String[] split = s1.split(this.addonFolder.getName() + "/" + s + "/", 2);
         if (split.length < 2) {

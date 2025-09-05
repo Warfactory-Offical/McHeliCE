@@ -947,7 +947,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
 
         if(this.getInfo().nukeYield > 0 && ModCompatManager.isLoaded(ModCompatManager.MODID_HBM)) {
             if(!this.getInfo().nukeEffectOnly) {
-                world.spawnEntity((Entity) MCH_HBMUtil.EntityNukeExplosionMK5_statFac(world, this.getInfo().nukeYield, this.posX + 0.5, this.posY + 0.5, this.posZ + 0.5));
+                world.spawnEntity(MCH_HBMUtil.EntityNukeExplosionMK5_statFac(world, this.getInfo().nukeYield, this.posX + 0.5, this.posY + 0.5, this.posZ + 0.5));
             }
             MCH_HBMUtil.EntityNukeTorex_statFac(world, this.posX + 0.5, this.posY + 0.5, this.posZ + 0.5, (float) this.getInfo().nukeYield);
         }
