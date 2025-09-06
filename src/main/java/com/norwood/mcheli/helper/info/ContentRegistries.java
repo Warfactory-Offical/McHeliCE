@@ -6,10 +6,10 @@ import com.google.common.collect.Multimap;
 import com.norwood.mcheli.MCH_BaseInfo;
 import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.MCH_MOD;
+import com.norwood.mcheli.helicopter.MCH_HeliInfo;
 import com.norwood.mcheli.helper.addon.AddonManager;
 import com.norwood.mcheli.helper.addon.AddonPack;
 import com.norwood.mcheli.helper.addon.BuiltinAddonPack;
-import com.norwood.mcheli.helicopter.MCH_HeliInfo;
 import com.norwood.mcheli.hud.MCH_Hud;
 import com.norwood.mcheli.plane.MCP_PlaneInfo;
 import com.norwood.mcheli.tank.MCH_TankInfo;
@@ -22,8 +22,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 public class ContentRegistries {
+    private static final Pattern PATH_SPLIT = Pattern.compile("[/\\\\]+");
     private static ContentRegistry<MCH_HeliInfo> REGISTORY_HELI = null;
     private static ContentRegistry<MCP_PlaneInfo> REGISTORY_PLANE = null;
     private static ContentRegistry<MCH_TankInfo> REGISTORY_TANK = null;
@@ -31,6 +33,19 @@ public class ContentRegistries {
     private static ContentRegistry<MCH_WeaponInfo> REGISTORY_WEAPON = null;
     private static ContentRegistry<MCH_ThrowableInfo> REGISTORY_THROWABLE = null;
     private static ContentRegistry<MCH_Hud> REGISTORY_HUD = null;
+
+    private static String[] splitPath(String filepath) {
+        String norm = filepath.replace('\\', '/');
+        while (norm.startsWith("/")) norm = norm.substring(1);
+        return PATH_SPLIT.split(norm);
+    }
+
+    private static int indexOf(String[] parts, String needle) {
+        for (int i = 0; i < parts.length; i++) {
+            if (needle.equals(parts[i])) return i;
+        }
+        return -1;
+    }
 
     public static ContentRegistry<MCH_HeliInfo> heli() {
         return REGISTORY_HELI;
@@ -60,6 +75,7 @@ public class ContentRegistries {
         return REGISTORY_HUD;
     }
 
+    @SuppressWarnings("unchecked")
     public static <T extends MCH_BaseInfo> ContentRegistry<T> get(Class<T> clazz) {
         if (clazz == MCH_HeliInfo.class) {
             return (ContentRegistry<T>) REGISTORY_HELI;
@@ -76,7 +92,7 @@ public class ContentRegistries {
         } else if (clazz == MCH_Hud.class) {
             return (ContentRegistry<T>) REGISTORY_HUD;
         } else {
-            throw new RuntimeException("Unknown type:" + clazz);
+            throw new RuntimeException("Unknown type: " + clazz);
         }
     }
 
@@ -129,7 +145,9 @@ public class ContentRegistries {
         return packLoader.load();
     }
 
-    private static <T extends MCH_BaseInfo> ContentRegistry<T> parseContents(Class<T> clazz, String dir, Collection<ContentLoader.ContentEntry> values) {
+    private static <T extends MCH_BaseInfo> ContentRegistry<T> parseContents(Class<T> clazz, String dir,
+                                                                             Collection<ContentLoader.ContentEntry> values) {
+
         ContentRegistry.Builder<T> builder = ContentRegistry.builder(clazz, dir);
         MCH_MOD.proxy.onLoadStartContents(dir, values.size());
 
@@ -145,34 +163,29 @@ public class ContentRegistries {
 
     public static ContentLoader getPackLoader(AddonPack pack, Predicate<String> fileFilter) {
         String loaderVersion = pack.getLoaderVersion();
-        return pack.getFile().isDirectory()
-                ? new FolderContentLoader(pack.getDomain(), pack.getFile(), loaderVersion, fileFilter)
-                : new FileContentLoader(pack.getDomain(), pack.getFile(), loaderVersion, fileFilter);
+        return pack.getFile().isDirectory() ? new FolderContentLoader(pack.getDomain(), pack.getFile(), loaderVersion, fileFilter) :
+               new FileContentLoader(pack.getDomain(), pack.getFile(), loaderVersion, fileFilter);
     }
 
     private static boolean filter(String filepath) {
-        String[] split = filepath.split("/");
-        String lootDir = split.length >= 2 ? split[0] : "";
-        if (lootDir.equals("assets") && split.length == 4) {
-            String modDir = split[1];
-            String infoDir = split[2];
-            return modDir.equals("mcheli") && MCH_MOD.proxy.canLoadContentDirName(infoDir);
-        } else {
-            return false;
-        }
+        String[] parts = splitPath(filepath);
+        int i = indexOf(parts, "assets");
+        if (i < 0) return false;
+        if (parts.length < i + 4) return false;
+        String modDir = parts[i + 1];
+        String infoDir = parts[i + 2];
+        return "mcheli".equals(modDir) && MCH_MOD.proxy.canLoadContentDirName(infoDir);
     }
 
     private static Predicate<String> getFilterOnly(String dir) {
         return filepath -> {
-            String[] split = filepath.split("/");
-            String lootDir = split.length >= 2 ? split[0] : "";
-            if (lootDir.equals("assets") && split.length == 4) {
-                String modDir = split[1];
-                String infoDir = split[2];
-                return modDir.equals("mcheli") && dir.equals(infoDir);
-            } else {
-                return false;
-            }
+            String[] parts = splitPath(filepath);
+            int i = indexOf(parts, "assets");
+            if (i < 0) return false;
+            if (parts.length < i + 4) return false;
+            String modDir = parts[i + 1];
+            String infoDir = parts[i + 2];
+            return "mcheli".equals(modDir) && dir.equals(infoDir);
         };
     }
 }
