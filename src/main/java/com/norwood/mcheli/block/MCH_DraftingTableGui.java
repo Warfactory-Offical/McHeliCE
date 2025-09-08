@@ -17,6 +17,7 @@ import com.norwood.mcheli.wrapper.W_McClient;
 import com.norwood.mcheli.wrapper.modelloader.W_ModelCustom;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -31,14 +32,18 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MCH_DraftingTableGui extends W_GuiContainer {
+    private GuiTextField searchField;
+
     public static final int RECIPE_HELI = 0;
     public static final int RECIPE_PLANE = 1;
     public static final int RECIPE_VEHICLE = 2;
@@ -96,6 +101,7 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
     }
 
     public void initGui() {
+        Keyboard.enableRepeatEvents(true);
         super.initGui();
         this.buttonList.clear();
         this.screenButtonList.clear();
@@ -112,11 +118,13 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
         btnVehicle.enabled = MCH_VehicleInfoManager.getInstance().getRecipeListSize() > 0;
         btnTank.enabled = MCH_TankInfoManager.getInstance().getRecipeListSize() > 0;
         btnItem.enabled = MCH_ItemRecipe.getInstance().getRecipeListSize() > 0;
+        //btnShip.enabled = MCH_ShipInfoManager.getInstance().getRecipeListSize() > 0;
         list.add(btnHeli);
         list.add(btnPlane);
         list.add(btnVehicle);
         list.add(btnTank);
         list.add(btnItem);
+        //list.add(btnShip);
         this.buttonCreate = new GuiButton(30, this.guiLeft + 120, this.guiTop + 89, 50, 20, "Create");
         this.buttonPrev = new GuiButton(21, this.guiLeft + 120, this.guiTop + 111, 36, 20, "<<");
         this.buttonNext = new GuiButton(20, this.guiLeft + 155, this.guiTop + 111, 35, 20, ">>");
@@ -148,24 +156,44 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
             this.buttonList.addAll(list);
         }
 
+        //search stuff
+        int x = this.guiLeft + 10;
+        int yy = this.guiTop + 5;
+        searchField = new GuiTextField(0, this.fontRenderer, x, yy, 100, 12);
+        searchField.setMaxStringLength(50);
+        searchField.setEnableBackgroundDrawing(true);
+        searchField.setVisible(true);
+        searchField.setFocused(false);
+
         this.switchScreen(0);
         initModelTransform();
         modelRotX = 180.0F;
         modelRotY = 90.0F;
-        if (MCH_ItemRecipe.getInstance().getRecipeListSize() > 0) {
-            this.switchRecipeList(MCH_ItemRecipe.getInstance());
-        } else if (MCH_HeliInfoManager.getInstance().getRecipeListSize() > 0) {
-            this.switchRecipeList(MCH_HeliInfoManager.getInstance());
-        } else if (MCP_PlaneInfoManager.getInstance().getRecipeListSize() > 0) {
-            this.switchRecipeList(MCP_PlaneInfoManager.getInstance());
-        } else if (MCH_VehicleInfoManager.getInstance().getRecipeListSize() > 0) {
-            this.switchRecipeList(MCH_VehicleInfoManager.getInstance());
-        } else if (MCH_TankInfoManager.getInstance().getRecipeListSize() > 0) {
-            this.switchRecipeList(MCH_TankInfoManager.getInstance());
-        } else {
-            this.switchRecipeList(MCH_ItemRecipe.getInstance());
+
+        //default behavior
+        if (searchField.getText().trim().isEmpty()) {
+            // it's empty, give our default results
+            if (MCH_ItemRecipe.getInstance().getRecipeListSize() > 0) {
+                this.switchRecipeList(MCH_ItemRecipe.getInstance());
+            } else if (MCH_HeliInfoManager.getInstance().getRecipeListSize() > 0) {
+                this.switchRecipeList(MCH_HeliInfoManager.getInstance());
+            } else if (MCP_PlaneInfoManager.getInstance().getRecipeListSize() > 0) {
+                this.switchRecipeList(MCP_PlaneInfoManager.getInstance());
+            } else if (MCH_VehicleInfoManager.getInstance().getRecipeListSize() > 0) {
+                this.switchRecipeList(MCH_VehicleInfoManager.getInstance());
+            } else if (MCH_TankInfoManager.getInstance().getRecipeListSize() > 0) {
+                this.switchRecipeList(MCH_TankInfoManager.getInstance());
+            }
+            //else if (MCH_ShipInfoManager.getInstance().getRecipeListSize() > 0) {
+            //    this.switchRecipeList(MCH_ShipInfoManager.getInstance());
+            //}
+            else {
+                this.switchRecipeList(MCH_ItemRecipe.getInstance());
+            }
         }
+
     }
+
 
     public void updateListSliderSize(int listSize) {
         int s = listSize / 2;
@@ -207,12 +235,21 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
     public void setCurrentRecipe(MCH_CurrentRecipe currentRecipe) {
         modelPosX = 0.0F;
         modelPosY = 0.0F;
-        if (this.current == null || currentRecipe == null || !this.current.recipe.getRecipeOutput().isItemEqual(currentRecipe.recipe.getRecipeOutput())) {
+
+        if (currentRecipe == null) {
+            this.current = null;
+            this.drawFace = 0; // Reset drawFace
+            return;
+        }
+
+        this.current = currentRecipe;
+
+        if(this.current == null || currentRecipe == null || !this.current.recipe.getRecipeOutput().isItemEqual(currentRecipe.recipe.getRecipeOutput())) {
             this.drawFace = 0;
         }
 
         this.current = currentRecipe;
-        if (this.getScreenId() == 0 && this.current != null && this.current.getDescMaxPage() > 1) {
+        if(this.getScreenId() == 0 && this.current != null && this.current.getDescMaxPage() > 1) {
             W_GuiButton.setVisible(this.buttonNextPage, true);
             W_GuiButton.setVisible(this.buttonPrevPage, true);
         } else {
@@ -220,7 +257,6 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
             W_GuiButton.setVisible(this.buttonPrevPage, false);
         }
 
-        this.updateEnableCreateButton();
     }
 
     public MCH_IRecipeList getCurrentList() {
@@ -287,6 +323,15 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
                         this.switchRecipeList(MCH_ItemRecipe.getInstance());
                         this.switchScreen(1);
                     }
+
+                    //case 15 -> {
+                    //    initModelTransform();
+                    //    modelRotX = 90.0F;
+                    //    modelRotY = 180.0F;
+                    //    this.switchRecipeList(MCH_ShipInfoManager.getInstance());
+                    //    this.switchScreen(1);
+                    //}
+
                     case 20 -> {
                         int page = this.current.getDescCurrentPage();
                         if (this.current.isCurrentPageTexture()) {
@@ -333,6 +378,44 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
         }
     }
 
+    private boolean listContainsSearch(MCH_IRecipeList list, String searchText) {
+        searchText = searchText.toLowerCase();
+        for (int i = 0; i < list.getRecipeListSize(); i++) {
+            IRecipe r = list.getRecipe(i);
+            if (r != null && r.getRecipeOutput() != null && r.getRecipeOutput().getDisplayName().toLowerCase().contains(searchText)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public class FilteredRecipeList implements MCH_IRecipeList {
+        private final List<IRecipe> filtered;
+
+        public FilteredRecipeList(MCH_IRecipeList base, String searchText) {
+            filtered = new ArrayList<>();
+            for (int i = 0; i < base.getRecipeListSize(); i++) {
+                IRecipe r = base.getRecipe(i);
+                if (r != null && r.getRecipeOutput() != null) {
+                    String name = r.getRecipeOutput().getDisplayName();
+                    if (name != null && name.toLowerCase().contains(searchText.toLowerCase())) {
+                        filtered.add(r);
+                    }
+                }
+            }
+        }
+
+        @Override
+        public int getRecipeListSize() {
+            return filtered.size();
+        }
+
+        @Override
+        public IRecipe getRecipe(int index) {
+            return filtered.get(index);
+        }
+    }
+
     private void updateEnableCreateButton() {
         MCH_DraftingTableGuiContainer container = (MCH_DraftingTableGuiContainer) this.inventorySlots;
         this.buttonCreate.enabled = false;
@@ -346,7 +429,94 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
     }
 
     protected void keyTyped(char par1, int keycode) throws IOException {
-        if (keycode == 1 || keycode == W_KeyBinding.getKeyCode(Minecraft.getMinecraft().gameSettings.keyBindInventory)) {
+
+        //search bar shit
+        if (searchField.textboxKeyTyped(par1, keycode)) {
+
+            String searchText = searchField.getText().trim();
+
+            if (searchText.isEmpty()) {
+                // Search field is empty, reset to default or ignore
+                return;
+            }
+
+            //attempt 2
+            //String searchText = searchField.getText();
+
+            // Try each recipe list to find the first that matches the filter
+            if (listContainsSearch(MCH_ItemRecipe.getInstance(), searchText)) {
+                this.switchRecipeList(MCH_ItemRecipe.getInstance());
+            } else if (listContainsSearch(MCH_HeliInfoManager.getInstance(), searchText)) {
+                this.switchRecipeList(MCH_HeliInfoManager.getInstance());
+            } else if (listContainsSearch(MCP_PlaneInfoManager.getInstance(), searchText)) {
+                this.switchRecipeList(MCP_PlaneInfoManager.getInstance());
+            } else if (listContainsSearch(MCH_VehicleInfoManager.getInstance(), searchText)) {
+                this.switchRecipeList(MCH_VehicleInfoManager.getInstance());
+            } else if (listContainsSearch(MCH_TankInfoManager.getInstance(), searchText)) {
+                this.switchRecipeList(MCH_TankInfoManager.getInstance());
+            }
+            //else if (listContainsSearch(MCH_ShipInfoManager.getInstance(), searchText)) {
+            //    this.switchRecipeList(MCH_ShipInfoManager.getInstance());
+            //}
+            //its shit code but it works
+
+            // Try filtering each manager in order
+            for (MCH_IRecipeList baseList : Arrays.asList(
+                    MCH_ItemRecipe.getInstance(),
+                    MCH_HeliInfoManager.getInstance(),
+                    MCP_PlaneInfoManager.getInstance(),
+                    MCH_VehicleInfoManager.getInstance(),
+                    MCH_TankInfoManager.getInstance()))
+
+                    //MCH_TankInfoManager.getInstance(),
+                    //MCH_ShipInfoManager.getInstance()))
+                {
+
+                FilteredRecipeList filtered = new FilteredRecipeList(baseList, searchText);
+                if (filtered.getRecipeListSize() > 0) {
+                    this.switchRecipeList(filtered);
+                    break;
+                }
+            }
+
+            return; // Prevent other key logic when typing in search bar
+
+
+            // Get the search text
+            //String searchText = searchField.getText().toLowerCase();
+//
+            //// Filter the recipes
+            //List<IRecipe> filteredRecipes = new ArrayList<>();
+            //if (originalRecipes != null) { // Ensure originalRecipes is not null
+            //   for (IRecipe recipe : originalRecipes) {
+            //      if (recipe != null && recipe.getRecipeOutput() != null) { // Null checks for recipe and its output
+            //         String displayName = recipe.getRecipeOutput().getDisplayName();
+            //         if (displayName != null && displayName.toLowerCase().contains(searchText)) {
+            //            filteredRecipes.add(recipe);
+            //         }
+            //      }
+            //   }
+            //}
+            //currently our search bar is crashing the game so we're going to comment this stuff out for now.
+
+            // Update the filteredRecipeList
+            //filteredRecipeList = new MCH_IRecipeList() {
+            //   @Override
+            //   public int getRecipeListSize() {
+            //      return filteredRecipes.size();
+            //   }
+//
+            //   @Override
+            //   public IRecipe getRecipe(int index) {
+            //      return filteredRecipes.get(index);
+            //   }
+            //};
+            //crashing the game
+
+            // Switch to the filtered list
+            //this.switchRecipeList(filteredRecipeList);
+            //return; // Prevent default behavior when typing in the search box
+        } else if (keycode == 1 || keycode == W_KeyBinding.getKeyCode(Minecraft.getMinecraft().gameSettings.keyBindInventory)) {
             if (this.getScreenId() == 0) {
                 this.mc.player.closeScreen();
             } else {
@@ -371,6 +541,12 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
                 this.listSlider.scrollUp(1.0F);
             }
         }
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        searchField.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     protected void drawGuiContainerForegroundLayer(int mx, int my) {
