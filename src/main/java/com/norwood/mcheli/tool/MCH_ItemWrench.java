@@ -9,6 +9,7 @@ import com.norwood.mcheli.wrapper.W_WorldFunc;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLogic;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -25,12 +26,14 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
@@ -45,6 +48,14 @@ public class MCH_ItemWrench extends W_Item {
         this.maxStackSize = 1;
         this.setMaxDamage(material.getMaxUses());
         this.damageVsEntity = 4.0F + material.getAttackDamage();
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(TextFormatting.YELLOW + "Shift+Right click to change vehicle skin!");
+
+        super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
     public static float getUseAnimSmooth(ItemStack stack, float partialTicks) {
