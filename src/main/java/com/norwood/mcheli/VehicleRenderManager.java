@@ -56,6 +56,7 @@ public class VehicleRenderManager {
 
             render.doRender(entity, d0 - d3, d1 - d4, d2 - d5, f, partialTicks);
 
+            Minecraft.getMinecraft().entityRenderer.disableLightmap();
 
         }
     }
