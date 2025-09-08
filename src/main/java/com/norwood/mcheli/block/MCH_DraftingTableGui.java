@@ -756,6 +756,9 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
             RenderHelper.enableGUIStandardItemLighting();
             this.drawModel(partialTicks);
         }
+
+        searchField.drawTextBox();
+
     }
 
     public void drawModel(float partialTicks) {
