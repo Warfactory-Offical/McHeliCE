@@ -48,6 +48,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
     public int inventorySize;
     public boolean isUAV;
     public boolean isSmallUAV;
+    public boolean isNewUAV;
     public boolean isTargetDrone;
     public float autoPilotRot;
     public float onGroundPitch;

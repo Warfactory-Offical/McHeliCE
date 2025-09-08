@@ -9,6 +9,7 @@ import com.norwood.mcheli.wrapper.W_WorldFunc;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.BlockSponge;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityMinecartEmpty;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,7 +21,10 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.*;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -28,6 +32,27 @@ import java.util.List;
 
 public abstract class MCH_ItemAircraft extends W_Item {
     private static final boolean isRegistedDispenseBehavior = false;
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        MCH_AircraftInfo info = this.getAircraftInfo().category.equals("zzz") ? null : this.getAircraftInfo();
+        MCH_EntityAircraft ac = createAircraft(worldIn, -1.0D, -1.0D, -1.0D, stack);
+
+        if (info != null) {
+            tooltip.add(TextFormatting.YELLOW + "Category: " + info.category);
+            // tooltip.add(TextFormatting.DARK_PURPLE + "Weapon: " + info.weaponSetList);
+        }
+
+        if (ac != null && ac.isNewUAV()) {
+            tooltip.add(TextFormatting.RED + "DANGER!");
+            tooltip.add(TextFormatting.RED + "This drone has a new UAV mechanic!");
+            tooltip.add(TextFormatting.RED + "It may contain a lot of bugs!");
+            tooltip.add(TextFormatting.RED + "Clear your inventory before use!");
+        }
+
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+    }
 
     public MCH_ItemAircraft(int i) {
         super(i);

@@ -558,6 +558,10 @@ public abstract class MCH_EntityAircraft
         return this.getAcInfo() != null && this.getAcInfo().isUAV;
     }
 
+    public boolean isNewUAV() {
+        return (getAcInfo() != null && (getAcInfo()).isNewUAV);
+    }
+
     public boolean isSmallUAV() {
         return this.getAcInfo() != null && this.getAcInfo().isSmallUAV;
     }
