@@ -32,6 +32,9 @@ import com.norwood.mcheli.particles.MCH_ParticlesUtil;
 import com.norwood.mcheli.plane.MCP_EntityPlane;
 import com.norwood.mcheli.plane.MCP_PlaneInfo;
 import com.norwood.mcheli.plane.MCP_RenderPlane;
+import com.norwood.mcheli.ship.MCH_EntityShip;
+import com.norwood.mcheli.ship.MCH_RenderShip;
+import com.norwood.mcheli.ship.MCH_ShipInfo;
 import com.norwood.mcheli.tank.MCH_EntityTank;
 import com.norwood.mcheli.tank.MCH_RenderTank;
 import com.norwood.mcheli.tank.MCH_TankInfo;
@@ -107,6 +110,7 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
         RenderingRegistry.registerEntityRenderingHandler(MCH_EntitySeat.class, MCH_RenderTest.factory(0.0F, 0.3125F, 0.0F, "seat"));
         RenderingRegistry.registerEntityRenderingHandler(MCH_EntityHeli.class, MCH_RenderHeli.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(MCP_EntityPlane.class, MCP_RenderPlane.FACTORY);
+        RenderingRegistry.registerEntityRenderingHandler(MCH_EntityShip.class, MCH_RenderShip.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(MCH_EntityTank.class, MCH_RenderTank.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(MCH_EntityGLTD.class, MCH_RenderGLTD.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(MCH_EntityChain.class, MCH_RenderChain.FACTORY);
@@ -195,6 +199,13 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
             System.out.println("[MCH-LOADER][PLANE] Loaded in " + ((end - start) / 1_000_000) + " ms");
         });
 
+        CompletableFuture<Void> shipFuture = CompletableFuture.runAsync(() -> {
+            long start = System.nanoTime();
+            ContentRegistries.ship().forEachValue(info -> this.registerModelsShip(info, false));
+            long end = System.nanoTime();
+            System.out.println("[MCH-LOADER][SHIP] Loaded in " + ((end - start) / 1_000_000) + " ms");
+        });
+
         CompletableFuture<Void> tankFuture = CompletableFuture.runAsync(() -> {
             long start = System.nanoTime();
             ContentRegistries.tank().forEachValue(info -> this.registerModelsTank(info, false));
@@ -233,7 +244,7 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
         });
 
         CompletableFuture<Void> allTasks = CompletableFuture.allOf(
-                heliFuture, planeFuture, tankFuture, vehicleFuture, bulletFuture, throwableFuture, uavFuture, miscFuture
+                heliFuture, planeFuture, shipFuture, tankFuture, vehicleFuture, bulletFuture, throwableFuture, uavFuture, miscFuture
         );
 
         MCH_ModelManager.load("blocks", "drafting_table");
@@ -290,6 +301,36 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
         }
 
         this.registerCommonPart("planes", info);
+        MCH_ModelManager.setForceReloadMode(false);
+    }
+
+    @Override
+    public void registerModelsShip(MCH_ShipInfo info, boolean reload) {
+        MCH_ModelManager.setForceReloadMode(reload);
+        info.model = MCH_ModelManager.load("ships", info.name);
+
+        for (MCH_AircraftInfo.DrawnPart n : info.nozzles) {
+            n.model = this.loadPartModel("ships", info.name, info.model, n.modelName);
+        }
+
+        for (MCH_ShipInfo.Rotor r : info.rotorList) {
+            r.model = this.loadPartModel("ships", info.name, info.model, r.modelName);
+
+            for (MCH_ShipInfo.Blade b : r.blades) {
+                b.model = this.loadPartModel("ships", info.name, info.model, b.modelName);
+            }
+        }
+
+        for (MCH_ShipInfo.Wing w : info.wingList) {
+            w.model = this.loadPartModel("ships", info.name, info.model, w.modelName);
+            if (w.pylonList != null) {
+                for (MCH_ShipInfo.Pylon p : w.pylonList) {
+                    p.model = this.loadPartModel("ships", info.name, info.model, p.modelName);
+                }
+            }
+        }
+
+        this.registerCommonPart("ships", info);
         MCH_ModelManager.setForceReloadMode(false);
     }
 

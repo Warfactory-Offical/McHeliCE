@@ -26,6 +26,9 @@ import com.norwood.mcheli.parachute.MCH_ItemParachute;
 import com.norwood.mcheli.plane.MCP_EntityPlane;
 import com.norwood.mcheli.plane.MCP_ItemPlane;
 import com.norwood.mcheli.plane.MCP_PlaneInfo;
+import com.norwood.mcheli.ship.MCH_EntityShip;
+import com.norwood.mcheli.ship.MCH_ItemShip;
+import com.norwood.mcheli.ship.MCH_ShipInfo;
 import com.norwood.mcheli.tank.MCH_EntityTank;
 import com.norwood.mcheli.tank.MCH_ItemTank;
 import com.norwood.mcheli.tank.MCH_TankInfo;
@@ -101,6 +104,7 @@ public class MCH_MOD {
     public static MCH_CreativeTabs creativeTabs;
     public static MCH_CreativeTabs creativeTabsHeli;
     public static MCH_CreativeTabs creativeTabsPlane;
+    public static MCH_CreativeTabs creativeTabsShip;
     public static MCH_CreativeTabs creativeTabsTank;
     public static MCH_CreativeTabs creativeTabsVehicle;
     public static MCH_DraftingTableBlock blockDraftingTable;
@@ -160,6 +164,25 @@ public class MCH_MOD {
             info.item.setMaxDamage(info.maxHp);
             if (info.canRide || !(info.ammoSupplyRange > 0.0F) && !(info.fuelSupplyRange > 0.0F)) {
                 registerItem(info.item, entry.getKey(), creativeTabsPlane);
+            } else {
+                registerItem(info.item, entry.getKey(), creativeTabs);
+            }
+
+            MCH_ItemAircraft.registerDispenseBehavior(info.item);
+            info.itemID = W_Item.getIdFromItem(info.item) - 256;
+            W_LanguageRegistry.addName(info.item, info.displayName);
+
+            for (String lang : info.displayNameLang.keySet()) {
+                W_LanguageRegistry.addNameForObject(info.item, lang, info.displayNameLang.get(lang));
+            }
+        }
+
+        for (Entry<String, MCH_ShipInfo> entry : ContentRegistries.ship().entries()) {
+            MCH_ShipInfo info = entry.getValue();
+            info.item = new MCH_ItemShip(info.itemID);
+            info.item.setMaxDamage(info.maxHp);
+            if (info.canRide || !(info.ammoSupplyRange > 0.0F) && !(info.fuelSupplyRange > 0.0F)) {
+                registerItem(info.item, entry.getKey(), creativeTabsShip);
             } else {
                 registerItem(info.item, entry.getKey(), creativeTabs);
             }
@@ -241,6 +264,7 @@ public class MCH_MOD {
         creativeTabs = new MCH_CreativeTabs("MC Heli Item");
         creativeTabsHeli = new MCH_CreativeTabs("MC Heli Helicopters");
         creativeTabsPlane = new MCH_CreativeTabs("MC Heli Planes");
+        creativeTabsShip = new MCH_CreativeTabs("MC Heli Ships");
         creativeTabsTank = new MCH_CreativeTabs("MC Heli Tanks");
         creativeTabsVehicle = new MCH_CreativeTabs("MC Heli Vehicles");
         proxy.loadConfig("config/mcheli.cfg");
@@ -302,6 +326,7 @@ public class MCH_MOD {
         creativeTabs.setFixedIconItem(MCH_Config.CreativeTabIcon.prmString);
         creativeTabsHeli.setFixedIconItem(MCH_Config.CreativeTabIconHeli.prmString);
         creativeTabsPlane.setFixedIconItem(MCH_Config.CreativeTabIconPlane.prmString);
+        creativeTabsShip.setFixedIconItem(MCH_Config.CreativeTabIconShip.prmString);
         creativeTabsTank.setFixedIconItem(MCH_Config.CreativeTabIconTank.prmString);
         creativeTabsVehicle.setFixedIconItem(MCH_Config.CreativeTabIconVehicle.prmString);
         proxy.readClientModList();
@@ -323,6 +348,8 @@ public class MCH_MOD {
         MCH_Entities.register(MCH_EntityHeli.class, "MCH.E.Heli", 101, this, 600, 10, true);
         MCH_Entities.register(MCH_EntityGLTD.class, "MCH.E.GLTD", 102, this, 600, 10, true);
         MCH_Entities.register(MCP_EntityPlane.class, "MCH.E.Plane", 103, this, 600, 10, true);
+        MCH_Entities.register(MCH_EntityShip.class, "MCH.E.Ship", 403, this, 600, 10, true);
+
         MCH_Entities.register(MCH_EntityChain.class, "MCH.E.Chain", 104, this, 600, 10, true);
         MCH_Entities.register(MCH_EntityHitBox.class, "MCH.E.PSeat", 105, this, 200, 10, true);
         MCH_Entities.register(MCH_EntityParachute.class, "MCH.E.Parachute", 106, this, 200, 10, true);

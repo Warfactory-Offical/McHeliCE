@@ -5,6 +5,8 @@ import com.norwood.mcheli.helicopter.MCH_HeliInfoManager;
 import com.norwood.mcheli.helicopter.MCH_ItemHeli;
 import com.norwood.mcheli.plane.MCP_ItemPlane;
 import com.norwood.mcheli.plane.MCP_PlaneInfoManager;
+import com.norwood.mcheli.ship.MCH_ItemShip;
+import com.norwood.mcheli.ship.MCH_ShipInfoManager;
 import com.norwood.mcheli.tank.MCH_ItemTank;
 import com.norwood.mcheli.tank.MCH_TankInfoManager;
 import com.norwood.mcheli.wrapper.W_GuiContainer;
@@ -34,6 +36,10 @@ public class MCH_GuiUavStation extends W_GuiContainer {
             MCH_AircraftInfo info = null;
             if (!item.isEmpty() && item.getItem() instanceof MCP_ItemPlane) {
                 info = MCP_PlaneInfoManager.getFromItem(item.getItem());
+            }
+
+            if (!item.isEmpty() && item.getItem() instanceof MCH_ItemShip) {
+                info = MCH_ShipInfoManager.getFromItem(item.getItem());
             }
 
             if (!item.isEmpty() && item.getItem() instanceof MCH_ItemHeli) {

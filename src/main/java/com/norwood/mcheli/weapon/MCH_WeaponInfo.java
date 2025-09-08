@@ -6,6 +6,7 @@ import com.norwood.mcheli.MCH_DamageFactor;
 import com.norwood.mcheli.helper.addon.AddonResourceLocation;
 import com.norwood.mcheli.helicopter.MCH_EntityHeli;
 import com.norwood.mcheli.plane.MCP_EntityPlane;
+import com.norwood.mcheli.ship.MCH_EntityShip;
 import com.norwood.mcheli.tank.MCH_EntityTank;
 import com.norwood.mcheli.vehicle.MCH_EntityVehicle;
 import com.norwood.mcheli.wrapper.W_Item;
@@ -737,6 +738,7 @@ public class MCH_WeaponInfo extends MCH_BaseInfo {
                         case "player" -> EntityPlayer.class;
                         case "heli", "helicopter" -> MCH_EntityHeli.class;
                         case "plane" -> MCP_EntityPlane.class;
+                        case "ship" -> MCH_EntityShip.class;
                         case "tank" -> MCH_EntityTank.class;
                         case "vehicle" -> MCH_EntityVehicle.class;
                         default -> c;

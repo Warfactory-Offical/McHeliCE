@@ -8,6 +8,7 @@ import com.norwood.mcheli.aircraft.MCH_RenderAircraft;
 import com.norwood.mcheli.gui.MCH_GuiSliderVertical;
 import com.norwood.mcheli.helicopter.MCH_HeliInfoManager;
 import com.norwood.mcheli.plane.MCP_PlaneInfoManager;
+import com.norwood.mcheli.ship.MCH_ShipInfoManager;
 import com.norwood.mcheli.tank.MCH_TankInfoManager;
 import com.norwood.mcheli.vehicle.MCH_VehicleInfoManager;
 import com.norwood.mcheli.wrapper.W_GuiButton;
@@ -110,6 +111,7 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
         List<GuiButton> list = this.screenButtonList.get(0);
         GuiButton btnHeli = new GuiButton(10, this.guiLeft + 20, this.guiTop + 20, 90, 20, "Helicopter List");
         GuiButton btnPlane = new GuiButton(11, this.guiLeft + 20, this.guiTop + 40, 90, 20, "Plane List");
+        GuiButton btnShip = new GuiButton(15, super.guiLeft + 20, super.guiTop + 120, 90, 20, "Ship List");
         GuiButton btnVehicle = new GuiButton(12, this.guiLeft + 20, this.guiTop + 60, 90, 20, "Vehicle List");
         GuiButton btnTank = new GuiButton(13, this.guiLeft + 20, this.guiTop + 80, 90, 20, "Tank List");
         GuiButton btnItem = new GuiButton(14, this.guiLeft + 20, this.guiTop + 100, 90, 20, "Item List");
@@ -118,13 +120,13 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
         btnVehicle.enabled = MCH_VehicleInfoManager.getInstance().getRecipeListSize() > 0;
         btnTank.enabled = MCH_TankInfoManager.getInstance().getRecipeListSize() > 0;
         btnItem.enabled = MCH_ItemRecipe.getInstance().getRecipeListSize() > 0;
-        //btnShip.enabled = MCH_ShipInfoManager.getInstance().getRecipeListSize() > 0;
+        btnShip.enabled = MCH_ShipInfoManager.getInstance().getRecipeListSize() > 0;
         list.add(btnHeli);
         list.add(btnPlane);
         list.add(btnVehicle);
         list.add(btnTank);
         list.add(btnItem);
-        //list.add(btnShip);
+        list.add(btnShip);
         this.buttonCreate = new GuiButton(30, this.guiLeft + 120, this.guiTop + 89, 50, 20, "Create");
         this.buttonPrev = new GuiButton(21, this.guiLeft + 120, this.guiTop + 111, 36, 20, "<<");
         this.buttonNext = new GuiButton(20, this.guiLeft + 155, this.guiTop + 111, 35, 20, ">>");
@@ -183,10 +185,9 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
                 this.switchRecipeList(MCH_VehicleInfoManager.getInstance());
             } else if (MCH_TankInfoManager.getInstance().getRecipeListSize() > 0) {
                 this.switchRecipeList(MCH_TankInfoManager.getInstance());
+            } else if (MCH_ShipInfoManager.getInstance().getRecipeListSize() > 0) {
+                this.switchRecipeList(MCH_ShipInfoManager.getInstance());
             }
-            //else if (MCH_ShipInfoManager.getInstance().getRecipeListSize() > 0) {
-            //    this.switchRecipeList(MCH_ShipInfoManager.getInstance());
-            //}
             else {
                 this.switchRecipeList(MCH_ItemRecipe.getInstance());
             }
@@ -324,13 +325,13 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
                         this.switchScreen(1);
                     }
 
-                    //case 15 -> {
-                    //    initModelTransform();
-                    //    modelRotX = 90.0F;
-                    //    modelRotY = 180.0F;
-                    //    this.switchRecipeList(MCH_ShipInfoManager.getInstance());
-                    //    this.switchScreen(1);
-                    //}
+                    case 15 -> {
+                        initModelTransform();
+                        modelRotX = 90.0F;
+                        modelRotY = 180.0F;
+                        this.switchRecipeList(MCH_ShipInfoManager.getInstance());
+                        this.switchScreen(1);
+                    }
 
                     case 20 -> {
                         int page = this.current.getDescCurrentPage();
@@ -454,10 +455,9 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
                 this.switchRecipeList(MCH_VehicleInfoManager.getInstance());
             } else if (listContainsSearch(MCH_TankInfoManager.getInstance(), searchText)) {
                 this.switchRecipeList(MCH_TankInfoManager.getInstance());
+            } else if (listContainsSearch(MCH_ShipInfoManager.getInstance(), searchText)) {
+                this.switchRecipeList(MCH_ShipInfoManager.getInstance());
             }
-            //else if (listContainsSearch(MCH_ShipInfoManager.getInstance(), searchText)) {
-            //    this.switchRecipeList(MCH_ShipInfoManager.getInstance());
-            //}
             //its shit code but it works
 
             // Try filtering each manager in order
@@ -466,10 +466,9 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
                     MCH_HeliInfoManager.getInstance(),
                     MCP_PlaneInfoManager.getInstance(),
                     MCH_VehicleInfoManager.getInstance(),
-                    MCH_TankInfoManager.getInstance()))
-
-                    //MCH_TankInfoManager.getInstance(),
-                    //MCH_ShipInfoManager.getInstance()))
+                    //MCH_TankInfoManager.getInstance()))
+                    MCH_TankInfoManager.getInstance(),
+                    MCH_ShipInfoManager.getInstance()))
                 {
 
                 FilteredRecipeList filtered = new FilteredRecipeList(baseList, searchText);

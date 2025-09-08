@@ -9,6 +9,7 @@ import com.norwood.mcheli.helicopter.MCH_HeliPacketHandler;
 import com.norwood.mcheli.lweapon.MCH_LightWeaponPacketHandler;
 import com.norwood.mcheli.multiplay.MCH_MultiplayPacketHandler;
 import com.norwood.mcheli.plane.MCP_PlanePacketHandler;
+import com.norwood.mcheli.ship.MCH_ShipPacketHandler;
 import com.norwood.mcheli.tank.MCH_TankPacketHandler;
 import com.norwood.mcheli.tool.MCH_ToolPacketHandler;
 import com.norwood.mcheli.uav.MCH_UavPacketHandler;
@@ -61,6 +62,7 @@ public class MCH_PacketHandler extends W_PacketHandler {
             case 537133072 -> MCH_UavPacketHandler.onPacketUavStatus(entityPlayer, data, handler);
             case 537395216 -> MCH_DraftingTablePacketHandler.onPacketCreate(entityPlayer, data, handler);
             case 537919504 -> MCH_TankPacketHandler.onPacket_PlayerControl(entityPlayer, data, handler);
+            case 536903698 -> MCH_ShipPacketHandler.onPacket_PlayerControl(entityPlayer, data, handler);
             default -> MCH_Lib.DbgLog(entityPlayer.world, "MCH_PacketHandler.onPacket invalid MSGID=0x%X(%d)", msgid, msgid);
         }
     }

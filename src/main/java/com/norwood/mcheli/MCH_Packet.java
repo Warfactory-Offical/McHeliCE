@@ -54,6 +54,7 @@ public abstract class MCH_Packet extends W_PacketBase {
     public static final int MSGID_HELI_NOTIFY_SYNC_STATUS = 268443696;
     public static final int MSGID_GLTD_PLAYER_CONTROL = 536887312;
     public static final int MSGID_PLANE_PLAYER_CONTROL = 536903696;
+    public static final int MSGID_SHIP_PLAYER_CONTROL = 536903698;
     public static final int MSGID_TANK_PLAYER_CONTROL = 537919504;
     public static final int MSGID_LW_PLAYER_CONTROL = 536936464;
     public static final int MSGID_VEHICLE_PLAYER_CONTROL = 537002000;

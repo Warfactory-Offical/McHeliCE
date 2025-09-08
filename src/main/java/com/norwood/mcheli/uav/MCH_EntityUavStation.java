@@ -14,6 +14,9 @@ import com.norwood.mcheli.multiplay.MCH_Multiplay;
 import com.norwood.mcheli.plane.MCP_ItemPlane;
 import com.norwood.mcheli.plane.MCP_PlaneInfo;
 import com.norwood.mcheli.plane.MCP_PlaneInfoManager;
+import com.norwood.mcheli.ship.MCH_ItemShip;
+import com.norwood.mcheli.ship.MCH_ShipInfo;
+import com.norwood.mcheli.ship.MCH_ShipInfoManager;
 import com.norwood.mcheli.tank.MCH_ItemTank;
 import com.norwood.mcheli.tank.MCH_TankInfo;
 import com.norwood.mcheli.tank.MCH_TankInfoManager;
@@ -509,6 +512,17 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
                             ac = null;
                         } else {
                             ac = ((MCP_ItemPlane) item).createAircraft(this.world, x, y, z, itemStack);
+                        }
+                    }
+                }
+
+                if (item instanceof MCH_ItemShip) {
+                    MCH_ShipInfo si = MCH_ShipInfoManager.getFromItem(item);
+                    if (si != null && si.isUAV) {
+                        if (!si.isSmallUAV && this.getKind() == 2) {
+                            ac = null;
+                        } else {
+                            ac = ((MCH_ItemShip) item).createAircraft(this.world, x, y, z, itemStack);
                         }
                     }
                 }

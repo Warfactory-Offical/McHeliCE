@@ -19,6 +19,9 @@ import com.norwood.mcheli.multiplay.MCH_MultiplayClient;
 import com.norwood.mcheli.plane.MCP_ClientPlaneTickHandler;
 import com.norwood.mcheli.plane.MCP_EntityPlane;
 import com.norwood.mcheli.plane.MCP_GuiPlane;
+import com.norwood.mcheli.ship.MCH_GuiShip;
+import com.norwood.mcheli.ship.MCH_ClientShipTickHandler;
+import com.norwood.mcheli.ship.MCH_EntityShip;
 import com.norwood.mcheli.tank.MCH_ClientTankTickHandler;
 import com.norwood.mcheli.tank.MCH_EntityTank;
 import com.norwood.mcheli.tank.MCH_GuiTank;
@@ -66,6 +69,7 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
     public final MCH_GuiCommon gui_Common;
     public final MCH_Gui gui_Heli;
     public final MCH_Gui gui_Plane;
+    public final MCH_Gui gui_Ship;
     public final MCH_Gui gui_Tank;
     public final MCH_Gui gui_GLTD;
     public final MCH_Gui gui_Vehicle;
@@ -90,6 +94,7 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
         this.gui_Common = new MCH_GuiCommon(minecraft);
         this.gui_Heli = new MCH_GuiHeli(minecraft);
         this.gui_Plane = new MCP_GuiPlane(minecraft);
+        this.gui_Ship = new MCH_GuiShip(minecraft);
         this.gui_Tank = new MCH_GuiTank(minecraft);
         this.gui_GLTD = new MCH_GuiGLTD(minecraft);
         this.gui_Vehicle = new MCH_GuiVehicle(minecraft);
@@ -99,11 +104,12 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
         this.gui_RngFndr = new MCH_GuiRangeFinder(minecraft);
         this.gui_EMarker = new MCH_GuiTargetMarker(minecraft);
         this.gui_Title = new MCH_GuiTitle(minecraft);
-        this.guis = new MCH_Gui[]{this.gui_RngFndr, this.gui_LWeapon, this.gui_Heli, this.gui_Plane, this.gui_Tank, this.gui_GLTD, this.gui_Vehicle};
+        this.guis = new MCH_Gui[]{this.gui_RngFndr, this.gui_LWeapon, this.gui_Heli, this.gui_Plane, this.gui_Ship, this.gui_Tank, this.gui_GLTD, this.gui_Vehicle};
         this.guiTicks = new MCH_Gui[]{
                 this.gui_Common,
                 this.gui_Heli,
                 this.gui_Plane,
+                this.gui_Ship,
                 this.gui_Tank,
                 this.gui_GLTD,
                 this.gui_Vehicle,
@@ -117,6 +123,7 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
         this.ticks = new MCH_ClientTickHandlerBase[]{
                 new MCH_ClientHeliTickHandler(minecraft, config),
                 new MCP_ClientPlaneTickHandler(minecraft, config),
+                new MCH_ClientShipTickHandler(minecraft, config),
                 new MCH_ClientTankTickHandler(minecraft, config),
                 new MCH_ClientGLTDTickHandler(minecraft, config),
                 new MCH_ClientVehicleTickHandler(minecraft, config),
@@ -333,6 +340,7 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
                 MCH_EntityAircraft ac = null;
                 if (player.getRidingEntity() instanceof MCH_EntityHeli
                         || player.getRidingEntity() instanceof MCP_EntityPlane
+                        || player.getRidingEntity() instanceof MCH_EntityShip
                         || player.getRidingEntity() instanceof MCH_EntityTank) {
                     ac = (MCH_EntityAircraft) player.getRidingEntity();
                 } else if (player.getRidingEntity() instanceof MCH_EntityUavStation) {
@@ -346,9 +354,11 @@ public class MCH_ClientCommonTickHandler extends W_TickHandler {
                     stickMode = MCH_Config.MouseControlStickModeHeli.prmBool;
                 }
 
-                if (ac instanceof MCP_EntityPlane) {
+                if (ac instanceof MCP_EntityPlane || ac instanceof MCH_EntityShip) { //do the stanky leg
                     stickMode = MCH_Config.MouseControlStickModePlane.prmBool;
                 }
+
+
 
                 for (int i = 0; i < 10 && prevTick > partialTicks; i++) {
                     prevTick--;

@@ -6,6 +6,7 @@ import com.norwood.mcheli.helper.entity.IEntitySinglePassenger;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.helicopter.MCH_EntityHeli;
 import com.norwood.mcheli.plane.MCP_EntityPlane;
+import com.norwood.mcheli.ship.MCH_EntityShip;
 import com.norwood.mcheli.tank.MCH_EntityTank;
 import com.norwood.mcheli.vehicle.MCH_EntityVehicle;
 import net.minecraft.command.CommandException;
@@ -42,7 +43,7 @@ public class MCH_Multiplay {
     };
 
     public static boolean canSpotEntityWithFilter(int filter, Entity entity) {
-        if (entity instanceof MCP_EntityPlane) {
+        if (entity instanceof MCP_EntityPlane || entity instanceof MCH_EntityShip) { //spaghetti
             return (filter & 32) != 0;
         } else if (entity instanceof MCH_EntityHeli) {
             return (filter & 16) != 0;
