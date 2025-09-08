@@ -2,6 +2,7 @@ package com.norwood.mcheli.wrapper;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
@@ -31,5 +32,10 @@ public class W_Item extends Item {
 
     public static @NotNull Item getItemFromBlock(@NotNull Block block) {
         return Item.getItemFromBlock(block);
+    }
+
+    public boolean canApplyAtEnchantingTable(ItemStack stack, net.minecraft.enchantment.Enchantment enchantment)
+    {
+        return false;
     }
 }
