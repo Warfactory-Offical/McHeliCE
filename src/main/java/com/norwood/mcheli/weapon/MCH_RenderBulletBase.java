@@ -8,7 +8,7 @@ import com.norwood.mcheli.wrapper.W_WorldFunc;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.entity.RenderManager;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public abstract class MCH_RenderBulletBase<T extends W_Entity> extends W_Render<T> {
     protected MCH_RenderBulletBase(RenderManager renderManager) {
@@ -27,21 +27,21 @@ public abstract class MCH_RenderBulletBase<T extends W_Entity> extends W_Render<
                 }
             }
 
-            GL11.glColor4f(c.r, c.g, c.b, c.a);
+             GlStateManager.color(c.r, c.g, c.b, c.a);
         } else {
-            GL11.glColor4f(0.75F, 0.75F, 0.75F, 1.0F);
+             GlStateManager.color(0.75F, 0.75F, 0.75F, 1.0F);
         }
 
-        GL11.glAlphaFunc(516, 0.001F);
-        GL11.glEnable(2884);
-        GL11.glEnable(3042);
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.001F);
+        GlStateManager.enableCull();
+        GlStateManager.enableBlend();
         int srcBlend = GL11.glGetInteger(3041);
         int dstBlend = GL11.glGetInteger(3040);
-        GL11.glBlendFunc(770, 771);
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         this.renderBullet(e, var2, var4, var6, var8, var9);
-        GL11.glColor4f(0.75F, 0.75F, 0.75F, 1.0F);
+         GlStateManager.color(0.75F, 0.75F, 0.75F, 1.0F);
         GL11.glBlendFunc(srcBlend, dstBlend);
-        GL11.glDisable(3042);
+        GlStateManager.disableBlend();
     }
 
     public void renderModel(MCH_EntityBaseBullet e) {

@@ -17,12 +17,13 @@ import com.norwood.mcheli.wrapper.W_WorldFunc;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -119,18 +120,18 @@ public abstract class MCH_HudItem extends Gui {
         float f2 = (par4 & 0xFF) / 255.0F;
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
-        GL11.glEnable(3042);
-        GL11.glDisable(3553);
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
         W_OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-        GL11.glColor4f(f, f1, f2, f3);
+         GlStateManager.color(f, f1, f2, f3);
         builder.begin(7, DefaultVertexFormats.POSITION);
         builder.pos(par0, par3, 0.0).endVertex();
         builder.pos(par2, par3, 0.0).endVertex();
         builder.pos(par2, par1, 0.0).endVertex();
         builder.pos(par0, par1, 0.0).endVertex();
         tessellator.draw();
-        GL11.glEnable(3553);
-        GL11.glDisable(3042);
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
     }
 
     public static void updateVarMap(MCH_EntityAircraft ac, MCH_WeaponSet ws) {
@@ -466,9 +467,9 @@ public abstract class MCH_HudItem extends Gui {
             int textureHeight
     ) {
         W_McClient.MOD_bindTexture("textures/gui/" + name + ".png");
-        GL11.glPushMatrix();
-        GL11.glTranslated(left + width / 2.0, top + height / 2.0, 0.0);
-        GL11.glRotatef(rot, 0.0F, 0.0F, 1.0F);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(left + width / 2.0, top + height / 2.0, 0.0);
+        GlStateManager.rotate(rot, 0.0F, 0.0F, 1.0F);
         float fx = (float) (1.0 / textureWidth);
         float fy = (float) (1.0 / textureHeight);
         Tessellator tessellator = Tessellator.getInstance();
@@ -479,7 +480,7 @@ public abstract class MCH_HudItem extends Gui {
         builder.pos(width / 2.0, -height / 2.0, this.zLevel).tex((uLeft + uWidth) * fx, vTop * fy).endVertex();
         builder.pos(-width / 2.0, -height / 2.0, this.zLevel).tex(uLeft * fx, vTop * fy).endVertex();
         tessellator.draw();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     public void drawLine(double[] line, int color) {
@@ -487,10 +488,10 @@ public abstract class MCH_HudItem extends Gui {
     }
 
     public void drawLine(double[] line, int color, int mode) {
-        GL11.glPushMatrix();
-        GL11.glEnable(3042);
-        GL11.glDisable(3553);
-        GL11.glBlendFunc(770, 771);
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4ub((byte) (color >> 16 & 0xFF), (byte) (color >> 8 & 0xFF), (byte) (color >> 0 & 0xFF), (byte) (color >> 24 & 0xFF));
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
@@ -501,10 +502,10 @@ public abstract class MCH_HudItem extends Gui {
         }
 
         tessellator.draw();
-        GL11.glEnable(3553);
-        GL11.glDisable(3042);
-        GL11.glColor4b((byte) -1, (byte) -1, (byte) -1, (byte) -1);
-        GL11.glPopMatrix();
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.color((byte) -1, (byte) -1, (byte) -1, (byte) -1);
+        GlStateManager.popMatrix();
     }
 
     public void drawLineStipple(double[] line, int color, int factor, int pattern) {
@@ -516,10 +517,10 @@ public abstract class MCH_HudItem extends Gui {
 
     public void drawPoints(ArrayList<Double> points, int color, int pointWidth) {
         int prevWidth = GL11.glGetInteger(2833);
-        GL11.glPushMatrix();
-        GL11.glEnable(3042);
-        GL11.glDisable(3553);
-        GL11.glBlendFunc(770, 771);
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4ub((byte) (color >> 16 & 0xFF), (byte) (color >> 8 & 0xFF), (byte) (color >> 0 & 0xFF), (byte) (color >> 24 & 0xFF));
         GL11.glPointSize(pointWidth);
         Tessellator tessellator = Tessellator.getInstance();
@@ -531,10 +532,10 @@ public abstract class MCH_HudItem extends Gui {
         }
 
         tessellator.draw();
-        GL11.glEnable(3553);
-        GL11.glDisable(3042);
-        GL11.glPopMatrix();
-        GL11.glColor4b((byte) -1, (byte) -1, (byte) -1, (byte) -1);
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
+        GlStateManager.color((byte) -1, (byte) -1, (byte) -1, (byte) -1);
         GL11.glPointSize(prevWidth);
     }
 }

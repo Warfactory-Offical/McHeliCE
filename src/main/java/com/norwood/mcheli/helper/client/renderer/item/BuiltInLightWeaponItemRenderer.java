@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 @SideOnly(Side.CLIENT)
 public class BuiltInLightWeaponItemRenderer implements IItemModelRenderer {
@@ -40,22 +40,22 @@ public class BuiltInLightWeaponItemRenderer implements IItemModelRenderer {
 
     private void renderItem(ItemStack itemStack, boolean isFirstPerson, EntityLivingBase entity) {
         String name = MCH_ItemLightWeaponBase.getName(itemStack);
-        GL11.glEnable(32826);
-        GL11.glEnable(2903);
-        GL11.glPushMatrix();
+         GlStateManager.enableRescaleNormal();;
+        GlStateManager.enableColorMaterial();
+        GlStateManager.pushMatrix();
         if (MCH_Config.SmoothShading.prmBool) {
-            GL11.glShadeModel(7425);
+            GlStateManager.shadeModel(GL11.GL_SMOOTH);
         }
 
-        GL11.glEnable(2884);
+        GlStateManager.enableCull();
         W_McClient.MOD_bindTexture("textures/lweapon/" + name + ".png");
         if (isFirstPerson && entity.isHandActive() && entity.getActiveHand() == EnumHand.MAIN_HAND) {
-            GL11.glTranslated(0.13F, 0.27F, 0.01F);
+            GlStateManager.translate(0.13F, 0.27F, 0.01F);
         }
 
         MCH_ModelManager.render("lweapons", name);
-        GL11.glShadeModel(7424);
-        GL11.glPopMatrix();
-        GL11.glDisable(32826);
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GlStateManager.popMatrix();
+         GlStateManager.disableRescaleNormal();;
     }
 }

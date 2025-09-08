@@ -7,7 +7,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class MCH_GuiSliderVertical extends W_GuiButton {
     public final float valueMin;
@@ -57,7 +57,7 @@ public class MCH_GuiSliderVertical extends W_GuiButton {
                 this.currentSlider = this.normalizeValue(this.denormalizeValue(this.currentSlider));
             }
 
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             this.drawTexturedModalRect(this.x, this.y + (int) (this.currentSlider * (this.height - 8)), 66, 0, 20, 4);
             this.drawTexturedModalRect(this.x, this.y + (int) (this.currentSlider * (this.height - 8)) + 4, 66, 196, 20, 4);
             if (!MCH_Key.isKeyDown(-100)) {
@@ -133,7 +133,7 @@ public class MCH_GuiSliderVertical extends W_GuiButton {
         if (this.isVisible()) {
             FontRenderer fontrenderer = mc.fontRenderer;
             mc.getTextureManager().bindTexture(new ResourceLocation("mcheli", "textures/gui/widgets.png"));
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             this.setOnMouseOver(x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height);
             int k = this.getHoverState(this.isOnMouseOver());
             this.enableBlend();

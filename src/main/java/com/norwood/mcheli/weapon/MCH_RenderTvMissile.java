@@ -4,13 +4,14 @@ import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_EntitySeat;
 import com.norwood.mcheli.uav.MCH_EntityUavStation;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 @SideOnly(Side.CLIENT)
 public class MCH_RenderTvMissile extends MCH_RenderBulletBase<MCH_EntityBaseBullet> {
@@ -34,12 +35,12 @@ public class MCH_RenderTvMissile extends MCH_RenderBulletBase<MCH_EntityBaseBull
 
         if (ac == null || ac.isRenderBullet(entity, Minecraft.getMinecraft().player)) {
             if (entity instanceof MCH_EntityBaseBullet) {
-                GL11.glPushMatrix();
-                GL11.glTranslated(posX, posY, posZ);
-                GL11.glRotatef(-entity.rotationYaw, 0.0F, 1.0F, 0.0F);
-                GL11.glRotatef(-entity.rotationPitch, -1.0F, 0.0F, 0.0F);
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(posX, posY, posZ);
+                GlStateManager.rotate(-entity.rotationYaw, 0.0F, 1.0F, 0.0F);
+                GlStateManager.rotate(-entity.rotationPitch, -1.0F, 0.0F, 0.0F);
                 this.renderModel(entity);
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
             }
         }
     }

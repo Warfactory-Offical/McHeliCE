@@ -5,6 +5,7 @@ import com.norwood.mcheli.helper.client._IModelCustom;
 import com.norwood.mcheli.wrapper.W_Lib;
 import com.norwood.mcheli.wrapper.W_Render;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -13,7 +14,7 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
 
@@ -29,8 +30,8 @@ public class MCH_RenderGLTD extends W_Render<MCH_EntityGLTD> {
     }
 
     public void doRender(MCH_EntityGLTD entity, double posX, double posY, double posZ, float par8, float tickTime) {
-        GL11.glPushMatrix();
-        GL11.glTranslated(posX, posY + 0.25, posZ);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, posY + 0.25, posZ);
         this.setCommonRenderParam(true, entity.getBrightnessForRender());
         this.bindTexture("textures/gltd.png");
         Minecraft mc = Minecraft.getMinecraft();
@@ -43,34 +44,34 @@ public class MCH_RenderGLTD extends W_Render<MCH_EntityGLTD> {
         }
 
         if (entity.isUsedPlayer) {
-            GL11.glPushMatrix();
-            GL11.glRotatef(-entity.rotationYaw, 0.0F, 1.0F, 0.0F);
+            GlStateManager.pushMatrix();
+            GlStateManager.rotate(-entity.rotationYaw, 0.0F, 1.0F, 0.0F);
             model.renderPart("$body");
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         } else {
-            GL11.glRotatef(-entity.rotationYaw, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(-entity.rotationYaw, 0.0F, 1.0F, 0.0F);
             model.renderPart("$body");
         }
 
-        GL11.glTranslatef(0.0F, 0.45F, 0.0F);
+        GlStateManager.translate(0.0F, 0.45F, 0.0F);
         if (entity.isUsedPlayer) {
-            GL11.glRotatef(entity.renderRotaionYaw, 0.0F, -1.0F, 0.0F);
-            GL11.glRotatef(entity.renderRotaionPitch, 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(entity.renderRotaionYaw, 0.0F, -1.0F, 0.0F);
+            GlStateManager.rotate(entity.renderRotaionPitch, 1.0F, 0.0F, 0.0F);
         }
 
-        GL11.glTranslatef(0.0F, -0.45F, 0.0F);
+        GlStateManager.translate(0.0F, -0.45F, 0.0F);
         if (!isNotRenderHead) {
             model.renderPart("$head");
         }
 
-        GL11.glTranslatef(0.0F, 0.45F, 0.0F);
+        GlStateManager.translate(0.0F, 0.45F, 0.0F);
         this.restoreCommonRenderParam();
-        GL11.glDisable(2896);
+        GlStateManager.disableLighting();
         Vec3d[] v = new Vec3d[]{new Vec3d(0.0, 0.2, 0.0), new Vec3d(0.0, 0.2, 100.0)};
         int a = rand.nextInt(64);
         MCH_RenderLib.drawLine(v, 1619066752 | a << 24);
-        GL11.glEnable(2896);
-        GL11.glPopMatrix();
+        GlStateManager.enableLighting();
+        GlStateManager.popMatrix();
     }
 
     public boolean shouldRender(@NotNull MCH_EntityGLTD livingEntity, @NotNull ICamera camera, double camX, double camY, double camZ) {

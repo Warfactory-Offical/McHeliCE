@@ -5,6 +5,7 @@ import com.norwood.mcheli.helper.MCH_ColorInt;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_RenderAircraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -13,7 +14,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 @SideOnly(Side.CLIENT)
 public class MCH_RenderTank extends MCH_RenderAircraft<MCH_EntityTank> {
@@ -34,10 +35,10 @@ public class MCH_RenderTank extends MCH_RenderAircraft<MCH_EntityTank> {
                 this.renderWheel(tank, posX, posY, posZ);
                 this.renderDebugHitBox(tank, posX, posY, posZ, yaw, pitch);
                 this.renderDebugPilotSeat(tank, posX, posY, posZ, yaw, pitch, roll);
-                GL11.glTranslated(posX, posY, posZ);
-                GL11.glRotatef(yaw, 0.0F, -1.0F, 0.0F);
-                GL11.glRotatef(pitch, 1.0F, 0.0F, 0.0F);
-                GL11.glRotatef(roll, 0.0F, 0.0F, 1.0F);
+                GlStateManager.translate(posX, posY, posZ);
+                GlStateManager.rotate(yaw, 0.0F, -1.0F, 0.0F);
+                GlStateManager.rotate(pitch, 1.0F, 0.0F, 0.0F);
+                GlStateManager.rotate(roll, 0.0F, 0.0F, 1.0F);
                 this.bindTexture("textures/tanks/" + tank.getTextureName() + ".png", tank);
                 renderBody(tankInfo.model);
             }
@@ -47,18 +48,18 @@ public class MCH_RenderTank extends MCH_RenderAircraft<MCH_EntityTank> {
     public void renderWheel(MCH_EntityTank tank, double posX, double posY, double posZ) {
         if (MCH_Config.TestMode.prmBool) {
             if (debugModel != null) {
-                GL11.glColor4f(0.75F, 0.75F, 0.75F, 0.5F);
+                 GlStateManager.color(0.75F, 0.75F, 0.75F, 0.5F);
 
                 for (MCH_EntityWheel w : tank.WheelMng.wheels) {
-                    GL11.glPushMatrix();
-                    GL11.glTranslated(w.posX - tank.posX + posX, w.posY - tank.posY + posY + 0.25, w.posZ - tank.posZ + posZ);
-                    GL11.glScalef(w.width, w.height / 2.0F, w.width);
+                    GlStateManager.pushMatrix();
+                    GlStateManager.translate(w.posX - tank.posX + posX, w.posY - tank.posY + posY + 0.25, w.posZ - tank.posZ + posZ);
+                    GlStateManager.scale(w.width, w.height / 2.0F, w.width);
                     this.bindTexture("textures/seat_pilot.png");
                     debugModel.renderAll();
-                    GL11.glPopMatrix();
+                    GlStateManager.popMatrix();
                 }
 
-                GL11.glColor4f(0.75F, 0.75F, 0.75F, 1.0F);
+                 GlStateManager.color(0.75F, 0.75F, 0.75F, 1.0F);
                 Tessellator tessellator = Tessellator.getInstance();
                 BufferBuilder builder = tessellator.getBuffer();
                 builder.begin(1, DefaultVertexFormats.POSITION_COLOR);

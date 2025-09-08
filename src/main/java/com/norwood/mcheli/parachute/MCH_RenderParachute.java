@@ -3,13 +3,14 @@ package com.norwood.mcheli.parachute;
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_ModelManager;
 import com.norwood.mcheli.wrapper.W_Render;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Random;
 
@@ -26,9 +27,9 @@ public class MCH_RenderParachute extends W_Render<MCH_EntityParachute> {
     public void doRender(@NotNull MCH_EntityParachute entity, double posX, double posY, double posZ, float par8, float tickTime) {
         int type = entity.getType();
         if (type > 0) {
-            GL11.glPushMatrix();
-            GL11.glEnable(2884);
-            GL11.glTranslated(posX, posY, posZ);
+            GlStateManager.pushMatrix();
+            GlStateManager.enableCull();
+            GlStateManager.translate(posX, posY, posZ);
             float prevYaw = entity.prevRotationYaw;
             if (entity.rotationYaw - prevYaw < -180.0F) {
                 prevYaw -= 360.0F;
@@ -37,14 +38,14 @@ public class MCH_RenderParachute extends W_Render<MCH_EntityParachute> {
             }
 
             float yaw = prevYaw + (entity.rotationYaw - prevYaw) * tickTime;
-            GL11.glRotatef(yaw, 0.0F, -1.0F, 0.0F);
-            GL11.glColor4f(0.75F, 0.75F, 0.75F, 1.0F);
-            GL11.glEnable(3042);
+            GlStateManager.rotate(yaw, 0.0F, -1.0F, 0.0F);
+             GlStateManager.color(0.75F, 0.75F, 0.75F, 1.0F);
+            GlStateManager.enableBlend();
             int srcBlend = GL11.glGetInteger(3041);
             int dstBlend = GL11.glGetInteger(3040);
-            GL11.glBlendFunc(770, 771);
+            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             if (MCH_Config.SmoothShading.prmBool) {
-                GL11.glShadeModel(7425);
+                GlStateManager.shadeModel(GL11.GL_SMOOTH);
             }
 
             switch (type) {
@@ -66,9 +67,9 @@ public class MCH_RenderParachute extends W_Render<MCH_EntityParachute> {
             }
 
             GL11.glBlendFunc(srcBlend, dstBlend);
-            GL11.glDisable(3042);
-            GL11.glShadeModel(7424);
-            GL11.glPopMatrix();
+            GlStateManager.disableBlend();
+            GlStateManager.shadeModel(GL11.GL_FLAT);
+            GlStateManager.popMatrix();
         }
     }
 

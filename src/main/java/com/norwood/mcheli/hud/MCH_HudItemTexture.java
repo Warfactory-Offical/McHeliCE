@@ -1,7 +1,7 @@
 package com.norwood.mcheli.hud;
 
 import com.norwood.mcheli.wrapper.W_TextureUtil;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class MCH_HudItemTexture extends MCH_HudItem {
     private final String name;
@@ -36,8 +36,8 @@ public class MCH_HudItemTexture extends MCH_HudItem {
 
     @Override
     public void execute() {
-        GL11.glEnable(3042);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.enableBlend();
+         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.textureWidth == 0 || this.textureHeight == 0) {
             int w = 0;
             int h = 0;

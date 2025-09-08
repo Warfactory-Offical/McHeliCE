@@ -15,7 +15,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 @SideOnly(Side.CLIENT)
 public class MCH_GuiGLTD extends MCH_Gui {
@@ -40,15 +40,15 @@ public class MCH_GuiGLTD extends MCH_Gui {
             if (this.isDrawGui(player)) {
                 MCH_EntityGLTD gltd = (MCH_EntityGLTD) player.getRidingEntity();
                 if (gltd.camera.getMode(0) == 1) {
-                    GL11.glEnable(3042);
-                    GL11.glColor4f(0.0F, 1.0F, 0.0F, 0.3F);
+                    GlStateManager.enableBlend();
+                     GlStateManager.color(0.0F, 1.0F, 0.0F, 0.3F);
                     int srcBlend = GL11.glGetInteger(3041);
                     int dstBlend = GL11.glGetInteger(3040);
                     GL11.glBlendFunc(1, 1);
                     W_McClient.MOD_bindTexture("textures/gui/alpha.png");
                     this.drawTexturedModalRectRotate(0.0, 0.0, this.width, this.height, this.rand.nextInt(256), this.rand.nextInt(256), 256.0, 256.0, 0.0F);
                     GL11.glBlendFunc(srcBlend, dstBlend);
-                    GL11.glDisable(3042);
+                    GlStateManager.disableBlend();
                 }
 
                 this.drawString(String.format("x%.1f", gltd.camera.getCameraZoom()), this.centerX - 70, this.centerY + 10, -805306369);

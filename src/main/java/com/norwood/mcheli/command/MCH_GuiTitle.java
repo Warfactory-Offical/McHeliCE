@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.norwood.mcheli.gui.MCH_Gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatLine;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -11,7 +12,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,7 @@ public class MCH_GuiTitle extends MCH_Gui {
     @Override
     public void drawGui(EntityPlayer player, boolean isThirdPersonView) {
         GL11.glLineWidth(scaleFactor * 2);
-        GL11.glDisable(3042);
+        GlStateManager.disableBlend();
         if (scaleFactor <= 0) {
             scaleFactor = 1;
         }
@@ -164,7 +165,7 @@ public class MCH_GuiTitle extends MCH_Gui {
     private void drawChat() {
         float charAlpha = this.mc.gameSettings.chatOpacity * 0.9F + 0.1F;
         float scale = this.mc.gameSettings.chatScale * 2.0F;
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         float posY = switch (this.position) {
             case 1 -> 0.0F;
             case 2 -> (float) this.mc.displayHeight / scaleFactor - this.chatLines.size() * 9.0F * scale;
@@ -173,8 +174,8 @@ public class MCH_GuiTitle extends MCH_Gui {
             default -> (float) this.mc.displayHeight / 2 / scaleFactor - this.chatLines.size() / 2.0F * 9.0F * scale;
         };
 
-        GL11.glTranslatef(0.0F, posY, 0.0F);
-        GL11.glScalef(scale, scale, 1.0F);
+        GlStateManager.translate(0.0F, posY, 0.0F);
+        GlStateManager.scale(scale, scale, 1.0F);
 
         for (int i = 0; i < this.chatLines.size(); i++) {
             ChatLine chatline = this.chatLines.get(i);
@@ -182,16 +183,16 @@ public class MCH_GuiTitle extends MCH_Gui {
                 int alpha = (int) (255.0F * charAlpha * this.colorAlpha);
                 int y = i * 9;
                 drawRect(0, y + 9, this.mc.displayWidth, y, alpha / 2 << 24);
-                GL11.glEnable(3042);
+                GlStateManager.enableBlend();
                 String s = chatline.getChatComponent().getFormattedText();
                 int sw = this.mc.displayWidth / 2 / scaleFactor - this.mc.fontRenderer.getStringWidth(s);
                 sw = (int) (sw / scale);
                 this.mc.fontRenderer.drawStringWithShadow(s, sw, y + 1, 16777215 + (alpha << 24));
-                GL11.glDisable(3008);
+                GlStateManager.disableAlpha();
             }
         }
 
-        GL11.glTranslatef(-3.0F, 0.0F, 0.0F);
-        GL11.glPopMatrix();
+        GlStateManager.translate(-3.0F, 0.0F, 0.0F);
+        GlStateManager.popMatrix();
     }
 }

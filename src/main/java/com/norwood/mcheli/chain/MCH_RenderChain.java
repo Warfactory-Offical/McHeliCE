@@ -3,6 +3,7 @@ package com.norwood.mcheli.chain;
 import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.MCH_ModelManager;
 import com.norwood.mcheli.wrapper.W_Render;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.ResourceLocation;
@@ -11,7 +12,7 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 @SideOnly(Side.CLIENT)
 public class MCH_RenderChain extends W_Render<MCH_EntityChain> {
@@ -23,10 +24,10 @@ public class MCH_RenderChain extends W_Render<MCH_EntityChain> {
 
     public void doRender(@NotNull MCH_EntityChain e, double posX, double posY, double posZ, float par8, float par9) {
         if (e.towedEntity != null && e.towEntity != null) {
-            GL11.glPushMatrix();
-            GL11.glEnable(2884);
-            GL11.glColor4f(0.5F, 0.5F, 0.5F, 1.0F);
-            GL11.glTranslated(
+            GlStateManager.pushMatrix();
+            GlStateManager.enableCull();
+             GlStateManager.color(0.5F, 0.5F, 0.5F, 1.0F);
+            GlStateManager.translate(
                     e.towedEntity.lastTickPosX - TileEntityRendererDispatcher.staticPlayerX,
                     e.towedEntity.lastTickPosY - TileEntityRendererDispatcher.staticPlayerY,
                     e.towedEntity.lastTickPosZ - TileEntityRendererDispatcher.staticPlayerZ
@@ -40,16 +41,16 @@ public class MCH_RenderChain extends W_Render<MCH_EntityChain> {
             double y = dy * 0.95F / diff;
 
             for (double z = dz * 0.95F / diff; diff > 0.95F; diff -= 0.95F) {
-                GL11.glTranslated(x, y, z);
-                GL11.glPushMatrix();
+                GlStateManager.translate(x, y, z);
+                GlStateManager.pushMatrix();
                 Vec3d v = MCH_Lib.getYawPitchFromVec(x, y, z);
-                GL11.glRotatef((float) v.y, 0.0F, -1.0F, 0.0F);
-                GL11.glRotatef((float) v.z, 0.0F, 0.0F, 1.0F);
+                GlStateManager.rotate((float) v.y, 0.0F, -1.0F, 0.0F);
+                GlStateManager.rotate((float) v.z, 0.0F, 0.0F, 1.0F);
                 MCH_ModelManager.render("chain");
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
             }
 
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 

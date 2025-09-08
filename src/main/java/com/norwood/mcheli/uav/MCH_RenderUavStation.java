@@ -9,7 +9,7 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 @SideOnly(Side.CLIENT)
 public class MCH_RenderUavStation extends W_Render<MCH_EntityUavStation> {
@@ -26,16 +26,16 @@ public class MCH_RenderUavStation extends W_Render<MCH_EntityUavStation> {
     public void doRender(@NotNull MCH_EntityUavStation entity, double posX, double posY, double posZ, float par8, float tickTime) {
         if (entity.getKind() > 0) {
             int kind = entity.getKind() - 1;
-            GL11.glPushMatrix();
-            GL11.glTranslated(posX, posY + 0.35F, posZ);
-            GL11.glEnable(2884);
-            GL11.glRotatef(entity.rotationYaw, 0.0F, -1.0F, 0.0F);
-            GL11.glRotatef(entity.rotationPitch, 1.0F, 0.0F, 0.0F);
-            GL11.glColor4f(0.75F, 0.75F, 0.75F, 1.0F);
-            GL11.glEnable(3042);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(posX, posY + 0.35F, posZ);
+            GlStateManager.enableCull();
+            GlStateManager.rotate(entity.rotationYaw, 0.0F, -1.0F, 0.0F);
+            GlStateManager.rotate(entity.rotationPitch, 1.0F, 0.0F, 0.0F);
+             GlStateManager.color(0.75F, 0.75F, 0.75F, 1.0F);
+            GlStateManager.enableBlend();
             int srcBlend = GL11.glGetInteger(3041);
             int dstBlend = GL11.glGetInteger(3040);
-            GL11.glBlendFunc(770, 771);
+            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             if (kind == 0) {
                 if (entity.getControlAircract() != null && entity.getRiddenByEntity() != null) {
                     this.bindTexture("textures/" + TEX_NAME_ON[kind] + ".png");
@@ -55,8 +55,8 @@ public class MCH_RenderUavStation extends W_Render<MCH_EntityUavStation> {
             }
 
             GL11.glBlendFunc(srcBlend, dstBlend);
-            GL11.glDisable(3042);
-            GL11.glPopMatrix();
+            GlStateManager.disableBlend();
+            GlStateManager.popMatrix();
         }
     }
 
@@ -69,12 +69,12 @@ public class MCH_RenderUavStation extends W_Render<MCH_EntityUavStation> {
     }
 
     private void renderRotPart(String modelName, String partName, float rot, double x, double y, double z) {
-        GL11.glPushMatrix();
-        GL11.glTranslated(x, y, z);
-        GL11.glRotatef(rot, -1.0F, 0.0F, 0.0F);
-        GL11.glTranslated(-x, -y, -z);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, z);
+        GlStateManager.rotate(rot, -1.0F, 0.0F, 0.0F);
+        GlStateManager.translate(-x, -y, -z);
         MCH_ModelManager.renderPart(modelName, partName);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     protected ResourceLocation getEntityTexture(@NotNull MCH_EntityUavStation entity) {

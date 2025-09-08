@@ -17,13 +17,14 @@ import com.norwood.mcheli.wrapper.W_McClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -551,20 +552,20 @@ public class MCH_ConfigGui extends W_GuiContainer {
             x = 185.0;
             y = this.sliderBlockMarkerSize.y;
             color = -65536;
-            GL11.glPushMatrix();
-            GL11.glEnable(3042);
-            GL11.glDisable(3553);
-            GL11.glBlendFunc(770, 771);
+            GlStateManager.pushMatrix();
+            GlStateManager.enableBlend();
+            GlStateManager.disableTexture2D();
+            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             GL11.glColor4ub((byte) (color >> 16 & 0xFF), (byte) (color >> 8 & 0xFF), (byte) (color >> 0 & 0xFF), (byte) (color >> 24 & 0xFF));
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder builder = tessellator.getBuffer();
             builder.begin(1, DefaultVertexFormats.POSITION_COLOR);
             MCH_GuiTargetMarker.drawRhombus(builder, 15, x, y, this.zLevel, size, color);
             tessellator.draw();
-            GL11.glEnable(3553);
-            GL11.glDisable(3042);
-            GL11.glColor4b((byte) -1, (byte) -1, (byte) -1, (byte) -1);
-            GL11.glPopMatrix();
+            GlStateManager.enableTexture2D();
+            GlStateManager.disableBlend();
+            GlStateManager.color((byte) -1, (byte) -1, (byte) -1, (byte) -1);
+            GlStateManager.popMatrix();
         } else if (this.currentScreenId == 2) {
             this.drawString("< Key Binding >", 170, 10, 16777215);
             if (this.waitKeyButtonId != 0) {
@@ -591,7 +592,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
 
     protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
         W_McClient.MOD_bindTexture("textures/gui/config.png");
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         int x = (this.width - this.xSize) / 2;
         int y = (this.height - this.ySize) / 2;
         this.drawTexturedModalRectRotate(x, y, this.xSize, this.ySize, 0.0, 0.0, this.xSize, this.ySize, 0.0F, 512.0, 256.0);
@@ -609,10 +610,10 @@ public class MCH_ConfigGui extends W_GuiContainer {
     }
 
     public void drawLine(double[] line, int color, int mode) {
-        GL11.glPushMatrix();
-        GL11.glEnable(3042);
-        GL11.glDisable(3553);
-        GL11.glBlendFunc(770, 771);
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4ub((byte) (color >> 16 & 0xFF), (byte) (color >> 8 & 0xFF), (byte) (color >> 0 & 0xFF), (byte) (color >> 24 & 0xFF));
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
@@ -623,10 +624,10 @@ public class MCH_ConfigGui extends W_GuiContainer {
         }
 
         tessellator.draw();
-        GL11.glEnable(3553);
-        GL11.glDisable(3042);
-        GL11.glColor4b((byte) -1, (byte) -1, (byte) -1, (byte) -1);
-        GL11.glPopMatrix();
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.color((byte) -1, (byte) -1, (byte) -1, (byte) -1);
+        GlStateManager.popMatrix();
     }
 
     public void drawTexturedModalRectRotate(
@@ -642,9 +643,9 @@ public class MCH_ConfigGui extends W_GuiContainer {
             double texWidth,
             double texHeight
     ) {
-        GL11.glPushMatrix();
-        GL11.glTranslated(left + width / 2.0, top + height / 2.0, 0.0);
-        GL11.glRotatef(rot, 0.0F, 0.0F, 1.0F);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(left + width / 2.0, top + height / 2.0, 0.0);
+        GlStateManager.rotate(rot, 0.0F, 0.0F, 1.0F);
         float fw = (float) (1.0 / texWidth);
         float fh = (float) (1.0 / texHeight);
         Tessellator tessellator = Tessellator.getInstance();
@@ -655,6 +656,6 @@ public class MCH_ConfigGui extends W_GuiContainer {
         buffer.pos(width / 2.0, -height / 2.0, this.zLevel).tex((uLeft + uWidth) * fw, vTop * fh).endVertex();
         buffer.pos(-width / 2.0, -height / 2.0, this.zLevel).tex(uLeft * fw, vTop * fh).endVertex();
         tessellator.draw();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 }

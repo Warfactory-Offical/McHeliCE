@@ -1,13 +1,14 @@
 package com.norwood.mcheli.weapon;
 
 import com.norwood.mcheli.wrapper.W_Render;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 @SideOnly(Side.CLIENT)
 public class MCH_RenderCartridge extends W_Render<MCH_EntityCartridge> {
@@ -21,9 +22,9 @@ public class MCH_RenderCartridge extends W_Render<MCH_EntityCartridge> {
     public void doRender(MCH_EntityCartridge entity, double posX, double posY, double posZ, float par8, float tickTime) {
         MCH_EntityCartridge cartridge = null;
         if (entity.model != null && !entity.texture_name.isEmpty()) {
-            GL11.glPushMatrix();
-            GL11.glTranslated(posX, posY, posZ);
-            GL11.glScalef(entity.getScale(), entity.getScale(), entity.getScale());
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(posX, posY, posZ);
+            GlStateManager.scale(entity.getScale(), entity.getScale(), entity.getScale());
             float prevYaw = entity.prevRotationYaw;
             if (entity.rotationYaw - prevYaw < -180.0F) {
                 prevYaw -= 360.0F;
@@ -33,11 +34,11 @@ public class MCH_RenderCartridge extends W_Render<MCH_EntityCartridge> {
 
             float yaw = -(prevYaw + (entity.rotationYaw - prevYaw) * tickTime);
             float pitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * tickTime;
-            GL11.glRotatef(yaw, 0.0F, 1.0F, 0.0F);
-            GL11.glRotatef(pitch, 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(yaw, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(pitch, 1.0F, 0.0F, 0.0F);
             this.bindTexture("textures/bullets/" + entity.texture_name + ".png");
             entity.model.renderAll();
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 

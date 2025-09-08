@@ -6,6 +6,7 @@ import com.norwood.mcheli.multiplay.MCH_GuiTargetMarker;
 import com.norwood.mcheli.wrapper.W_Reflection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.Team;
@@ -14,7 +15,7 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class MCH_EntityParticleMarkPoint extends MCH_EntityParticleBase implements ITargetMarkerObject {
     final Team team;
@@ -52,7 +53,7 @@ public class MCH_EntityParticleMarkPoint extends MCH_EntityParticleBase implemen
     }
 
     public void renderParticle(@NotNull BufferBuilder buffer, @NotNull Entity entityIn, float par2, float par3, float par4, float par5, float par6, float par7) {
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayer player = mc.player;
         if (player != null) {
@@ -78,7 +79,7 @@ public class MCH_EntityParticleMarkPoint extends MCH_EntityParticleBase implemen
                     }
                 }
 
-                GL11.glTranslated(v.x * (block_dist / dist), v.y * (block_dist / dist), v.z * (block_dist / dist));
+                GlStateManager.translate(v.x * (block_dist / dist), v.y * (block_dist / dist), v.z * (block_dist / dist));
                 ix += v.x * (block_dist / dist);
                 iy += v.y * (block_dist / dist);
                 iz += v.z * (block_dist / dist);
@@ -93,7 +94,7 @@ public class MCH_EntityParticleMarkPoint extends MCH_EntityParticleBase implemen
             }
 
             MCH_GuiTargetMarker.addMarkEntityPos(100, this, px / scale, py / scale, pz / scale, false);
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 

@@ -3,6 +3,7 @@ package com.norwood.mcheli.mob;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelBiped.ArmPose;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,7 +13,7 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 @SideOnly(Side.CLIENT)
 public class MCH_RenderGunner extends RenderLivingBase<MCH_EntityGunner> {
@@ -53,7 +54,7 @@ public class MCH_RenderGunner extends RenderLivingBase<MCH_EntityGunner> {
 
     protected void preRenderCallback(@NotNull MCH_EntityGunner entitylivingbaseIn, float partialTickTime) {
         float f1 = 0.9375F;
-        GL11.glScalef(f1, f1, f1);
+        GlStateManager.scale(f1, f1, f1);
     }
 
     public void renderFirstPersonArm(EntityPlayer p_82441_1_) {

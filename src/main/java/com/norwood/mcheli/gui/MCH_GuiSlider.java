@@ -5,7 +5,7 @@ import com.norwood.mcheli.wrapper.W_GuiButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class MCH_GuiSlider extends W_GuiButton {
     public final String stringFormat;
@@ -46,7 +46,7 @@ public class MCH_GuiSlider extends W_GuiButton {
                 this.updateDisplayString();
             }
 
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             this.drawTexturedModalRect(this.x + (int) (this.currentSlider * (this.width - 8)), this.y, 0, 66, 4, 20);
             this.drawTexturedModalRect(this.x + (int) (this.currentSlider * (this.width - 8)) + 4, this.y, 196, 66, 4, 20);
             if (!MCH_Key.isKeyDown(-100)) {

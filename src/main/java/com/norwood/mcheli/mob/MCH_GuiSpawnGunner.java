@@ -4,13 +4,14 @@ import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_EntitySeat;
 import com.norwood.mcheli.gui.MCH_Gui;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
         if (!isThirdPersonView) {
             if (this.isDrawGui(player)) {
                 GL11.glLineWidth(scaleFactor);
-                GL11.glDisable(3042);
+                GlStateManager.disableBlend();
                 this.draw(player, this.searchTarget(player));
             }
         }
@@ -113,11 +114,11 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
 
     void draw(EntityPlayer player, Entity entity) {
         if (entity != null) {
-            GL11.glEnable(3042);
-            GL11.glColor4f(0.0F, 0.0F, 0.0F, 1.0F);
+            GlStateManager.enableBlend();
+             GlStateManager.color(0.0F, 0.0F, 0.0F, 1.0F);
             int srcBlend = GL11.glGetInteger(3041);
             int dstBlend = GL11.glGetInteger(3040);
-            GL11.glBlendFunc(770, 771);
+            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             double size = 512.0;
 
             while (size < this.width || size < this.height) {
@@ -125,14 +126,14 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
             }
 
             GL11.glBlendFunc(srcBlend, dstBlend);
-            GL11.glDisable(3042);
+            GlStateManager.disableBlend();
             double factor = size / 512.0;
             double SCALE_FACTOR = scaleFactor * factor;
             double CX = (double) this.mc.displayWidth / 2;
             double CY = (double) this.mc.displayHeight / 2;
             double px = (CX - 0.0) / SCALE_FACTOR;
             double py = (CY + 0.0) / SCALE_FACTOR;
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
             if (entity instanceof MCH_EntityGunner gunner) {
                 String seatName = "";
                 if (gunner.getRidingEntity() instanceof MCH_EntitySeat) {
@@ -170,7 +171,7 @@ public class MCH_GuiSpawnGunner extends MCH_Gui {
                 }
             }
 
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 }

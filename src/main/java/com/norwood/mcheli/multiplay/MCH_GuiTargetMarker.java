@@ -17,7 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.util.glu.GLU;
 
 import javax.annotation.Nullable;
@@ -213,7 +213,7 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
     public void drawGui(EntityPlayer player, boolean isThirdPersonView) {
         GL11.glLineWidth(scaleFactor * 2);
         if (this.isDrawGui(player)) {
-            GL11.glDisable(3042);
+            GlStateManager.disableBlend();
             if (isEnableEntityMarker()) {
                 this.drawMark();
             }
@@ -223,11 +223,11 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
     void drawMark() {
         int[] COLOR_TABLE = new int[]{0, -808464433, -805371904, -805306624, -822018049, -805351649, -65536, 0};
         int scale = scaleFactor > 0 ? scaleFactor : 2;
-        GL11.glEnable(3042);
-        GL11.glDisable(3553);
-        GL11.glBlendFunc(770, 771);
-        GL11.glColor4b((byte) -1, (byte) -1, (byte) -1, (byte) -1);
-        GL11.glDepthMask(false);
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.color((byte) -1, (byte) -1, (byte) -1, (byte) -1);
+        GlStateManager.depthMask(false);
         int DW = this.mc.displayWidth;
         int DSW = this.mc.displayWidth / scale;
         int DSH = this.mc.displayHeight / scale;
@@ -265,7 +265,7 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
                     double MARK_SIZE = MCH_Config.BlockMarkerSize.prmDouble;
                     if (z < 1.0 && x >= 0.0 && x <= DSW - 20 && y >= 0.0 && y <= DSH - 40) {
                         double dist = this.mc.player.getDistance(target.getX(), target.getY(), target.getZ());
-                        GL11.glEnable(3553);
+                        GlStateManager.enableTexture2D();
                         this.drawCenteredString(String.format("%.0fm", dist), (int) x, (int) (y + MARK_SIZE * 1.1 + 16.0), color);
                         if (x >= (double) DSW / 2 - 20 && x <= (double) DSW / 2 + 20 && y >= (double) DSH / 2 - 20 && y <= (double) DSH / 2 + 20) {
                             this.drawString(String.format("x : %.0f", target.getX()), (int) (x + MARK_SIZE + 18.0), (int) y - 12, color);
@@ -273,7 +273,7 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
                             this.drawString(String.format("z : %.0f", target.getZ()), (int) (x + MARK_SIZE + 18.0), (int) y + 4, color);
                         }
 
-                        GL11.glDisable(3553);
+                        GlStateManager.disableTexture2D();
                         builder.begin(1, DefaultVertexFormats.POSITION_COLOR);
                         drawRhombus(builder, 15, x, y, this.zLevel, MARK_SIZE, color);
                     } else {
@@ -301,9 +301,9 @@ public class MCH_GuiTargetMarker extends MCH_Gui {
             }
         }
 
-        GL11.glDepthMask(true);
-        GL11.glEnable(3553);
-        GL11.glDisable(3042);
+        GlStateManager.depthMask(true);
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
     }
 
     public void drawTriangle1(BufferBuilder builder, double x, double y, double size, int color) {

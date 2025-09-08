@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
@@ -54,23 +55,23 @@ public abstract class MCH_Gui extends GuiScreen {
             this.height = this.mc.displayHeight / scaleFactor;
             this.centerX = this.width / 2;
             this.centerY = this.height / 2;
-            GL11.glPushMatrix();
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.pushMatrix();
+             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             if (this.mc.player != null) {
                 this.drawGui(this.mc.player, this.mc.gameSettings.thirdPersonView != 0);
             }
 
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            GL11.glPopMatrix();
+             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.popMatrix();
         }
     }
 
     public void drawTexturedModalRectRotate(
             double left, double top, double width, double height, double uLeft, double vTop, double uWidth, double vHeight, float rot
     ) {
-        GL11.glPushMatrix();
-        GL11.glTranslated(left + width / 2.0, top + height / 2.0, 0.0);
-        GL11.glRotatef(rot, 0.0F, 0.0F, 1.0F);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(left + width / 2.0, top + height / 2.0, 0.0);
+        GlStateManager.rotate(rot, 0.0F, 0.0F, 1.0F);
         float f = 0.00390625F;
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
@@ -80,7 +81,7 @@ public abstract class MCH_Gui extends GuiScreen {
         builder.pos(width / 2.0, -height / 2.0, this.zLevel).tex((uLeft + uWidth) * f, vTop * f).endVertex();
         builder.pos(-width / 2.0, -height / 2.0, this.zLevel).tex(uLeft * f, vTop * f).endVertex();
         tessellator.draw();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     public void drawTexturedRect(
@@ -98,13 +99,6 @@ public abstract class MCH_Gui extends GuiScreen {
         tessellator.draw();
     }
 
-    public void drawLineStipple(double[] line, int color, int factor, int pattern) {
-        GL11.glEnable(2852);
-        GL11.glLineStipple(factor, (short) pattern);
-        this.drawLine(line, color);
-        GL11.glDisable(2852);
-    }
-
     public void drawLine(double[] line, int color) {
         this.drawLine(line, color, 1);
     }
@@ -114,11 +108,11 @@ public abstract class MCH_Gui extends GuiScreen {
     }
 
     public void drawDigit(String s, int x, int y, int interval, int color) {
-        GL11.glEnable(3042);
+        GlStateManager.enableBlend();
         GL11.glColor4ub((byte) (color >> 16 & 0xFF), (byte) (color >> 8 & 0xFF), (byte) (color & 0xFF), (byte) (color >> 24 & 0xFF));
         int srcBlend = GL11.glGetInteger(3041);
         int dstBlend = GL11.glGetInteger(3040);
-        GL11.glBlendFunc(770, 771);
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         W_McClient.MOD_bindTexture("textures/gui/digit.png");
 
         for (int i = 0; i < s.length(); i++) {
@@ -133,7 +127,7 @@ public abstract class MCH_Gui extends GuiScreen {
         }
 
         GL11.glBlendFunc(srcBlend, dstBlend);
-        GL11.glDisable(3042);
+        GlStateManager.disableBlend();
     }
 
     public void drawCenteredString(String s, int x, int y, int color) {
@@ -141,10 +135,10 @@ public abstract class MCH_Gui extends GuiScreen {
     }
 
     public void drawLine(double[] line, int color, int mode) {
-        GL11.glPushMatrix();
-        GL11.glEnable(3042);
-        GL11.glDisable(3553);
-        GL11.glBlendFunc(770, 771);
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4ub((byte) (color >> 16 & 0xFF), (byte) (color >> 8 & 0xFF), (byte) (color >> 0 & 0xFF), (byte) (color >> 24 & 0xFF));
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
@@ -155,18 +149,18 @@ public abstract class MCH_Gui extends GuiScreen {
         }
 
         tessellator.draw();
-        GL11.glEnable(3553);
-        GL11.glDisable(3042);
-        GL11.glColor4b((byte) -1, (byte) -1, (byte) -1, (byte) -1);
-        GL11.glPopMatrix();
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.color((byte) -1, (byte) -1, (byte) -1, (byte) -1);
+        GlStateManager.popMatrix();
     }
 
     public void drawPoints(double[] points, int color, int pointWidth) {
         int prevWidth = GL11.glGetInteger(2833);
-        GL11.glPushMatrix();
-        GL11.glEnable(3042);
-        GL11.glDisable(3553);
-        GL11.glBlendFunc(770, 771);
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4ub((byte) (color >> 16 & 0xFF), (byte) (color >> 8 & 0xFF), (byte) (color >> 0 & 0xFF), (byte) (color >> 24 & 0xFF));
         GL11.glPointSize(pointWidth);
         Tessellator tessellator = Tessellator.getInstance();
@@ -178,19 +172,19 @@ public abstract class MCH_Gui extends GuiScreen {
         }
 
         tessellator.draw();
-        GL11.glEnable(3553);
-        GL11.glDisable(3042);
-        GL11.glPopMatrix();
-        GL11.glColor4b((byte) -1, (byte) -1, (byte) -1, (byte) -1);
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
+        GlStateManager.color((byte) -1, (byte) -1, (byte) -1, (byte) -1);
         GL11.glPointSize(prevWidth);
     }
 
     public void drawPoints(ArrayList<Double> points, int color, int pointWidth) {
         int prevWidth = GL11.glGetInteger(2833);
-        GL11.glPushMatrix();
-        GL11.glEnable(3042);
-        GL11.glDisable(3553);
-        GL11.glBlendFunc(770, 771);
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4ub((byte) (color >> 16 & 0xFF), (byte) (color >> 8 & 0xFF), (byte) (color >> 0 & 0xFF), (byte) (color >> 24 & 0xFF));
         GL11.glPointSize(pointWidth);
         Tessellator tessellator = Tessellator.getInstance();
@@ -202,10 +196,10 @@ public abstract class MCH_Gui extends GuiScreen {
         }
 
         tessellator.draw();
-        GL11.glEnable(3553);
-        GL11.glDisable(3042);
-        GL11.glPopMatrix();
-        GL11.glColor4b((byte) -1, (byte) -1, (byte) -1, (byte) -1);
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
+        GlStateManager.color((byte) -1, (byte) -1, (byte) -1, (byte) -1);
         GL11.glPointSize(prevWidth);
     }
 }

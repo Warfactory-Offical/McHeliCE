@@ -53,6 +53,7 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
@@ -61,6 +62,12 @@ import java.util.List;
 public class MCH_ClientProxy extends MCH_CommonProxy {
     public String lastLoadHUDPath = "";
 
+
+    @Override
+    public void postInit(FMLPostInitializationEvent postEvent) {
+        MinecraftForge.EVENT_BUS.register(new VehicleRenderManager());
+
+    }
     public static void registerModels_Bullet() {
         for (MCH_WeaponInfo wi : ContentRegistries.weapon().values()) {
             _IModelCustom m;
@@ -217,6 +224,8 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
         this.registerCommonPart("planes", info);
         MCH_ModelManager.setForceReloadMode(false);
     }
+
+
 
     @Override
     public void registerModelsVehicle(MCH_VehicleInfo info, boolean reload) {

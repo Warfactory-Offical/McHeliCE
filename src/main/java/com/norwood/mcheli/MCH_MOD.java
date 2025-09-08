@@ -305,6 +305,7 @@ public class MCH_MOD {
         creativeTabsTank.setFixedIconItem(MCH_Config.CreativeTabIconTank.prmString);
         creativeTabsVehicle.setFixedIconItem(MCH_Config.CreativeTabIconVehicle.prmString);
         proxy.readClientModList();
+        proxy.postInit(evt);
     }
 
     @EventHandler

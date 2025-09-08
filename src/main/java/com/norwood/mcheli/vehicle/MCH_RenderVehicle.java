@@ -6,12 +6,13 @@ import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_RenderAircraft;
 import com.norwood.mcheli.weapon.MCH_WeaponSet;
 import com.norwood.mcheli.wrapper.W_Lib;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 @SideOnly(Side.CLIENT)
 public class MCH_RenderVehicle extends MCH_RenderAircraft<MCH_EntityVehicle> {
@@ -40,9 +41,9 @@ public class MCH_RenderVehicle extends MCH_RenderAircraft<MCH_EntityVehicle> {
                 posY += 0.35F;
                 this.renderDebugHitBox(vehicle, posX, posY, posZ, yaw, pitch);
                 this.renderDebugPilotSeat(vehicle, posX, posY, posZ, yaw, pitch, roll);
-                GL11.glTranslated(posX, posY, posZ);
-                GL11.glRotatef(yaw, 0.0F, -1.0F, 0.0F);
-                GL11.glRotatef(pitch, 1.0F, 0.0F, 0.0F);
+                GlStateManager.translate(posX, posY, posZ);
+                GlStateManager.rotate(yaw, 0.0F, -1.0F, 0.0F);
+                GlStateManager.rotate(pitch, 1.0F, 0.0F, 0.0F);
                 this.bindTexture("textures/vehicles/" + vehicle.getTextureName() + ".png", vehicle);
                 renderBody(vehicleInfo.model);
                 MCH_WeaponSet ws = vehicle.getFirstSeatWeapon();
@@ -71,7 +72,7 @@ public class MCH_RenderVehicle extends MCH_RenderAircraft<MCH_EntityVehicle> {
             MCH_WeaponSet ws,
             int index
     ) {
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         float recoilBuf = 0.0F;
         if (index < ws.getWeaponsCount()) {
             MCH_WeaponSet.Recoil r = ws.recoilBuf[index];
@@ -80,25 +81,25 @@ public class MCH_RenderVehicle extends MCH_RenderAircraft<MCH_EntityVehicle> {
 
         int bkIndex = index;
         if (vp.rotPitch || vp.rotYaw || vp.type == 1) {
-            GL11.glTranslated(vp.pos.x, vp.pos.y, vp.pos.z);
+            GlStateManager.translate(vp.pos.x, vp.pos.y, vp.pos.z);
             if (vp.rotYaw) {
-                GL11.glRotatef(-vehicle.lastRiderYaw + yaw, 0.0F, 1.0F, 0.0F);
+                GlStateManager.rotate(-vehicle.lastRiderYaw + yaw, 0.0F, 1.0F, 0.0F);
             }
 
             if (vp.rotPitch) {
                 float p = MCH_Lib.RNG(vehicle.lastRiderPitch, info.minRotationPitch, info.maxRotationPitch);
-                GL11.glRotatef(p - pitch, 1.0F, 0.0F, 0.0F);
+                GlStateManager.rotate(p - pitch, 1.0F, 0.0F, 0.0F);
             }
 
             if (vp.type == 1) {
-                GL11.glRotatef(rotBrl, 0.0F, 0.0F, -1.0F);
+                GlStateManager.rotate(rotBrl, 0.0F, 0.0F, -1.0F);
             }
 
-            GL11.glTranslated(-vp.pos.x, -vp.pos.y, -vp.pos.z);
+            GlStateManager.translate(-vp.pos.x, -vp.pos.y, -vp.pos.z);
         }
 
         if (vp.type == 2) {
-            GL11.glTranslated(0.0, 0.0, -vp.recoilBuf * recoilBuf);
+            GlStateManager.translate(0.0, 0.0, -vp.recoilBuf * recoilBuf);
         }
 
         if (vp.type == 2 || vp.type == 3) {
@@ -117,7 +118,7 @@ public class MCH_RenderVehicle extends MCH_RenderAircraft<MCH_EntityVehicle> {
             MCH_ModelManager.render("vehicles", vp.modelName);
         }
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
         return index;
     }
 

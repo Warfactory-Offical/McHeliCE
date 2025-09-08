@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 @SideOnly(Side.CLIENT)
 public class BuiltInRangeFinderItemRenderer implements IItemModelRenderer {
@@ -21,13 +21,13 @@ public class BuiltInRangeFinderItemRenderer implements IItemModelRenderer {
 
     @Override
     public void renderItem(ItemStack itemStack, EntityLivingBase entity, TransformType transformType, float partialTicks) {
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         W_McClient.MOD_bindTexture("textures/rangefinder.png");
         boolean flag = true;
         if (IItemModelRenderer.isFirstPerson(transformType)) {
             flag = entity instanceof EntityPlayer && !MCH_ItemRangeFinder.isUsingScope((EntityPlayer) entity);
             if (entity.isHandActive() && entity.getActiveHand() == EnumHand.MAIN_HAND) {
-                GL11.glTranslated(0.6563F, 0.3438F, 0.01F);
+                GlStateManager.translate(0.6563F, 0.3438F, 0.01F);
             }
         }
 
@@ -35,6 +35,6 @@ public class BuiltInRangeFinderItemRenderer implements IItemModelRenderer {
             MCH_ModelManager.render("rangefinder");
         }
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 }

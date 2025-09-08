@@ -8,7 +8,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 
@@ -134,7 +134,7 @@ public class MCH_GuiScoreboard_CreateTeam extends MCH_GuiScoreboard_Base {
         ScaledResolution sr = new W_ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
         int factor = sr.getScaleFactor() > 0 ? sr.getScaleFactor() : 1;
         W_McClient.MOD_bindTexture("textures/gui/mp_new_team.png");
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         int x = (this.mc.displayWidth / factor - 222) / 2;
         int y = (this.mc.displayHeight / factor - 200) / 2;
         this.drawTexturedModalRect(x, y, 0, 0, 222, 200);

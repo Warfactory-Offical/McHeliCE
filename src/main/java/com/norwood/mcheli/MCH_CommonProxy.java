@@ -1,15 +1,15 @@
 package com.norwood.mcheli;
 
+import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
+import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
+import com.norwood.mcheli.aircraft.MCH_SoundUpdater;
+import com.norwood.mcheli.helicopter.MCH_HeliInfo;
 import com.norwood.mcheli.helper.MCH_SoundEvents;
 import com.norwood.mcheli.helper.MCH_Utils;
 import com.norwood.mcheli.helper.addon.AddonManager;
 import com.norwood.mcheli.helper.addon.AddonPack;
 import com.norwood.mcheli.helper.addon.AddonResourceLocation;
 import com.norwood.mcheli.helper.info.ContentRegistries;
-import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
-import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
-import com.norwood.mcheli.aircraft.MCH_SoundUpdater;
-import com.norwood.mcheli.helicopter.MCH_HeliInfo;
 import com.norwood.mcheli.plane.MCP_PlaneInfo;
 import com.norwood.mcheli.tank.MCH_TankInfo;
 import com.norwood.mcheli.vehicle.MCH_VehicleInfo;
@@ -17,6 +17,7 @@ import com.norwood.mcheli.weapon.MCH_WeaponInfo;
 import com.norwood.mcheli.wrapper.W_LanguageRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 
 import java.io.File;
 import java.util.List;
@@ -25,6 +26,10 @@ public class MCH_CommonProxy {
     protected static final String[] CONTENT_DIRS = new String[]{"helicopters", "planes", "tanks", "vehicles", "weapons", "throwable"};
     public MCH_Config config = null;
     public String lastConfigFileName;
+
+    public void postInit(FMLPostInitializationEvent postEvent) {
+
+    }
 
     public String getDataDir() {
         return MCH_Utils.getServer().getFolderName();

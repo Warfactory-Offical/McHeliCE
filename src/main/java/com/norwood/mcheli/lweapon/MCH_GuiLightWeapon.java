@@ -17,7 +17,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 @SideOnly(Side.CLIENT)
 public class MCH_GuiLightWeapon extends MCH_Gui {
@@ -52,11 +52,11 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
                         this.drawNightVisionNoise();
                     }
 
-                    GL11.glEnable(3042);
-                    GL11.glColor4f(0.0F, 0.0F, 0.0F, 1.0F);
+                    GlStateManager.enableBlend();
+                     GlStateManager.color(0.0F, 0.0F, 0.0F, 1.0F);
                     int srcBlend = GL11.glGetInteger(3041);
                     int dstBlend = GL11.glGetInteger(3040);
-                    GL11.glBlendFunc(770, 771);
+                    GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                     double dist = 0.0;
                     if (gs.getTargetEntity() != null) {
                         double dx = gs.getTargetEntity().posX - player.posX;
@@ -69,7 +69,7 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
                         this.drawGuiFGM148(player, gs, canFire, player.getHeldItemMainhand());
                         this.drawKeyBind(-805306369, true);
                     } else {
-                        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                         W_McClient.MOD_bindTexture("textures/gui/stinger.png");
                         double size = 512.0;
 
@@ -82,7 +82,7 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
                     }
 
                     GL11.glBlendFunc(srcBlend, dstBlend);
-                    GL11.glDisable(3042);
+                    GlStateManager.disableBlend();
                     this.drawLock(-14101432, -2161656, gs.getLockCount(), gs.getLockCountMax());
                     this.drawRange(player, gs, canFire, -14101432, -2161656);
                 }
@@ -91,15 +91,15 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
     }
 
     public void drawNightVisionNoise() {
-        GL11.glEnable(3042);
-        GL11.glColor4f(0.0F, 1.0F, 0.0F, 0.3F);
+        GlStateManager.enableBlend();
+         GlStateManager.color(0.0F, 1.0F, 0.0F, 0.3F);
         int srcBlend = GL11.glGetInteger(3041);
         int dstBlend = GL11.glGetInteger(3040);
         GL11.glBlendFunc(1, 1);
         W_McClient.MOD_bindTexture("textures/gui/alpha.png");
         this.drawTexturedModalRectRotate(0.0, 0.0, this.width, this.height, this.rand.nextInt(256), this.rand.nextInt(256), 256.0, 256.0, 0.0F);
         GL11.glBlendFunc(srcBlend, dstBlend);
-        GL11.glDisable(3042);
+        GlStateManager.disableBlend();
     }
 
     void drawLock(int color, int colorLock, int cntLock, int cntMax) {
@@ -131,7 +131,7 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
     }
 
     void drawGuiFGM148(EntityPlayer player, MCH_WeaponGuidanceSystem gs, boolean canFire, ItemStack itemStack) {
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         double fac = Math.min(this.width / 800.0, this.height / 700.0);
         int size = (int) (1024.0 * fac);
         size = size / 64 * 64;
@@ -186,8 +186,8 @@ public class MCH_GuiLightWeapon extends MCH_Gui {
         drawRect((int) right - 1, -1, this.width + 1, this.height + 1, -16777216);
         drawRect(-1, -1, this.width + 1, (int) top + 1, -16777216);
         drawRect(-1, (int) bottom - 1, this.width + 1, this.height + 1, -16777216);
-        GL11.glEnable(3042);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.enableBlend();
+         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         W_McClient.MOD_bindTexture("textures/gui/javelin.png");
         this.drawTexturedModalRectRotate(left, top, size, size, 0.0, 0.0, 256.0, 256.0, 0.0F);
         W_McClient.MOD_bindTexture("textures/gui/javelin2.png");

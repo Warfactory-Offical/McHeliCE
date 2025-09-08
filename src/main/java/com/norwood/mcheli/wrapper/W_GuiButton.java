@@ -2,7 +2,7 @@ package com.norwood.mcheli.wrapper;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.OpenGlHelper;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +35,9 @@ public class W_GuiButton extends GuiButton {
     }
 
     public void enableBlend() {
-        GL11.glEnable(3042);
+        GlStateManager.enableBlend();
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-        GL11.glBlendFunc(770, 771);
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     }
 
     public boolean isOnMouseOver() {

@@ -6,7 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public abstract class W_GuiContainer extends GuiContainer {
     private float time;
@@ -23,8 +23,8 @@ public abstract class W_GuiContainer extends GuiContainer {
                 font = this.fontRenderer;
             }
 
-            GL11.glEnable(2929);
-            GL11.glEnable(2896);
+            GlStateManager.enableDepth();
+            GlStateManager.enableLighting();
             this.itemRender.renderItemAndEffectIntoGUI(item, x, y);
             this.itemRender.renderItemOverlayIntoGUI(font, item, x, y, null);
             this.zLevel = 0.0F;

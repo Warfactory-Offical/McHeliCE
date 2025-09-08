@@ -3,6 +3,7 @@ package com.norwood.mcheli.block;
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_ModelManager;
 import com.norwood.mcheli.wrapper.W_McClient;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -11,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class MCH_DraftingTableRenderer extends TileEntitySpecialRenderer<MCH_DraftingTableTileEntity> {
     @SideOnly(Side.CLIENT)
@@ -27,27 +28,27 @@ public class MCH_DraftingTableRenderer extends TileEntitySpecialRenderer<MCH_Dra
     }
 
     public void render(@NotNull MCH_DraftingTableTileEntity tile, double posX, double posY, double posZ, float partialTicks, int destroyStage, float alpha) {
-        GL11.glPushMatrix();
-        GL11.glEnable(2884);
-        GL11.glTranslated(posX + 0.5, posY, posZ + 0.5);
+        GlStateManager.pushMatrix();
+        GlStateManager.enableCull();
+        GlStateManager.translate(posX + 0.5, posY, posZ + 0.5);
         float yaw = this.getYawAngle(tile);
-        GL11.glRotatef(yaw, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(yaw, 0.0F, 1.0F, 0.0F);
         RenderHelper.enableStandardItemLighting();
-        GL11.glColor4f(0.75F, 0.75F, 0.75F, 1.0F);
-        GL11.glEnable(3042);
+         GlStateManager.color(0.75F, 0.75F, 0.75F, 1.0F);
+        GlStateManager.enableBlend();
         int srcBlend = GL11.glGetInteger(3041);
         int dstBlend = GL11.glGetInteger(3040);
-        GL11.glBlendFunc(770, 771);
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         if (MCH_Config.SmoothShading.prmBool) {
-            GL11.glShadeModel(7425);
+            GlStateManager.shadeModel(GL11.GL_SMOOTH);
         }
 
         W_McClient.MOD_bindTexture("textures/blocks/drafting_table.png");
         MCH_ModelManager.render("blocks", "drafting_table");
         GL11.glBlendFunc(srcBlend, dstBlend);
-        GL11.glDisable(3042);
-        GL11.glShadeModel(7424);
-        GL11.glPopMatrix();
+        GlStateManager.disableBlend();
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GlStateManager.popMatrix();
     }
 
     private float getYawAngle(MCH_DraftingTableTileEntity tile) {

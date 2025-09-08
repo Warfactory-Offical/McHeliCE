@@ -15,7 +15,7 @@ import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.text.TextFormatting;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -121,8 +121,8 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
             int y = listTop + drawY * 9;
             int rectY = listTop + i * 9;
             drawRect(listLeft, rectY, listLeft + width - 1, rectY + 8, 553648127);
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            GL11.glEnable(3008);
+             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.enableAlpha();
             if (i < list.size()) {
                 NetworkPlayerInfo guiplayerinfo = list.get(i);
                 String playerName = guiplayerinfo.getGameProfile().getName();
@@ -147,7 +147,7 @@ public abstract class MCH_GuiScoreboard_Base extends W_GuiContainer {
     }
 
     public static void drawResponseTime(int x, int y, int responseTime) {
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getMinecraft().getTextureManager().bindTexture(ICONS);
         byte b2;
         if (responseTime < 0) {

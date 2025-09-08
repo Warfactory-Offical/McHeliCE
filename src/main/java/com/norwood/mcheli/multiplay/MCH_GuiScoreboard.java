@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -115,9 +115,9 @@ public class MCH_GuiScoreboard extends W_GuiContainer implements MCH_IGuiScorebo
     }
 
     public void func_146278_c(int tint) {
-        GL11.glDisable(2896);
+        GlStateManager.disableLighting();
         GL11.glDisable(2912);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     protected void drawGuiContainerForegroundLayer(int x, int y) {

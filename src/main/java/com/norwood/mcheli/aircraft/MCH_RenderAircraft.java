@@ -4,12 +4,12 @@ import com.norwood.mcheli.MCH_ClientCommonTickHandler;
 import com.norwood.mcheli.MCH_ClientEventHook;
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_Lib;
+import com.norwood.mcheli.debug._v3.WeaponPointRenderer;
+import com.norwood.mcheli.gui.MCH_Gui;
 import com.norwood.mcheli.helper.MCH_ColorInt;
 import com.norwood.mcheli.helper.MCH_Utils;
 import com.norwood.mcheli.helper.client._IModelCustom;
 import com.norwood.mcheli.helper.client.renderer.MCH_Verts;
-import com.norwood.mcheli.debug._v3.WeaponPointRenderer;
-import com.norwood.mcheli.gui.MCH_Gui;
 import com.norwood.mcheli.lweapon.MCH_ClientLightWeaponTickHandler;
 import com.norwood.mcheli.multiplay.MCH_GuiTargetMarker;
 import com.norwood.mcheli.uav.MCH_EntityUavStation;
@@ -22,10 +22,7 @@ import com.norwood.mcheli.wrapper.W_Render;
 import com.norwood.mcheli.wrapper.modelloader.W_ModelCustom;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -35,7 +32,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.MathHelper;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -83,29 +79,29 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
                 float yaw = ac.lastSearchLightYaw;
                 float pitch = ac.lastSearchLightPitch;
                 RenderHelper.disableStandardItemLighting();
-                GL11.glDisable(3553);
-                GL11.glShadeModel(7425);
-                GL11.glEnable(3042);
-                GL11.glBlendFunc(770, 1);
-                GL11.glDisable(3008);
-                GL11.glDisable(2884);
-                GL11.glDepthMask(false);
+                GlStateManager.disableTexture2D();
+                GlStateManager.shadeModel(GL11.GL_SMOOTH);
+                GlStateManager.enableBlend();
+                GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+                GlStateManager.disableAlpha();
+                GlStateManager.disableCull();
+                GlStateManager.depthMask(false);
                 float rot = ac.prevRotYawWheel + (ac.rotYawWheel - ac.prevRotYawWheel) * tickTime;
 
                 for (MCH_AircraftInfo.SearchLight sl : info.searchLights) {
-                    GL11.glPushMatrix();
-                    GL11.glTranslated(sl.pos.x, sl.pos.y, sl.pos.z);
+                    GlStateManager.pushMatrix();
+                    GlStateManager.translate(sl.pos.x, sl.pos.y, sl.pos.z);
                     if (!sl.fixDir) {
-                        GL11.glRotatef(yaw - ac.getRotYaw() + sl.yaw, 0.0F, -1.0F, 0.0F);
-                        GL11.glRotatef(pitch + 90.0F - ac.getRotPitch() + sl.pitch, 1.0F, 0.0F, 0.0F);
+                        GlStateManager.rotate(yaw - ac.getRotYaw() + sl.yaw, 0.0F, -1.0F, 0.0F);
+                        GlStateManager.rotate(pitch + 90.0F - ac.getRotPitch() + sl.pitch, 1.0F, 0.0F, 0.0F);
                     } else {
                         float stRot = 0.0F;
                         if (sl.steering) {
                             stRot = -rot * sl.stRot;
                         }
 
-                        GL11.glRotatef(0.0F + sl.yaw + stRot, 0.0F, -1.0F, 0.0F);
-                        GL11.glRotatef(90.0F + sl.pitch, 1.0F, 0.0F, 0.0F);
+                        GlStateManager.rotate(0.0F + sl.yaw + stRot, 0.0F, -1.0F, 0.0F);
+                        GlStateManager.rotate(90.0F + sl.pitch, 1.0F, 0.0F, 0.0F);
                     }
 
                     float height = sl.height;
@@ -123,26 +119,17 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
                     }
 
                     tessellator.draw();
-                    GL11.glPopMatrix();
+                    GlStateManager.popMatrix();
                 }
 
-                GL11.glDepthMask(true);
-                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                GL11.glEnable(3553);
-                GL11.glEnable(3008);
-                GL11.glBlendFunc(770, 771);
+                GlStateManager.depthMask(true);
+                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                GlStateManager.enableTexture2D();
+                GlStateManager.enableAlpha();
+                GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                 RenderHelper.enableStandardItemLighting();
             }
         }
-    }
-
-    public static void Test_Material(int light, float a, float b, float c) {
-        GL11.glMaterial(1032, light, setColorBuffer(a, b, c, 1.0F));
-    }
-
-    public static void Test_Light(int light, float a, float b, float c) {
-        GL11.glLight(16384, light, setColorBuffer(a, b, c, 1.0F));
-        GL11.glLight(16385, light, setColorBuffer(a, b, c, 1.0F));
     }
 
     public static void renderBody(@Nullable _IModelCustom model) {
@@ -172,12 +159,12 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
             float rot = ac.prevRotLightHatch + (ac.rotLightHatch - ac.prevRotLightHatch) * tickTime;
 
             for (MCH_AircraftInfo.Hatch t : info.lightHatchList) {
-                GL11.glPushMatrix();
-                GL11.glTranslated(t.pos.x, t.pos.y, t.pos.z);
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(t.pos.x, t.pos.y, t.pos.z);
                 GL11.glRotated(rot * t.maxRot, t.rot.x, t.rot.y, t.rot.z);
-                GL11.glTranslated(-t.pos.x, -t.pos.y, -t.pos.z);
+                GlStateManager.translate(-t.pos.x, -t.pos.y, -t.pos.z);
                 renderPart(t.model, info.model, t.modelName);
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
             }
         }
     }
@@ -187,12 +174,12 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
             float rot = ac.prevRotYawWheel + (ac.rotYawWheel - ac.prevRotYawWheel) * tickTime;
 
             for (MCH_AircraftInfo.PartWheel t : info.partSteeringWheel) {
-                GL11.glPushMatrix();
-                GL11.glTranslated(t.pos.x, t.pos.y, t.pos.z);
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(t.pos.x, t.pos.y, t.pos.z);
                 GL11.glRotated(rot * t.rotDir, t.rot.x, t.rot.y, t.rot.z);
-                GL11.glTranslated(-t.pos.x, -t.pos.y, -t.pos.z);
+                GlStateManager.translate(-t.pos.x, -t.pos.y, -t.pos.z);
                 renderPart(t.model, info.model, t.modelName);
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
             }
         }
     }
@@ -202,15 +189,15 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
             float yaw = ac.prevRotYawWheel + (ac.rotYawWheel - ac.prevRotYawWheel) * tickTime;
 
             for (MCH_AircraftInfo.PartWheel t : info.partWheel) {
-                GL11.glPushMatrix();
-                GL11.glTranslated(t.pos2.x, t.pos2.y, t.pos2.z);
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(t.pos2.x, t.pos2.y, t.pos2.z);
                 GL11.glRotated(yaw * t.rotDir, t.rot.x, t.rot.y, t.rot.z);
-                GL11.glTranslated(-t.pos2.x, -t.pos2.y, -t.pos2.z);
-                GL11.glTranslated(t.pos.x, t.pos.y, t.pos.z);
-                GL11.glRotatef(ac.prevRotWheel + (ac.rotWheel - ac.prevRotWheel) * tickTime, 1.0F, 0.0F, 0.0F);
-                GL11.glTranslated(-t.pos.x, -t.pos.y, -t.pos.z);
+                GlStateManager.translate(-t.pos2.x, -t.pos2.y, -t.pos2.z);
+                GlStateManager.translate(t.pos.x, t.pos.y, t.pos.z);
+                GlStateManager.rotate(ac.prevRotWheel + (ac.rotWheel - ac.prevRotWheel) * tickTime, 1.0F, 0.0F, 0.0F);
+                GlStateManager.translate(-t.pos.x, -t.pos.y, -t.pos.z);
                 renderPart(t.model, info.model, t.modelName);
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
             }
         }
     }
@@ -226,12 +213,12 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
 
                 rot = MCH_Lib.smooth(rot, prevRot, tickTime);
                 MCH_AircraftInfo.RotPart h = info.partRotPart.get(i);
-                GL11.glPushMatrix();
-                GL11.glTranslated(h.pos.x, h.pos.y, h.pos.z);
-                GL11.glRotatef(rot, (float) h.rot.x, (float) h.rot.y, (float) h.rot.z);
-                GL11.glTranslated(-h.pos.x, -h.pos.y, -h.pos.z);
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(h.pos.x, h.pos.y, h.pos.z);
+                GlStateManager.rotate(rot, (float) h.rot.x, (float) h.rot.y, (float) h.rot.z);
+                GlStateManager.translate(-h.pos.x, -h.pos.y, -h.pos.z);
                 renderPart(h.model, info.model, h.modelName);
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
             }
         }
     }
@@ -286,15 +273,15 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
                 }
             }
 
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
             if (w.turret) {
-                GL11.glTranslated(info.turretPosition.x, info.turretPosition.y, info.turretPosition.z);
+                GlStateManager.translate(info.turretPosition.x, info.turretPosition.y, info.turretPosition.z);
                 float ty = MCH_Lib.smooth(ac.getLastRiderYaw() - ac.getRotYaw(), ac.prevLastRiderYaw - ac.prevRotationYaw, tickTime);
-                GL11.glRotatef(ty, 0.0F, -1.0F, 0.0F);
-                GL11.glTranslated(-info.turretPosition.x, -info.turretPosition.y, -info.turretPosition.z);
+                GlStateManager.rotate(ty, 0.0F, -1.0F, 0.0F);
+                GlStateManager.translate(-info.turretPosition.x, -info.turretPosition.y, -info.turretPosition.z);
             }
 
-            GL11.glTranslated(w.pos.x, w.pos.y, w.pos.z);
+            GlStateManager.translate(w.pos.x, w.pos.y, w.pos.z);
             if (w.yaw) {
                 float var20;
                 float var21;
@@ -315,20 +302,20 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
                     var21 -= 360.0F;
                 }
 
-                GL11.glRotatef(var21 + (var20 - var21) * tickTime, 0.0F, -1.0F, 0.0F);
+                GlStateManager.rotate(var21 + (var20 - var21) * tickTime, 0.0F, -1.0F, 0.0F);
             }
 
             if (w.turret) {
                 float ty = MCH_Lib.smooth(ac.getLastRiderYaw() - ac.getRotYaw(), ac.prevLastRiderYaw - ac.prevRotationYaw, tickTime);
                 ty -= ws.rotationTurretYaw;
-                GL11.glRotatef(-ty, 0.0F, -1.0F, 0.0F);
+                GlStateManager.rotate(-ty, 0.0F, -1.0F, 0.0F);
             }
 
             boolean rev_sign = false;
             if (ws != null && (int) ws.defaultRotationYaw != 0) {
                 float t = MathHelper.wrapDegrees(ws.defaultRotationYaw);
                 rev_sign = t >= 45.0F && t <= 135.0F || t <= -45.0F && t >= -135.0F;
-                GL11.glRotatef(-ws.defaultRotationYaw, 0.0F, -1.0F, 0.0F);
+                GlStateManager.rotate(-ws.defaultRotationYaw, 0.0F, -1.0F, 0.0F);
             }
 
             if (w.pitch) {
@@ -350,7 +337,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
                     var23 = -var23;
                 }
 
-                GL11.glRotatef(var23 + (var22 - var23) * tickTime, 1.0F, 0.0F, 0.0F);
+                GlStateManager.rotate(var23 + (var22 - var23) * tickTime, 1.0F, 0.0F, 0.0F);
             }
 
             if (ws != null && w.recoilBuf != 0.0F) {
@@ -365,29 +352,29 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
                 }
 
                 float recoilBuf = r.prevRecoilBuf + (r.recoilBuf - r.prevRecoilBuf) * tickTime;
-                GL11.glTranslated(0.0, 0.0, w.recoilBuf * recoilBuf);
+                GlStateManager.translate(0.0, 0.0, w.recoilBuf * recoilBuf);
             }
 
             if (ws != null) {
-                GL11.glRotatef(ws.defaultRotationYaw, 0.0F, -1.0F, 0.0F);
+                GlStateManager.rotate(ws.defaultRotationYaw, 0.0F, -1.0F, 0.0F);
                 if (w.rotBarrel) {
                     float rotBrl = ws.prevRotBarrel + (ws.rotBarrel - ws.prevRotBarrel) * tickTime;
-                    GL11.glRotatef(rotBrl, (float) w.rot.x, (float) w.rot.y, (float) w.rot.z);
+                    GlStateManager.rotate(rotBrl, (float) w.rot.x, (float) w.rot.y, (float) w.rot.z);
                 }
             }
 
-            GL11.glTranslated(-w.pos.x, -w.pos.y, -w.pos.z);
+            GlStateManager.translate(-w.pos.x, -w.pos.y, -w.pos.z);
             if (!w.isMissile || !ac.isWeaponNotCooldown(ws, weaponIndex)) {
                 renderPart(w.model, info.model, w.modelName);
 
                 for (MCH_AircraftInfo.PartWeaponChild wc : w.child) {
-                    GL11.glPushMatrix();
+                    GlStateManager.pushMatrix();
                     renderWeaponChild(ac, info, wc, ws, e, tickTime);
-                    GL11.glPopMatrix();
+                    GlStateManager.popMatrix();
                 }
             }
 
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
             weaponIndex++;
         }
     }
@@ -399,7 +386,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
         float prevYaw;
         float rotPitch;
         float prevPitch;
-        GL11.glTranslated(w.pos.x, w.pos.y, w.pos.z);
+        GlStateManager.translate(w.pos.x, w.pos.y, w.pos.z);
         if (w.yaw) {
             if (ws != null) {
                 rotYaw = ws.rotationYaw - ws.defaultRotationYaw;
@@ -418,14 +405,14 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
                 prevYaw -= 360.0F;
             }
 
-            GL11.glRotatef(prevYaw + (rotYaw - prevYaw) * tickTime, 0.0F, -1.0F, 0.0F);
+            GlStateManager.rotate(prevYaw + (rotYaw - prevYaw) * tickTime, 0.0F, -1.0F, 0.0F);
         }
 
         boolean rev_sign = false;
         if (ws != null && (int) ws.defaultRotationYaw != 0) {
             float t = MathHelper.wrapDegrees(ws.defaultRotationYaw);
             rev_sign = t >= 45.0F && t <= 135.0F || t <= -45.0F && t >= -135.0F;
-            GL11.glRotatef(-ws.defaultRotationYaw, 0.0F, -1.0F, 0.0F);
+            GlStateManager.rotate(-ws.defaultRotationYaw, 0.0F, -1.0F, 0.0F);
         }
 
         if (w.pitch) {
@@ -445,7 +432,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
                 prevPitch = -prevPitch;
             }
 
-            GL11.glRotatef(prevPitch + (rotPitch - prevPitch) * tickTime, 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(prevPitch + (rotPitch - prevPitch) * tickTime, 1.0F, 0.0F, 0.0F);
         }
 
         if (ws != null && w.recoilBuf != 0.0F) {
@@ -460,14 +447,14 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
             }
 
             float recoilBuf = r.prevRecoilBuf + (r.recoilBuf - r.prevRecoilBuf) * tickTime;
-            GL11.glTranslated(0.0, 0.0, -w.recoilBuf * recoilBuf);
+            GlStateManager.translate(0.0, 0.0, -w.recoilBuf * recoilBuf);
         }
 
         if (ws != null) {
-            GL11.glRotatef(ws.defaultRotationYaw, 0.0F, -1.0F, 0.0F);
+            GlStateManager.rotate(ws.defaultRotationYaw, 0.0F, -1.0F, 0.0F);
         }
 
-        GL11.glTranslated(-w.pos.x, -w.pos.y, -w.pos.z);
+        GlStateManager.translate(-w.pos.x, -w.pos.y, -w.pos.z);
         renderPart(w.model, info.model, w.modelName);
     }
 
@@ -477,12 +464,12 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
             float[] prevRot = ac.prevRotTrackRoller;
 
             for (MCH_AircraftInfo.TrackRoller t : info.partTrackRoller) {
-                GL11.glPushMatrix();
-                GL11.glTranslated(t.pos.x, t.pos.y, t.pos.z);
-                GL11.glRotatef(prevRot[t.side] + (rot[t.side] - prevRot[t.side]) * tickTime, 1.0F, 0.0F, 0.0F);
-                GL11.glTranslated(-t.pos.x, -t.pos.y, -t.pos.z);
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(t.pos.x, t.pos.y, t.pos.z);
+                GlStateManager.rotate(prevRot[t.side] + (rot[t.side] - prevRot[t.side]) * tickTime, 1.0F, 0.0F, 0.0F);
+                GlStateManager.translate(-t.pos.x, -t.pos.y, -t.pos.z);
                 renderPart(t.model, info.model, t.modelName);
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
             }
         }
     }
@@ -496,8 +483,8 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
             for (MCH_AircraftInfo.CrawlerTrack c : info.partCrawlerTrack) {
                 GL11.glPointSize(c.len * 20.0F);
                 if (MCH_Config.TestMode.prmBool) {
-                    GL11.glDisable(3553);
-                    GL11.glDisable(3042);
+                    GlStateManager.disableTexture2D();
+                    GlStateManager.disableBlend();
                     builder.begin(0, DefaultVertexFormats.POSITION_COLOR);
 
                     for (int i = 0; i < c.cx.length; i++) {
@@ -507,8 +494,8 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
                     tessellator.draw();
                 }
 
-                GL11.glEnable(3553);
-                GL11.glEnable(3042);
+                GlStateManager.enableTexture2D();
+                GlStateManager.enableBlend();
                 int L = c.lp.size() - 1;
                 double rc = ac != null ? ac.rotCrawlerTrack[c.side] : 0.0;
                 double pc = ac != null ? ac.prevRotCrawlerTrack[c.side] : 0.0;
@@ -539,15 +526,15 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
                     double x = sx + (ex - sx) * pc;
                     double y = sy + (ey - sy) * pc;
                     double r = sr + (er - sr) * pc;
-                    GL11.glPushMatrix();
-                    GL11.glTranslated(0.0, x, y);
-                    GL11.glRotatef((float) r, -1.0F, 0.0F, 0.0F);
+                    GlStateManager.pushMatrix();
+                    GlStateManager.translate(0.0, x, y);
+                    GlStateManager.rotate((float) r, -1.0F, 0.0F, 0.0F);
                     renderPart(c.model, info.model, c.modelName);
-                    GL11.glPopMatrix();
+                    GlStateManager.popMatrix();
                 }
             }
 
-            GL11.glEnable(3042);
+            GlStateManager.enableBlend();
             GL11.glPointSize(prevWidth);
         }
     }
@@ -558,20 +545,20 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
             float prevRot = ac.getPrevHatchRotation();
 
             for (MCH_AircraftInfo.Hatch h : info.hatchList) {
-                GL11.glPushMatrix();
+                GlStateManager.pushMatrix();
                 if (h.isSlide) {
                     float r = ac.partHatch.rotation / ac.partHatch.rotationMax;
                     float pr = ac.partHatch.prevRotation / ac.partHatch.rotationMax;
                     float f = pr + (r - pr) * tickTime;
-                    GL11.glTranslated(h.pos.x * f, h.pos.y * f, h.pos.z * f);
+                    GlStateManager.translate(h.pos.x * f, h.pos.y * f, h.pos.z * f);
                 } else {
-                    GL11.glTranslated(h.pos.x, h.pos.y, h.pos.z);
-                    GL11.glRotatef((prevRot + (rot - prevRot) * tickTime) * h.maxRotFactor, (float) h.rot.x, (float) h.rot.y, (float) h.rot.z);
-                    GL11.glTranslated(-h.pos.x, -h.pos.y, -h.pos.z);
+                    GlStateManager.translate(h.pos.x, h.pos.y, h.pos.z);
+                    GlStateManager.rotate((prevRot + (rot - prevRot) * tickTime) * h.maxRotFactor, (float) h.rot.x, (float) h.rot.y, (float) h.rot.z);
+                    GlStateManager.translate(-h.pos.x, -h.pos.y, -h.pos.z);
                 }
 
                 renderPart(h.model, info.model, h.modelName);
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
             }
         }
     }
@@ -581,13 +568,13 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
             float throttle = MCH_Lib.smooth((float) ac.getCurrentThrottle(), (float) ac.getPrevCurrentThrottle(), tickTime);
 
             for (MCH_AircraftInfo.Throttle h : info.partThrottle) {
-                GL11.glPushMatrix();
-                GL11.glTranslated(h.pos.x, h.pos.y, h.pos.z);
-                GL11.glRotatef(throttle * h.rot2, (float) h.rot.x, (float) h.rot.y, (float) h.rot.z);
-                GL11.glTranslated(-h.pos.x, -h.pos.y, -h.pos.z);
-                GL11.glTranslated(h.slide.x * throttle, h.slide.y * throttle, h.slide.z * throttle);
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(h.pos.x, h.pos.y, h.pos.z);
+                GlStateManager.rotate(throttle * h.rot2, (float) h.rot.x, (float) h.rot.y, (float) h.rot.z);
+                GlStateManager.translate(-h.pos.x, -h.pos.y, -h.pos.z);
+                GlStateManager.translate(h.slide.x * throttle, h.slide.y * throttle, h.slide.z * throttle);
                 renderPart(h.model, info.model, h.modelName);
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
             }
         }
     }
@@ -596,20 +583,20 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
         for (int i = 0; i < info.partWeaponBay.size(); i++) {
             MCH_AircraftInfo.WeaponBay w = info.partWeaponBay.get(i);
             MCH_EntityAircraft.WeaponBay ws = ac.weaponBays[i];
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
             if (w.isSlide) {
                 float r = ws.rot / 90.0F;
                 float pr = ws.prevRot / 90.0F;
                 float f = pr + (r - pr) * tickTime;
-                GL11.glTranslated(w.pos.x * f, w.pos.y * f, w.pos.z * f);
+                GlStateManager.translate(w.pos.x * f, w.pos.y * f, w.pos.z * f);
             } else {
-                GL11.glTranslated(w.pos.x, w.pos.y, w.pos.z);
-                GL11.glRotatef((ws.prevRot + (ws.rot - ws.prevRot) * tickTime) * w.maxRotFactor, (float) w.rot.x, (float) w.rot.y, (float) w.rot.z);
-                GL11.glTranslated(-w.pos.x, -w.pos.y, -w.pos.z);
+                GlStateManager.translate(w.pos.x, w.pos.y, w.pos.z);
+                GlStateManager.rotate((ws.prevRot + (ws.rot - ws.prevRot) * tickTime) * w.maxRotFactor, (float) w.rot.x, (float) w.rot.y, (float) w.rot.z);
+                GlStateManager.translate(-w.pos.x, -w.pos.y, -w.pos.z);
             }
 
             renderPart(w.model, info.model, w.modelName);
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 
@@ -623,19 +610,19 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
             float pitch = prevRotPitch + (rotPitch - prevRotPitch) * tickTime - ac.getRotPitch();
 
             for (MCH_AircraftInfo.Camera c : info.cameraList) {
-                GL11.glPushMatrix();
-                GL11.glTranslated(c.pos.x, c.pos.y, c.pos.z);
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(c.pos.x, c.pos.y, c.pos.z);
                 if (c.yawSync) {
-                    GL11.glRotatef(yaw, 0.0F, -1.0F, 0.0F);
+                    GlStateManager.rotate(yaw, 0.0F, -1.0F, 0.0F);
                 }
 
                 if (c.pitchSync) {
-                    GL11.glRotatef(pitch, 1.0F, 0.0F, 0.0F);
+                    GlStateManager.rotate(pitch, 1.0F, 0.0F, 0.0F);
                 }
 
-                GL11.glTranslated(-c.pos.x, -c.pos.y, -c.pos.z);
+                GlStateManager.translate(-c.pos.x, -c.pos.y, -c.pos.z);
                 renderPart(c.model, info.model, c.modelName);
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
             }
         }
     }
@@ -646,20 +633,20 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
             float prevRot = ac.getPrevCanopyRotation();
 
             for (MCH_AircraftInfo.Canopy c : info.canopyList) {
-                GL11.glPushMatrix();
+                GlStateManager.pushMatrix();
                 if (c.isSlide) {
                     float r = ac.partCanopy.rotation / ac.partCanopy.rotationMax;
                     float pr = ac.partCanopy.prevRotation / ac.partCanopy.rotationMax;
                     float f = pr + (r - pr) * tickTime;
-                    GL11.glTranslated(c.pos.x * f, c.pos.y * f, c.pos.z * f);
+                    GlStateManager.translate(c.pos.x * f, c.pos.y * f, c.pos.z * f);
                 } else {
-                    GL11.glTranslated(c.pos.x, c.pos.y, c.pos.z);
-                    GL11.glRotatef((prevRot + (rot - prevRot) * tickTime) * c.maxRotFactor, (float) c.rot.x, (float) c.rot.y, (float) c.rot.z);
-                    GL11.glTranslated(-c.pos.x, -c.pos.y, -c.pos.z);
+                    GlStateManager.translate(c.pos.x, c.pos.y, c.pos.z);
+                    GlStateManager.rotate((prevRot + (rot - prevRot) * tickTime) * c.maxRotFactor, (float) c.rot.x, (float) c.rot.y, (float) c.rot.z);
+                    GlStateManager.translate(-c.pos.x, -c.pos.y, -c.pos.z);
                 }
 
                 renderPart(c.model, info.model, c.modelName);
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
             }
         }
     }
@@ -678,38 +665,38 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
             }
 
             for (MCH_AircraftInfo.LandingGear n : info.landingGear) {
-                GL11.glPushMatrix();
-                GL11.glTranslated(n.pos.x, n.pos.y, n.pos.z);
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(n.pos.x, n.pos.y, n.pos.z);
                 if (!n.reverse) {
                     if (!n.hatch) {
-                        GL11.glRotatef(rot1 * n.maxRotFactor, (float) n.rot.x, (float) n.rot.y, (float) n.rot.z);
+                        GlStateManager.rotate(rot1 * n.maxRotFactor, (float) n.rot.x, (float) n.rot.y, (float) n.rot.z);
                     } else {
-                        GL11.glRotatef(rotHatch * n.maxRotFactor, (float) n.rot.x, (float) n.rot.y, (float) n.rot.z);
+                        GlStateManager.rotate(rotHatch * n.maxRotFactor, (float) n.rot.x, (float) n.rot.y, (float) n.rot.z);
                     }
                 } else {
-                    GL11.glRotatef(rot1Rev * n.maxRotFactor, (float) n.rot.x, (float) n.rot.y, (float) n.rot.z);
+                    GlStateManager.rotate(rot1Rev * n.maxRotFactor, (float) n.rot.x, (float) n.rot.y, (float) n.rot.z);
                 }
 
                 if (n.enableRot2) {
                     if (!n.reverse) {
-                        GL11.glRotatef(rot1 * n.maxRotFactor2, (float) n.rot2.x, (float) n.rot2.y, (float) n.rot2.z);
+                        GlStateManager.rotate(rot1 * n.maxRotFactor2, (float) n.rot2.x, (float) n.rot2.y, (float) n.rot2.z);
                     } else {
-                        GL11.glRotatef(rot1Rev * n.maxRotFactor2, (float) n.rot2.x, (float) n.rot2.y, (float) n.rot2.z);
+                        GlStateManager.rotate(rot1Rev * n.maxRotFactor2, (float) n.rot2.x, (float) n.rot2.y, (float) n.rot2.z);
                     }
                 }
 
-                GL11.glTranslated(-n.pos.x, -n.pos.y, -n.pos.z);
+                GlStateManager.translate(-n.pos.x, -n.pos.y, -n.pos.z);
                 if (n.slide != null) {
                     float f = rot / 90.0F;
                     if (n.reverse) {
                         f = 1.0F - f;
                     }
 
-                    GL11.glTranslated(f * n.slide.x, f * n.slide.y, f * n.slide.z);
+                    GlStateManager.translate(f * n.slide.x, f * n.slide.y, f * n.slide.z);
                 }
 
                 renderPart(n.model, info.model, n.modelName);
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
             }
         }
     }
@@ -737,18 +724,18 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
                             double y = entity.posY - TileEntityRendererDispatcher.staticPlayerY;
                             double z = entity.posZ - TileEntityRendererDispatcher.staticPlayerZ;
                             if (dist < 10000.0) {
-                                GL11.glPushMatrix();
-                                GL11.glTranslatef((float) x, (float) y + entity.height + 0.5F, (float) z);
+                                GlStateManager.pushMatrix();
+                                GlStateManager.translate((float) x, (float) y + entity.height + 0.5F, (float) z);
                                 GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-                                GL11.glRotatef(-rm.playerViewY, 0.0F, 1.0F, 0.0F);
-                                GL11.glRotatef(rm.playerViewX, 1.0F, 0.0F, 0.0F);
-                                GL11.glScalef(-0.02666667F, -0.02666667F, 0.02666667F);
-                                GL11.glDisable(2896);
-                                GL11.glTranslatef(0.0F, 9.374999F, 0.0F);
-                                GL11.glDepthMask(false);
-                                GL11.glEnable(3042);
-                                GL11.glBlendFunc(770, 771);
-                                GL11.glDisable(3553);
+                                GlStateManager.rotate(-rm.playerViewY, 0.0F, 1.0F, 0.0F);
+                                GlStateManager.rotate(rm.playerViewX, 1.0F, 0.0F, 0.0F);
+                                GlStateManager.scale(-0.02666667F, -0.02666667F, 0.02666667F);
+                                GlStateManager.disableLighting();
+                                GlStateManager.translate(0.0F, 9.374999F, 0.0F);
+                                GlStateManager.depthMask(false);
+                                GlStateManager.enableBlend();
+                                GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+                                GlStateManager.disableTexture2D();
                                 int prevWidth = GL11.glGetInteger(2849);
                                 float size = Math.max(entity.width, entity.height) * 20.0F;
                                 if (entity instanceof MCH_EntityAircraft) {
@@ -774,9 +761,9 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
                                 }
 
                                 tessellator.draw();
-                                GL11.glPopMatrix();
+                                GlStateManager.popMatrix();
                                 if (!ac.isUAV() && isLockEntity && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
-                                    GL11.glPushMatrix();
+                                    GlStateManager.pushMatrix();
                                     builder.begin(1, MCH_Verts.POS_COLOR_LMAP);
                                     GL11.glLineWidth(1.0F);
                                     builder.pos(x, y + entity.height / 2.0F, z).color(1.0F, 0.0F, 0.0F, 1.0F).lightmap(0, 240).endVertex();
@@ -789,15 +776,15 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
                                             .lightmap(0, 240)
                                             .endVertex();
                                     tessellator.draw();
-                                    GL11.glPopMatrix();
+                                    GlStateManager.popMatrix();
                                 }
 
                                 GL11.glLineWidth(prevWidth);
-                                GL11.glEnable(3553);
-                                GL11.glDepthMask(true);
-                                GL11.glEnable(2896);
-                                GL11.glDisable(3042);
-                                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                                GlStateManager.enableTexture2D();
+                                GlStateManager.depthMask(true);
+                                GlStateManager.enableLighting();
+                                GlStateManager.disableBlend();
+                                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                             }
                         }
                     }
@@ -807,12 +794,12 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
     }
 
     public static void renderRope(MCH_EntityAircraft ac, MCH_AircraftInfo info, double x, double y, double z, float tickTime) {
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
         if (ac.isRepelling()) {
-            GL11.glDisable(3553);
-            GL11.glDisable(2896);
+            GlStateManager.disableTexture2D();
+            GlStateManager.disableLighting();
 
             for (int i = 0; i < info.repellingHooks.size(); i++) {
                 builder.begin(3, DefaultVertexFormats.POSITION_COLOR);
@@ -823,17 +810,17 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
                 tessellator.draw();
             }
 
-            GL11.glEnable(2896);
-            GL11.glEnable(3553);
+            GlStateManager.enableLighting();
+            GlStateManager.enableTexture2D();
         }
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     public void doRender(T entity, double posX, double posY, double posZ, float par8, float tickTime) {
         MCH_AircraftInfo info = entity.getAcInfo();
         if (info != null) {
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
             float yaw = this.calcRot(entity.getRotYaw(), entity.prevRotationYaw, tickTime);
             float pitch = entity.calcRotPitch(tickTime);
             float roll = this.calcRot(entity.getRotRoll(), entity.prevRotationRoll, tickTime);
@@ -844,9 +831,9 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
             if (!shouldSkipRender(entity)) {
                 this.setCommonRenderParam(info.smoothShading, entity.getBrightnessForRender());
                 if (entity.isDestroyed()) {
-                    GL11.glColor4f(0.15F, 0.15F, 0.15F, 1.0F);
+                    GlStateManager.color(0.15F, 0.15F, 0.15F, 1.0F);
                 } else {
-                    GL11.glColor4f(0.75F, 0.75F, 0.75F, (float) MCH_Config.__TextureAlpha.prmDouble);
+                    GlStateManager.color(0.75F, 0.75F, 0.75F, (float) MCH_Config.__TextureAlpha.prmDouble);
                 }
 
                 this.renderAircraft(entity, posX, posY, posZ, yaw, pitch, roll, tickTime);
@@ -855,7 +842,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
                 this.restoreCommonRenderParam();
             }
 
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
             MCH_GuiTargetMarker.addMarkEntityPos(1, entity, posX, posY + info.markerHeight, posZ);
             MCH_ClientLightWeaponTickHandler.markEntity(entity, posX, posY, posZ);
             renderEntityMarker(entity);
@@ -865,9 +852,6 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
         }
     }
 
-    public boolean shouldRender(@NotNull T livingEntity, @NotNull ICamera camera, double camX, double camY, double camZ) {
-        return true;
-    }
 
     public void doRenderShadowAndFire(Entity entity, double x, double y, double z, float yaw, float partialTicks) {
         if (entity.canRenderOnFire()) {
@@ -876,23 +860,23 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
     }
 
     private void renderEntityOnFire(Entity entity, double x, double y, double z, float tick) {
-        GL11.glDisable(2896);
+        GlStateManager.disableLighting();
         TextureMap texturemap = Minecraft.getMinecraft().getTextureMapBlocks();
         TextureAtlasSprite textureatlassprite = texturemap.getAtlasSprite("minecraft:blocks/fire_layer_0");
         TextureAtlasSprite textureatlassprite1 = texturemap.getAtlasSprite("minecraft:blocks/fire_layer_1");
-        GL11.glPushMatrix();
-        GL11.glTranslatef((float) x, (float) y, (float) z);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate((float) x, (float) y, (float) z);
         float f1 = entity.width * 1.4F;
-        GL11.glScalef(f1 * 2.0F, f1 * 2.0F, f1 * 2.0F);
+        GlStateManager.scale(f1 * 2.0F, f1 * 2.0F, f1 * 2.0F);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         float f2 = 1.5F;
         float f3 = 0.0F;
         float f4 = entity.height / f1;
         float f5 = (float) (entity.posY + entity.getEntityBoundingBox().minY);
-        GL11.glRotatef(-this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-        GL11.glTranslatef(0.0F, 0.0F, -0.3F + (int) f4 * 0.02F);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.rotate(-this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+        GlStateManager.translate(0.0F, 0.0F, -0.3F + (int) f4 * 0.02F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         float f6 = 0.0F;
         int i = 0;
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
@@ -922,8 +906,8 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
         }
 
         tessellator.draw();
-        GL11.glPopMatrix();
-        GL11.glEnable(2896);
+        GlStateManager.popMatrix();
+        GlStateManager.enableLighting();
     }
 
     protected void bindTexture(String path, MCH_EntityAircraft ac) {
@@ -939,7 +923,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
 
     public void renderRiddenEntity(MCH_EntityAircraft ac, float tickTime, float yaw, float pitch, float roll, float width, float height) {
         MCH_ClientEventHook.setCancelRender(false);
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         this.renderEntitySimple(ac, ac.getRiddenByEntity(), tickTime, yaw, pitch, roll, width, height);
 
         for (MCH_EntitySeat s : ac.getSeats()) {
@@ -948,7 +932,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
             }
         }
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
         MCH_ClientEventHook.setCancelRender(true);
     }
 
@@ -957,7 +941,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
             boolean isPilot = ac.isPilot(entity);
             boolean isClientPlayer = W_Lib.isClientPlayer(entity);
             if (!isClientPlayer || !W_Lib.isFirstPerson() || isPilot && ac.getCameraId() > 0) {
-                GL11.glPushMatrix();
+                GlStateManager.pushMatrix();
                 if (entity.ticksExisted == 0) {
                     entity.lastTickPosX = entity.posX;
                     entity.lastTickPosY = entity.posY;
@@ -976,17 +960,17 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
                 int j = i % 65536;
                 int k = i / 65536;
                 OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
-                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                 double dx = x - TileEntityRendererDispatcher.staticPlayerX;
                 double dy = y - TileEntityRendererDispatcher.staticPlayerY;
                 double dz = z - TileEntityRendererDispatcher.staticPlayerZ;
-                GL11.glTranslated(dx, dy, dz);
-                GL11.glRotatef(yaw, 0.0F, -1.0F, 0.0F);
-                GL11.glRotatef(pitch, 1.0F, 0.0F, 0.0F);
-                GL11.glRotatef(roll, 0.0F, 0.0F, 1.0F);
-                GL11.glScaled(width, height, width);
-                GL11.glRotatef(-yaw, 0.0F, -1.0F, 0.0F);
-                GL11.glTranslated(-dx, -dy, -dz);
+                GlStateManager.translate(dx, dy, dz);
+                GlStateManager.rotate(yaw, 0.0F, -1.0F, 0.0F);
+                GlStateManager.rotate(pitch, 1.0F, 0.0F, 0.0F);
+                GlStateManager.rotate(roll, 0.0F, 0.0F, 1.0F);
+                GlStateManager.scale(width, height, width);
+                GlStateManager.rotate(-yaw, 0.0F, -1.0F, 0.0F);
+                GlStateManager.translate(-dx, -dy, -dz);
                 boolean bk = renderingEntity;
                 renderingEntity = true;
                 Entity ridingEntity = entity.getRidingEntity();
@@ -1018,7 +1002,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
 
                 entity.startRiding(ridingEntity);
                 renderingEntity = bk;
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
             }
         }
     }
@@ -1039,45 +1023,45 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
 
     public void renderDebugHitBox(MCH_EntityAircraft e, double x, double y, double z, float yaw, float pitch) {
         if (MCH_Config.TestMode.prmBool && debugModel != null) {
-            GL11.glPushMatrix();
-            GL11.glTranslated(x, y, z);
-            GL11.glScalef(e.width, e.height, e.width);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(x, y, z);
+            GlStateManager.scale(e.width, e.height, e.width);
             this.bindTexture("textures/hit_box.png");
             debugModel.renderAll();
-            GL11.glPopMatrix();
-            GL11.glPushMatrix();
-            GL11.glTranslated(x, y, z);
+            GlStateManager.popMatrix();
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(x, y, z);
 
             for (MCH_BoundingBox bb : e.extraBoundingBox) {
-                GL11.glPushMatrix();
-                GL11.glTranslated(bb.rotatedOffset.x, bb.rotatedOffset.y, bb.rotatedOffset.z);
-                GL11.glPushMatrix();
-                GL11.glScalef(bb.width, bb.height, bb.width);
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(bb.rotatedOffset.x, bb.rotatedOffset.y, bb.rotatedOffset.z);
+                GlStateManager.pushMatrix();
+                GlStateManager.scale(bb.width, bb.height, bb.width);
                 this.bindTexture("textures/bounding_box.png");
                 debugModel.renderAll();
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
                 this.drawHitBoxDetail(bb);
-                GL11.glPopMatrix();
+                GlStateManager.popMatrix();
             }
 
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 
     public void drawHitBoxDetail(MCH_BoundingBox bb) {
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         float f1 = 0.080000006F;
         String s = String.format("%.2f", bb.damegeFactor);
-        GL11.glPushMatrix();
-        GL11.glTranslatef(0.0F, 0.5F + (float) (bb.offsetY * 0.0 + bb.height), 0.0F);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0.0F, 0.5F + (float) (bb.offsetY * 0.0 + bb.height), 0.0F);
         GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(-this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
-        GL11.glScalef(-f1, -f1, f1);
-        GL11.glDisable(2896);
-        GL11.glEnable(3042);
+        GlStateManager.rotate(-this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+        GlStateManager.scale(-f1, -f1, f1);
+        GlStateManager.disableLighting();
+        GlStateManager.enableBlend();
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-        GL11.glDisable(3553);
+        GlStateManager.disableTexture2D();
         FontRenderer fontrenderer = this.getFontRendererFromRenderManager();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
@@ -1088,29 +1072,33 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
         builder.pos(i + 1, 8.0, 0.1).color(0.0F, 0.0F, 0.0F, 0.4F).endVertex();
         builder.pos(i + 1, -1.0, 0.1).color(0.0F, 0.0F, 0.0F, 0.4F).endVertex();
         tessellator.draw();
-        GL11.glEnable(3553);
-        GL11.glDepthMask(false);
+        GlStateManager.enableTexture2D();
+        GlStateManager.depthMask(false);
         int color = bb.damegeFactor > 1.0F ? 16711680 : (bb.damegeFactor < 1.0F ? '\uffff' : 16777215);
         fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, 0, -1073741824 | color);
-        GL11.glDepthMask(true);
-        GL11.glEnable(2896);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GL11.glPopMatrix();
+        GlStateManager.depthMask(true);
+        GlStateManager.enableLighting();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.popMatrix();
+    }
+
+    public boolean shouldRender(MCH_EntityAircraft livingEntity, ICamera camera, double camX, double camY, double camZ) {
+        return false;
     }
 
     public void renderDebugPilotSeat(MCH_EntityAircraft e, double x, double y, double z, float yaw, float pitch, float roll) {
         if (MCH_Config.TestMode.prmBool && debugModel != null) {
-            GL11.glPushMatrix();
+            GlStateManager.pushMatrix();
             MCH_SeatInfo seat = e.getSeatInfo(0);
-            GL11.glTranslated(x, y, z);
-            GL11.glRotatef(yaw, 0.0F, -1.0F, 0.0F);
-            GL11.glRotatef(pitch, 1.0F, 0.0F, 0.0F);
-            GL11.glRotatef(roll, 0.0F, 0.0F, 1.0F);
-            GL11.glTranslated(seat.pos.x, seat.pos.y, seat.pos.z);
-            GL11.glScalef(1.0F, 1.0F, 1.0F);
+            GlStateManager.translate(x, y, z);
+            GlStateManager.rotate(yaw, 0.0F, -1.0F, 0.0F);
+            GlStateManager.rotate(pitch, 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(roll, 0.0F, 0.0F, 1.0F);
+            GlStateManager.translate(seat.pos.x, seat.pos.y, seat.pos.z);
+            GlStateManager.scale(1.0F, 1.0F, 1.0F);
             this.bindTexture("textures/seat_pilot.png");
             debugModel.renderAll();
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 

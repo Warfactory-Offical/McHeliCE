@@ -1,13 +1,14 @@
 package com.norwood.mcheli.weapon;
 
 import com.norwood.mcheli.MCH_Lib;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 @SideOnly(Side.CLIENT)
 public class MCH_RenderAAMissile extends MCH_RenderBulletBase<MCH_EntityAAMissile> {
@@ -23,13 +24,13 @@ public class MCH_RenderAAMissile extends MCH_RenderBulletBase<MCH_EntityAAMissil
             double mx = entity.prevMotionX + (entity.motionX - entity.prevMotionX) * par9;
             double my = entity.prevMotionY + (entity.motionY - entity.prevMotionY) * par9;
             double mz = entity.prevMotionZ + (entity.motionZ - entity.prevMotionZ) * par9;
-            GL11.glPushMatrix();
-            GL11.glTranslated(posX, posY, posZ);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(posX, posY, posZ);
             Vec3d v = MCH_Lib.getYawPitchFromVec(mx, my, mz);
-            GL11.glRotatef((float) v.y - 90.0F, 0.0F, -1.0F, 0.0F);
-            GL11.glRotatef((float) v.z, -1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate((float) v.y - 90.0F, 0.0F, -1.0F, 0.0F);
+            GlStateManager.rotate((float) v.z, -1.0F, 0.0F, 0.0F);
             this.renderModel(entity);
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 

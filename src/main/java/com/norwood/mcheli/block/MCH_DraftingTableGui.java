@@ -18,6 +18,7 @@ import com.norwood.mcheli.wrapper.modelloader.W_ModelCustom;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -31,7 +32,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -375,7 +376,7 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
     protected void drawGuiContainerForegroundLayer(int mx, int my) {
         super.drawGuiContainerForegroundLayer(mx, my);
         this.zLevel = 0.0F;
-        GL11.glEnable(3042);
+        GlStateManager.enableBlend();
         if (this.getScreenId() == 0) {
             ArrayList<String> list = new ArrayList<>();
             if (this.current != null) {
@@ -563,9 +564,9 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        GL11.glEnable(3042);
-        GL11.glBlendFunc(770, 771);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.getScreenId() == 0) {
             super.drawScreen(mouseX, mouseY, partialTicks);
         } else {
@@ -585,28 +586,28 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
         W_ModelCustom model = this.current.getModel();
         double scl = 162.0 / (MathHelper.abs(model.size) < 0.01 ? 0.01 : model.size);
         this.mc.getTextureManager().bindTexture(this.current.getModelTexture());
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         double cx = (model.maxX - model.minX) * 0.5 + model.minX;
         double cy = (model.maxY - model.minY) * 0.5 + model.minY;
         double cz = (model.maxZ - model.minZ) * 0.5 + model.minZ;
         if (this.current.modelRot == 0) {
-            GL11.glTranslated(cx * scl, cz * scl, 0.0);
+            GlStateManager.translate(cx * scl, cz * scl, 0.0);
         } else {
-            GL11.glTranslated(cz * scl, cy * scl, 0.0);
+            GlStateManager.translate(cz * scl, cy * scl, 0.0);
         }
 
-        GL11.glTranslated(this.guiLeft + 300 + modelPosX, this.guiTop + 110 + modelPosY, 550.0);
+        GlStateManager.translate(this.guiLeft + 300 + modelPosX, this.guiTop + 110 + modelPosY, 550.0);
         GL11.glRotated(modelRotX, 1.0, 0.0, 0.0);
         GL11.glRotated(modelRotY, 0.0, 1.0, 0.0);
-        GL11.glScaled(scl * modelZoom, scl * modelZoom, -scl * modelZoom);
-        GL11.glDisable(32826);
-        GL11.glDisable(2896);
-        GL11.glEnable(3008);
-        GL11.glEnable(3042);
+       GlStateManager.scale(scl * modelZoom, scl * modelZoom, -scl * modelZoom);
+         GlStateManager.disableRescaleNormal();;
+        GlStateManager.disableLighting();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableBlend();
         int faceNum = model.getFaceNum();
         if (this.drawFace < faceNum * 2) {
             GL11.glColor4d(0.1F, 0.1F, 0.1F, 1.0);
-            GL11.glDisable(3553);
+            GlStateManager.disableTexture2D();
             GL11.glPolygonMode(1032, 6913);
             float lw = GL11.glGetFloat(2849);
             GL11.glLineWidth(1.0F);
@@ -614,7 +615,7 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
             MCH_RenderAircraft.renderCrawlerTrack(null, this.current.getAcInfo(), partialTicks);
             GL11.glLineWidth(lw);
             GL11.glPolygonMode(1032, 6914);
-            GL11.glEnable(3553);
+            GlStateManager.enableTexture2D();
         }
 
         if (this.drawFace >= faceNum) {
@@ -623,16 +624,16 @@ public class MCH_DraftingTableGui extends W_GuiContainer {
             MCH_RenderAircraft.renderCrawlerTrack(null, this.current.getAcInfo(), partialTicks);
         }
 
-        GL11.glEnable(32826);
-        GL11.glEnable(2896);
-        GL11.glPopMatrix();
+         GlStateManager.enableRescaleNormal();;
+        GlStateManager.enableLighting();
+        GlStateManager.popMatrix();
         if (this.drawFace < 10000000) {
             this.drawFace = (int) (this.drawFace + 20.0F);
         }
     }
 
     protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         float z = this.zLevel;
         this.zLevel = 0.0F;
         W_McClient.MOD_bindTexture("textures/gui/drafting_table.png");

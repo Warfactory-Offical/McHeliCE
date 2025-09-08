@@ -1,7 +1,8 @@
 package com.norwood.mcheli.hud;
 
 import com.norwood.mcheli.MCH_Lib;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class MCH_HudItemGraduation extends MCH_HudItem {
     private final String drawRot;
@@ -21,12 +22,12 @@ public class MCH_HudItemGraduation extends MCH_HudItem {
 
     @Override
     public void execute() {
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
         int x = (int) (centerX + calc(this.drawPosX));
         int y = (int) (centerY + calc(this.drawPosY));
-        GL11.glTranslated(x, y, 0.0);
-        GL11.glRotatef((float) calc(this.drawRoll), 0.0F, 0.0F, 1.0F);
-        GL11.glTranslated(-x, -y, 0.0);
+        GlStateManager.translate(x, y, 0.0);
+        GlStateManager.rotate((float) calc(this.drawRoll), 0.0F, 0.0F, 1.0F);
+        GlStateManager.translate(-x, -y, 0.0);
         if (this.type == 0) {
             this.drawCommonGraduationYaw(calc(this.drawRot), colorSetting, x, y);
         } else if (this.type == 1) {
@@ -35,7 +36,7 @@ public class MCH_HudItemGraduation extends MCH_HudItem {
             this.drawCommonGraduationPitch2(calc(this.drawRot), colorSetting, x, y);
         }
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     private void drawCommonGraduationPitch2(double playerPitch, int color, int posX, int posY) {

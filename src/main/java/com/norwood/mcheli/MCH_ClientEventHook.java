@@ -12,6 +12,7 @@ import com.norwood.mcheli.wrapper.W_ClientEventHook;
 import com.norwood.mcheli.wrapper.W_Reflection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -23,7 +24,7 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderLivingEvent.Specials.Post;
 import net.minecraftforge.client.event.RenderLivingEvent.Specials.Pre;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,19 +62,20 @@ public class MCH_ClientEventHook extends W_ClientEventHook {
                         int k = 240;
                         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
                         RenderManager rm = event.getRenderer().getRenderManager();
-                        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                         float f1 = 0.080000006F;
-                        GL11.glPushMatrix();
-                        GL11.glTranslated(event.getX(), event.getY() + (float) (entity.height * 0.75), event.getZ());
+                        GlStateManager.pushMatrix();
+                        GlStateManager.translate(event.getX(), event.getY() + (float) (entity.height * 0.75), event.getZ());
                         GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-                        GL11.glRotatef(-rm.playerViewY, 0.0F, 1.0F, 0.0F);
-                        GL11.glRotatef(rm.playerViewX, 1.0F, 0.0F, 0.0F);
-                        GL11.glScalef(-f1, -f1, f1);
-                        GL11.glEnable(3042);
+                        GlStateManager.rotate(-rm.playerViewY, 0.0F, 1.0F, 0.0F);
+                        GlStateManager.rotate(rm.playerViewX, 1.0F, 0.0F, 0.0F);
+                        GlStateManager.scale(-f1, -f1, f1);
+                        GlStateManager.enableBlend();
                         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-                        GL11.glEnable(3553);
+                        GlStateManager.enableTexture2D();
                         rm.renderEngine.bindTexture(ir_strobe);
-                        GL11.glAlphaFunc(516, 0.003921569F);
+                        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F);
+
                         Tessellator tessellator = Tessellator.getInstance();
                         BufferBuilder builder = tessellator.getBuffer();
                         builder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
@@ -83,8 +85,8 @@ public class MCH_ClientEventHook extends W_ClientEventHook {
                         builder.pos(i, i, 0.1).tex(1.0, 1.0).color(1.0F, 1.0F, 1.0F, alpha * (cm == 1 ? 0.9F : 0.5F)).endVertex();
                         builder.pos(i, -i, 0.1).tex(1.0, 0.0).color(1.0F, 1.0F, 1.0F, alpha * (cm == 1 ? 0.9F : 0.5F)).endVertex();
                         tessellator.draw();
-                        GL11.glEnable(2896);
-                        GL11.glPopMatrix();
+                        GlStateManager.enableLighting();
+                        GlStateManager.popMatrix();
                     }
                 }
             }

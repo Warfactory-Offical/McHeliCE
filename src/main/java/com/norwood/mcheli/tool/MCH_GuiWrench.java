@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 @SideOnly(Side.CLIENT)
 public class MCH_GuiWrench extends MCH_Gui {
@@ -32,7 +32,7 @@ public class MCH_GuiWrench extends MCH_Gui {
         if (!isThirdPersonView) {
             GL11.glLineWidth(scaleFactor);
             if (this.isDrawGui(player)) {
-                GL11.glDisable(3042);
+                GlStateManager.disableBlend();
                 MCH_EntityAircraft ac = ((MCH_ItemWrench) player.getHeldItemMainhand().getItem()).getMouseOverAircraft(player);
                 if (ac != null && ac.getMaxHP() > 0) {
                     int color = (float) ac.getHP() / ac.getMaxHP() > 0.3 ? -14101432 : -2161656;
