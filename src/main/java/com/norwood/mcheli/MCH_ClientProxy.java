@@ -58,6 +58,9 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MCH_ClientProxy extends MCH_CommonProxy {
     public String lastLoadHUDPath = "";
@@ -159,27 +162,54 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
         for (String s : MCH_RenderUavStation.MODEL_NAME) {
             MCH_ModelManager.load(s);
         }
+        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
         MCH_ModelManager.load("wrench");
         MCH_ModelManager.load("rangefinder");
-        ContentRegistries.heli().forEachValue(info -> this.registerModelsHeli(info, false));
-        ContentRegistries.plane().forEachValue(info -> this.registerModelsPlane(info, false));
-        ContentRegistries.tank().forEachValue(info -> this.registerModelsTank(info, false));
-        ContentRegistries.vehicle().forEachValue(info -> this.registerModelsVehicle(info, false));
-        registerModels_Bullet();
-        MCH_DefaultBulletModels.Bullet = this.loadBulletModel("bullet");
-        MCH_DefaultBulletModels.AAMissile = this.loadBulletModel("aamissile");
-        MCH_DefaultBulletModels.ATMissile = this.loadBulletModel("asmissile");
-        MCH_DefaultBulletModels.ASMissile = this.loadBulletModel("asmissile");
-        MCH_DefaultBulletModels.Bomb = this.loadBulletModel("bomb");
-        MCH_DefaultBulletModels.Rocket = this.loadBulletModel("rocket");
-        MCH_DefaultBulletModels.Torpedo = this.loadBulletModel("torpedo");
+        CompletableFuture<Void> heliFuture = CompletableFuture.runAsync(() ->
+        ContentRegistries.heli().forEachValue(info -> this.registerModelsHeli(info, false)));
 
-        for (MCH_ThrowableInfo wi : ContentRegistries.throwable().values()) {
-            wi.model = MCH_ModelManager.load("throwable", wi.name);
-        }
+        CompletableFuture<Void> planeFuture = CompletableFuture.runAsync(() ->
+        ContentRegistries.plane().forEachValue(info -> this.registerModelsPlane(info, false)));
+
+        CompletableFuture<Void> tankFuture = CompletableFuture.runAsync(() ->
+        ContentRegistries.tank().forEachValue(info -> this.registerModelsTank(info, false)));
+
+        CompletableFuture<Void> vehicleFuture = CompletableFuture.runAsync(() ->
+        ContentRegistries.vehicle().forEachValue(info -> this.registerModelsVehicle(info, false)));
+
+        CompletableFuture<Void> bulletFuture = CompletableFuture.runAsync(() -> {
+                    registerModels_Bullet();
+                    MCH_DefaultBulletModels.Bullet = this.loadBulletModel("bullet");
+                    MCH_DefaultBulletModels.AAMissile = this.loadBulletModel("aamissile");
+                    MCH_DefaultBulletModels.ATMissile = this.loadBulletModel("asmissile");
+                    MCH_DefaultBulletModels.ASMissile = this.loadBulletModel("asmissile");
+                    MCH_DefaultBulletModels.Bomb = this.loadBulletModel("bomb");
+                    MCH_DefaultBulletModels.Rocket = this.loadBulletModel("rocket");
+                    MCH_DefaultBulletModels.Torpedo = this.loadBulletModel("torpedo");
+
+                }
+        );
+        CompletableFuture<Void> throwableFuture = CompletableFuture.runAsync(() ->{
+            for (MCH_ThrowableInfo wi : ContentRegistries.throwable().values()) {
+                wi.model = MCH_ModelManager.load("throwable", wi.name);
+            }
+        });
+
+        CompletableFuture<Void> allTasks = CompletableFuture.allOf(
+                heliFuture, planeFuture, tankFuture, vehicleFuture, bulletFuture, throwableFuture
+        );
 
         MCH_ModelManager.load("blocks", "drafting_table");
+        allTasks.thenRun(() -> {
+            executor.shutdown();
+            System.out.println("All model rendering tasks completed successfully.");
+        }).exceptionally(ex -> {
+            System.err.println("Error during model rendering: " + ex.getMessage());
+            ex.printStackTrace();
+            executor.shutdown();
+            return null;
+        });
     }
 
     @Override
