@@ -11,11 +11,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 @SideOnly(Side.CLIENT)
 public class MCH_ModelManager extends W_ModelBase {
     private static final MCH_ModelManager instance = new MCH_ModelManager();
-    private static final HashMap<String, _IModelCustom> map = new HashMap<>();
+    private static final ConcurrentHashMap<String, _IModelCustom> map = new ConcurrentHashMap<>();
     private static final ModelRenderer defaultModel;
     private static boolean forceReloadMode = false;
     private static final Random rand = new Random();

@@ -6,6 +6,7 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class _Face implements DebugInfoObject {
     private final int[] verticesID;
@@ -53,21 +54,18 @@ public class _Face implements DebugInfoObject {
     _Face calcVerticesNormal(List<_Face> faces, boolean shading, double facet) {
         _Vertex[] vnormals = new _Vertex[this.verticesID.length];
 
-        for (int i = 0; i < this.verticesID.length; i++) {
-            _Vertex vn = getVerticesNormalFromFace(this.faceNormal, this.verticesID[i], faces, (float) facet);
-            vn = vn.normalize();
+        IntStream.range(0, this.verticesID.length).parallel().forEach(i -> {
+            _Vertex vn = getVerticesNormalFromFace(this.faceNormal, this.verticesID[i], faces, (float) facet).normalize();
             if (shading) {
-                if (this.faceNormal.x * vn.x + this.faceNormal.y * vn.y + this.faceNormal.z * vn.z >= facet) {
-                    vnormals[i] = vn;
-                } else {
-                    vnormals[i] = this.faceNormal;
-                }
+                double dot = this.faceNormal.x * vn.x + this.faceNormal.y * vn.y + this.faceNormal.z * vn.z;
+                vnormals[i] = (dot >= facet) ? vn : this.faceNormal;
             } else {
                 vnormals[i] = this.faceNormal;
             }
-        }
+        });
 
         return new _Face(this.verticesID, this.vertices, vnormals, this.textureCoordinates);
+
     }
 
     @Override

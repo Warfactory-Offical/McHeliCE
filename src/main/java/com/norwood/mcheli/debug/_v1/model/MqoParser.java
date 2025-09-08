@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.norwood.mcheli.wrapper.modelloader.W_ModelCustom.normalizeWhitespace;
+
 public class MqoParser {
     public static MqoModel parse(InputStream inputStream) throws DebugException {
         List<_Vertex> vertices = new ArrayList<>();
@@ -27,7 +29,7 @@ public class MqoParser {
 
             while ((currentLine = reader.readLine()) != null) {
                 lineCount++;
-                currentLine = currentLine.replaceAll("\\s+", " ").trim();
+                currentLine = normalizeWhitespace(currentLine);
                 if (isValidGroupObjectLine(currentLine)) {
                     _GroupObject.Builder group = parseGroupObject(currentLine, lineCount);
                     if (group != null) {
@@ -40,7 +42,7 @@ public class MqoParser {
 
                         while ((currentLine = reader.readLine()) != null) {
                             lineCount++;
-                            currentLine = currentLine.replaceAll("\\s+", " ").trim();
+                            currentLine = normalizeWhitespace(currentLine);
                             if (currentLine.equalsIgnoreCase("mirror 1")) {
                                 mirror = true;
                             }
@@ -63,7 +65,7 @@ public class MqoParser {
                         if (vertexNum2 > 0) {
                             while ((currentLine = reader.readLine()) != null) {
                                 lineCount++;
-                                currentLine = currentLine.replaceAll("\\s+", " ").trim();
+                                currentLine = normalizeWhitespace(currentLine);
                                 String[] sx = currentLine.split(" ");
                                 if (sx.length == 3) {
                                     _Vertex v = new _Vertex(Float.parseFloat(sx[0]) / 100.0F, Float.parseFloat(sx[1]) / 100.0F, Float.parseFloat(sx[2]) / 100.0F);
@@ -80,7 +82,7 @@ public class MqoParser {
 
                             while ((currentLine = reader.readLine()) != null) {
                                 lineCount++;
-                                currentLine = currentLine.replaceAll("\\s+", " ").trim();
+                                currentLine = normalizeWhitespace(currentLine);
                                 if (isValidFaceLine(currentLine)) {
                                     faceNum2 = Integer.parseInt(currentLine.split(" ")[1]);
                                     break;
@@ -90,7 +92,7 @@ public class MqoParser {
                             if (faceNum2 > 0) {
                                 while ((currentLine = reader.readLine()) != null) {
                                     lineCount++;
-                                    currentLine = currentLine.replaceAll("\\s+", " ").trim();
+                                    currentLine = normalizeWhitespace(currentLine);
                                     String[] sx = currentLine.split(" ");
                                     if (sx.length <= 2) {
                                     } else {

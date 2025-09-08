@@ -73,7 +73,7 @@ public class ContentRegistry<T extends MCH_BaseInfo> {
     }
 
     public void forEachValue(Consumer<? super T> action) {
-        this.registry.values().forEach(action);
+        this.registry.values().parallelStream().forEach(action);
     }
 
     public boolean contains(String key) {

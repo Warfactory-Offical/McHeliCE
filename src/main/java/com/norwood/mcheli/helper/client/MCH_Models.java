@@ -28,6 +28,7 @@ public class MCH_Models {
 
         for (IVertexModelLoader loader : loaders) {
             try {
+
                 model = loader.load(resourceManager, resource);
             } catch (FileNotFoundException var10) {
                 MCH_Utils.logger().debug("model file not found '{}' at .{}", resource, loader.getExtension());

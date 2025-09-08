@@ -82,4 +82,28 @@ public abstract class W_ModelCustom implements _IModelCustom {
     public abstract int getVertexNum();
 
     public abstract int getFaceNum();
+
+    public static String normalizeWhitespace(String line) {
+        StringBuilder sb = new StringBuilder(line.length());
+        boolean lastWasWhitespace = false;
+
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+            if (c == ' ' || c == '\t') {
+                if (!lastWasWhitespace) {
+                    sb.append(' ');
+                    lastWasWhitespace = true;
+                }
+            } else {
+                sb.append(c);
+                lastWasWhitespace = false;
+            }
+        }
+
+        int start = 0, end = sb.length();
+        while (start < end && sb.charAt(start) == ' ') start++;
+        while (end > start && sb.charAt(end - 1) == ' ') end--;
+
+        return sb.substring(start, end);
+    }
 }

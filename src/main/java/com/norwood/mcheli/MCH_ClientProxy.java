@@ -163,7 +163,7 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
             MCH_ModelManager.load("lweapons", "fim92");
             MCH_ModelManager.load("lweapons", "fgm148");
             long end = System.nanoTime();
-            System.out.println("[MISC] Loaded in " + ((end - start) / 1_000_000) + " ms");
+            System.out.println("[MCH-LOADER][MISC] Loaded in " + ((end - start) / 1_000_000) + " ms");
         });
 
         CompletableFuture<Void> uavFuture = CompletableFuture.runAsync(() -> {
@@ -172,41 +172,41 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
                 MCH_ModelManager.load(s);
             }
             long end = System.nanoTime();
-            System.out.println("[UAV] Loaded in " + ((end - start) / 1_000_000) + " ms");
+            System.out.println("[MCH-LOADER][UAV] Loaded in " + ((end - start) / 1_000_000) + " ms");
         });
 
         long startBasic = System.nanoTime();
         MCH_ModelManager.load("wrench");
         MCH_ModelManager.load("rangefinder");
         long endBasic = System.nanoTime();
-        System.out.println("[BASIC MODELS] Loaded in " + ((endBasic - startBasic) / 1_000_000) + " ms");
+        System.out.println("[MCH-LOADER][BASIC MODELS] Loaded in " + ((endBasic - startBasic) / 1_000_000) + " ms");
 
         CompletableFuture<Void> heliFuture = CompletableFuture.runAsync(() -> {
             long start = System.nanoTime();
             ContentRegistries.heli().forEachValue(info -> this.registerModelsHeli(info, false));
             long end = System.nanoTime();
-            System.out.println("[HELI] Loaded in " + ((end - start) / 1_000_000) + " ms");
+            System.out.println("[MCH-LOADER][HELI] Loaded in " + ((end - start) / 1_000_000) + " ms");
         });
 
         CompletableFuture<Void> planeFuture = CompletableFuture.runAsync(() -> {
             long start = System.nanoTime();
             ContentRegistries.plane().forEachValue(info -> this.registerModelsPlane(info, false));
             long end = System.nanoTime();
-            System.out.println("[PLANE] Loaded in " + ((end - start) / 1_000_000) + " ms");
+            System.out.println("[MCH-LOADER][PLANE] Loaded in " + ((end - start) / 1_000_000) + " ms");
         });
 
         CompletableFuture<Void> tankFuture = CompletableFuture.runAsync(() -> {
             long start = System.nanoTime();
             ContentRegistries.tank().forEachValue(info -> this.registerModelsTank(info, false));
             long end = System.nanoTime();
-            System.out.println("[TANK] Loaded in " + ((end - start) / 1_000_000) + " ms");
+            System.out.println("[MCH-LOADER][TANK] Loaded in " + ((end - start) / 1_000_000) + " ms");
         });
 
         CompletableFuture<Void> vehicleFuture = CompletableFuture.runAsync(() -> {
             long start = System.nanoTime();
             ContentRegistries.vehicle().forEachValue(info -> this.registerModelsVehicle(info, false));
             long end = System.nanoTime();
-            System.out.println("[VEHICLE] Loaded in " + ((end - start) / 1_000_000) + " ms");
+            System.out.println("[MCH-LOADER][VEHICLE] Loaded in " + ((end - start) / 1_000_000) + " ms");
         });
 
         CompletableFuture<Void> bulletFuture = CompletableFuture.runAsync(() -> {
@@ -229,7 +229,7 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
                 wi.model = MCH_ModelManager.load("throwable", wi.name);
             }
             long end = System.nanoTime();
-            System.out.println("[THROWABLES] Loaded in " + ((end - start) / 1_000_000) + " ms");
+            System.out.println("[MCH-LOADER][THROWABLES] Loaded in " + ((end - start) / 1_000_000) + " ms");
         });
 
         CompletableFuture<Void> allTasks = CompletableFuture.allOf(

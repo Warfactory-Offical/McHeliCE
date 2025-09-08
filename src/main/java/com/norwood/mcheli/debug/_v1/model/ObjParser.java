@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static com.norwood.mcheli.wrapper.modelloader.W_ModelCustom.normalizeWhitespace;
+
 public class ObjParser {
     private static final Pattern vertexPattern = Pattern.compile("(v( (\\-){0,1}\\d+\\.\\d+){3,4} *\\n)|(v( (\\-){0,1}\\d+\\.\\d+){3,4} *$)");
     private static final Pattern vertexNormalPattern = Pattern.compile("(vn( (\\-){0,1}\\d+\\.\\d+){3,4} *\\n)|(vn( (\\-){0,1}\\d+\\.\\d+){3,4} *$)");
@@ -38,7 +40,7 @@ public class ObjParser {
 
             while ((currentLine = reader.readLine()) != null) {
                 lineCount++;
-                currentLine = currentLine.replaceAll("\\s+", " ").trim();
+                currentLine = normalizeWhitespace(currentLine);
                 if (!currentLine.startsWith("#") && !currentLine.isEmpty()) {
                     if (currentLine.startsWith("v ")) {
                         _Vertex vertex = parseVertex(currentLine, lineCount);

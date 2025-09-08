@@ -94,7 +94,7 @@ public class W_MetasequoiaObject extends W_ModelCustom {
 
             while ((currentLine = reader.readLine()) != null) {
                 lineCount++;
-                currentLine = currentLine.replaceAll("\\s+", " ").trim();
+                currentLine = normalizeWhitespace(currentLine);
                 if (isValidGroupObjectLine(currentLine)) {
                     W_GroupObject group = this.parseGroupObject(currentLine, lineCount);
                     if (group != null) {
@@ -107,7 +107,7 @@ public class W_MetasequoiaObject extends W_ModelCustom {
 
                         while ((currentLine = reader.readLine()) != null) {
                             lineCount++;
-                            currentLine = currentLine.replaceAll("\\s+", " ").trim();
+                            currentLine = normalizeWhitespace(currentLine);
                             if (currentLine.equalsIgnoreCase("mirror 1")) {
                                 mirror = true;
                             }
@@ -130,7 +130,7 @@ public class W_MetasequoiaObject extends W_ModelCustom {
                         if (vertexNum > 0) {
                             while ((currentLine = reader.readLine()) != null) {
                                 lineCount++;
-                                currentLine = currentLine.replaceAll("\\s+", " ").trim();
+                                currentLine = normalizeWhitespace(currentLine);
                                 String[] sx = currentLine.split(" ");
                                 if (sx.length == 3) {
                                     W_Vertex v = new W_Vertex(Float.parseFloat(sx[0]) / 100.0F, Float.parseFloat(sx[1]) / 100.0F, Float.parseFloat(sx[2]) / 100.0F);
@@ -148,7 +148,7 @@ public class W_MetasequoiaObject extends W_ModelCustom {
 
                             while ((currentLine = reader.readLine()) != null) {
                                 lineCount++;
-                                currentLine = currentLine.replaceAll("\\s+", " ").trim();
+                                currentLine = normalizeWhitespace(currentLine);
                                 if (isValidFaceLine(currentLine)) {
                                     faceNum = Integer.parseInt(currentLine.split(" ")[1]);
                                     break;
@@ -158,7 +158,7 @@ public class W_MetasequoiaObject extends W_ModelCustom {
                             if (faceNum > 0) {
                                 while ((currentLine = reader.readLine()) != null) {
                                     lineCount++;
-                                    currentLine = currentLine.replaceAll("\\s+", " ").trim();
+                                    currentLine = normalizeWhitespace(currentLine);
                                     String[] sx = currentLine.split(" ");
                                     if (sx.length <= 2) {
                                     } else {
