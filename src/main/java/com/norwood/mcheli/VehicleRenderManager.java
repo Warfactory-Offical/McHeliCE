@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -25,6 +26,7 @@ public class VehicleRenderManager {
     public void renderVehicles(RenderWorldLastEvent event) {
 
         List<MCH_EntityAircraft> list = Minecraft.getMinecraft().world.getEntities(MCH_EntityAircraft.class, Predicates.alwaysTrue());
+        int skylight = -1;
 
         for (Entity entity : list) {
             float partialTicks = event.getPartialTicks();
@@ -48,13 +50,8 @@ public class VehicleRenderManager {
             GlStateManager.depthMask(true);
 
 
-            int brightness = entity.getBrightnessForRender();
+            Minecraft.getMinecraft().entityRenderer.enableLightmap();
 
-
-            int j = brightness & 0xFFFF;         // block light
-            int k = (brightness >> 16) & 0xFFFF; // sky light
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j, (float)k);
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
 
             render.doRender(entity, d0 - d3, d1 - d4, d2 - d5, f, partialTicks);

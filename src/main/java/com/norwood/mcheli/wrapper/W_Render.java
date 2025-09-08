@@ -56,9 +56,9 @@ public abstract class W_Render<T extends Entity> extends Render<T> {
         GlStateManager.enableAlpha();
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.001F); // 516, 0.001F
 
-//        int j = lighting % 65536;
-//        int k = lighting / 65536;
-//        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
+        int j = lighting % 65536;
+        int k = lighting / 65536;
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
 
         GlStateManager.color(0.75F, 0.75F, 0.75F, 1.0F);
 

@@ -768,7 +768,7 @@ public abstract class MCH_EntityAircraft
                 }
 
                 int k = MathHelper.floor(this.posY + fo + d0);
-                int val = this.world.getCombinedLight(new BlockPos(i, k, j), 0);
+                int val = this.world.getCombinedLight(new BlockPos(i, k, j),0);
                 int low = val & 65535;
                 int high = val >> 16 & 65535;
                 if (high < this.brightnessHigh) {

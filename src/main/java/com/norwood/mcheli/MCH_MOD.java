@@ -319,15 +319,15 @@ public class MCH_MOD {
     }
 
     public void registerEntity() {
-        MCH_Entities.register(MCH_EntitySeat.class, "MCH.E.Seat", 100, this, 400, 10, true);
-        MCH_Entities.register(MCH_EntityHeli.class, "MCH.E.Heli", 101, this, 400, 10, true);
-        MCH_Entities.register(MCH_EntityGLTD.class, "MCH.E.GLTD", 102, this, 200, 10, true);
-        MCH_Entities.register(MCP_EntityPlane.class, "MCH.E.Plane", 103, this, 400, 10, true);
-        MCH_Entities.register(MCH_EntityChain.class, "MCH.E.Chain", 104, this, 200, 10, true);
+        MCH_Entities.register(MCH_EntitySeat.class, "MCH.E.Seat", 100, this, 600, 10, true);
+        MCH_Entities.register(MCH_EntityHeli.class, "MCH.E.Heli", 101, this, 600, 10, true);
+        MCH_Entities.register(MCH_EntityGLTD.class, "MCH.E.GLTD", 102, this, 600, 10, true);
+        MCH_Entities.register(MCP_EntityPlane.class, "MCH.E.Plane", 103, this, 600, 10, true);
+        MCH_Entities.register(MCH_EntityChain.class, "MCH.E.Chain", 104, this, 600, 10, true);
         MCH_Entities.register(MCH_EntityHitBox.class, "MCH.E.PSeat", 105, this, 200, 10, true);
         MCH_Entities.register(MCH_EntityParachute.class, "MCH.E.Parachute", 106, this, 200, 10, true);
         MCH_Entities.register(MCH_EntityContainer.class, "MCH.E.Container", 107, this, 200, 10, true);
-        MCH_Entities.register(MCH_EntityVehicle.class, "MCH.E.Vehicle", 108, this, 400, 10, true);
+        MCH_Entities.register(MCH_EntityVehicle.class, "MCH.E.Vehicle", 108, this, 600, 10, true);
         MCH_Entities.register(MCH_EntityUavStation.class, "MCH.E.UavStation", 109, this, 400, 10, true);
         MCH_Entities.register(MCH_EntityHitBox.class, "MCH.E.HitBox", 110, this, 200, 10, true);
         MCH_Entities.register(MCH_EntityHide.class, "MCH.E.Hide", 111, this, 200, 10, true);
