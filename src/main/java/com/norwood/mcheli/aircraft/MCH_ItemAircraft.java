@@ -36,12 +36,13 @@ public abstract class MCH_ItemAircraft extends W_Item {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        if(worldIn == null) return;
         MCH_AircraftInfo info = this.getAircraftInfo().category.equals("zzz") ? null : this.getAircraftInfo();
         MCH_EntityAircraft ac = createAircraft(worldIn, -1.0D, -1.0D, -1.0D, stack);
 
         if (info != null) {
             tooltip.add(TextFormatting.YELLOW + "Category: " + info.category);
-            // tooltip.add(TextFormatting.DARK_PURPLE + "Weapon: " + info.weaponSetList);
+             tooltip.add(TextFormatting.DARK_PURPLE + "Weapon: " + info.weaponSetList);
         }
 
         if (ac != null && ac.isNewUAV()) {
