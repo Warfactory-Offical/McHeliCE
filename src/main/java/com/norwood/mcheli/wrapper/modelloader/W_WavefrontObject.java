@@ -41,8 +41,8 @@ public class W_WavefrontObject extends W_ModelCustom {
     public final ArrayList<W_Vertex> vertexNormals = new ArrayList<>();
     public final ArrayList<W_TextureCoordinate> textureCoordinates = new ArrayList<>();
     public final ArrayList<W_GroupObject> groupObjects = new ArrayList<>();
-    private W_GroupObject currentGroupObject;
     private final String fileName;
+    private W_GroupObject currentGroupObject;
 
     public W_WavefrontObject(ResourceLocation location, IResource resource) throws _ModelFormatException {
         this.fileName = resource.toString();
@@ -172,39 +172,64 @@ public class W_WavefrontObject extends W_ModelCustom {
 
             while ((currentLine = reader.readLine()) != null) {
                 lineCount++;
-                currentLine = currentLine.replaceAll("\\s+", " ").trim();
-                if (!currentLine.startsWith("#") && !currentLine.isEmpty()) {
-                    if (currentLine.startsWith("v ")) {
-                        W_Vertex vertex = this.parseVertex(currentLine, lineCount);
-                        if (vertex != null) {
-                            this.checkMinMax(vertex);
-                            this.vertices.add(vertex);
-                        }
-                    } else if (currentLine.startsWith("vn ")) {
-                        W_Vertex vertex = this.parseVertexNormal(currentLine, lineCount);
-                        if (vertex != null) {
-                            this.vertexNormals.add(vertex);
-                        }
-                    } else if (currentLine.startsWith("vt ")) {
-                        W_TextureCoordinate textureCoordinate = this.parseTextureCoordinate(currentLine, lineCount);
-                        if (textureCoordinate != null) {
-                            this.textureCoordinates.add(textureCoordinate);
-                        }
-                    } else if (currentLine.startsWith("f ")) {
-                        if (this.currentGroupObject == null) {
-                            this.currentGroupObject = new W_GroupObject("Default");
-                        }
+                currentLine = normalizeWhitespace(currentLine);
+                if (currentLine.startsWith("#") || currentLine.isEmpty()) continue;
 
-                        W_Face face = this.parseFace(currentLine, lineCount);
-                        this.currentGroupObject.faces.add(face);
-                    } else if (currentLine.startsWith("g ") | currentLine.startsWith("o ") && currentLine.charAt(2) == '$') {
-                        W_GroupObject group = this.parseGroupObject(currentLine, lineCount);
-                        if (group != null && this.currentGroupObject != null) {
-                            this.groupObjects.add(this.currentGroupObject);
-                        }
+                char c0 = currentLine.charAt(0);
 
-                        this.currentGroupObject = group;
-                    }
+                switch (c0) {
+                    case 'v':
+                        if (currentLine.length() > 1) {
+                            char c1 = currentLine.charAt(1);
+                            switch (c1) {
+                                case ' ' -> {
+                                    // vertex
+                                    W_Vertex vertex = parseVertex(currentLine, lineCount);
+                                    if (vertex != null) {
+                                        checkMinMax(vertex);
+                                        vertices.add(vertex);
+                                    }
+                                }
+                                case 'n' -> {
+                                    // vertex normal
+                                    W_Vertex normal = parseVertexNormal(currentLine, lineCount);
+                                    if (normal != null) vertexNormals.add(normal);
+                                }
+                                case 't' -> {
+                                    // texture coordinate
+                                    W_TextureCoordinate tex = parseTextureCoordinate(currentLine, lineCount);
+                                    if (tex != null) textureCoordinates.add(tex);
+                                }
+                            }
+                        }
+                        break;
+
+                    case 'f':
+                        if (currentGroupObject == null) currentGroupObject = new W_GroupObject("Default");
+                        W_Face face = parseFace(currentLine, lineCount);
+                        currentGroupObject.faces.add(face);
+                        break;
+
+                    case 'g':
+                        // group
+                        if (currentLine.length() > 2 && currentLine.charAt(2) == '$') {
+                            W_GroupObject group = parseGroupObject(currentLine, lineCount);
+                            if (group != null && currentGroupObject != null) groupObjects.add(currentGroupObject);
+                            currentGroupObject = group;
+                        }
+                        break;
+
+                    case 'o':
+                        if (currentLine.length() > 2 && currentLine.charAt(2) == '$') {
+                            W_GroupObject group2 = parseGroupObject(currentLine, lineCount);
+                            if (group2 != null && currentGroupObject != null) groupObjects.add(currentGroupObject);
+                            currentGroupObject = group2;
+                        }
+                        break;
+
+                    default:
+                        // ignore unknown lines
+                        break;
                 }
             }
 
@@ -225,6 +250,30 @@ public class W_WavefrontObject extends W_ModelCustom {
             }
         }
     }
+    private static String normalizeWhitespace(String line) {
+        StringBuilder sb = new StringBuilder(line.length());
+        boolean lastWasWhitespace = false;
+
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+            if (c == ' ' || c == '\t') {
+                if (!lastWasWhitespace) {
+                    sb.append(' ');
+                    lastWasWhitespace = true;
+                }
+            } else {
+                sb.append(c);
+                lastWasWhitespace = false;
+            }
+        }
+
+        int start = 0, end = sb.length();
+        while (start < end && sb.charAt(start) == ' ') start++;
+        while (end > start && sb.charAt(end - 1) == ' ') end--;
+
+        return sb.substring(start, end);
+    }
+
 
     @Override
     public void renderAll() {
