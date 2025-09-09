@@ -19,6 +19,8 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Random;
 
+//1.12.2
+
 public class MCH_WheelManager {
     private static final Random rand = new Random();
     public final MCH_EntityAircraft parent;
@@ -63,6 +65,7 @@ public class MCH_WheelManager {
         this.avgZ = this.maxZ - this.minZ;
     }
 
+    // Replace the original move(...) method with this one
     public void move(double x, double y, double z) {
         MCH_EntityAircraft ac = this.parent;
         if (ac.getAcInfo() != null) {
@@ -86,7 +89,6 @@ public class MCH_WheelManager {
             }
 
             int zmog = -1;
-
             for (int i = 0; i < this.wheels.length / 2; i++) {
                 zmog = i;
                 MCH_EntityWheel w1 = this.wheels[i * 2];
@@ -96,14 +98,12 @@ public class MCH_WheelManager {
                     break;
                 }
             }
-
             if (zmog >= 0) {
                 this.wheels[zmog * 2].onGround = true;
                 this.wheels[zmog * 2 + 1].onGround = true;
             }
 
             zmog = -1;
-
             for (int ix = this.wheels.length / 2 - 1; ix >= 0; ix--) {
                 zmog = ix;
                 MCH_EntityWheel w1 = this.wheels[ix * 2];
@@ -113,7 +113,6 @@ public class MCH_WheelManager {
                     break;
                 }
             }
-
             if (zmog >= 0) {
                 this.wheels[zmog * 2].onGround = true;
                 this.wheels[zmog * 2 + 1].onGround = true;
@@ -129,7 +128,12 @@ public class MCH_WheelManager {
                 Vec3d v1 = new Vec3d(w1.posX - (ac.posX + wc.x), w1.posY - (ac.posY + wc.y), w1.posZ - (ac.posZ + wc.z));
                 Vec3d v2 = new Vec3d(w2.posX - (ac.posX + wc.x), w2.posY - (ac.posY + wc.y), w2.posZ - (ac.posZ + wc.z));
                 Vec3d v = w1.pos.z >= 0.0 ? v2.crossProduct(v1) : v1.crossProduct(v2);
+
+                // avoid creating NaN - if v is zero-length, skip normalization
+                double vlen = Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+                if (vlen == 0.0) continue;
                 v = v.normalize();
+
                 double f = Math.abs(w1.pos.z / this.avgZ);
                 if (!w1.onGround && !w2.onGround) {
                     f = 0.0;
@@ -138,41 +142,81 @@ public class MCH_WheelManager {
                 rv = rv.add(v.x * f, v.y * f, v.z * f);
             }
 
-            rv = rv.normalize();
-            if (rv.y > 0.01 && rv.y < 0.7) {
-                ac.motionX = ac.motionX + rv.x / 50.0;
-                ac.motionZ = ac.motionZ + rv.z / 50.0;
+            // guard: if rv is still zero-length, skip further adjustments
+            double rvlen = Math.sqrt(rv.x * rv.x + rv.y * rv.y + rv.z * rv.z);
+            if (rvlen > 0.0) {
+                rv = rv.normalize();
+                if (rv.y > 0.01 && rv.y < 0.7) {
+                    ac.motionX = ac.motionX + rv.x / 50.0;
+                    ac.motionZ = ac.motionZ + rv.z / 50.0;
+                }
+
+                rv = rv.rotateYaw((float) (ac.getRotYaw() * Math.PI / 180.0));
+                float pitch = (float) (90.0 - Math.atan2(rv.y, rv.z) * 180.0 / Math.PI);
+                float roll = -((float) (90.0 - Math.atan2(rv.y, rv.x) * 180.0 / Math.PI));
+
+                float ogpf = ac.getAcInfo().onGroundPitchFactor;
+                if (pitch - ac.getRotPitch() > ogpf) pitch = ac.getRotPitch() + ogpf;
+                if (pitch - ac.getRotPitch() < -ogpf) pitch = ac.getRotPitch() - ogpf;
+
+                float ogrf = ac.getAcInfo().onGroundRollFactor;
+                if (roll - ac.getRotRoll() > ogrf) roll = ac.getRotRoll() + ogrf;
+                if (roll - ac.getRotRoll() < -ogrf) roll = ac.getRotRoll() - ogrf;
+
+                this.targetPitch = pitch;
+                this.targetRoll = roll;
+
+                /*
+                 * NEW: Smooth / Blend application of the computed pitch/roll to the aircraft
+                 * so throttle and small wheel impulses don't immediately snap the nose.
+                 *
+                 * TUNABLES:
+                 *  - GROUND_HIGH_THROTTLE_BLEND : how aggressively to apply pitch/roll while on ground and throttle is applied (smaller = less snap)
+                 *  - GROUND_IDLE_BLEND         : how aggressively to apply pitch/roll while on ground but not throttling (0..1)
+                 *  - AIR_BLEND                 : how aggressive in air (keep high)
+                 */
+                final float GROUND_HIGH_THROTTLE_BLEND = 0.12F; // very stiff when accelerating (prevents tilt)
+                final float GROUND_IDLE_BLEND = 0.55F;         // looser when idling on ground
+                final float AIR_BLEND = 0.9F;                  // near-immediate in air (if you want instant response)
+
+                // determine state
+                boolean groundLike = ac.onGround || MCH_Lib.getBlockIdY(ac, 1, -2) > 0;
+                double throttle = ac.getCurrentThrottle();
+                double horizSpeed = Math.sqrt(ac.motionX * ac.motionX + ac.motionZ * ac.motionZ);
+
+                float blend;
+                if (!groundLike) {
+                    blend = AIR_BLEND;
+                } else {
+                    // on ground: reduce blending (less immediate change) when throttle or moving
+                    if (throttle > 0.05D || horizSpeed > 0.08D) {
+                        blend = GROUND_HIGH_THROTTLE_BLEND;
+                    } else {
+                        blend = GROUND_IDLE_BLEND;
+                    }
+                }
+
+                // apply a blended rotation instead of forcing it immediately
+                // this prevents the throttle -> wheel pos change -> immediate pitch snap
+                float newPitch = ac.getRotPitch() + (pitch - ac.getRotPitch()) * blend;
+                float newRoll = ac.getRotRoll() + (roll - ac.getRotRoll()) * blend;
+
+                // small sanity clamp: prevent huge per-tick jumps
+                final float MAX_DELTA_PER_TICK = 2.5F;
+                float dpitch = newPitch - ac.getRotPitch();
+                float droll  = newRoll - ac.getRotRoll();
+                if (dpitch > MAX_DELTA_PER_TICK) dpitch = MAX_DELTA_PER_TICK;
+                if (dpitch < -MAX_DELTA_PER_TICK) dpitch = -MAX_DELTA_PER_TICK;
+                if (droll > MAX_DELTA_PER_TICK) droll = MAX_DELTA_PER_TICK;
+                if (droll < -MAX_DELTA_PER_TICK) droll = -MAX_DELTA_PER_TICK;
+
+                if (!W_Lib.isClientPlayer(ac.getRiddenByEntity())) {
+                    ac.setRotPitch(ac.getRotPitch() + dpitch);
+                    ac.setRotRoll(ac.getRotRoll() + droll);
+                }
             }
 
-            rv = rv.rotateYaw((float) (ac.getRotYaw() * Math.PI / 180.0));
-            float pitch = (float) (90.0 - Math.atan2(rv.y, rv.z) * 180.0 / Math.PI);
-            float roll = -((float) (90.0 - Math.atan2(rv.y, rv.x) * 180.0 / Math.PI));
-            float ogpf = ac.getAcInfo().onGroundPitchFactor;
-            if (pitch - ac.getRotPitch() > ogpf) {
-                pitch = ac.getRotPitch() + ogpf;
-            }
-
-            if (pitch - ac.getRotPitch() < -ogpf) {
-                pitch = ac.getRotPitch() - ogpf;
-            }
-
-            float ogrf = ac.getAcInfo().onGroundRollFactor;
-            if (roll - ac.getRotRoll() > ogrf) {
-                roll = ac.getRotRoll() + ogrf;
-            }
-
-            if (roll - ac.getRotRoll() < -ogrf) {
-                roll = ac.getRotRoll() - ogrf;
-            }
-
-            this.targetPitch = pitch;
-            this.targetRoll = roll;
-            if (!W_Lib.isClientPlayer(ac.getRiddenByEntity())) {
-                ac.setRotPitch(pitch);
-                ac.setRotRoll(roll);
-                //todo marker...
-            }
-
+            // re-position wheels to follow applied targetPitch/targetRoll
             for (MCH_EntityWheel wheel : this.wheels) {
                 Vec3d vx = this.getTransformedPosition(wheel.pos.x, wheel.pos.y, wheel.pos.z, ac, ac.getRotYaw(), this.targetPitch, this.targetRoll);
                 double rangeH = 2.0;
@@ -201,6 +245,7 @@ public class MCH_WheelManager {
             }
         }
     }
+
 
     public Vec3d getTransformedPosition(double x, double y, double z, MCH_EntityAircraft ac, float yaw, float pitch, float roll) {
         Vec3d v = MCH_Lib.RotVec3(x, y, z, -yaw, -pitch, -roll);
