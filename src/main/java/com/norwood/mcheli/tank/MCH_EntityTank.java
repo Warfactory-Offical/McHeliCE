@@ -1337,162 +1337,29 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
         return this.getTankInfo().speed + 0.0F;
     }
 
-    /**
-     * 1.7.10 method
-     public void setAngles(Entity player, boolean fixRot, float fixYaw, float fixPitch, float deltaX, float deltaY, float x, float y, float partialTicks) {
-      if(partialTicks < 0.03F) {
-         partialTicks = 0.4F;
-      }
-
-      if(partialTicks > 0.9F) {
-         partialTicks = 0.6F;
-      }
-
-      super.lowPassPartialTicks.put(partialTicks);
-      partialTicks = super.lowPassPartialTicks.getAvg();
-      float ac_pitch = this.getRotPitch();
-      float ac_yaw = this.getRotYaw();
-      float ac_roll = this.getRotRoll();
-      if(this.isFreeLookMode()) {
-         y = 0.0F;
-         x = 0.0F;
-      }
-
-      float yaw = 0.0F;
-      float pitch = 0.0F;
-      float roll = 0.0F;
-      MCH_Math.FMatrix m_add = MCH_Math.newMatrix();
-      MCH_Math.MatTurnZ(m_add, roll / 180.0F * 3.1415927F);
-      MCH_Math.MatTurnX(m_add, pitch / 180.0F * 3.1415927F);
-      MCH_Math.MatTurnY(m_add, yaw / 180.0F * 3.1415927F);
-      MCH_Math.MatTurnZ(m_add, (float)((double)(this.getRotRoll() / 180.0F) * 3.141592653589793D));
-      MCH_Math.MatTurnX(m_add, (float)((double)(this.getRotPitch() / 180.0F) * 3.141592653589793D));
-      MCH_Math.MatTurnY(m_add, (float)((double)(this.getRotYaw() / 180.0F) * 3.141592653589793D));
-      MCH_Math.FVector3D v = MCH_Math.MatrixToEuler(m_add);
-      v.x = MCH_Lib.RNG(v.x, -90.0F, 90.0F);
-      v.z = MCH_Lib.RNG(v.z, -90.0F, 90.0F);
-      if(v.z > 180.0F) {
-         v.z -= 360.0F;
-      }
-
-      if(v.z < -180.0F) {
-         v.z += 360.0F;
-      }
-
-      this.setRotYaw(v.y);
-      this.setRotPitch(v.x);
-      this.setRotRoll(v.z);
-      this.onUpdateAngles(partialTicks);
-      if(this.getAcInfo().limitRotation) {
-         v.x = MCH_Lib.RNG(this.getRotPitch(), -90.0F, 90.0F);
-         v.z = MCH_Lib.RNG(this.getRotRoll(), -90.0F, 90.0F);
-         this.setRotPitch(v.x);
-         this.setRotRoll(v.z);
-      }
-
-      float RV = 180.0F;
-      if(MathHelper.abs(this.getRotPitch()) > 90.0F) {
-         MCH_Lib.DbgLog(true, "MCH_EntityAircraft.setAngles Error:Pitch=%.1f", new Object[]{Float.valueOf(this.getRotPitch())});
-         this.setRotPitch(0.0F);
-      }
-
-      if(this.getRotRoll() > 180.0F) {
-         this.setRotRoll(this.getRotRoll() - 360.0F);
-      }
-
-      if(this.getRotRoll() < -180.0F) {
-         this.setRotRoll(this.getRotRoll() + 360.0F);
-      }
-
-      super.prevRotationRoll = this.getRotRoll();
-      super.prevRotationPitch = this.getRotPitch();
-      if(this.getRidingEntity() == null) {
-         super.prevRotationYaw = this.getRotYaw();
-      }
-
-      float deltaLimit = this.getAcInfo().cameraRotationSpeed * partialTicks;
-      MCH_WeaponSet ws = this.getCurrentWeapon(player);
-      deltaLimit *= ws != null && ws.getInfo() != null?ws.getInfo().cameraRotationSpeedPitch:1.0F;
-      if(deltaX > deltaLimit) {
-         deltaX = deltaLimit;
-      }
-
-      if(deltaX < -deltaLimit) {
-         deltaX = -deltaLimit;
-      }
-
-      if(deltaY > deltaLimit) {
-         deltaY = deltaLimit;
-      }
-
-      if(deltaY < -deltaLimit) {
-         deltaY = -deltaLimit;
-      }
-
-      if(!this.isOverridePlayerYaw() && !fixRot) {
-         player.setAngles(deltaX, 0.0F);
-      } else {
-         if(this.getRidingEntity() == null) {
-            player.prevRotationYaw = this.getRotYaw() + fixYaw;
-         } else {
-            if(this.getRotYaw() - player.rotationYaw > 180.0F) {
-               player.prevRotationYaw += 360.0F;
-            }
-
-            if(this.getRotYaw() - player.rotationYaw < -180.0F) {
-               player.prevRotationYaw -= 360.0F;
-            }
-         }
-
-         player.rotationYaw = this.getRotYaw() + fixYaw;
-      }
-
-      if(!this.isOverridePlayerPitch() && !fixRot) {
-         player.setAngles(0.0F, deltaY);
-      } else {
-         player.prevRotationPitch = this.getRotPitch() + fixPitch;
-         player.rotationPitch = this.getRotPitch() + fixPitch;
-      }
-
-      float playerYaw = MathHelper.wrapAngleTo180_float(this.getRotYaw() - player.rotationYaw);
-      float playerPitch = this.getRotPitch() * MathHelper.cos((float)((double)playerYaw * 3.141592653589793D / 180.0D)) + -this.getRotRoll() * MathHelper.sin((float)((double)playerYaw * 3.141592653589793D / 180.0D));
-      if(MCH_MOD.proxy.isFirstPerson()) {
-         player.rotationPitch = MCH_Lib.RNG(player.rotationPitch, playerPitch + this.getAcInfo().minRotationPitch, playerPitch + this.getAcInfo().maxRotationPitch);
-         player.rotationPitch = MCH_Lib.RNG(player.rotationPitch, -90.0F, 90.0F);
-      }
-
-      player.prevRotationPitch = player.rotationPitch;
-      if(this.getRidingEntity() == null && ac_yaw != this.getRotYaw() || ac_pitch != this.getRotPitch() || ac_roll != this.getRotRoll()) {
-         super.aircraftRotChanged = true;
-      }
-
-   }
-     */
-
-
-    //1.12.2
     @Override
-    public void setAngles(Entity player, boolean fixRot, float fixYaw, float fixPitch,
-                          float deltaX, float deltaY, float x, float y, float partialTicks) {
+    public void setAngles(Entity player, boolean fixRot, float fixYaw, float fixPitch, float deltaX, float deltaY, float x, float y, float partialTicks) {
+        if (partialTicks < 0.03F) {
+            partialTicks = 0.4F;
+        }
 
-        // clamp partialTicks and low-pass as before
-        if (partialTicks < 0.03F) partialTicks = 0.4F;
-        if (partialTicks > 0.9F) partialTicks = 0.6F;
+        if (partialTicks > 0.9F) {
+            partialTicks = 0.6F;
+        }
+
         this.lowPassPartialTicks.put(partialTicks);
         partialTicks = this.lowPassPartialTicks.getAvg();
-
-        // keep old rotations for change detection
         float ac_pitch = this.getRotPitch();
-        float ac_yaw   = this.getRotYaw();
-        float ac_roll  = this.getRotRoll();
-
+        float ac_yaw = this.getRotYaw();
+        float ac_roll = this.getRotRoll();
         if (this.isFreeLookMode()) {
             y = 0.0F;
             x = 0.0F;
         }
 
-        // build matrix -> euler (same as original)
-        float yaw = 0.0F, pitch = 0.0F, roll = 0.0F;
+        float yaw = 0.0F;
+        float pitch = 0.0F;
+        float roll = 0.0F;
         MCH_Math.FMatrix m_add = MCH_Math.newMatrix();
         MCH_Math.MatTurnZ(m_add, roll / 180.0F * (float) Math.PI);
         MCH_Math.MatTurnX(m_add, pitch / 180.0F * (float) Math.PI);
@@ -1501,110 +1368,80 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
         MCH_Math.MatTurnX(m_add, (float) (this.getRotPitch() / 180.0F * Math.PI));
         MCH_Math.MatTurnY(m_add, (float) (this.getRotYaw() / 180.0F * Math.PI));
         MCH_Math.FVector3D v = MCH_Math.MatrixToEuler(m_add);
-
-        // clamp euler ranges as original
         v.x = MCH_Lib.RNG(v.x, -90.0F, 90.0F);
         v.z = MCH_Lib.RNG(v.z, -90.0F, 90.0F);
-        if (v.z > 180.0F) v.z -= 360.0F;
-        if (v.z < -180.0F) v.z += 360.0F;
-
-        // desired Euler from matrix
-        float desiredYaw   = v.y;
-        float desiredPitch = v.x;
-        float desiredRoll  = v.z;
-
-        // Determine ground/fly state and throttle to adjust damping/clamps
-        boolean isFly = MCH_Lib.getBlockIdY(this, 3, -3) == 0;
-        boolean nearWaterFloat = this.getAcInfo().isFloat && this.getWaterDepth() > 0.0;
-        boolean onGroundLike = !isFly || nearWaterFloat;
-        double throttle = this.getCurrentThrottle();
-
-        // --- CLAMP per-axis change (stronger clamp when on-ground or under throttle)
-        // Tune these as needed:
-        final float MAX_YAW_DELTA_AIR   = 6.0F;
-        final float MAX_YAW_DELTA_GROUND= 1.8F;
-        final float MAX_PITCH_DELTA_AIR = 3.5F;
-        final float MAX_PITCH_DELTA_GROUND = 0.6F;
-        final float MAX_ROLL_DELTA_AIR  = 3.5F;
-        final float MAX_ROLL_DELTA_GROUND = 1.0F;
-
-        float maxYawDelta   = onGroundLike ? MAX_YAW_DELTA_GROUND   : MAX_YAW_DELTA_AIR;
-        float maxPitchDelta = onGroundLike ? MAX_PITCH_DELTA_GROUND : MAX_PITCH_DELTA_AIR;
-        float maxRollDelta  = onGroundLike ? MAX_ROLL_DELTA_GROUND  : MAX_ROLL_DELTA_AIR;
-
-        // Further reduce sensitivity when throttle is significant (prevents throttle snaps)
-        if (throttle > 0.05D) {
-            float throttleFactor = 1.0F - Math.min(0.9F, (float) throttle) * 0.5F; // reduces max delta up to 50%
-            maxYawDelta   *= throttleFactor;
-            maxPitchDelta *= throttleFactor;
-            maxRollDelta  *= throttleFactor;
+        if (v.z > 180.0F) {
+            v.z -= 360.0F;
         }
 
-        // Compute clamped values relative to current rotation
-        float yawDelta   = MathHelper.wrapDegrees(desiredYaw   - this.getRotYaw());
-        float pitchDelta = MathHelper.wrapDegrees(desiredPitch - this.getRotPitch());
-        float rollDelta  = MathHelper.wrapDegrees(desiredRoll  - this.getRotRoll());
+        if (v.z < -180.0F) {
+            v.z += 360.0F;
+        }
 
-        // tiny-change deadzone: ignore micro-noise
-        final float DEADZONE = 0.05F;
-        if (Math.abs(yawDelta) < DEADZONE) yawDelta = 0.0F;
-        if (Math.abs(pitchDelta) < DEADZONE) pitchDelta = 0.0F;
-        if (Math.abs(rollDelta) < DEADZONE) rollDelta = 0.0F;
-
-        // clamp deltas
-        if (yawDelta > maxYawDelta) yawDelta = maxYawDelta;
-        if (yawDelta < -maxYawDelta) yawDelta = -maxYawDelta;
-        if (pitchDelta > maxPitchDelta) pitchDelta = maxPitchDelta;
-        if (pitchDelta < -maxPitchDelta) pitchDelta = -maxPitchDelta;
-        if (rollDelta > maxRollDelta) rollDelta = maxRollDelta;
-        if (rollDelta < -maxRollDelta) rollDelta = -maxRollDelta;
-
-        // apply clamped rotations (smoothly replace the instant set)
-        this.setRotYaw(this.getRotYaw() + yawDelta);
-        this.setRotPitch(this.getRotPitch() + pitchDelta);
-        this.setRotRoll(this.getRotRoll() + rollDelta);
-
-        // now run angle update and limit rotation if requested (same as original)
+        this.setRotYaw(v.y);
+        this.setRotPitch(v.x);
+        this.setRotRoll(v.z);
         this.onUpdateAngles(partialTicks);
         if (this.getAcInfo().limitRotation) {
-            float clampedPitch = MCH_Lib.RNG(this.getRotPitch(), -90.0F, 90.0F);
-            float clampedRoll  = MCH_Lib.RNG(this.getRotRoll(), -90.0F, 90.0F);
-            this.setRotPitch(clampedPitch);
-            this.setRotRoll(clampedRoll);
+            v.x = MCH_Lib.RNG(this.getRotPitch(), -90.0F, 90.0F);
+            v.z = MCH_Lib.RNG(this.getRotRoll(), -90.0F, 90.0F);
+            this.setRotPitch(v.x);
+            this.setRotRoll(v.z);
         }
 
-        // keep angles in sane ranges (same behavior)
         if (MathHelper.abs(this.getRotPitch()) > 90.0F) {
             MCH_Lib.DbgLog(true, "MCH_EntityAircraft.setAngles Error:Pitch=%.1f", this.getRotPitch());
             this.setRotPitch(0.0F);
         }
-        if (this.getRotRoll() > 180.0F) this.setRotRoll(this.getRotRoll() - 360.0F);
-        if (this.getRotRoll() < -180.0F) this.setRotRoll(this.getRotRoll() + 360.0F);
 
-        // save prev rotation values
+        if (this.getRotRoll() > 180.0F) {
+            this.setRotRoll(this.getRotRoll() - 360.0F);
+        }
+
+        if (this.getRotRoll() < -180.0F) {
+            this.setRotRoll(this.getRotRoll() + 360.0F);
+        }
+
         this.prevRotationRoll = this.getRotRoll();
         this.prevRotationPitch = this.getRotPitch();
-        if (this.getRidingEntity() == null) this.prevRotationYaw = this.getRotYaw();
+        if (this.getRidingEntity() == null) {
+            this.prevRotationYaw = this.getRotYaw();
+        }
 
-        // camera rotation speed clamping (unchanged)
         float deltaLimit = this.getAcInfo().cameraRotationSpeed * partialTicks;
         MCH_WeaponSet ws = this.getCurrentWeapon(player);
         deltaLimit *= ws != null && ws.getInfo() != null ? ws.getInfo().cameraRotationSpeedPitch : 1.0F;
-        if (deltaX > deltaLimit) deltaX = deltaLimit;
-        if (deltaX < -deltaLimit) deltaX = -deltaLimit;
-        if (deltaY > deltaLimit) deltaY = deltaLimit;
-        if (deltaY < -deltaLimit) deltaY = -deltaLimit;
+        if (deltaX > deltaLimit) {
+            deltaX = deltaLimit;
+        }
 
-        // player yaw/pitch sync (use same logic as original)
+        if (deltaX < -deltaLimit) {
+            deltaX = -deltaLimit;
+        }
+
+        if (deltaY > deltaLimit) {
+            deltaY = deltaLimit;
+        }
+
+        if (deltaY < -deltaLimit) {
+            deltaY = -deltaLimit;
+        }
+
         if (!this.isOverridePlayerYaw() && !fixRot) {
             player.turn(deltaX, 0.0F);
         } else {
             if (this.getRidingEntity() == null) {
                 player.prevRotationYaw = this.getRotYaw() + fixYaw;
             } else {
-                if (this.getRotYaw() - player.rotationYaw > 180.0F) player.prevRotationYaw += 360.0F;
-                if (this.getRotYaw() - player.rotationYaw < -180.0F) player.prevRotationYaw -= 360.0F;
+                if (this.getRotYaw() - player.rotationYaw > 180.0F) {
+                    player.prevRotationYaw += 360.0F;
+                }
+
+                if (this.getRotYaw() - player.rotationYaw < -180.0F) {
+                    player.prevRotationYaw -= 360.0F;
+                }
             }
+
             player.rotationYaw = this.getRotYaw() + fixYaw;
         }
 
@@ -1615,21 +1452,21 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             player.rotationPitch = this.getRotPitch() + fixPitch;
         }
 
-        // first-person camera limits (unchanged)
         float playerYaw = MathHelper.wrapDegrees(this.getRotYaw() - player.rotationYaw);
-        float playerPitch = this.getRotPitch() * MathHelper.cos((float)(playerYaw * Math.PI / 180.0))
-                + -this.getRotRoll() * MathHelper.sin((float)(playerYaw * Math.PI / 180.0));
+        float playerPitch = this.getRotPitch() * MathHelper.cos((float) (playerYaw * Math.PI / 180.0))
+                + -this.getRotRoll() * MathHelper.sin((float) (playerYaw * Math.PI / 180.0));
         if (MCH_MOD.proxy.isFirstPerson()) {
-            player.rotationPitch = MCH_Lib.RNG(player.rotationPitch, playerPitch + this.getAcInfo().minRotationPitch, playerPitch + this.getAcInfo().maxRotationPitch);
+            player.rotationPitch = MCH_Lib.RNG(
+                    player.rotationPitch, playerPitch + this.getAcInfo().minRotationPitch, playerPitch + this.getAcInfo().maxRotationPitch
+            );
             player.rotationPitch = MCH_Lib.RNG(player.rotationPitch, -90.0F, 90.0F);
         }
-        player.prevRotationPitch = player.rotationPitch;
 
-        if (this.getRidingEntity() == null && (ac_yaw != this.getRotYaw() || ac_pitch != this.getRotPitch() || ac_roll != this.getRotRoll())) {
+        player.prevRotationPitch = player.rotationPitch;
+        if (this.getRidingEntity() == null && ac_yaw != this.getRotYaw() || ac_pitch != this.getRotPitch() || ac_roll != this.getRotRoll()) {
             this.aircraftRotChanged = true;
         }
     }
-
 
     @Override
     public float getSoundVolume() {
