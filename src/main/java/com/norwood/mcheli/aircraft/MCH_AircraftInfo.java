@@ -1377,7 +1377,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         public final float pitch;
 
         public CameraPosition(MCH_AircraftInfo paramMCH_AircraftInfo, Vec3d vec3, boolean fixRot, float yaw, float pitch) {
-            this.pos = vec3;
+            this.pos = vec3.add(0, 0.35, 0); //FIXME Seems like basically everthing needs a 0.35 offset when it comes to mcheli rendering, this is temporary so for when I figure out where it belongs
             this.fixRot = fixRot;
             this.yaw = yaw;
             this.pitch = pitch;
