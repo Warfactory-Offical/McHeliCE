@@ -1,4 +1,4 @@
-DisplayName = 46cm Type3 Anti-Air Shell[AA]
+DisplayName = 46cm Type 91 Naval Cannon [Type 3 Anti-Air Shell - AA]
 Type = Rocket
 Power = 25
 ModelBullet = type3_46
@@ -8,14 +8,32 @@ ExplosionBlock = 1
 Flaming = false
 Sight = MoveSight
 Delay = 20
-ReloadTime = 100
 Round = 3
 Bomblet = 30
 BombletDiff = 2.0
+
+ModelBomblet = bullet
+
 DisableSmoke = true
-Sound = rocket_snd
-DamageFactor = helicopter, 4.0
-DamageFactor = plane,      4.0
+SoundDelay = 3
+SoundPitch = 0.3
+Sound = cannon_1_snd
+Delay = 10
+ReloadTime = 530
+Round = 3
+SoundVolume = 15
+Gravity = -0.005
+Group = MainGun
+HeatCount = 500
+MaxHeatCount = 1450
+
+
+
+
+DamageFactor = tank, 1.0
+DamageFactor = plane, 3.0
+DamageFactor = vehicle 2.0
+DamageFactor = heli, 3.0
 RecoilBufCount = 40, 5
 
 MaxAmmo = 24

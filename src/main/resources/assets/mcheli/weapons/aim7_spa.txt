@@ -1,19 +1,26 @@
-DisplayName = AIM-7 Sparrow
+DisplayName = AIM-7E Sparrow [AAM]
 Type = AAMissile
-Power = 70
-Acceleration = 5
-Explosion = 5
+Power = 40
+Acceleration = 2.6
+Explosion = 8
 Flaming = false
 Sight = MissileSight
-Delay = 9
-ReloadTime = 110
-Round = 8
-LockTime = 12
-ProximityFuseDist = 1
+Delay = 5
+ReloadTime = 1000
+Round = 4
+LockTime = 24
+ProximityFuseDist = 2
 ModelBullet = aim7
 Sound = missile_1_snd
 
-MaxAmmo = 16
+DamageFactor = tank, 1.5
+DamageFactor = plane, 3.0
+DamageFactor = vehicle 2.0
+DamageFactor = heli, 3.0
+
+
+
+MaxAmmo = 4
 SuppliedNum = 4
 Item =  2, iron_ingot
 Item =  2, gunpowder

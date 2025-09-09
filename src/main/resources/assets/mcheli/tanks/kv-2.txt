@@ -1,26 +1,28 @@
-DisplayName = KV-2 Gigant
-AddDisplayName = ja_JP, KV-2 ギガント
-MaxHp = 450
-Speed = 0.45
-Sound = mbt_run
+DisplayName = KV-2 'Gigant' (1940)
+AddDisplayName = en_US, KV-2 'Gigant' (1940)
+AddDisplayName = ja_JP, KV-2 ギガント (1940)
+MaxHp = 150
+Speed = 0.17
+Sound = kvtwo
 MobilityYawOnGround = 2.0
-ThrottleUpDown = 10.0
+ThrottleUpDown = 1
 MobilityRoll = 0
-Gravity = -0.06
-GravityInWater = -0.06
+Gravity = -0.61
+GravityInWater = -1.0
 DamageFactor = 0.0
 CameraZoom = 3
 CameraPosition = 0.00, 4.2, 0.00
 HideEntity = true
 MaxFuel         = 1500
 FuelConsumption = 2.0
-CameraRotationSpeed = 26
-MinRotationPitch = -14
-MaxRotationPitch = 7
+CameraRotationSpeed = 4
+MinRotationPitch = -12
+MaxRotationPitch = 5
 DefaultFreelook = true
-ThirdPersonDist = 12
 
-SubmergedDamageHeight = 4
+Category = HT/AG
+
+SubmergedDamageHeight = 2
 
 ; Tank or Car or Unknown
 WeightType = Tank
@@ -38,18 +40,20 @@ AddGunnerSeat =  0.00,  1.05, -1.00,   0.0, 1.6, 2.8,  false, -90, 90
 ; Tank or Car or Unknown
 WeightType = Tank
 
-ArmorMinDamage = 10
+
 
 MotionFactor = 0.9
 
 ;後退可能にする
 EnableBack = true
 
-SetWheelPos =  1.75,  -0.24,  3.02, 1.44, -1.54, -2.91, -4.85
+
 AddCrawlerTrack = false, 0.25, 0.00,  1.1582/-4.3796,  1.0164/-4.722,  0.6740/-4.8638,  0.3316/-4.722, -0.1742/-3.628, -0.2826/-3.3664, -0.2800/-2.3524, -0.2800/2.4975, -0.1918/2.7590,  0.4125/3.6074,  0.7351/3.7410,  1.0576/3.6074,  1.1912/3.2849,  1.2030/1.5385,  1.2030/-3.1331
 AddCrawlerTrack = false, 0.25, -0.00,  1.1582/-4.3796,  1.0164/-4.722,  0.6740/-4.8638,  0.3316/-4.722, -0.1742/-3.8041, -0.2826/-3.5425, -0.2900/-2.3524, -0.2900/2.3214, -0.1918/2.5829,  0.4125/3.6074,  0.7351/3.7410,  1.0576/3.6074,  1.1912/3.2849,  1.2030/1.5385,  1.2030/-3.1331
 
 -------------------------------------------------
+
+SetWheelPos =  1.55,  -0.24,  2.4975, 1.2755, 0.0152, -1.2024, -2.3524, -3.3664
 
 AddTrackRoller =  1.70,  0.7351,  3.2849
 
@@ -85,20 +89,46 @@ AddTrackRoller = -1.70,  0.6740, -4.3796
 
 ----------------------------------------------------
 
-AddWeapon      = 152mm_howitzer,  0.00, 3.017, 0.00,  0.0, 0.0, true,1, 0,-360,360, -14, 7
-AddPartWeapon  = 152mm_howitzer, false, true,  false,  0.00, 0.00, 0.00
+AddTurretWeapon      = kv2apcbc,  0.00, 3.017, 0.00,  0.0, 0.0, true,1, 0,-360,360, -12, 5
+AddTurretWeapon      = kv2he,  0.00, 3.017, 0.00,  0.0, 0.0, true,1, 0,-360,360, -12, 5
+AddTurretWeapon      = kv2apcbc2,  0.00, 3.017, 0.00,  0.0, 0.0, true,1, 0,-360,360, -12, 5
+AddPartWeapon = kv2apcbc/ kv2he / kv2apcbc2, false, true, false, 0.00, 0.00, 0.00
+;AddPartWeapon  = kv2apcbc, false, true,  false,  0.00, 0.00, 0.00 ????????
 AddPartWeaponChild = false, true,   0.00, 3.017, 1.245
 AddPartWeaponChild = false, true,   0.00, 3.017, 1.245, 0.5
 
-AddWeapon     = ww2tank_coaxmg,  0.5994, 1.515,  2.61,  0.0, 0.0, true,2, 0,-16.12, 16.12, -23.62, 22.00
-AddPartWeapon = ww2tank_coaxmg, false, true, false,  0.5994, 1.515, 2.609, 0
+AddWeapon     = kvww2tank_coaxmg,  0.5994, 1.515,  2.61,  0.0, 0.0, false,2, 0,-16.12, 16.12, -23.62, 22.00
+AddPartWeapon = kvww2tank_coaxmg, false, true, false,  0.5994, 1.515, 2.609, 0
+AddPartWeaponChild = false, true,   0.5994, 1.515, 2.609
 
-AddWeapon = targeting_pod_tank,   0.0, 0.6, 4.8,   0.0, 0.0,  true, 2
+;AddWeapon = targeting_pod_tank,   0.0, 0.6, 4.8,   0.0, 0.0,  true, 2
 
-AddRecipe = " X ",  " X ",  "XXX",  X, iron_block,  I, iron_ingot
+;heavy tracked tank ww2
+AddRecipe = "ABC", "DEE", "EEE", A, mcheli:heavychassis, B, mcheli:cannon3, C, mcheli:engine3, D, mcheli:tanktracks, E, mcheli:hap
 
-BoundingBox =  0.00,  0.8,  1.5,  4.0, 2.0,  0.7
-BoundingBox =  0.00,  0.8, -1.0,  4.0, 2.0,  0.9
-BoundingBox =  0.00,  2.7,  0.0,  2.4, 2.6,  1.1
-BoundingBox =  0.00,  0.8, -3.0,  4.0, 2.0,  1.2
+AddRecipe = "ABB", "BBC", "   ", A, mcheli:kv-1, B, mcheli:hap, C, mcheli:wrench
 
+
+ArmorMinDamage = 30
+
+;sideback 75
+BoundingBox = 0.0, 1.0, -3.45, 2.7, 1.7, 0.4
+BoundingBox = 0.0, 1.0, -2.70, 2.7, 1.7, 0.4
+;backback 65
+BoundingBox = 0.0, 1.0, -3.48, 2.69, 1.7, 0.46
+
+;center 75
+BoundingBox = 0.0, 1.0, 0.0, 2.7, 1.7, 0.4
+;lower plate 92
+BoundingBox = 0.0, 0.7, 2.3, 2.69, 1.1, 0.32
+;upper plate 150
+BoundingBox = 0.0, 1.0, 1.85, 1.0, 1.7, 0.2
+;upper 86
+BoundingBox = 0.8, 1.0, 1.85, 1.0, 1.7, 0.34
+;upper 86
+BoundingBox = -0.8, 1.0, 1.85, 1.0, 1.7, 0.34
+
+;turret 83
+BoundingBox = 0.0, 2.8, 0.0, 1.5, 1.9, 0.36
+
+unmountposition = 0.00,  1.45,  0.00

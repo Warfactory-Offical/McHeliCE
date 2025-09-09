@@ -1,4 +1,6 @@
 
+;Call = mortar
+
 ; 耐久値(HP)
 ; HPが20%を超えている場合は橙(0xFFFFC90E)、HPが20%以下の場合は赤(0xFFDF0408)
 Color = hp_rto>0.2? 0xFFFFC90E: 0xFFDF0408
@@ -19,6 +21,24 @@ DrawString = -181, 58, "/",   WPN_AMMO
 DrawString = -172, 58, "%s",  WPN_RM_AMMO
 ; 武器名 (Weapon name)
 DrawString = -207, 69, "%s",  WPN_NAME
+
+If = cam_zoom>1
+	Color = #FF000000
+	DrawRect =  127.5, -127.5, 1080, 1080
+	DrawRect =  127.5,  127.5,-1080, 1080
+	DrawRect = -127.5,  127.5,-1080,-1080
+	DrawRect = -127.5, -127.5, 1080,-1080
+	DrawTexture = tank_scope, -127.5, -128,  256,256, 0,0, 256,256
+EndIf
+
+If = dsp_mt_dist == 1 && mt_dist > 0
+	DrawString = 30, 30, "DIST = %.0f", MORTAR_DIST
+Endif
+If = dsp_mt_dist == 1 && mt_dist <= 0
+	DrawString = 30, 30, "DIST = ----"
+Endif
+
+
 
 ; 銃身の熱量タイプの場合(Heat)
 If = is_heat_wpn==1

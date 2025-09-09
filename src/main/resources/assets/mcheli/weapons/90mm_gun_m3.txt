@@ -1,10 +1,8 @@
-DisplayName = 90 mm Gun M3
+DisplayName = 90mm M3 Cannon
 Type = MachineGun2
-Power = 75
-ModelBullet = bullet105mm
-Acceleration = 6.0
-Explosion = 3
-ExplosionBlock = 2
+Power = 175
+ModelBullet = bullet
+Acceleration = 7.0
 Sight = None
 ReloadTime = 80
 Round = 1
@@ -12,9 +10,21 @@ Delay = 80
 SoundPitch = 1.2
 SoundVolume = 16.0
 Accuracy = 1.5
-Gravity = -0.02
-Sound = cannon_4_snd
+Gravity = -0.005
+Sound = big
 Recoil = 1.5
+Piercing = 2
+
+
+DamageFactor = tank, 3.5
+DamageFactor = plane, 1.5
+DamageFactor = vehicle 2.0
+DamageFactor = heli, 2.0
+DamageFactor = player, 10.0
+
+
+
+
 
 AddMuzzleFlash      =  7.2,      1.80,        7,  200,254,129,44
 AddMuzzleFlash      =  7.1,      1.75,        6,  200,254,219,104
@@ -25,7 +35,7 @@ AddMuzzleFlashSmoke = 10.2, 10,  11.0,  6.0, 35,  200,190,170,150
 ; RecoilBufCount = 駐退カウント, 後退中のカウント倍率
 RecoilBufCount = 40, 5
 
-MaxAmmo = 70
-SuppliedNum = 35
+MaxAmmo = 35
+SuppliedNum = 12
 Item =  4, iron_ingot
 Item =  6, gunpowder

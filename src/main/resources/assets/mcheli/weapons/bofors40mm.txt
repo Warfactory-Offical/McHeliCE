@@ -1,24 +1,30 @@
-DisplayName = Bofors 40mm gun
+DisplayName = 40mm Bofors Automatic Cannon [Mk.II - HE]
 Type = MachineGun2
-Power = 30
+Power = 9
 ModelBullet = bullet76mm
-Acceleration = 5.0
-Explosion = 2
+Acceleration = 7.0
+Explosion = 1
 ExplosionBlock = 1
 Flaming = false
 Sight = MoveSight
 Delay = 5
-SoundPitch = 0.6
-SoundVolume = 20
-Sound = cannon_2_snd
-Accuracy = 3.0
 HeatCount = 18
 MaxHeatCount = 150
 ReloadTime = 30
-Round = 4
-;SetCartridge = cartridge, 0.1,  180, 0, 5.0, -0.04, 0.40
 
-MaxAmmo = 500
-SuppliedNum = 100
+;SoundPitch = 0.6
+SoundVolume = 15
+
+Gravity = -0.001
+SoundVolume = 15
+Sound = bofors
+
+MaxAmmo = 480
+SuppliedNum = 120
 Item =  2, iron_ingot
-Item =  3, gunpowder
+Item =  2, gunpowder
+DamageFactor = tank, 1.0
+DamageFactor = plane, 4.5
+DamageFactor = vehicle 4.5
+DamageFactor = heli, 4.5
+DamageFactor = player, 20.0

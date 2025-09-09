@@ -1,18 +1,24 @@
 DisplayName = F-35A Lightning II
+AddDisplayName = en_US, F-35A Lightning II
 AddDisplayName = ja_JP, F-35A ライトニング II
 ItemID = 28723
-MaxHp = 200
+MaxHp = 100
 EnableNightVision = true
 EnableEntityRadar = true
 EnableEjectionSeat = true
-Speed = 1.2
+sound = fthirtyfive
+Speed = 1.199
+
+DamageFactor = 0.8
+
 FlareType = 4
 ParticlesScale = 0.7
 EnableSeaSurfaceParticle = true
 MaxFuel         = 1200
 FuelConsumption = 1.0
-Stealth = 0.2
-ThirdPersonDist = 16
+Stealth = 0.5
+ThirdPersonDist = 20
+ThrottleUpDown = 0.3
 
 ; M = Military(軍用機).  F = Fighter(戦闘機)
 Category = M.F
@@ -35,40 +41,85 @@ AddPartLG    =  2.18, 1.91, -7.23,    -1,0, -0.05, 90,  0,-1,0, 90
 AddPartLG    = -2.18, 1.91, -7.23,    -1,0, -0.05, 90,  0, 1,0, 90
 
 ;AddPartWeaponBay = 武器名1 / 武器名2 / 武器名3, 位置X, 位置Y, 位置Z, 回転軸X, 回転軸Y, 回転軸Z, 回転角度 0～180
-AddPartWeaponBay = aim-9x / gbu-39_b_sdb,  1.65, 1.43,-2.64,  -0.027, -0.031, 1.000,  80
-AddPartWeaponBay = aim-9x / gbu-39_b_sdb, -1.65, 1.43,-2.64,   0.027, -0.031, 1.000, -80
-AddPartWeaponBay = aim-9x / gbu-39_b_sdb,  0.51, 1.15,-2.64,   0.000, -0.011, 1.000, -80
-AddPartWeaponBay = aim-9x / gbu-39_b_sdb, -0.51, 1.15,-2.64,   0.000, -0.011, 1.000,  80
-AddPartWeaponBay = aim-9x,                 0.65, 1.22,-4.92,   0.000,  0.000, 1.000, -110
-AddPartWeaponBay = aim-9x,                -0.65, 1.22,-4.92,   0.000,  0.000, 1.000,  110
+AddPartWeaponBay = f35aaim-9x / f35agbu-39_b_sdb / b6135,  1.65, 1.43,-2.64,  -0.027, -0.031, 1.000,  80
+AddPartWeaponBay = f35aaim-9x / f35agbu-39_b_sdb / b6135, -1.65, 1.43,-2.64,   0.027, -0.031, 1.000, -80
+AddPartWeaponBay = f35aaim-9x / f35agbu-39_b_sdb / b6135,  0.51, 1.15,-2.64,   0.000, -0.011, 1.000, -80
+AddPartWeaponBay = f35aaim-9x / f35agbu-39_b_sdb / b6135, -0.51, 1.15,-2.64,   0.000, -0.011, 1.000,  80
+AddPartWeaponBay = f35aaim-9x,                 0.65, 1.22,-4.92,   0.000,  0.000, 1.000, -110
+AddPartWeaponBay = f35aaim-9x,                -0.65, 1.22,-4.92,   0.000,  0.000, 1.000,  110
 
-AddPartWeaponMissile = gbu-39_b_sdb,   false,  false,  false,   1.06, 1.71, -4.85
-AddPartWeaponMissile = gbu-39_b_sdb,   false,  false,  false,  -1.06, 1.71, -4.85
-AddPartWeaponMissile = gbu-39_b_sdb,   false,  false,  false,   1.06, 1.71, -4.85
-AddPartWeaponMissile = gbu-39_b_sdb,   false,  false,  false,  -1.06, 1.71, -4.85
-AddPartWeaponMissile = gbu-39_b_sdb,   false,  false,  false,   1.06, 1.71, -6.85
-AddPartWeaponMissile = gbu-39_b_sdb,   false,  false,  false,  -1.06, 1.71, -6.85
-AddPartWeaponMissile = gbu-39_b_sdb,   false,  false,  false,   1.06, 1.71, -6.85
-AddPartWeaponMissile = gbu-39_b_sdb,   false,  false,  false,  -1.06, 1.71, -6.85
+AddPartWeaponMissile = f35agbu-39_b_sdb,   false,  false,  false,   1.06, 1.71, -4.85
+AddPartWeaponMissile = f35agbu-39_b_sdb,   false,  false,  false,  -1.06, 1.71, -4.85
+AddPartWeaponMissile = f35agbu-39_b_sdb,   false,  false,  false,   1.06, 1.71, -4.85
+AddPartWeaponMissile = f35agbu-39_b_sdb,   false,  false,  false,  -1.06, 1.71, -4.85
+AddPartWeaponMissile = f35agbu-39_b_sdb,   false,  false,  false,   1.06, 1.71, -6.85
+AddPartWeaponMissile = f35agbu-39_b_sdb,   false,  false,  false,  -1.06, 1.71, -6.85
+AddPartWeaponMissile = f35agbu-39_b_sdb,   false,  false,  false,   1.06, 1.71, -6.85
+AddPartWeaponMissile = f35agbu-39_b_sdb,   false,  false,  false,  -1.06, 1.71, -6.85
 
-AddWeapon = gau-22a,       1.67, 2.37, -1.43, 0.0, 0.0
-AddWeapon = aim-9x,        0.95, 1.16, -6.53, 0.0, 0.0
-AddWeapon = aim-9x,       -0.95, 1.16, -6.53, 0.0, 0.0
-AddWeapon = gbu-39_b_sdb,  1.06, 1.71, -4.85, 0.0, 0.0
-AddWeapon = gbu-39_b_sdb, -1.06, 1.71, -4.85, 0.0, 0.0
-AddWeapon = gbu-39_b_sdb,  1.06, 1.71, -4.85, 0.0, 0.0
-AddWeapon = gbu-39_b_sdb, -1.06, 1.71, -4.85, 0.0, 0.0
-AddWeapon = gbu-39_b_sdb,  1.06, 1.71, -6.85, 0.0, 0.0
-AddWeapon = gbu-39_b_sdb, -1.06, 1.71, -6.85, 0.0, 0.0
-AddWeapon = gbu-39_b_sdb,  1.06, 1.71, -6.85, 0.0, 0.0
-AddWeapon = gbu-39_b_sdb, -1.06, 1.71, -6.85, 0.0, 0.0
+
+;230
+AddWeapon = f35agau-22a,       1.67, 2.37, -1.43, 0.0, 0.0
+
+;4
+AddWeapon = f35aaim-9x,        0.95, 1.16, -6.53, 0.0, 0.0
+AddWeapon = f35aaim-9x,       -0.95, 1.16, -6.53, 0.0, 0.0
+
+;8
+AddWeapon = f35agbu-39_b_sdb,  1.06, 1.71, -4.85, 0.0, 0.0
+AddWeapon = f35agbu-39_b_sdb, -1.06, 1.71, -4.85, 0.0, 0.0
+AddWeapon = f35agbu-39_b_sdb,  1.06, 1.71, -4.85, 0.0, 0.0
+AddWeapon = f35agbu-39_b_sdb, -1.06, 1.71, -4.85, 0.0, 0.0
+AddWeapon = f35agbu-39_b_sdb,  1.06, 1.71, -6.85, 0.0, 0.0
+AddWeapon = f35agbu-39_b_sdb, -1.06, 1.71, -6.85, 0.0, 0.0
+AddWeapon = f35agbu-39_b_sdb,  1.06, 1.71, -6.85, 0.0, 0.0
+AddWeapon = f35agbu-39_b_sdb, -1.06, 1.71, -6.85, 0.0, 0.0
+
+;2
+AddWeapon = b6135,  1.06, 1.71, -4.85, 0.0, 0.0
+AddWeapon = b6135, -1.06, 1.71, -4.85, 0.0, 0.0
+
+
+
+
+AddWeapon = targeting_pod_block, 0.0, 0.9, 0.0,  0.0, 0.0
 
 AddWeapon = targeting_pod_ph75s,  0.00, 3.0, 0.3,    0.0, 0.0
+AddWeapon = uhf_radar,  0.00, 3.0, 0.0,    0.0, 0.0
 
-AddRecipe = " Y ",  "XXX",  "XDX",  X, iron_block, Y, glass, D, diamond_block
+;modern light plane (late jet), AOW3 style (fcs)
+AddRecipe = "ABC", "DEF", "GGG", A, mcheli:airframe2, B, mcheli:advancedmechanicparts, C, mcheli:engine3, D, mcheli:wheelair, E, mcheli:cannon1, F, mcheli:fcs3, G, mcheli:electronics
 
-BoundingBox =  0.00, 1.90, -2.80,  3.0, 2.0
+BoundingBox =  0.00, 1.90, -3.10,  3.0, 2.0
 BoundingBox =  0.00, 1.90, -6.60,  4.0, 2.0
 BoundingBox = -2.92, 2.20, -7.60,  3.0, 1.0
 BoundingBox =  2.92, 2.20, -7.60,  3.0, 1.0
-BoundingBox =  0.00, 1.80, -9.80,  2.0, 1.0
+BoundingBox =  0.00, 2.20, -9.80,  3.0, 1.0
+
+BoundingBox = -4.82, 2.10, -7.90,  2.0, 0.3
+BoundingBox =  4.82, 2.10, -7.90,  2.0, 0.3
+
+BoundingBox = -2.52, 2.25, -11.60,  2.0, 0.3
+BoundingBox =  2.52, 2.25, -11.60,  2.0, 0.3
+
+BoundingBox = 2.03, 3.55, -10.96, 0.5, 2.5
+BoundingBox = -2.03, 3.55, -10.96, 0.5, 2.5
+BoundingBox = 2.03, 3.55, -11.96, 0.5, 2.5
+BoundingBox = -2.03, 3.55, -11.96, 0.5, 2.5
+
+BoundingBox = 2.03, 3.05, -10.46, 0.5, 2.5
+BoundingBox = -2.03, 3.05, -10.46, 0.5, 2.5
+
+BoundingBox = 2.03, 3.55, -11.46, 0.5, 2.5
+BoundingBox = -2.03, 3.55, -11.46, 0.5, 2.5
+
+BoundingBox = 2.03, 3.05, -9.96, 0.5, 2.5
+BoundingBox = -2.03, 3.05, -9.96, 0.5, 2.5
+
+
+
+unmountposition = 0.00,  1.52,  0.32
+
+
+enableback = true
+DamageFactor = 0.8

@@ -1,17 +1,25 @@
 DisplayName = An-2
+AddDisplayName = en_US, An-2
 AddDisplayName = ja_JP, An-2
 ItemID = 28732
 MaxHp = 100
-Speed = 0.9
-Sound = prop
-ThrottleUpDown = 0.5
+;130mph cruise speed
+;160mph max speed
+
+
+Speed = 0.2784
+Sound = antwo
+ThrottleUpDown = 0.4
 MaxFuel         = 1200
 FuelConsumption = 1.0
 onGroundPitch = 12.31
 InventorySize = 18
-ThirdPersonDist = 12
 
-Regeneration = true
+RotorSpeed = 2000.0
+
+
+
+Regeneration = false
 
 AddTexture = an2_2
 AddTexture = an2_3
@@ -22,8 +30,8 @@ AddTexture = an2_5
 ; C = Civilian(民間機)
 Category = C
 
-EntityWidth  = 0.9
-EntityHeight = 0.9
+EntityWidth  = 0.81
+EntityHeight = 0.81
 
 EnableParachuting = true
 ;MobDropOption =降下位置X, 降下位置Y, 降下位置Z, 降下間隔(1/20秒)
@@ -53,10 +61,28 @@ AddWeapon = dispenser_water,  0.0, 0.0, 0.54,   1.0, 0.0
 ; DEBUG Only
 ;AddWeapon = dispenser_fire,  0.0, 0.0, 0.54,   1.0, 0.0
 
-AddRecipe = " PI",  "FXI",  " W ",  X,iron_block, P,heavy_weighted_pressure_plate, I,iron_ingot, F,furnace, W,water_bucket
+;;AddRecipe = "CAC", "E  ", "W W", W, hfr:item.part_wheel, A, hfr:item.part_plating_1, C, hfr:item.part_chassis_1, E, hfr:item.part_engine_2
+
+
+;basic unarmed prop plane, AOW3 style
+AddRecipe = "ABC", "D  ", "   ", A, mcheli:airframe, B, mcheli:basicmechanicparts, C, mcheli:engine1, D, mcheli:wheelair
+
 
 BoundingBox =  0.00,  2.15, -3.41,  1.5, 1.5
 BoundingBox =  0.00,  2.15,  2.03,  1.3, 1.3
 
+
+BoundingBox =  1.88,  3.38, -0.32,  2.0, 0.3
+BoundingBox = -1.88,  3.38, -0.32,  2.0, 0.3
 BoundingBox =  3.88,  3.38, -0.32,  2.0, 0.3
 BoundingBox = -3.88,  3.38, -0.32,  2.0, 0.3
+BoundingBox =  5.88,  3.38, -0.32,  2.0, 0.3
+BoundingBox = -5.88,  3.38, -0.32,  2.0, 0.3
+
+
+DamageFactor = 0.8
+
+unmountposition = 0.5267, 1.51,  0.0
+
+enableback = true
+DamageFactor = 0.8

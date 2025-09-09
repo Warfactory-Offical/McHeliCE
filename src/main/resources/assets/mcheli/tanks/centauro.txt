@@ -1,48 +1,58 @@
-DisplayName = B1 centauro
-AddDisplayName = ja_JP, チェンタウロ偵察戦闘車
+DisplayName = B1 Centauro 105mm
+AddDisplayName = en_US, B1 Centauro 105mm
+AddDisplayName = ja_JP, チェンタウロ偵察戦闘車 105mm
 ItemID = 30102
-MaxHp = 220
-Speed = 0.8
-Sound = vehicle_run
-ThrottleUpDown = 5
-MobilityYawOnGround = 5.5
+MaxHp = 200
+Speed = 0.67
+Sound = vsixbone
+ThrottleUpDown = 2
+MobilityYawOnGround = 6.5
 MaxFuel         = 1000
 FuelConsumption = 0.8
 CameraPosition = 0.00, 3.40, 0.00, true
-CameraZoom = 4
+CameraZoom = 8
+
+;unknown
+
 EnableNightVision = true
 EnableEntityRadar = false
-Gravity = -1.0
-CameraRotationSpeed = 35
+Gravity = -0.61
 GravityInWater = -1.0
-MinRotationPitch = -15
+CameraRotationSpeed = 14
+
+MinRotationPitch = -50
 MaxRotationPitch = 6
 MobilityRoll = 0
 InventorySize = 10
-StepHeight = 1.5
+StepHeight = 1.8
 DefaultFreelook = true
 MotionFactor = 0.9
 FlareType = 10
-ThirdPersonDist = 12
 
-SubmergedDamageHeight = 3
+AddTexture = centaurodes
+AddTexture = centaurow
+
+SubmergedDamageHeight = 2
 
 ;  M = Military,  A = AAGun(対空砲)
-Category = M.A
+Category = WTD
 
 WeightType = Tank
 
 OnGroundPitchFactor = 2.0
 OnGroundRollFactor  = 0.8
 
-HUD = mbt_hud, mbt_gnr, gunner, gunner
+HUD = mbt_hud, mbt_gnrtwo, gunnernvg, gunnernvg
 
 AddGunnerSeat =  0.00, 1.00,  0.00
 AddGunnerSeat =  0.00, 1.01,  0.00,   0.60, 3.40,  0.60, false, -90, 90, true
-AddGunnerSeat =  0.78, 2.33, -0.16,   0.78, 3.63, -0.16, true, -90, 90, true
-AddGunnerSeat = -0.80, 2.41, -0.97,  -0.80, 3.71, -0.97, true, -90, 90, true
+;AddGunnerSeat =  0.78, 2.53, -0.16
+;AddGunnerSeat = -0.80, 2.61, -0.97
 
-SetWheelPos =  1.50,  -0.24,  3.75, 1.71, -0.15, -2.01
+AddGunnerSeat =  0.78, 2.53, -0.16,   0.78, 3.63, -0.16, false, -90, 90, true
+AddGunnerSeat = -0.80, 2.61, -0.97,  -0.80, 3.71, -0.97, false, -90, 90, true
+
+SetWheelPos =  1.25,  -0.24,  3.75, 1.71, -0.15, -2.01
 
 AddPartWheel =    1.25,  0.43, 3.75, 20
 AddPartWheel =    1.25,  0.43, 1.71, 10
@@ -55,9 +65,9 @@ AddPartWheel =   -0.00,  0.43,-0.15
 AddPartWheel =   -0.00,  0.43,-2.01
 
 ;ArmorMinDamage 最小ダメージ、これより小さいダメージは無効化される
-ArmorMinDamage = 9
+ArmorMinDamage = 15
 ;ArmorMaxDamage 最大ダメージ、これより大きいダメージは最大ダメージに丸められる
-ArmorMaxDamage = 500
+;ArmorMaxDamage = 500
 ;ArmorDamageFactor ダメージ係数上記のMin/Max範囲チェック後のダメージの係数 1で100%, 0.5で50%
 ArmorDamageFactor = 1.00
 ;後退可能にする(暫定処置で今後削除される可能性有り)
@@ -67,8 +77,11 @@ PivotTurnThrottle = 0.2
 
 TrackRollerRot = 30
 
-AddWeapon        = 105mm,  0.00, 2.39, 0.00, 0.0, 0.0, true,  1 , 0, -360, 360, -15,7
-AddPartWeapon    = 105mm,  false, true, false,  0.00, 2.01, 0.00
+AddWeapon        = 105mmb1,  0.00, 2.39, 0.00, 0.0, 0.0, true,  1 , 0, -360, 360, -16,6
+AddWeapon        = 105mmb1heat,  0.00, 2.39, 0.00, 0.0, 0.0, true,  1 , 0, -360, 360, -16,6
+AddWeapon        = 105mmb1he,  0.00, 2.39, 0.00, 0.0, 0.0, true,  1 , 0, -360, 360, -16,6
+AddPartWeapon    = 105mmb1/105mmb1heat/105mmb1he,  false, true, false,  0.00, 2.01, 0.00
+AddTurretWeapon     = centmg3,  0.422, 2.33, 1.79, 0.0, 0.0, true,   1 , 0, -360, 360, -16,6
 AddPartWeaponChild= false, true, 0.00, 2.36, 1.32
 AddPartWeaponChild= false, true, 0.00, 2.36, 1.32,  0.5
 
@@ -76,13 +89,16 @@ AddTurretWeapon = targeting_pod_mob,     0.60, 3.40, 0.60,   0.0, 0.0,  true, 2
 AddTurretWeapon = targeting_pod_pv10s,   0.60, 3.40, 0.60,   0.0, 0.0,  false,2
 AddTurretWeapon = targeting_pod_block,   0.60, 3.40, 0.60,   0.0, 0.0,  true, 2
 
-AddTurretWeapon     = mg3_l,  1.1824, 3.3164, -0.1427, 0.0, 0.0, true,   3 , 0, -360, 360, -35,35
-AddPartTurretWeapon = mg3_l, false, true, true,  1.1824, 3.1640, -0.1427
 
-AddTurretWeapon     = mg3_r, -1.2037, 3.3164, -0.9673, 0.0, 0.0, false,  4 , 0, -360, 360, -35,35
-AddPartTurretWeapon = mg3_r, false, true, true, -1.2037, 3.1640, -0.9673
 
-DamageFactor = 0.0
+
+AddTurretWeapon     = centmg3_l,  1.1824, 3.3164, -0.1427, 0.0, 0.0, true,   3 , 0, -360, 360, -35,35
+AddPartTurretWeapon = centmg3_l, false, true, true,  1.1824, 3.1640, -0.1427
+
+AddTurretWeapon     = centmg3_r, -1.2037, 3.3164, -0.9673, 0.0, 0.0, false,  4 , 0, -360, 360, -35,35
+AddPartTurretWeapon = centmg3_r, false, true, true, -1.2037, 3.1640, -0.9673
+
+DamageFactor = 0.1
 
 HideEntity = true
 
@@ -90,8 +106,25 @@ HideEntity = true
 RideRack = c5, 1
 RideRack = c5, 2
 
-AddRecipe = "IXI",  " X ",  "III",  X, iron_block,  I, iron_ingot
+;light 8x8 with cannon
+AddRecipe = "ABC", "DEF", "G  ", A, mcheli:lightchassis, B, mcheli:wheel8, C, mcheli:engine1, D, mcheli:electronics, E, mcheli:fcs, F, mcheli:basicmechanicparts, G, mcheli:cannon3
 
-BoundingBox =  0.0, 1.0,  4.0,   3.4, 2.0,  0.90
-BoundingBox =  0.0, 1.4,  1.0,   3.4, 3.8,  1.00
-BoundingBox =  0.0, 1.0, -2.0,   3.4, 2.3,  1.25
+;BoundingBox =  0.0, 1.0,  4.0,   3.4, 2.0,  0.90
+;BoundingBox =  0.0, 1.4,  1.0,   3.4, 3.8,  1.00
+;BoundingBox =  0.0, 1.0, -2.0,   3.4, 2.3,  1.25
+
+
+
+BoundingBox = 0.0, 2.35, 0.0, 2.0, 0.8, 1.0
+
+BoundingBox = 0.0, 1.2, -2.0, 3.25, 1.6, 1.0
+
+BoundingBox = 0.0, 1.2, -0.5, 3.3, 1.5, 1.0
+BoundingBox = 0.0, 1.2, 1.7, 3.3, 1.5, 1.0
+BoundingBox = 0.0, 1.2, 1.8, 3.3, 1.4, 1.0
+BoundingBox = 0.0, 1.2, 2.7, 3.3, 1.3, 1.0
+BoundingBox = 0.0, 1.0, 3.3, 2.5, 1.2, 0.21
+BoundingBox = 0.0, 1.1, 4.0, 2.50, 0.95, 0.21
+BoundingBox = 0.0, 1.1, 4.63, 2.45, 0.55, 0.5
+
+UnmountPosition = 0.00, 1.50,  0.00

@@ -1,8 +1,6 @@
-DisplayName = 12.7mm Machine gun
+DisplayName = 12.7mm Machine Gun
 Type = MachineGun1
-Power = 9
-Acceleration = 8.0
-Explosion = 0
+Power = 31
 Flaming = false
 Sight = MoveSight
 Delay = 1
@@ -11,7 +9,25 @@ Delay = 1
 HeatCount = 4
 MaxHeatCount = 100
 SoundPitch = 1.0
-Sound = gun_h1_snd
+Sound = dshk
+
+Gravity = -0.005
+
+
+;12.7
+Power = 31
+
+Acceleration = 7.5
+Piercing = 0
+DamageFactor = tank, 1.0
+DamageFactor = plane, 0.5
+DamageFactor = vehicle, 1.0
+DamageFactor = heli, 0.5
+DamageFactor = player, 20.0
+;AddDisplayName = en_US,
+SoundVolume = 15
+
+
 
 MaxAmmo = 800
 SuppliedNum = 200

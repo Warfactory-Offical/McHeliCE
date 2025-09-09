@@ -1,8 +1,6 @@
-DisplayName = 7.62mm Machine gun
+DisplayName = 7.62mm Machine Gun
 Type = MachineGun1
 Power = 7
-Acceleration = 10.0
-Explosion = 0
 Flaming = false
 Sight = MoveSight
 Delay = 1
@@ -11,9 +9,20 @@ Accuracy = 2.0
 HeatCount = 3
 MaxHeatCount = 150
 SoundPitch = 1.0
-SoundVolume = 2.0
-Sound = gun_l1_snd
+SoundVolume = 15
+Sound = pkt
+Gravity = -0.005
 BulletColor        = 255, 189, 255, 116
+
+Acceleration = 7.5
+Piercing = 0
+DamageFactor = tank, 1.0
+DamageFactor = plane, 0.5
+DamageFactor = vehicle, 1.0
+DamageFactor = heli, 0.5
+;DamageFactor = player, 20.0
+;AddDisplayName = en_US,
+SoundVolume = 15
 
 MaxAmmo = 1000
 SuppliedNum = 200

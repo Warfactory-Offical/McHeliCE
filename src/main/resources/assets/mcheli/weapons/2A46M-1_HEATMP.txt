@@ -1,29 +1,51 @@
-DisplayName = 2A46M-1 Smoothbore Gun[HEAT-MP]
+DisplayName = 125mm 2A46M-5 Smoothbore Cannon [3BK18M - HEAT-MP]
 Type = MachineGun2
-Power = 120
+Power = 550
 ModelBullet = bullet105mm
-Acceleration = 6.0
-Explosion = 2
-ExplosionBlock = 2
+Acceleration = 8.0
+Explosion = 3
+ExplosionInWater = 2
+ExplosionBlock = 3
 Flaming = false
 Sight = MoveSight
-Delay = 120
+Delay = 170
 ModeNum = 1
-SoundPitch = 0.5
-SoundVolume = 10
-Sound = cannon_3_snd
-Group = MainGun
-Recoil = 2.5
+;SoundPitch = 0.5
+SoundVolume = 20
+Sound = tseventytwomain
+group = maingun
 
-AddMuzzleFlash      =  8.2,     2.10,        7,  220,254,159,74
-AddMuzzleFlash      =  8.1,     2.05,        6,  220,254,219,104
-AddMuzzleFlash      =  8.0,     2.00,        5,  220,254,219,184
-AddMuzzleFlashSmoke =  8.2, 30, 12.0,  4.0, 65,  220,160,140,120
-AddMuzzleFlashSmoke = 10.2, 20, 13.0,  7.0, 55,  200,190,170,150
+Gravity = -0.005
 
-RecoilBufCount = 40, 5
+DisplayMortarDistance = true
 
-MaxAmmo = 20
-SuppliedNum = 10
-Item =  2, iron_ingot
+
+AddMuzzleFlash      =  10.2,      1.80,        7,  200,254,129,44
+AddMuzzleFlash      =  10.1,      1.75,        6,  200,254,219,104
+AddMuzzleFlash      =  10.0,      1.70,        5,  200,254,219,184
+AddMuzzleFlashSmoke =  12.2, 20,  10.0,  3.0, 45,  220,160,140,120
+AddMuzzleFlashSmoke = 15.2, 10,  11.0,  6.0, 35,  200,190,170,150
+
+Round = 1
+
+MaxAmmo = 11
+SuppliedNum = 11
+Item =  3, iron_ingot
 Item =  2, gunpowder
+
+Delay = 80
+ReloadTime = 80
+Group = MainGun
+Acceleration = 7.0
+BulletColor        = 255, 255, 100, 100
+ModelBullet = bullet105mm
+Piercing = 0
+Accuracy = 0.0
+DamageFactor = tank, 2.0
+DamageFactor = plane, 4.5
+DamageFactor = vehicle 4.5
+DamageFactor = heli, 4.5
+DamageFactor = player, 20.0
+SoundVolume = 15
+AddDisplayName = en_US, 2A46M-1 Smoothbore Gun[HEAT-MP]
+

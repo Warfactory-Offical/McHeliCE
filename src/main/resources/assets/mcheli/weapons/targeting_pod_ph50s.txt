@@ -1,7 +1,7 @@
 DisplayName = Spot Heli/Plane 50s
 Type = TargetingPod
 Sight = None
-Delay = 60
+Delay = 6
 Sound = lockon
 
 Length = 300

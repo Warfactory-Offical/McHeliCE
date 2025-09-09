@@ -2,7 +2,11 @@ DisplayName = X-47B Pegasus
 AddDisplayName = ja_JP, X-47B ペガサス
 ItemID = 28728
 MaxHp = 100
-Speed = 0.6
+Speed = 1.1919
+
+;685mph cruising speed
+
+
 FlareType = 4
 ParticlesScale = 0.7
 EnableSeaSurfaceParticle = true
@@ -10,13 +14,12 @@ EnableNightVision = true
 EnableEntityRadar = true
 EnableGunnerMode = true
 UAV = true
-AutoPilotRot = -0.60
+AutoPilotRot = -1.60
 CameraPosition = 0.0, 1.7, 5.2
-ThrottleUpDown = 0.9
+ThrottleUpDown = 0.7
 MaxFuel         = 1000
 FuelConsumption = 1.0
 Stealth = 0.35
-ThirdPersonDist = 16
 
 ; M = Military(軍用機).  Q = Drone(無人航空機)
 Category = M.Q
@@ -45,24 +48,31 @@ AddPartWing =   5.04, 2.10, 0.00,  0,0,1, 150
 AddPartNozzle = -0.35, 2.23, -5.23, -1,0,0
 AddPartNozzle =  0.35, 2.23, -5.23, -1,0,0
 
-AddPartWeaponBay = gbu-31, -0.62, 1.22,-1.45,  0, -0.02, 1.0,  90
-AddPartWeaponBay = gbu-31,  0.62, 1.22,-1.45,  0, -0.02, 1.0, -90
+AddPartWeaponBay = x47gbu-31, -0.62, 1.22,-1.45,  0, -0.02, 1.0,  90
+AddPartWeaponBay = x47gbu-31,  0.62, 1.22,-1.45,  0, -0.02, 1.0, -90
 
-AddPartWeaponMissile = gbu-31,   false,  false,  false,    1.15,  1.97, -3.55
-AddPartWeaponMissile = gbu-31,   false,  false,  false,   -1.15,  1.97, -3.55
+AddPartWeaponMissile = x47gbu-31,   false,  false,  false,    1.15,  1.97, -3.55
+AddPartWeaponMissile = x47gbu-31,   false,  false,  false,   -1.15,  1.97, -3.55
 
 AddWeapon = dummy_bay_closed, 0,0,0,0,0
-AddWeapon = gbu-31,  1.15,  1.97, -3.55,  0, 0
+AddWeapon = x47gbu-31,  1.15,  1.97, -3.55,  0, 0
+
+;AddTurretWeapon = gbu-31, 1.15,  1.97, -3.55,  0.0, 0.0, true,1, 0,-360,360, -20, 9
+
 AddWeapon = gbu-31, -1.15,  1.97, -3.55,  0, 0
 
 AddWeapon = targeting_pod_mob,   0.0, 1.7, 5.2,  0.0, 0.0
 AddWeapon = targeting_pod_pv30s, 0.0, 1.7, 5.2,  0.0, 0.0
 AddWeapon = targeting_pod_block, 0.0, 1.7, 5.2,  0.0, 0.0
 
-AddRecipe = " I ",  "IRI",  " I ", I, iron_block, R, redstone_block
+;advanced prop drone (modern drone), AOW3 style
+AddRecipe = "ABC", "DEF", "FBE", A, mcheli:airframe3, B, mcheli:complexmechanicparts, C, mcheli:engine2, D, mcheli:wheelair, E, mcheli:electronics, F, mcheli:fcs2
+;prototype thing... but like there's probably something like this in active service we just dont know about or something
 
 BoundingBox =  0.0, 2.0,  1.0,  3.0, 1.8
 BoundingBox =  3.0, 2.0, -3.0,  3.0, 1.5
 BoundingBox =  0.0, 2.0, -2.0,  3.0, 1.8
 BoundingBox = -3.0, 2.0, -3.0,  3.0, 1.5
 BoundingBox =  0.0, 2.0, -5.0,  3.0, 1.8
+
+enableback = true

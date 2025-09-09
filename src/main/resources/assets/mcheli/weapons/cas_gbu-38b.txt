@@ -1,9 +1,10 @@
 DisplayName = GBU-38/B JDAM
 Type = ASMissile
-Power = 32
+Power = 1000
 Acceleration = 4
-Explosion = 6
-ExplosionBlock = 3
+Explosion = 10
+ExplosionInWater = 5
+ExplosionBlock = 5
 Flaming = true
 Sight = MoveSight
 Delay = 140
@@ -15,7 +16,7 @@ Gravity = -0.02
 DisableSmoke = true
 
 MaxAmmo = 12
-SuppliedNum = 4
-Item =  4, iron_ingot
-Item =  4, gunpowder
+SuppliedNum = 1
+Item =  6, iron_ingot
+Item =  6, gunpowder
 Item =  4, redstone

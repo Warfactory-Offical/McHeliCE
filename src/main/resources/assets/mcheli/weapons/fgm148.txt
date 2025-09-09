@@ -1,9 +1,11 @@
 DisplayName = FGM-148 Javelin
 Type = ATMissile
-Power = 62
-Acceleration = 3.0
-Explosion = 4
-Flaming = true
+Power = 762
+Explosion = 5
+
+ExplosionInWater = 3
+
+Flaming = false
 Sight = MissileSight 
 Delay = 100
 LockTime = 70
@@ -16,9 +18,27 @@ RigidityTime = 3
 TrajectoryParticleStartTick = 10
 Zoom = 4.2, 9.2
 
+DamageFactor = tank, 1.0
 DamageFactor = plane, 3.0
-DamageFactor = helicopter, 3.0
-DamageFactor = tank, 2.5
+DamageFactor = vehicle 2.0
+DamageFactor = heli, 3.0
+
+Delay = 100
+;ReloadTime = 150
+;Group = MainGun
+Acceleration = 4.3
+;BulletColor        = 255, 255, 100, 100
+;ModelBullet = bullet105mm
+Piercing = 0
+;Accuracy = 0.0
+DamageFactor = tank, 2.0
+DamageFactor = plane, 4.5
+DamageFactor = vehicle 4.5
+DamageFactor = heli, 4.5
+DamageFactor = player, 20.0
+AddDisplayName = en_US,
+SoundVolume = 15
+
 
 MaxAmmo = 1
 SuppliedNum = 1

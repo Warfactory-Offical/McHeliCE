@@ -7,18 +7,21 @@ FloatOffset = -0.4
 EnableFoldBlade = true
 EnableNightVision = true
 EnableEntityRadar = true
-Speed = 0.55
+Speed = 2
 ThrottleUpDown = 0.5
 FlareType = 3
 CameraPosition = 0.0, 0.7, 3.5
 MaxFuel         = 2400
 FuelConsumption = 1.1
-ThirdPersonDist = 24
+ThirdPersonDist = 20
+
+sound = stallion
+soundvolume = 15
 
 ; M = Military(軍用機).  M = Multi-Mission(多目的機)
 Category = M.M
 
-HUD = heli, none, gunner, gunner, none, none, none, none, none, none, none, none
+HUD = helinvg, none, gunner, gunner, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none
 
 MobilityYaw = 0.4
 MobilityPitch = 0.4
@@ -42,19 +45,50 @@ AddSeat = 0.85,  1.63,  0.07
 AddGunnerSeat = 0.50,  1.17, -1.62,   1.40,  2.37, -1.62, false, -90, 50
 AddGunnerSeat =-0.50,  1.17, -1.62,  -1.40,  2.37, -1.62, false, -90, 50
 
+;30
+
 AddSeat = 1.05,  1.20, -2.95
 AddSeat =-1.05,  1.20, -2.95
+
+AddSeat = 0.50,  1.00, -2.95
+AddSeat = 0.00,  0.90, -2.95
+AddSeat =-0.50,  1.00, -2.95
+
 AddSeat = 1.05,  1.20, -4.05
 AddSeat =-1.05,  1.20, -4.05
+
+AddSeat = 0.50,  1.00, -4.05
+AddSeat = 0.00,  0.90, -4.05
+AddSeat =-0.50,  1.00, -4.05
+
 AddSeat = 1.05,  1.20, -5.20
 AddSeat =-1.05,  1.20, -5.20
+
+AddSeat = 0.50,  1.00, -5.25
+AddSeat = 0.00,  0.90, -5.25
+AddSeat =-0.50,  1.00, -5.25
+
 AddSeat = 1.05,  1.20, -6.40
 AddSeat =-1.05,  1.20, -6.40
+
+AddSeat = 0.50,  1.00, -6.45
+AddSeat = 0.00,  0.90, -6.45
+AddSeat =-0.50,  1.00, -6.45
+
 AddSeat = 1.05,  1.20, -7.60
 AddSeat =-1.05,  1.20, -7.60
+
+AddSeat = 0.50,  1.00, -7.60
+AddSeat = 0.00,  0.90, -7.60
+AddSeat =-0.50,  1.00, -7.60
+
 AddSeat = 1.05,  1.20, -8.70
 AddSeat =-1.05,  1.20, -8.70
+
 AddSeat = 1.05,  1.20, -9.85
+
+AddSeat = 0.0,  1.20, -9.85
+
 AddSeat =-1.05,  1.20, -9.85
 
 AddPartLG  = 0, 1.12,  0.93,  1,0,0,  77
@@ -66,14 +100,34 @@ AddPartHatch  = 0, 0.543, -10.47, 1,0,0, -34
 AddWeapon = m3m_l,     1.47, 1.70,-1.62,   0.0, 0.0, false, 3, -90,-70, 70, -50,80
 AddWeapon = m3m_r,    -1.47, 1.70,-1.62,   0.0, 0.0, false, 4,  90,-70, 70, -50,80
 
-AddRecipe = " X ",  "XIX",  "X X",  X, iron_block, I, iron_ingot
+;advanced large modern helicopter transport armed, AOW3 style
+AddRecipe = "ABC", "DEF", " A ", A, mcheli:airframe3, B, mcheli:heliblade, C, mcheli:engine2, D, mcheli:wheelair, E, mcheli:electronics, F, mcheli:cannon1
+
+AddRecipe = "AB ", "   ", "   ", A, mcheli:ch-53e, B, mcheli:cannon1
 
 InventorySize = 54
 
-BoundingBox =  0.0, 2.3, -2.0,  2.8, 3.8
-BoundingBox =  0.0, 2.0, -6.5,  4.0, 4.2
-BoundingBox =  0.0, 2.3, -9.0,  2.8, 3.8
-BoundingBox =  0.0, 5.5,-22.5,  3.0, 4.0
+
+BoundingBox = 0.0, 5.0, -5.42, 1.5, 1.5, 1.5
+
+BoundingBox = 0.0, 3.8, -2.0, 3.5, 1.0
+BoundingBox = 0.0, 3.8, -5.5, 3.5, 1.0
+BoundingBox = 0.0, 3.8, -9.0, 3.5, 1.0
+
+BoundingBox = 0.0, 3.4, -12.0, 2.5, 1.0
+BoundingBox = 0.0, 3.2, -14.5, 2.5, 1.0
+BoundingBox = 0.0, 3.0, -17.0, 2.5, 1.0
+BoundingBox = 0.0, 3.0, -19.5, 2.5, 1.0
+
+BoundingBox =  0.0, 5.5,-22.5,  3.0, 4.0, 1.25
+
 
 AddRack = growler, 0.0, 0.85, -9.0, 0.0, 0.00, -12.0, 7.0, 500000, 180
 AddRack = growler, 0.0, 0.85, -4.5, 0.0, 0.00, -12.0, 7.0, 500000, 180
+
+unmountposition = -0.85,  1.50,  0.07
+
+DamageFactor = 0.8
+
+ThrottleUpDown = 0.3
+DamageFactor = 0.8

@@ -12,7 +12,7 @@ If = uav_fs > 0.01
 	DrawString = 100, 95, "[ %.2f ]", UAV_DIST
 EndIf
 If = uav_fs <= 0.01
-	DrawString = 100, 95, "[ --.-- ]"
+	DrawString = 100, 95, "[ %.2f ]", UAV_DIST
 EndIf
 
 If = uav_fs >= 0.1

@@ -1,29 +1,35 @@
-DisplayName = Kurganets-25 IFV
+DisplayName = Kurganets-25 IFV with DUBM-30 Epoch or 'Bumerang-BM' RWS
+AddDisplayName = en_US, Kurganets-25 IFV
 AddDisplayName = ja_JP, Kurganets-25 歩兵戦闘車
-MaxHp = 300
+MaxHp = 250
 Speed = 0.55
-Sound = mbt_run
-ThrottleUpDown = 20.0
-MobilityYawOnGround = 4.0
-MinRotationPitch = -50
+Sound = kurg
+ThrottleUpDown = 5.0
+MobilityYawOnGround = 3.30
+MinRotationPitch = -74
 MaxRotationPitch = 8
 MobilityRoll = 0
-Gravity = -0.1
-GravityInWater = -0.1
+Gravity = -0.61
+Float = true
+GravityInWater = -0.2
 DamageFactor = 0.0
-CameraZoom = 1
-CameraPosition = 0.00,  2.99, 0.00, true
+CameraZoom = 10
+CameraPosition = 0.00,  2.99, 0.00
 EnableNightVision = true
 CameraRotationSpeed = 35
 FlareType = 10
 MaxFuel         = 1200
 FuelConsumption = 2.7
-StepHeight = 1.5
+StepHeight = 1.8
 DefaultFreelook = true
 OnGroundPitchFactor = 2.5
 OnGroundRollFactor  = 1.0
 FlareType = 10
-ThirdPersonDist = 8
+
+Category = AIFV/AAPC
+;AARV
+
+
 
 ; 指定した高さまでの水に触れてもダメージを受けない
 ; 2であれば2ブロックまでダメージ無し
@@ -35,13 +41,13 @@ HUD = mbt_hud,mbt_gnr, none, none, none, none, none, none, none, none
 WeightType = Tank
 
 ; 重心Z座標設定
-WeightedCenterZ = 0.0
+WeightedCenterZ = 1.0
 
 ;SetWheelPos =  X座標, Y座標,  Z座標1, Z座標2, Z座標3 ...
 ; X座標のマイナス側は必要なし
-SetWheelPos =  1.37,  -0.32,  3.60, 1.43, -0.75
 
-AddSeat = 0.75,  0.33, 1.57
+
+AddGunnerSeat = 0.75,  0.33, 1.57, 0.00,  2.99, 0.00, false, -90, 90, false
 ;AddGunnerSeat =  0.75, 0.33, 1.57
 AddGunnerSeat = -0.75, 0.33, 1.57, 0.00, 3.50, 0.00, true, -90, 90
 AddSeat =  0.88, 0.45, -1.32
@@ -57,15 +63,17 @@ AddSeat = -0.88, 0.45,  0.68
 MotionFactor = 0.9
 
 ;ArmorMinDamage 最小ダメージ、これより小さいダメージは無効化される
-ArmorMinDamage = 12
+ArmorMinDamage = 31
 ;ArmorMaxDamage 最大ダメージ、これより大きいダメージは最大ダメージに丸められる
-ArmorMaxDamage = 280
+ArmorMaxDamage = 500
 ;ArmorDamageFactor ダメージ係数上記のMin/Max範囲チェック後のダメージの係数 1で100%, 0.5で50%
-ArmorDamageFactor = 0.95
+;ArmorDamageFactor = 1.0
 ;後退可能にする
 EnableBack = true
 
-AddPartHatch = -0.38, 1.05, -2.01, 0.05, 1.0, -0.1, 110
+;AddPartHatch = -0.38, 1.05, -2.01, 0.05, 1.0, -0.1, 110
+
+
 
 ;PivotTurnThrottle を0より大きい値にすると超信地旋回ができなくなる。デフォルトは0
 PivotTurnThrottle = 0.0
@@ -79,6 +87,10 @@ TrackRollerRot = 40
 
 ;転輪を追加する、設定は座標だけで、X軸が負の値だと右側、正の値だと左側の転輪となる
 ;履帯と同じ動きをするが、履帯がなくても設定可能
+
+
+SetWheelPos =  1.37,  -0.32,  3.98, 3.18, 2.38, 1.58, 0.77, -0.02, -0.83
+
 AddTrackRoller = -1.51, 0.49, 4.83
 AddTrackRoller = -1.51, 0.02, 3.98
 AddTrackRoller = -1.51, 0.02, 3.18
@@ -99,22 +111,74 @@ AddTrackRoller = 1.51, 0.02,-0.02
 AddTrackRoller = 1.51, 0.02,-0.83
 AddTrackRoller = 1.51, 0.49,-1.63
 
-AddPartWeapon = 2a42_ifv / mg_coaxial / 9m133 / 9m133s, false, true, false,  0.00, 2.14, 0.00, 0
+AddPartWeapon = kurg2a42_ifv / kurg2a42_30mmhei / kurgmg_coaxial / kurg9m133 / kurg9m133s, false, true, false,  0.00, 2.14, 0.00, 0
 AddPartWeaponChild = false, true, 0.00, 2.64, 0.23
 
-AddTurretWeapon = 2a42_ifv,   -0.04, 2.64, 3.42, 0.0, 0.0, true, 1, 0, -360, 360, -20,  8
-AddTurretWeapon = mg_coaxial,  0.12, 2.57, 0.55, 0.0, 0.0, true, 1, 0, -360, 360, -20,  8
-AddTurretWeapon = 9m133,      -1.74, 2.64, 0.64, 0.0, 0.0, true, 1, 0, -360, 360
-AddTurretWeapon = 9m133,       1.74, 2.64, 0.64, 0.0, 0.0, true, 1, 0, -360, 360
-AddTurretWeapon = 9m133s,     -1.41, 2.64, 0.64, 0.0, 0.0, true, 1, 0, -360, 360
-AddTurretWeapon = 9m133s,      1.41, 2.64, 0.64, 0.0, 0.0, true, 1, 0, -360, 360
+AddTurretWeapon = kurg2a42_ifv,   -0.04, 2.64, 0.0, 0.0, 0.0, true, 1, 0, -360, 360, -74,  8
+AddTurretWeapon = kurg2a42_30mmhei,   -0.04, 2.64, 0.0, 0.0, 0.0, true, 1, 0, -360, 360, -74,  8
+AddTurretWeapon = kurgmg_coaxial,  0.12, 2.57, 0.55, 0.0, 0.0, true, 1, 0, -360, 360, -74,  8
+AddTurretWeapon = kurg9m133,      -1.74, 2.64, 0.64, 0.0, 0.0, true, 1, 0, -360, 360
+AddTurretWeapon = kurg9m133,       1.74, 2.64, 0.64, 0.0, 0.0, true, 1, 0, -360, 360
+AddTurretWeapon = kurg9m133s,     -1.41, 2.64, 0.64, 0.0, 0.0, true, 1, 0, -360, 360
+AddTurretWeapon = kurg9m133s,      1.41, 2.64, 0.64, 0.0, 0.0, true, 1, 0, -360, 360
 AddWeapon = kurganets_spot, 0.00, 3.50, 0.00, 0.0, 0.0, false, 2, 0, -360, 360, -90, 90
 
-BoundingBox =  0.0, 1.0,  3.0,   3.5, 2.0,   0.90
-BoundingBox =  0.0, 2.5, -0.5,   3.0, 1.0,   1.20
-BoundingBox =  0.0, 1.0, -0.5,   3.5, 2.0,   1.10
+AddPartWeaponBay = op, -0.38, 1.05, -2.01, 0.05, 1.0, -0.1, 110
+AddWeapon = op, 0.00, 3.50, 0.00, 0.0, 0.0, false, 1, 0, -360, 360, -90, 90
+
+;sidestuff
+
+BoundingBox = 1.65, 0.99, 4.55, 1.0, 1.35,  0.6
+BoundingBox = 1.65, 0.99, 3.55, 1.0, 1.35,  0.6
+BoundingBox = 1.65, 0.99, 2.55, 1.0, 1.35,  0.6
+BoundingBox = 1.65, 0.99, 1.55, 1.0, 1.35,  0.6
+BoundingBox = 1.65, 0.99, 0.55, 1.0, 1.35,  0.6
+BoundingBox = 1.65, 1.11, 0.00, 1.0, 1.40,  0.6
+BoundingBox = 1.65, 1.11, -0.55, 1.0, 1.40, 0.6
+BoundingBox = 1.65, 1.11, -1.55, 1.0, 1.40, 0.6
+BoundingBox = 1.65, 0.99, 0.00, 1.0, 1.35,  0.6
+BoundingBox = 1.65, 0.99, -0.55, 1.0, 1.35, 0.6
+BoundingBox = 1.65, 0.99, -1.55, 1.0, 1.35, 0.6
+BoundingBox = 1.65, 1.11, 1.55, 1.0, 1.40,  0.6
+BoundingBox = 1.65, 1.11, 0.55, 1.0, 1.40,  0.6
+
+BoundingBox = -1.65, 0.99, 4.55, 1.0, 1.35,  0.6
+BoundingBox = -1.65, 0.99, 3.55, 1.0, 1.35,  0.6
+BoundingBox = -1.65, 0.99, 2.55, 1.0, 1.35,  0.6
+BoundingBox = -1.65, 0.99, 1.55, 1.0, 1.35,  0.6
+BoundingBox = -1.65, 0.99, 0.55, 1.0, 1.35,  0.6
+BoundingBox = -1.65, 1.11, 0.00, 1.0, 1.40,  0.6
+BoundingBox = -1.65, 1.11, -0.55, 1.0, 1.40, 0.6
+BoundingBox = -1.65, 1.11, -1.55, 1.0, 1.40, 0.6
+BoundingBox = -1.65, 0.99, 0.00, 1.0, 1.35,  0.6
+BoundingBox = -1.65, 0.99, -0.55, 1.0, 1.35, 0.6
+BoundingBox = -1.65, 0.99, -1.55, 1.0, 1.35, 0.6
+BoundingBox = -1.65, 1.11, 1.55, 1.0, 1.40,  0.6
+BoundingBox = -1.65, 1.11, 0.55, 1.0, 1.40,  0.6
+
+
+ArmorDamageFactor = 0.90
+
+;bugged?
+
+
+
+BoundingBox = 0.0, 1.20, 3.95, 3.6, 0.7, 0.2
+BoundingBox = 0.0, 0.99, 3.4, 3.6, 1.35, 0.3
+BoundingBox = 0.0, 0.90, 2.1, 3.6, 1.9, 0.80
+BoundingBox = 0.0, 0.98, -0.3, 3.6, 2.2, 1.0
+;BoundingBox = 0.0, 2.15, 0.0, 2.8, 1.2, 1.0
+
+
+;BoundingBox =  0.0, 1.0,  3.0,   3.5, 2.0,   1.0
+;BoundingBox =  0.0, 2.5, -0.5,   3.0, 1.0,   1.0
+;BoundingBox =  0.0, 1.0, -0.5,   3.5, 2.0,   1.0
+
+
+UnmountPosition = 0.0,  1.50, -1.32
 
 EntityWidth  = 0.8
 EntityHeight = 0.8
 
-AddRecipe = " R ",  "I I",  "XXX",  X, iron_block,  I, iron_ingot, R, redstone
+;heavy MEME (APS) IFV tracked IFV (modern)
+AddRecipe = "ABC", "DGF", "EHG", A, mcheli:mediumchassis, B, mcheli:cannon2, C, mcheli:engine3, D, mcheli:tanktracks, F, mcheli:electronics, G, mcheli:composite3, E, mcheli:complexmechanicparts, H, mcheli:fcs3

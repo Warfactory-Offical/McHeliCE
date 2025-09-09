@@ -1,15 +1,27 @@
-DisplayName = Hydra 70mm Rocket
+DisplayName = 70mm Hydra Rocket [HE-FRAG - M151]
 Type = Rocket
-Power = 35
+Power = 400
 ModelBullet = hydra70
 Acceleration = 4.0
 Explosion = 3
+ExplosionInWater = 2
 Flaming = false
-Sound = rocket_snd
+
 Sight = MoveSight
-Delay = 7
+
 ReloadTime = 110
 Round = 10
+
+Gravity = -0.005
+Sound = hydraseventy
+Delay = 1
+
+SoundVolume = 15
+
+DamageFactor = tank, 1.0
+DamageFactor = plane, 3.0
+DamageFactor = vehicle 2.0
+DamageFactor = heli, 3.0
 
 MaxAmmo = 20
 SuppliedNum = 10

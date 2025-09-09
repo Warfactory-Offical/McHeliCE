@@ -1,32 +1,40 @@
-DisplayName = Oto Melara 127 mm gun
+DisplayName = Otobreda 127/64 Naval Gun
 AddDisplayName = ja_JP, オート・メラーラ127mm砲
 ItemID = 30110
-MaxHp = 200
+MaxHp = 100
 HideEntity = true
-MinRotationPitch = -83
+Gravity = -9.81
+GravityInWater = -1.0
+MinRotationPitch = -85
 MaxRotationPitch =  15
-DamageFactor = 0.1
+DamageFactor = 1.0
 CameraZoom = 4
-CameraPosition = 0.0, 4.00, 0.0
+CameraPosition = 0.0, 4.00, -1.0
 ThirdPersonDist = 8
+
+
+
+unmountposition = 0.0, 1.60, 0.0
 
 ; M = Military,  A = AAGun(対空砲)
 Category = M.A
 
 HUD = vehicle
 
-AddSeat = 0.00, 0.60, 0.00
+AddGunnerSeat = 0.00, 0.60, 0.00, 0.0, 4, -1.0, false, -85, 15, true
 
 ; AddPart = DrawFirstPerson[T/F], RotationYaw[T/F], RotationPitch[T/F], PartType[0~], PoxX, PoxY, PoxZ
 ;脚
 AddPart		 = true, true, false, 0,   0.00, 0.00, 0.00
 ;本体
-AddChildPart = false,false,true,  0,   0.00, 2.24, -0.68
+AddChildPart = true,false,true,  0,   0.00, 2.24, -0.68
 ;砲身
-AddChildPart = false,false,true,  2,   0.00, 2.24, -0.68, 0.4
+AddChildPart = true,false,true,  2,   0.00, 2.24, -0.68, 0.4
 
-AddWeapon = 127mmgun,  0.00, 2.24, -0.68,   0.0, -1.0,   true,1, 0,-360,360, -83, 15
+AddTurretWeapon = 127mmgun,  0.00, 2.24, 0,   0.0, 0,   true,1, 0,-360,360, -85, 15
 
-BoundingBox =  0.0, 1.8, 0.0,  4.0, 4.0
+BoundingBox =  0.0, 1.8, 0.0,  3.0, 3.0
 
-AddRecipe = "ZXZ",  "XDR",  "ZXR",  X, iron_block, R, redstone_block, Z, gold_ingot, D, dispenser
+
+;light aa turret modern less complex stage 3 naval can
+AddRecipe = "ABC", "DCC", "   ", A, mcheli:cannon3, B, mcheli:map, C, mcheli:electronics, D, mcheli:fcs2

@@ -1,10 +1,10 @@
-DisplayName = 540pound bomb
+DisplayName = Generic 540lb Bomb [TEMP]
 Type = Bomb
-Power = 50
+Power = 1000
 Acceleration = 0.1
-Explosion = 4
+Explosion = 12
 ExplosionBlock = 3
-ExplosionInWater = 0
+ExplosionInWater = 6
 Flaming = false
 Sight = None
 Delay = 5
@@ -12,8 +12,13 @@ Sound = bomb_snd
 
 ReloadTime = 150
 Round = 6
+DamageFactor = tank, 2.0
+DamageFactor = plane, 4.5
+DamageFactor = vehicle 4.5
+DamageFactor = heli, 4.5
+DamageFactor = player, 20.0
 
 MaxAmmo = 12
 SuppliedNum = 4
-Item =  2, iron_ingot
+Item =  4, iron_ingot
 Item =  4, gunpowder

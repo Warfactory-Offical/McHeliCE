@@ -1,24 +1,32 @@
-DisplayName = MW-1 BombDispenser
+DisplayName = MW-1 Bomb Dispenser [STABO]
 Type = Bomb
-Power = 15
+Power = 50
 Acceleration = 0.8
 Explosion = 3
-ExplosionInWater = 0
+ExplosionBlock = 1
+ExplosionInWater = 2
 Flaming = false
+Sound = bofors
+SoundPitch = 0.6
 Sight = None
-Delay = 2
-Round = 25
-Bomblet = 2
-BombletSTime = 0
-BombletDiff = 0.3
+Delay = 1
+Round = 200
+;Bomblet = 2
+;BombletSTime = 0
+;BombletDiff = 0.3
 ReloadTime = 280
-DelayFuse = 40
+;DelayFuse = 40
 Bound = 0.3
+
+AddMuzzleFlash      =  0,      0.62,        0,  150,254,159,84
+AddMuzzleFlash      =  0,      0.61,        0,  150,254,230,160
+AddMuzzleFlash      =  0,      0.60,        0,  150,254,219,184
+;sad cant use TrajectoryParticle = fireworksSpark
 
 ModelBullet = cbc
 ModelBomblet = cbc
 
-MaxAmmo = 50
-SuppliedNum = 25
+MaxAmmo = 200
+SuppliedNum = 50
 Item =  3, iron_ingot
 Item =  3, gunpowder

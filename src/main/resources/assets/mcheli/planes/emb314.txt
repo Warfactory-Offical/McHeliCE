@@ -1,24 +1,28 @@
 DisplayName = EMB 314 Super Tucano
+AddDisplayName = en_US, EMB 314 Super Tucano
 AddDisplayName = ja_JP, エンブラエル EMB-314
 ItemID = 28703
-MaxHp = 150
-Speed = 0.8
+MaxHp = 100
+Speed = 0.64032
+
+;368mph
 FlareType = 4
-Sound = turboprop
-ThrottleUpDown = 0.8
+Sound = embthree
+ThrottleUpDown = 0.3
 MaxFuel         = 1200
 FuelConsumption = 1.0
 EnableEjectionSeat = true
 EnableNightVision = true
 CameraPosition = 0.0, 0.3, 0.7
-ThirdPersonDist = 12
+
+RotorSpeed = 2000.0
 
 UnmountPosition = 3.0, 2.0, -5.0
 
 ; M = Military(軍用機).  A = Attacker(攻撃機)
 Category = M.A
 
-HUD = plane, plane_gnr
+HUD = planenvg, plane_gnr
 
 AddSeat       = 0.0,  1.32, -1.70
 AddGunnerSeat = 0.0,  1.48, -3.57,   0.0, 0.3, 0.7,  true
@@ -44,27 +48,57 @@ AddPartLG = -1.65, 1.18, -2.72,  0,0, 1, 145.84
 AddPartLG = -2.20, 1.30, -2.76,  0,0, 1, 83.56
 AddPartLG = -2.37, 1.29, -2.76,  0,0, 1, 85
 
-AddWeapon = aim9,      4.21, 1.24, -3.75,   0.0,  0.0
-AddWeapon = aim9,     -4.21, 1.24, -3.75,   0.0,  0.0
-AddWeapon = mg12_7mm,  2.37, 1.27,  0.56,   1.0, -3.0
-AddWeapon = mg12_7mm, -2.37, 1.27,  0.56,  -1.0, -3.0
-AddWeapon = lau-68,    3.31, 1.05, -3.88,   0.0, -0.0
-AddWeapon = lau-68,   -3.31, 1.05, -3.88,   0.0, -0.0
-AddWeapon = gpu-2,     0.00, 0.50, -1.25,   0.0,  0.0
+AddWeapon = aim9ltucano,      4.21, 1.24, -3.75,   0.0,  0.0
+AddWeapon = aim9ltucano,     -4.21, 1.24, -3.75,   0.0,  0.0
+AddWeapon = tucanohmg,  2.37, 1.27,  0.56,   1.0, -3.0
+AddWeapon = tucanohmg, -2.37, 1.27,  0.56,  -1.0, -3.0
+AddWeapon = tucanolau-68,    3.31, 1.05, -3.88,   0.0, -0.0
+AddWeapon = tucanolau-68,   -3.31, 1.05, -3.88,   0.0, -0.0
 
-AddPartRotWeapon     = gpu-2,  false,  false,  false,   0.00, 0.50, -1.54, 0,0,1
-AddPartWeaponMissile = aim9,   false,  false,  false,   4.21, 1.24, -3.75
-AddPartWeaponMissile = aim9,   false,  false,  false,  -4.21, 1.24, -3.75
 
-AddWeapon = lau-68_apkws,  3.31, 1.05, -3.88,   0.0, -0.0,false, 2
-AddWeapon = lau-68_apkws, -3.31, 1.05, -3.88,   0.0, -0.0,false, 2
-AddWeapon = lau-68_logir,  3.31, 1.05, -3.88,   0.0, -0.0,false, 2
-AddWeapon = lau-68_logir, -3.31, 1.05, -3.88,   0.0, -0.0,false, 2
+;AddWeapon = gpu-2,     0.00, 0.50, -1.25,   0.0,  0.0
+;AddPartRotWeapon     = gpu-2,  false,  false,  false,   0.00, 0.50, -1.54, 0,0,1
+;no documented existence
 
-AddRecipe = " G ",  "IXI",  "DID",  X, iron_block, G, glass, I, iron_ingot, D, dispenser
+AddPartWeaponMissile = aim9ltucano,   false,  false,  false,   4.21, 1.24, -3.75
+AddPartWeaponMissile = aim9ltucano,   false,  false,  false,  -4.21, 1.24, -3.75
+
+AddWeapon = tucanolau-68_apkws,  3.31, 1.05, -3.88,   0.0, -0.0,true, 2
+AddWeapon = tucanolau-68_apkws, -3.31, 1.05, -3.88,   0.0, -0.0,true, 2
+
+;AddWeapon = lau-68_logir,  3.31, 1.05, -3.88,   0.0, -0.0,false, 2
+;AddWeapon = lau-68_logir, -3.31, 1.05, -3.88,   0.0, -0.0,false, 2
+;not typical
+
+;prop plane modern, AOW3 style
+AddRecipe = "A C", "DEF", "G  ", A, mcheli:airframe, C, mcheli:engine2, D, mcheli:wheelair, E, mcheli:electronics, F, mcheli:cannon1, G, mcheli:rocket
 
 BoundingBox =  0.0, 1.4, -2.7,  3.0, 1.8
 BoundingBox = -2.9, 1.1, -2.7,  2.0, 0.6
 BoundingBox =  2.9, 1.1, -2.7,  2.0, 0.6
 BoundingBox = -4.9, 1.5, -2.7,  2.0, 0.6
 BoundingBox =  4.9, 1.5, -2.7,  2.0, 0.6
+
+BoundingBox =  0.0, 1.4, -5.0,  2.0, 1.8
+
+BoundingBox =  0.0, 1.4, -6.7,  2.0, 1.8
+
+BoundingBox =  0.0, 1.4, -8.7,  2.0, 1.8
+
+
+BoundingBox =  0.0, 3.4, -10.3,  1.6, 1.8
+BoundingBox =  0.0, 1.4, -9.7,  2.0, 1.8
+BoundingBox =  1.5, 1.4, -9.7,  2.0, 1.8
+BoundingBox =  -1.5, 1.4, -9.7,  2.0, 1.8
+
+
+unmountposition = 0.0,  1.32, -1.70
+
+
+DamageFactor = 0.8
+
+EntityWidth  = 0.81
+EntityHeight = 0.81
+
+enableback = true
+DamageFactor = 0.8

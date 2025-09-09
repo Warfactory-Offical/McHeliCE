@@ -1,13 +1,19 @@
-DisplayName =  Mk29 Missile Launcher
+DisplayName = Mk29 Sea Sparrow (RIM-7)
+AddDisplayName = en_US, Mk29 Sea Sparrow (RIM-7)
 AddDisplayName = ja_JP, Mk29 艦対空個艦防衛ミサイル
 ItemID = 28615
-MaxHP = 350
+MaxHP = 100
+Gravity = -9.81
+GravityInWater = -1.0
 CameraPosition = 0.0, 3.5, 0.0
 CameraZoom = 5
 MinRotationPitch = -50
 MaxRotationPitch = 0
 AddSeat = 0.0,  0.0, 0.0
-ThirdPersonDist = 12
+HideEntity = true
+unmountposition = 0.0,  1.4, -0
+DamageFactor = 1.0
+EnableNightVision = true
 
 ; M = Military,  M = Missile(ミサイル)
 Category = M.M
@@ -24,6 +30,10 @@ AddWeapon = aim7_spa,  1.59,  1.0, 1.94,   0.0, 0.0
 AddPart	= true, true, false, 0,   0.00, 0.00, 0.00
 AddChildPart = true,false,true,  0,  0.00, 1.49, 0.00
 
-AddRecipe = "T T",  " X ",  "XAX",  X,iron_block, T,tnt, A,iron_ingot
+; aa launcher 4
+AddRecipe = "BBC", "DCC", "CC ", B, mcheli:lap, C, mcheli:electronics, D, mcheli:fcs2
 
-BoundingBox =  0.0, 1.0, 0.0,  3.0, 2.5
+
+BoundingBox =  0.0, 0.4, 0.0,  1.2, 1.5
+
+BoundingBox =  0.0, 1.44, 0.0,  2.0, 1.25

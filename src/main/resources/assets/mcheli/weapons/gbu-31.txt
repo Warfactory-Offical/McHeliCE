@@ -1,14 +1,15 @@
 DisplayName = GBU-31
-Type = ASMissile
-Power = 32
+Type = ATMissile
+DisableSmoke = true
+
+
+Power = 1000
 Acceleration = 1.7
-Explosion = 6
-ExplosionBlock = 3
 Flaming = true
 Sight = MoveSight
-Delay = 35
-Round = 2
-ReloadTime = 190
+Delay = 5
+Round = 4
+ReloadTime = 1500
 SoundVolume = 3
 SoundPitch = 0.1
 Sound = bomb_snd
@@ -16,8 +17,22 @@ ModelBullet = gbu31
 Gravity = -0.01
 DisableSmoke = true
 
+;bomb rewrite
+;Acceleration = 0.5
+Explosion = 17
+;Explosive mass	269.9*5 kg kg
+Power = 1080
+ExplosionBlock = 5
+ExplosionInWater = 9
+DamageFactor = tank, 2.0
+DamageFactor = plane, 4.5
+DamageFactor = vehicle 4.5
+DamageFactor = heli, 4.5
+DamageFactor = player, 20.0
+
+
 MaxAmmo = 4
-SuppliedNum = 4
+SuppliedNum = 1
 Item =  4, iron_ingot
 Item =  4, gunpowder
 Item =  4, redstone

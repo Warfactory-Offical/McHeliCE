@@ -2,12 +2,15 @@ DisplayName = Robinson R44 Float
 AddDisplayName = ja_JP, ロビンソン R44 フロート
 ItemID = 28823
 MaxHp = 100
-Speed = 0.6
+Speed = 1.37
 Float = true
 Sound = r44_heli
 MaxFuel         = 1200
 FuelConsumption = 1.0
-ThirdPersonDist = 16
+ThirdPersonDist = 20
+
+Soundpitch = 1.65
+SoundVolume = 15
 
 ; C = Civilian(民間機)
 Category = C
@@ -34,6 +37,26 @@ AddPartHatch = -0.87, 1.01, 2.48,  0.046,  1.0, -0.51,  70
 AddPartHatch =  0.87, 1.01, 2.48,  0.046, -1.0,  0.51,  70
 AddPartHatch = -0.87, 1.01, 2.48,  0.046,  1.0, -0.51,  70
 
-AddRecipe = "IRI",  " G ",  "BFB",  R, iron_block,  I, iron_ingot,  G, Glass,  B,  boat,  F, iron_bars,
+;basic unarmed modern helicopter, AOW3 style
+AddRecipe = "ABC", "DE ", "   ", A, mcheli:airframe, B, mcheli:heliblade, C, mcheli:engine2, D, mcheli:wheelair, E, mcheli:electronics
+
+BoundingBox = 0.0, 3.5, 0.0, 1.0, 2.0, 1.5
+
+BoundingBox = 0.0, 1.33, -1.00, 2.0, 2.0
+BoundingBox = 0.0, 2.06, -0.50, 1.0, 1.0
+BoundingBox = 0.0, 2.06, -1.50, 1.0, 1.0
+BoundingBox = 0.0, 2.06, -2.50, 1.0, 1.0
+BoundingBox = 0.0, 2.06, -3.50, 1.0, 1.0
+BoundingBox = 0.0, 2.06, -4.50, 1.0, 1.0
+BoundingBox = 0.0, 2.06, -5.50, 1.0, 1.0
+BoundingBox = 0.0, 2.06, -6.50, 1.0, 1.0
+BoundingBox = 0.0, 2.06, -7.50, 1.0, 1.0
+BoundingBox = 0.0, 2.56, -8.50, 1.0, 1.5, 1.25
+
+unmountposition = -0.43,  1.50,  1.76
 
 InventorySize = 27
+
+
+ThrottleUpDown = 0.5
+DamageFactor = 0.8

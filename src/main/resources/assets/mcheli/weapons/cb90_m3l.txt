@@ -1,16 +1,26 @@
 DisplayName = M3 12.7mmMG(Left)
 Type = MachineGun2
-Power = 10
-Acceleration = 10.0
+Power = 31
+Acceleration = 7.0
 Flaming = false
 Sight = MoveSight
 Delay = 1
 SoundVolume = 1.0
 SoundPitch = 1.0
-Sound = gun_h1_snd
+Sound = m2_snd
 Accuracy = 1.5
-HeatCount = 8
+HeatCount = 1
 MaxHeatCount = 150
+
+Acceleration = 7.5
+Gravity = -0.005
+SoundVolume = 15
+
+
+DamageFactor = tank, 1.0
+DamageFactor = plane, 0.5
+DamageFactor = vehicle, 1.0
+DamageFactor = heli, 0.5
 
 MaxAmmo = 200
 SuppliedNum = 100

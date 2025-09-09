@@ -1,16 +1,23 @@
 DisplayName = AGM-114 Hellfire
 Type = TVMissile
-Power = 52
-Acceleration = 2.0
-Explosion = 4
+Power = 1000
+Acceleration = 4.8
+Explosion = 5
+ExplosionInWater = 3
+ExplosionBlock = 5
 Flaming = true
 Sight = MoveSight
-Delay = 100
+Delay = 5
+ReloadTime = 1000
 ModeNum = 2
 ModelBullet = agm114
 Sound = missile_1_snd
 
 DamageFactor = tank, 2.0
+DamageFactor = plane, 1.0
+DamageFactor = vehicle 4.5
+DamageFactor = heli, 4.5
+DamageFactor = player, 20.0
 
 ;DEBUG:Manual control only
 ;FixMode = 1
@@ -19,7 +26,7 @@ DamageFactor = tank, 2.0
 ;RigidityTime = 30
 
 MaxAmmo = 4
-SuppliedNum = 2
-Item =  1, iron_ingot
-Item =  1, gunpowder
-Item =  1, redstone
+SuppliedNum = 1
+Item =  4, iron_ingot
+Item =  6, gunpowder
+Item =  2, redstone

@@ -1,21 +1,27 @@
-DisplayName =Type3 Anti-Air Shell[AA]
+DisplayName = Type 3 Anti-Air Shell [AA]
 Type = Rocket
 Power = 15
 ModelBullet = rocket
 Acceleration = 2.7
-Explosion = 2
+Explosion = 1
 ExplosionBlock = 1
 Flaming = false
 Sight = MoveSight
-Delay = 20
+Delay = 10
 ReloadTime = 60
 Round = 3
 Bomblet = 20
 BombletDiff = 2.0
 DisableSmoke = true
-Sound = rocket_snd
-DamageFactor = helicopter, 1.5
-DamageFactor = plane,      1.5
+Sound = naval
+SoundVolume = 15
+
+Gravity = -0.005
+
+DamageFactor = tank, 1.0
+DamageFactor = plane, 1.5
+DamageFactor = vehicle 2.0
+DamageFactor = heli, 1.5
 
 MaxAmmo = 12
 SuppliedNum = 4

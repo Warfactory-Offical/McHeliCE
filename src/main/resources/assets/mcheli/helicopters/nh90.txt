@@ -1,21 +1,26 @@
-DisplayName = NHIndustries NH90-TTH
+DisplayName = NH Industries NH-90 TTH
 AddDisplayName = ja_JP, NHインダストリーズ NH90-TTH
 ItemID = 28997
-MaxHp = 250
+MaxHp = 100
 EnableNightVision = true
-Speed = 0.8
+Speed = 1.86
 ThrottleUpDown = 1.0
 FlareType = 1,2,3
 onGroundPitch = 1.0
-Regeneration = true
+
 RotorSpeed = 80.0
-ArmorDamageFactor = 0.7
-DamageFactor = 0.2
+ArmorDamageFactor = 1
+
 ; M = Military(軍用機).  M = Multi-Mission(多目的機)
 Category = M.M
-ThirdPersonDist = 16
+ThirdPersonDist = 20
 
-HUD = heli, heli
+sound = nhninety
+soundvolume = 15
+
+HUD = helinvg, heli_gnrnvg, none, none, none, none, none, none, none, none, none, none
+
+AddWeapon = targeting_pod_pv10s,   0.0, 0.7, 3.5,   0.0, 0.0,  true,2
 
 AddSeat = -0.40, 0.52, 5.11
 AddSeat =  0.40, 0.52, 5.11
@@ -65,12 +70,34 @@ InventorySize = 54
 MaxFuel         = 1200
 FuelConsumption = 0.4
 
-AddRecipe = "CXC",  "XIX",  "I I",  X, iron_block, I, iron_ingot, C,coal_block
 
-BoundingBox =  0.0, 1.4,  5.0,  1.5, 1.5
-BoundingBox =  0.0, 1.8,  3.0,  2.0, 2.5
-BoundingBox =  0.0, 1.8,  1.0,  2.0, 2.5
-BoundingBox =  0.0, 1.8, -1.0,  2.0, 2.5
-BoundingBox =  0.0, 2.5,-8.0,  2.0, 3.0
+;basic unarmed small modern helicopter, AOW3 style
+AddRecipe = "ABC", "DE ", "   ", A, mcheli:airframe, B, mcheli:heliblade, C, mcheli:engine1, D, mcheli:wheelair, E, mcheli:electronics
+
+;BoundingBox =  0.0, 1.4,  5.0,  1.5, 1.5
+;BoundingBox =  0.0, 1.8,  3.0,  2.0, 2.5
+;BoundingBox =  0.0, 1.8,  1.0,  2.0, 2.5
+;BoundingBox =  0.0, 1.8, -1.0,  2.0, 2.5
+BoundingBox =  0.0, 2.5,-8.0,  2.0, 3.0, 1.25
+
+BoundingBox = 0.0, 3.1, 1.6, 1.0, 1.5, 1.5
+BoundingBox = 0.0, 2.72, 3.51, 1.6, 0.5
+BoundingBox = 0.0, 2.72, 1.90, 1.6, 0.5
+BoundingBox = 0.0, 2.72, 0.41, 1.6, 0.5
+
+BoundingBox = 0.0, 1.95, -7.18, 1.0, 1.0
+BoundingBox = 0.0, 1.95, -6.18, 1.0, 1.0
+BoundingBox = 0.0, 1.95, -5.18, 1.0, 1.0
+BoundingBox = 0.0, 1.95, -4.18, 1.0, 1.0
+BoundingBox = 0.0, 2.55, -3.18, 1.0, 0.5
+BoundingBox = 0.0, 2.55, -2.18, 1.0, 0.5
+BoundingBox = 0.0, 2.55, -1.18, 1.0, 0.5
+BoundingBox = 0.0, 2.55, -0.18, 1.0, 0.5
+
+unmountposition = -0.40, 1.50, 5.11
+
+DamageFactor = 0.8
 
 
+ThrottleUpDown = 0.5
+DamageFactor = 0.8

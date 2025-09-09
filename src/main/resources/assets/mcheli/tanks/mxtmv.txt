@@ -1,21 +1,25 @@
-DisplayName = MXT-MV Husky TSV
-AddDisplayName = ja_JP, MXT-MV ハスキーTSV
-MaxHp = 160
-ThrottleUpDown = 10.0
+DisplayName = MXT-MV Husky TSV with Heckler & Koch GMG
+AddDisplayName = en_US, MXT-MV Husky TSV with Heckler & Koch GMG
+AddDisplayName = ja_JP, MXT-MV ハスキーTSV with Heckler & Koch GMG
+MaxHp = 280
+ThrottleUpDown = 0.81
 Speed = 0.7
-MobilityYawOnGround = 6.5
+MobilityYawOnGround = 9.0
 StepHeight = 1.5
-Sound = prop
+Sound = dieselman
 MinRotationPitch = -90
 MaxRotationPitch = 90
 MobilityRoll     = 0
-Gravity        = -0.15
-GravityInWater = -0.1
-DamageFactor   = 0.85
-EnableNightVision = true
+Gravity = -0.61
+GravityInWater = -1.0
+DamageFactor   = 0.2
+EnableNightVision = false
 MaxFuel           = 1200
 FuelConsumption   = 1.0
-ThirdPersonDist = 8
+
+Category = IMV
+
+CameraZoom = 2
 
 OnGroundPitchFactor = 3.0
 OnGroundRollFactor  = 3.8
@@ -23,25 +27,38 @@ OnGroundRollFactor  = 3.8
 ;後退可能にする
 EnableBack = true
 
+AddPartSteeringWheel =  -0.691,  1.46,  0.626,  0, 0.3196, -1,   130
+
 ; Tank or Car or Unknown
 WeightType = Car
 
 ;SetWheelPos =  X座標, Y座標,  Z座標1, Z座標2, Z座標3 ...
 ; X座標のマイナス側は必要なし
-SetWheelPos = 1.03, -0.24, -2.05, 2.02
+SetWheelPos = 0.72, -0.24, -2.05, 2.02
 
-HUD = bnr32_hud, none, none, none, gunner
+HUD = bnr32_hud, none, none, none, gunner, none, none
 
 AddSeat = -0.70, 0.79,  0.27
 AddSeat =  0.70, 0.79,  0.27
 AddSeat = -0.70, 1.07, -1.01
 AddSeat =  0.70, 1.07, -1.01
-AddGunnerSeat =  0.00, 2.20,-0.59, 0.00, 3.40, -0.59, false, -25, 4
+AddGunnerSeat =  0.00, 2.20,-0.59, 0.00, 3.20, -0.59, false, -25, 4
 AddSeat = -0.70, 1.45, -2.35
 AddSeat =  0.70, 1.45, -2.35
 
+AddWeapon = smoke_none, 1.2,  -0.3,-1.7592,   1.0, 0.0
+AddWeapon = thorn2,    0.00, 0.00, 0.00,  0.0,0.0
+
 ;PivotTurnThrottle を0より大きい値にすると超信地旋回ができなくなる。デフォルトは0
 PivotTurnThrottle = 0.1
+;front headlights
+AddFixedSearchLight =  1.00, 1.10, 2.84,      0x20FFFFFF,   0x00FFFFC0,    0.2, 2.0,  -5,  0
+AddFixedSearchLight = -1.00, 1.10, 2.84,      0x20FFFFFF,   0x00FFFFC0,    0.2, 2.0,   5,  0
+
+;rear lights
+AddFixedSearchLight =  0.9074, 1.1367,-3.1433,   0xFFFF0000,   0x10FF0000,    0.0, 0.16 
+AddFixedSearchLight = -0.9074, 1.1367,-3.1433,   0xFFFF0000,   0x10FF0000,    0.0, 0.16
+
 
 ; タイヤの回転スピード
 PartWheelRot = 40
@@ -56,17 +73,44 @@ AddPartHatch =   1.12, 1.58, 0.92, 0.0, 1.0, 0.0, -60
 AddPartHatch =  -1.12, 1.86,-1.46, 0.0, 1.0, 0.0, -100
 AddPartHatch =   1.12, 1.86,-1.46, 0.0, 1.0, 0.0, 100
 
-AddTurretWeapon = gmw,    0.00, 2.95, -0.59, 0.0, 0.0, false, 5, 0, -360, 360, -25,  4
-AddTurretWeapon = gmw_fl, 0.00, 2.95, -0.59, 0.0, 0.0, false, 5, 0, -360, 360, -25,  4
-AddPartWeapon = gmw / gmw_fl, false, true, false,  0.00, 2.30, -0.59, 0
+AddTurretWeapon = huskygmw,    0.00, 2.95, -0.59, 0.0, 0.0, false, 5, 0, -360, 360, -25,  4
+AddTurretWeapon = huskygmw_fl, 0.00, 2.95, -0.59, 0.0, 0.0, false, 5, 0, -360, 360, -25,  4
+AddTurretWeapon = huskygmw_apers, 0.00, 2.95, -0.59, 0.0, 0.0, false, 5, 0, -360, 360, -25,  4
+AddTurretWeapon = huskygmwtb, 0.00, 2.95, -0.59, 0.0, 0.0, false, 5, 0, -360, 360, -25,  4
+
+TurretPosition = 0.0, 2.95, -0.5881
+
+AddPartWeapon = huskygmw / huskygmw_fl / huskygmw_apers / huskygmwtb, false, true, false,  0.00, 2.30, -0.59, 0
 AddPartWeaponChild = false, true, 0.00, 2.74, 0.48
 
 AddRack = container, 0.0, 1.20, -2.35,  0.0, 2.00, -3.85
 
 InventorySize = 27
 
-BoundingBox =  0.0, 1.0,  1.5,   2.6, 1.0,   0.90
-BoundingBox =  0.0, 1.5, -0.5,   2.6, 2.0,   1.00
-BoundingBox =  0.0, 1.5, -1.5,   2.6, 2.0,   1.10
+BoundingBox = 0.0, 1.0, 1.8, 1.9, 1.0, 1.0, 1.0
+BoundingBox = 0.0, 1.0, -0.3, 2.8, 2.6, 1.0, 1.0
+;BoundingBox =  0.0, 1.0,  1.5,   2.6, 1.0,   1.00
+;BoundingBox =  0.0, 1.5, -0.5,   2.6, 2.0,   1.00
+;BoundingBox =  0.0, 1.5, -1.5,   2.6, 2.0,   1.00
 
-AddRecipe = " G ",  "IXI",  "RIR",   G, glass, I, iron_ingot, R, redstone, X, iron_block
+
+;BoundingBox =  0.0, 0.62,  1.70,   1.8, 0.9
+;;rest
+;BoundingBox = 0.0, 0.70, -0.20, 2.4, 2.0
+;BoundingBox = 0.0, 0.90, -1.25, 2.0, 1.0, 0.0
+;BoundingBox = 0.0, 0.90, -1.33, 1.9, 1.0, 1.0
+
+
+
+
+UnmountPosition = -0.70, 1.79,  0.27
+
+;BoundingBox =  0.0, 0.62,  1.70,   1.8, 0.9
+ArmorMinDamage = 50
+ArmorDamageFactor = 1.2
+Regeneration = false
+
+;advanced humvee type gl
+AddRecipe = "ABC", "DDD", "GE ", A, mcheli:lightchassis, B, mcheli:wheel4, C, mcheli:engine2, D, mcheli:map, G, mcheli:cannon2, E, mcheli:electronics
+
+AddRecipe = "AB ", "   ", "   ", A, mcheli:mxtmvbase, B, mcheli:cannon2
