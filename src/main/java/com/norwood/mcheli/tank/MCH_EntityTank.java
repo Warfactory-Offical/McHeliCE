@@ -894,7 +894,9 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
         Vec3d v = MCH_Lib.Rot2Vec3(this.getRotYaw(), this.getRotPitch() - 10.0F);
         if (!levelOff) {
             //todo marker
-            this.motionY = this.motionY + v.y * throttle / 8.0;
+            this.motionY += v.y * throttle / 8.0;
+            //retard alert
+            //super.motionY += v.yCoord * (double)throttle / 8.0D;
         }
 
         boolean canMove = true;
