@@ -73,7 +73,7 @@ public abstract class MCH_EntityAircraft
         IEntityAdditionalSpawnData,
         IEntitySinglePassenger,
         ITargetMarkerObject {
-    public static final float Y_OFFSET = 0.35F;
+    public static final float Y_OFFSET = W_Entity.GLOBAL_Y_OFFSET;
     public static final byte LIMIT_GROUND_PITCH = 40;
     public static final byte LIMIT_GROUND_ROLL = 40;
     public static final int CAMERA_PITCH_MIN = -30;
@@ -3282,7 +3282,7 @@ public abstract class MCH_EntityAircraft
 
             Vec3d v;
             if (info != null && info.length > 0) {
-                v = this.getTransformedPosition(info[0].pos.x, info[0].pos.y + riddenEntityYOffset - 0.5, info[0].pos.z, px, py + 0.35F, pz, info[0].rotSeat);
+                v = this.getTransformedPosition(info[0].pos.x, info[0].pos.y + riddenEntityYOffset - 0.5, info[0].pos.z, px, py + W_Entity.GLOBAL_Y_OFFSET, pz, info[0].rotSeat);
             } else {
                 v = this.getTransformedPosition(0.0, riddenEntityYOffset - 1.0F, 0.0);
             }

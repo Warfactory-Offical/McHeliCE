@@ -8,6 +8,7 @@ import com.norwood.mcheli.helper.info.IItemContent;
 import com.norwood.mcheli.hud.MCH_Hud;
 import com.norwood.mcheli.hud.MCH_HudManager;
 import com.norwood.mcheli.weapon.MCH_WeaponInfoManager;
+import com.norwood.mcheli.wrapper.W_Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.math.MathHelper;
@@ -1377,7 +1378,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         public final float pitch;
 
         public CameraPosition(MCH_AircraftInfo paramMCH_AircraftInfo, Vec3d vec3, boolean fixRot, float yaw, float pitch) {
-            this.pos = vec3.add(0, 0.35, 0); //FIXME Seems like basically everthing needs a 0.35 offset when it comes to mcheli rendering, this is temporary so for when I figure out where it belongs
+            this.pos = vec3.add(0, W_Entity.GLOBAL_Y_OFFSET, 0); //FIXME Seems like basically everthing needs a 0.35 offset when it comes to mcheli rendering, this is temporary so for when I figure out where it belongs
             this.fixRot = fixRot;
             this.yaw = yaw;
             this.pitch = pitch;
@@ -1404,7 +1405,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
     }
 
     public static class CrawlerTrack extends MCH_AircraftInfo.DrawnPart {
-        public float len = 0.35F;
+        public float len = W_Entity.GLOBAL_Y_OFFSET;
         public double[] cx;
         public double[] cy;
         public List<MCH_AircraftInfo.CrawlerTrackPrm> lp;
@@ -1737,7 +1738,7 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                 float mxp,
                 boolean turret
         ) {
-            this.pos = new Vec3d(x, y, z);
+            this.pos = new Vec3d(x, y+W_Entity.GLOBAL_Y_OFFSET, z);
             this.yaw = yaw;
             this.pitch = pitch;
             this.canUsePilot = canPirot;

@@ -5,6 +5,7 @@ import com.norwood.mcheli.MCH_ModelManager;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_RenderAircraft;
 import com.norwood.mcheli.weapon.MCH_WeaponSet;
+import com.norwood.mcheli.wrapper.W_Entity;
 import com.norwood.mcheli.wrapper.W_Lib;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -38,7 +39,7 @@ public class MCH_RenderVehicle extends MCH_RenderAircraft<MCH_EntityVehicle> {
                     vehicle.lastRiderPitch = vehicle.rotationPitch;
                 }
 
-                posY += 0.35F;
+                posY += W_Entity.GLOBAL_Y_OFFSET;
                 this.renderDebugHitBox(vehicle, posX, posY, posZ, yaw, pitch);
                 this.renderDebugPilotSeat(vehicle, posX, posY, posZ, yaw, pitch, roll);
                 GlStateManager.translate(posX, posY, posZ);

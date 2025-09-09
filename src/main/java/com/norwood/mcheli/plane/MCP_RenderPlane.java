@@ -3,6 +3,7 @@ package com.norwood.mcheli.plane;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_RenderAircraft;
+import com.norwood.mcheli.wrapper.W_Entity;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -25,7 +26,7 @@ public class MCP_RenderPlane extends MCH_RenderAircraft<MCP_EntityPlane> {
         if (entity instanceof MCP_EntityPlane plane) {
             planeInfo = plane.getPlaneInfo();
             if (planeInfo != null) {
-                posY += 0.35F;
+                posY += W_Entity.GLOBAL_Y_OFFSET;
                 this.renderDebugHitBox(plane, posX, posY, posZ, yaw, pitch);
                 this.renderDebugPilotSeat(plane, posX, posY, posZ, yaw, pitch, roll);
                 GlStateManager.translate(posX, posY, posZ);

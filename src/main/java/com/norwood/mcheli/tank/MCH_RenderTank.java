@@ -4,6 +4,7 @@ import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.helper.MCH_ColorInt;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_RenderAircraft;
+import com.norwood.mcheli.wrapper.W_Entity;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -31,7 +32,7 @@ public class MCH_RenderTank extends MCH_RenderAircraft<MCH_EntityTank> {
         if (entity instanceof MCH_EntityTank tank) {
             tankInfo = tank.getTankInfo();
             if (tankInfo != null) {
-                posY += 0.35F;
+                posY += W_Entity.GLOBAL_Y_OFFSET;
                 this.renderWheel(tank, posX, posY, posZ);
                 this.renderDebugHitBox(tank, posX, posY, posZ, yaw, pitch);
                 this.renderDebugPilotSeat(tank, posX, posY, posZ, yaw, pitch, roll);

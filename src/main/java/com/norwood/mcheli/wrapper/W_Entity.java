@@ -24,6 +24,9 @@ import javax.annotation.Nullable;
 public abstract class W_Entity extends Entity {
     protected double _renderDistanceWeight = 1.0;
 
+    //GLOBAL OFFSET, anything that has to do with world spawning, rendering, you should apply this offset
+    public static final float GLOBAL_Y_OFFSET = 0.35F;
+
     public W_Entity(World par1World) {
 
         super(par1World);

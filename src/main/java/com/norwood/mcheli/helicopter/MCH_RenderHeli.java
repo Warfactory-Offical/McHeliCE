@@ -4,6 +4,7 @@ import com.norwood.mcheli.aircraft.MCH_Blade;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_RenderAircraft;
 import com.norwood.mcheli.aircraft.MCH_Rotor;
+import com.norwood.mcheli.wrapper.W_Entity;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -27,7 +28,7 @@ public class MCH_RenderHeli extends MCH_RenderAircraft<MCH_EntityHeli> {
         if (entity instanceof MCH_EntityHeli heli) {
             heliInfo = heli.getHeliInfo();
             if (heliInfo != null) {
-                posY += 0.35F;
+                posY += W_Entity.GLOBAL_Y_OFFSET;
                 this.renderDebugHitBox(heli, posX, posY, posZ, yaw, pitch);
                 this.renderDebugPilotSeat(heli, posX, posY, posZ, yaw, pitch, roll);
                 GlStateManager.translate(posX, posY, posZ);

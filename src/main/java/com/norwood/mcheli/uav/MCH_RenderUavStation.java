@@ -2,6 +2,7 @@ package com.norwood.mcheli.uav;
 
 import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.MCH_ModelManager;
+import com.norwood.mcheli.wrapper.W_Entity;
 import com.norwood.mcheli.wrapper.W_Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -27,7 +28,7 @@ public class MCH_RenderUavStation extends W_Render<MCH_EntityUavStation> {
         if (entity.getKind() > 0) {
             int kind = entity.getKind() - 1;
             GlStateManager.pushMatrix();
-            GlStateManager.translate(posX, posY + 0.35F, posZ);
+            GlStateManager.translate(posX, posY + W_Entity.GLOBAL_Y_OFFSET, posZ);
             GlStateManager.enableCull();
             GlStateManager.rotate(entity.rotationYaw, 0.0F, -1.0F, 0.0F);
             GlStateManager.rotate(entity.rotationPitch, 1.0F, 0.0F, 0.0F);

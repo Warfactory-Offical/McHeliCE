@@ -48,7 +48,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySinglePassenger {
-    public static final float Y_OFFSET = 0.35F;
+
     private static final DataParameter<Byte> STATUS = EntityDataManager.createKey(MCH_EntityUavStation.class, DataSerializers.BYTE);
     private static final DataParameter<Integer> LAST_AC_ID = EntityDataManager.createKey(MCH_EntityUavStation.class, DataSerializers.VARINT);
     private static final DataParameter<BlockPos> UAV_POS = EntityDataManager.createKey(MCH_EntityUavStation.class, DataSerializers.BLOCK_POS);
@@ -481,7 +481,7 @@ public class MCH_EntityUavStation extends W_EntityContainer implements IEntitySi
         if (this.isPassenger(passenger)) {
             double x = -Math.sin(this.rotationYaw * Math.PI / 180.0) * 0.9;
             double z = Math.cos(this.rotationYaw * Math.PI / 180.0) * 0.9;
-            passenger.setPosition(this.posX + x, this.posY + this.getMountedYOffset() + passenger.getYOffset() + 0.35F, this.posZ + z);
+            passenger.setPosition(this.posX + x, this.posY + this.getMountedYOffset() + passenger.getYOffset() + W_Entity.GLOBAL_Y_OFFSET, this.posZ + z);
         }
     }
 

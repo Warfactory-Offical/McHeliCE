@@ -2,6 +2,7 @@ package com.norwood.mcheli.tool.rangefinder;
 
 import com.norwood.mcheli.MCH_ModelManager;
 import com.norwood.mcheli.helper.client.IItemRenderer;
+import com.norwood.mcheli.wrapper.W_Entity;
 import com.norwood.mcheli.wrapper.W_McClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -46,9 +47,9 @@ public class MCH_ItemRenderRangeFinder implements IItemRenderer {
                 GlStateManager.rotate(70.0F, 1.0F, 0.0F, 0.0F);
                 GlStateManager.rotate(5.0F, 0.0F, 0.0F, 1.0F);
                 if (Minecraft.getMinecraft().player.getItemInUseMaxCount() > 0) {
-                    GlStateManager.translate(0.4F, -0.35F, -0.3F);
+                    GlStateManager.translate(0.4F, -W_Entity.GLOBAL_Y_OFFSET, -0.3F);
                 } else {
-                    GlStateManager.translate(0.2F, -0.35F, -0.3F);
+                    GlStateManager.translate(0.2F, -W_Entity.GLOBAL_Y_OFFSET, -0.3F);
                 }
 
                 MCH_ModelManager.render("rangefinder");
