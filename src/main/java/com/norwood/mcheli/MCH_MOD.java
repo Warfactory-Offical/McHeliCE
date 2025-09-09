@@ -17,6 +17,9 @@ import com.norwood.mcheli.helicopter.MCH_HeliInfo;
 import com.norwood.mcheli.helicopter.MCH_ItemHeli;
 import com.norwood.mcheli.helper.*;
 import com.norwood.mcheli.helper.info.ContentRegistries;
+import com.norwood.mcheli.item.MCH_Item;
+import com.norwood.mcheli.item.MCH_ItemInfo;
+import com.norwood.mcheli.item.MCH_ItemInfoManager;
 import com.norwood.mcheli.lweapon.MCH_ItemLightWeaponBase;
 import com.norwood.mcheli.lweapon.MCH_ItemLightWeaponBullet;
 import com.norwood.mcheli.mob.MCH_EntityGunner;
@@ -61,6 +64,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.Map.Entry;
 
 @Mod(
@@ -105,6 +109,7 @@ public class MCH_MOD {
     public static MCH_CreativeTabs creativeTabsHeli;
     public static MCH_CreativeTabs creativeTabsPlane;
     public static MCH_CreativeTabs creativeTabsShip;
+    public static MCH_CreativeTabs creativeTabsItem;
     public static MCH_CreativeTabs creativeTabsTank;
     public static MCH_CreativeTabs creativeTabsVehicle;
     public static MCH_DraftingTableBlock blockDraftingTable;
@@ -120,6 +125,51 @@ public class MCH_MOD {
         }
 
         MCH_Items.register(item, name);
+    }
+
+    public static void registerItemCustom() {
+        System.out.println("[mcheli.MCH_MOD:registerItemCustom] Starting custom item registration...");
+
+        Iterator<String> i$ = MCH_ItemInfoManager.getKeySet().iterator();
+
+        while (i$.hasNext()) {
+            String name = i$.next();
+            System.out.println("[mcheli.MCH_MOD:registerItemCustom] Processing item: " + name);
+
+            // Get the item info for the current item
+            MCH_ItemInfo info = MCH_ItemInfoManager.get(name);
+
+            // Check if item info is null
+            if (info == null) {
+                System.out.println("[mcheli.MCH_MOD:registerItemCustom] Error: Item info for " + name + " is null! Skipping...");
+                continue;
+            }
+
+            // Separate logic for throwable items (grenades)
+            if (isThrowableItem(name)) {
+                // Skip registering the throwable item in the normal item registration logic
+                System.out.println("[mcheli.MCH_MOD:registerItemCustom] Skipping throwable item: " + name);
+                continue;
+            }
+
+            // Register as a normal item (non-throwable)
+            info.item = new MCH_Item(info.itemID);
+            info.item.setMaxStackSize(info.stackSize);
+            registerItem(info.item, name, creativeTabsItem);
+            info.itemID = W_Item.getIdFromItem(info.item) - 256;
+            W_LanguageRegistry.addName(info.item, info.displayName);
+
+            // Register item names in multiple languages
+            //for (String lang : info.displayNameLang.keySet()) {
+            //   W_LanguageRegistry.addNameForObject(info.item, (Object) lang, info.displayNameLang.get(lang));
+            //}
+            //let's get one thing fucking clear before I split you in two. The lang is Fucking Working.
+        }
+    }
+
+    private static boolean isThrowableItem(String name) {
+        return name.toLowerCase().contains("grenade");
+        //worst method in the world award
     }
 
     public static void registerItemThrowable() {
@@ -261,12 +311,13 @@ public class MCH_MOD {
         MCH_Lib.Log("SourcePath: " + sourcePath);
         MCH_Lib.Log("CurrentDirectory:" + new File(".").getAbsolutePath());
         proxy.init();
-        creativeTabs = new MCH_CreativeTabs("MC Heli Item");
-        creativeTabsHeli = new MCH_CreativeTabs("MC Heli Helicopters");
-        creativeTabsPlane = new MCH_CreativeTabs("MC Heli Planes");
-        creativeTabsShip = new MCH_CreativeTabs("MC Heli Ships");
-        creativeTabsTank = new MCH_CreativeTabs("MC Heli Tanks");
-        creativeTabsVehicle = new MCH_CreativeTabs("MC Heli Vehicles");
+        creativeTabs = new MCH_CreativeTabs("MCHeliO Items");
+        creativeTabsHeli = new MCH_CreativeTabs("MCHeliO Helicopters");
+        creativeTabsPlane = new MCH_CreativeTabs("MCHeliO Planes");
+        creativeTabsShip = new MCH_CreativeTabs("MCHeliO Ships");
+        creativeTabsTank = new MCH_CreativeTabs("MCHeliO Tanks");
+        creativeTabsVehicle = new MCH_CreativeTabs("MCHeliO Vehicles");
+        creativeTabsItem = new MCH_CreativeTabs("MCHeliO Recipe Items");
         proxy.loadConfig("config/mcheli.cfg");
         config = proxy.config;
         ContentRegistries.loadContents(addonDir);
@@ -282,6 +333,7 @@ public class MCH_MOD {
         this.registerItemUavStation();
         this.registerItemInvisible();
         registerItemThrowable();
+        registerItemCustom();
         this.registerItemLightWeaponBullet();
         this.registerItemLightWeapon();
         registerItemAircraft();
