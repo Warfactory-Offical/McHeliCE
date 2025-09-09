@@ -145,6 +145,82 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
     private int lastWeaponIndex = -1;
     private MCH_AircraftInfo.PartWeapon lastWeaponPart;
 
+
+    /**
+     * 雷达种类
+     */
+    //public EnumRadarType radarType = EnumRadarType.EARLY_AA;
+
+    /**
+     * RWR种类
+     */
+    //public EnumRWRType rwrType = EnumRWRType.DIGITAL;
+
+    /**
+     * 当前载具在现代对空雷达中显示的名字
+     */
+    public String nameOnModernAARadar = "?";
+    /**
+     * 当前载具在早期对空雷达中显示的名字
+     */
+    public String nameOnEarlyAARadar = "?";
+    /**
+     * 当前载具在现代对地雷达中显示的名字
+     */
+    public String nameOnModernASRadar = "?";
+    /**
+     * 当前载具在早期对地雷达中显示的名字
+     */
+    public String nameOnEarlyASRadar = "?";
+    /**
+     * 载具被摧毁时爆炸范围
+     */
+    public float explosionSizeByCrash = 5;
+    /**
+     * 倒车速度倍率，默认1
+     */
+    public float throttleDownFactor = 1;
+
+    /**
+     * 箔条生效时长
+     */
+    public int chaffUseTime = 100;
+
+    /**
+     * 箔条冷却时长
+     */
+    public int chaffWaitTime = 400;
+
+    /**
+     * 维修系统生效时长 （时长即为回血百分比）
+     */
+    public int maintenanceUseTime = 20;
+
+    /**
+     * 维修系统冷却时长
+     */
+    public int maintenanceWaitTime = 300;
+
+    /**
+     * 载具瘫痪阈值，血量低于此百分比将关闭载具引擎
+     */
+    public int engineShutdownThreshold = 20;
+
+    /**
+     * APS生效时长
+     */
+    public int apsUseTime = 100;
+    /**
+     * APS冷却时长
+     */
+    public int apsWaitTime = 400;
+
+    /**
+     * APS范围
+     */
+    public int apsRange = 8;
+
+
     public MCH_AircraftInfo(AddonResourceLocation location, String path) {
         super(location, path);
         this.name = location.getPath();
@@ -523,6 +599,35 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
                     this.repairOtherVehiclesValue = this.toInt(s[1], 0, 10000000);
                 }
             }
+
+            //else if(item.equalsIgnoreCase("RadarType")) {
+            //    try {
+            //        this.radarType = EnumRadarType.valueOf(data);
+            //    } catch (Exception e) {
+            //        this.radarType = EnumRadarType.MODERN_AA;
+            //    }
+            //}
+            //else if(item.equalsIgnoreCase("RWRType")) {
+            //    try {
+            //        this.rwrType = EnumRWRType.valueOf(data);
+            //    } catch (Exception e) {
+            //        this.rwrType = EnumRWRType.DIGITAL;
+            //    }
+            //}
+            else if(item.equalsIgnoreCase("NameOnModernAARadar")) {
+                nameOnModernAARadar = data;
+            }else if(item.equalsIgnoreCase("NameOnEarlyAARadar")) {
+                nameOnEarlyAARadar = data;
+            }else if(item.equalsIgnoreCase("NameOnModernASRadar")) {
+                nameOnModernASRadar = data;
+            }else if(item.equalsIgnoreCase("NameOnEarlyASRadar")) {
+                nameOnEarlyASRadar = data;
+            } else if(item.equalsIgnoreCase("ExplosionSizeByCrash")) {
+                explosionSizeByCrash = this.toInt(data, 0, 100);
+            } else if(item.equalsIgnoreCase("ThrottleDownFactor")) {
+                throttleDownFactor = this.toFloat(data, 0, 10);
+            }
+
         } else if (item.compareTo("itemid") == 0) {
             this.itemID = this.toInt(data, 0, 65535);
         } else if (item.compareTo("addtexture") == 0) {

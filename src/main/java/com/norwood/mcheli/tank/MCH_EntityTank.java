@@ -654,45 +654,90 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
     }
 
     protected void onUpdate_ControlSub() {
-        if (!this.isGunnerMode) {
+
+        if(!super.isGunnerMode) {
             float throttleUpDown = this.getAcInfo().throttleUpDown;
-            if (this.throttleUp) {
+            if(super.throttleUp) {
                 float f = throttleUpDown;
-                if (this.getRidingEntity() != null) {
+                if(this.getRidingEntity() != null) {
                     double mx = this.getRidingEntity().motionX;
                     double mz = this.getRidingEntity().motionZ;
-                    f = throttleUpDown * (MathHelper.sqrt(mx * mx + mz * mz) * this.getAcInfo().throttleUpDownOnEntity);
+                    f = throttleUpDown * MathHelper.sqrt(mx * mx + mz * mz) * this.getAcInfo().throttleUpDownOnEntity;
                 }
 
-                if (this.getAcInfo().enableBack && this.throttleBack > 0.0F) {
-                    this.throttleBack = (float) (this.throttleBack - 0.01 * f);
+                if(this.getAcInfo().enableBack && super.throttleBack > 0.0F) {
+                    super.throttleBack = (float)((double)super.throttleBack - 0.01D * (double)f);
                 } else {
-                    this.throttleBack = 0.0F;
-                    if (this.getCurrentThrottle() < 1.0) {
-                        this.addCurrentThrottle(0.01 * f);
+                    super.throttleBack = 0.0F;
+                    if(this.getCurrentThrottle() < 1.0D) {
+                        this.addCurrentThrottle(0.01D * (double)f);
+                        //here as well?
                     } else {
-                        this.setCurrentThrottle(1.0);
+                        this.setCurrentThrottle(1.0D);
+                        //implement a new variable here to add throttle control for specific vehicles specifically 1.8D
                     }
                 }
-            } else if (this.throttleDown) {
-                if (this.getCurrentThrottle() > 0.0) {
-                    this.addCurrentThrottle(-0.01 * throttleUpDown);
+
+
+
+            } else if(super.throttleDown) {
+
+
+
+                if(this.getCurrentThrottle() > 0.0D) {
+                    this.addCurrentThrottle(-0.01D * (double)throttleUpDown);
                 } else {
-                    this.setCurrentThrottle(0.0);
-                    if (this.getAcInfo().enableBack) {
-                        this.throttleBack = (float) (this.throttleBack + 0.0025 * throttleUpDown);
-                        if (this.throttleBack > 0.6F) {
-                            this.throttleBack = 0.6F;
+                    this.setCurrentThrottle(0.0D);
+                    if(this.getAcInfo().enableBack) {
+                        // super.throttleBack = (float)((double)super.throttleBack + 0.0025D * (double)throttleUpDown);
+                        super.throttleBack = (float)((double)super.throttleBack + 0.0025D * (double)throttleUpDown * getAcInfo().throttleDownFactor);
+//                  if(super.throttleBack > 0.6F) { //todno: add a new variable here for reversespeed
+//                     super.throttleBack = 0.6F;
+//                  }
+                        float pivotTurnThrottle1 = this.getAcInfo().pivotTurnThrottle;
+                        if (pivotTurnThrottle1 > 0) {
+                            if (super.throttleBack > 0) {
+                                double dx = super.posX - super.prevPosX;
+                                double dz = super.posZ - super.prevPosZ;
+                                double dist = dx * dx + dz * dz;
+                                float sf = (float)Math.sqrt(dist <= 1.0D ? dist : 1.0D);
+                                if (pivotTurnThrottle1 <= 0.0F) {
+                                    sf = 1.0F;
+                                }
+
+                                float rotonground = 1.0F;
+                                boolean isFly = MCH_Lib.getBlockIdY(this, 3, -3) == 0;
+
+                                if (!isFly) {
+                                    rotonground = this.getAcInfo().mobilityYawOnGround;
+                                    if (!this.getAcInfo().canRotOnGround) {
+                                        Block pivotTurnThrottle = MCH_Lib.getBlockY(this, 3, -2, false);
+                                        if (!W_Block.isEqual(pivotTurnThrottle, W_Block.getWater()) && !W_Block.isEqual(pivotTurnThrottle, Blocks.AIR)) {
+                                            rotonground = 0.0F;
+                                        }
+                                    }
+                                }
+
+                                float flag = !super.throttleUp && super.throttleDown && this.getCurrentThrottle() < (double)pivotTurnThrottle1 + 0.05D ? -1.0F : 1.0F;
+                                if(super.moveLeft && !super.moveRight) {
+                                    this.setRotYaw(this.getRotYaw() + 0.6F * rotonground * flag * sf);
+                                }
+
+                                if(super.moveRight && !super.moveLeft) {
+                                    this.setRotYaw(this.getRotYaw() - 0.6F * rotonground * flag * sf);
+                                }
+                            }
                         }
                     }
                 }
-            } else if (this.cs_tankAutoThrottleDown && this.getCurrentThrottle() > 0.0) {
-                this.addCurrentThrottle(-0.005 * throttleUpDown);
-                if (this.getCurrentThrottle() <= 0.0) {
-                    this.setCurrentThrottle(0.0);
+            } else if(super.cs_tankAutoThrottleDown && this.getCurrentThrottle() > 0.0D) {
+                this.addCurrentThrottle(-0.005D * (double)throttleUpDown);
+                if(this.getCurrentThrottle() <= 0.0D) {
+                    this.setCurrentThrottle(0.0D);
                 }
             }
         }
+
     }
 
     protected void onUpdate_Particle2() {
