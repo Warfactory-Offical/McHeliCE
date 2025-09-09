@@ -470,6 +470,8 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
     @Override
     public void onUpdateAngles(float partialTicks) {
         if (!this.isDestroyed()) {
+
+            // keep gunner damping / autopilot unchanged
             if (this.isGunnerMode) {
                 this.setRotPitch(this.getRotPitch() * 0.95F);
                 this.setRotYaw(this.getRotYaw() + this.getAcInfo().autoPilotRot * 0.2F);
@@ -479,10 +481,66 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             }
 
             this.updateRecoil(partialTicks);
-            this.setRotPitch(this.getRotPitch() + (this.WheelMng.targetPitch - this.getRotPitch()) * partialTicks);
-            this.setRotRoll(this.getRotRoll() + (this.WheelMng.targetRoll - this.getRotRoll()) * partialTicks);
+
+            // --- SAFER PITCH INTERPOLATION (prevents tiny spikes from producing visible pitch jumps)
+            // Compute base interpolation from WheelMng.targetPitch but scale/clamp it when on ground or under throttle
+            float currentPitch = this.getRotPitch();
+            float targetPitch = this.WheelMng.targetPitch;
+
+            // base interpolation
+            float baseInterp = partialTicks;
+
+            // if on ground (not flying) reduce interpolation strength so wheel pitch adjustments are much slower
             boolean isFly = MCH_Lib.getBlockIdY(this, 3, -3) == 0;
-            if (!isFly || this.getAcInfo().isFloat && this.getWaterDepth() > 0.0) {
+            boolean nearWaterFloat = this.getAcInfo().isFloat && this.getWaterDepth() > 0.0;
+            if (!isFly || nearWaterFloat) {
+                // mobility factor from acInfo (like original code)
+                float gmy = 1.0F;
+                if (!isFly) {
+                    gmy = this.getAcInfo().mobilityYawOnGround;
+                    if (!this.getAcInfo().canRotOnGround) {
+                        Block block = MCH_Lib.getBlockY(this, 3, -2, false);
+                        if (!W_Block.isEqual(block, W_Block.getWater()) && !W_Block.isEqual(block, Blocks.AIR)) {
+                            gmy = 0.0F;
+                        }
+                    }
+                }
+                // reduce pitch interpolation while on ground. multiply by gmy too so immobile vehicles remain locked.
+                baseInterp *= Math.max(0.12F, 0.35F * gmy); // small fraction on ground (12%..35% of normal)
+            }
+
+            // also reduce interpolation when throttle is being applied strongly (prevents throttle spikes causing pitch)
+            double throttle = this.getCurrentThrottle();
+            if (throttle > 0.05D) {
+                // scale down interpolation by up to half when throttle high
+                float throttleFactor = 1.0F - Math.min(0.8F, (float)throttle) * 0.35F;
+                baseInterp *= throttleFactor;
+            }
+
+            // compute the desired new pitch and clamp the per-tick delta to avoid jumps
+            float desiredPitch = currentPitch + (targetPitch - currentPitch) * baseInterp;
+
+            // clamp per-tick pitch change (in degrees) to avoid sudden jumps from small impulses
+            final float MAX_PITCH_DELTA_PER_TICK = 0.9F; // tweak this smaller if you want even gentler motion
+            float pitchDelta = desiredPitch - currentPitch;
+            if (pitchDelta > MAX_PITCH_DELTA_PER_TICK) {
+                pitchDelta = MAX_PITCH_DELTA_PER_TICK;
+            } else if (pitchDelta < -MAX_PITCH_DELTA_PER_TICK) {
+                pitchDelta = -MAX_PITCH_DELTA_PER_TICK;
+            }
+            this.setRotPitch(currentPitch + pitchDelta);
+
+            // --- ROLL interpolation (kept similar to original, but also slightly damped on ground)
+            float currentRoll = this.getRotRoll();
+            float targetRoll = this.WheelMng.targetRoll;
+            float rollInterp = partialTicks;
+            if (!isFly || nearWaterFloat) {
+                rollInterp *= 0.5F; // damp roll interpolation on ground
+            }
+            this.setRotRoll(currentRoll + (targetRoll - currentRoll) * rollInterp);
+
+            // --- YAW (pivot turning) logic follows original but using computed gmy/pivot checks
+            if (!isFly || nearWaterFloat) {
                 float gmy = 1.0F;
                 if (!isFly) {
                     gmy = this.getAcInfo().mobilityYawOnGround;
@@ -498,6 +556,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
                 double dx = this.posX - this.prevPosX;
                 double dz = this.posZ - this.prevPosZ;
                 double dist = dx * dx + dz * dz;
+
                 if (pivotTurnThrottle <= 0.0F
                         || this.getCurrentThrottle() >= pivotTurnThrottle
                         || this.throttleBack >= pivotTurnThrottle / 10.0F
@@ -516,11 +575,37 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
                         this.setRotYaw(this.getRotYaw() + 0.6F * gmy * partialTicks * flag * sf);
                     }
                 }
+            } else {
+                // when flying, yaw is allowed normally (original behavior)
+                float pivotTurnThrottle = this.getAcInfo().pivotTurnThrottle;
+                double dx = this.posX - this.prevPosX;
+                double dz = this.posZ - this.prevPosZ;
+                double dist = dx * dx + dz * dz;
+
+                if (pivotTurnThrottle <= 0.0F
+                        || this.getCurrentThrottle() >= pivotTurnThrottle
+                        || this.throttleBack >= pivotTurnThrottle / 10.0F
+                        || dist > this.throttleBack * 0.01) {
+                    float sf = (float) Math.sqrt(Math.min(dist, 1.0));
+                    if (pivotTurnThrottle <= 0.0F) {
+                        sf = 1.0F;
+                    }
+
+                    float flag = !this.throttleUp && this.throttleDown && this.getCurrentThrottle() < pivotTurnThrottle + 0.05 ? -1.0F : 1.0F;
+                    if (this.moveLeft && !this.moveRight) {
+                        this.setRotYaw(this.getRotYaw() - 0.6F * partialTicks * flag * sf);
+                    }
+
+                    if (this.moveRight && !this.moveLeft) {
+                        this.setRotYaw(this.getRotYaw() + 0.6F * partialTicks * flag * sf);
+                    }
+                }
             }
 
             this.addkeyRotValue = (float) (this.addkeyRotValue * (1.0 - 0.1F * partialTicks));
         }
     }
+
 
     protected void onUpdate_Control() {
         if (this.isGunnerMode && !this.canUseFuel()) {
