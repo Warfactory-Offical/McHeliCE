@@ -892,13 +892,13 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
 
         float throttle = (float) (this.getCurrentThrottle() / 10.0);
         Vec3d v = MCH_Lib.Rot2Vec3(this.getRotYaw(), this.getRotPitch() - 10.0F);
-        if (!levelOff && !onGround) {
-            //todo marker
-            this.motionY += v.y * throttle / 8.0;
-            //retard alert
-            //WAS:
-            //super.motionY += v.yCoord * (double)throttle / 8.0D;
-        }
+        //if (!levelOff && !onGround) {
+        //    //todo marker
+        //    this.motionY += v.y * throttle / 8.0;
+        //    //retard alert
+        //    //WAS:
+        //    //super.motionY += v.yCoord * (double)throttle / 8.0D;
+        //}
 
         boolean canMove = true;
         if (!this.getAcInfo().canMoveOnGround) {
