@@ -1008,7 +1008,8 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
      **/
 
     private void onUpdate_Server() {
-        //1.12.2 - patched to avoid throttle changing pitch on flat ground
+        // 1.12.2 - patched: normalize thrust, avoid vertical throttle on-ground,
+        // and clamp pitch changes from applyOnGroundPitch to prevent wobble.
         double prevMotion = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
         double dp = 0.0;
         if (this.canFloatWater()) {
@@ -1033,10 +1034,11 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             this.motionY = this.motionY + 0.007 * this.getCurrentThrottle();
         }
 
+        // compute throttle & direction vector
         float throttle = (float) (this.getCurrentThrottle() / 10.0);
         Vec3d v = MCH_Lib.Rot2Vec3(this.getRotYaw(), this.getRotPitch() - 10.0F);
 
-        // --- NORMALIZE the direction vector to ensure consistent magnitude (matches 1.7 behaviour)
+        // normalize vector (ensure consistent magnitude like 1.7 behaviour)
         double vx = v.x;
         double vy = v.y;
         double vz = v.z;
@@ -1048,20 +1050,20 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             v = new Vec3d(vx, vy, vz);
         }
 
-        // conservative thresholds
-        final double AIRBORNE_SPEED_MIN = 0.05D;   // require a small horizontal speed before letting throttle give lift
-        final double SMALL_MOTIONY_CLAMP = 0.03D;  // if on ground and motionY smaller than this, zero it before pitch logic
+        // thresholds
+        final double AIRBORNE_SPEED_MIN = 0.05D;    // require a small horizontal speed before throttle gives lift
+        final double SMALL_MOTIONY_CLAMP = 0.03D;   // zero small vertical motion when on ground
+        final float MAX_PITCH_DELTA = 0.6F;         // maximum pitch change allowed per tick from applyOnGroundPitch
 
-        // Apply vertical thrust only when effectively airborne (or you really want small lift while grounded)
+        // apply vertical thrust: only meaningful vertical lift while airborne and moving
         if (!levelOff) {
-            // Only give meaningful vertical throttle when airborne AND moving a little.
-            // This prevents tiny vertical impulses from throttle while the vehicle is on flat ground.
             double horizSpeed = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
             if (!this.onGround && horizSpeed > AIRBORNE_SPEED_MIN) {
                 this.motionY += v.y * throttle / 8.0;
             } else {
-                // optionally apply a much smaller fraction (or skip entirely). Here we apply none.
-                // this.motionY += v.y * throttle / 32.0; // <-- alternative tiny bump if desired
+                // intentionally skip tiny vertical kicks while grounded to avoid pitch wobble
+                // If you want a tiny bump for climbing small obstacles, change the line below:
+                // this.motionY += v.y * throttle / 32.0;
             }
         }
 
@@ -1107,13 +1109,24 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             this.motionX = this.motionX * this.getAcInfo().motionFactor;
             this.motionZ = this.motionZ * this.getAcInfo().motionFactor;
 
-            // zero very small vertical movement before pitch adjustments so applyOnGroundPitch isn't triggered by tiny spikes
+            // zero very small vertical movement before pitch adjustments so applyOnGroundPitch isn't triggered by micro-spikes
             if (Math.abs(this.motionY) < SMALL_MOTIONY_CLAMP) {
                 this.motionY = 0.0;
             }
 
-            if (MathHelper.abs(this.getRotPitch()) < 40.0F) {
-                this.applyOnGroundPitch(0.8F);
+            // call applyOnGroundPitch but clamp any sudden rotation delta it creates
+            float prevPitch = this.getRotPitch();
+            this.applyOnGroundPitch(0.8F);
+            float afterPitch = this.getRotPitch();
+            float delta = afterPitch - prevPitch;
+            if (delta > MAX_PITCH_DELTA) {
+                delta = MAX_PITCH_DELTA;
+            } else if (delta < -MAX_PITCH_DELTA) {
+                delta = -MAX_PITCH_DELTA;
+            }
+            // only update rotation to a clamped pitch
+            if (delta != (afterPitch - prevPitch)) {
+                this.setRotation(this.getRotYaw(), prevPitch + delta);
             }
         }
 
@@ -1129,6 +1142,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             this.unmountEntity();
         }
     }
+
 
 
     private void collisionEntity(AxisAlignedBB bb) {
