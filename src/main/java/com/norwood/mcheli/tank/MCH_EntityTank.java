@@ -864,7 +864,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
      **/
 
     private void onUpdate_Server() {
-        //1.12.2
+        //1.12.2 - patched to avoid throttle changing pitch on flat ground
         double prevMotion = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
         double dp = 0.0;
         if (this.canFloatWater()) {
@@ -883,7 +883,6 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             if (this.motionY < 0.0) {
                 this.motionY /= 2.0;
             }
-
             this.motionY += 0.007;
         } else {
             this.motionY -= 1.0E-4;
@@ -892,13 +891,35 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
 
         float throttle = (float) (this.getCurrentThrottle() / 10.0);
         Vec3d v = MCH_Lib.Rot2Vec3(this.getRotYaw(), this.getRotPitch() - 10.0F);
-        //if (!levelOff && !onGround) {
-        //    //todo marker
-        //    this.motionY += v.y * throttle / 8.0;
-        //    //retard alert
-        //    //WAS:
-        //    //super.motionY += v.yCoord * (double)throttle / 8.0D;
-        //}
+
+        // --- NORMALIZE the direction vector to ensure consistent magnitude (matches 1.7 behaviour)
+        double vx = v.x;
+        double vy = v.y;
+        double vz = v.z;
+        double vlen = Math.sqrt(vx * vx + vy * vy + vz * vz);
+        if (vlen != 0.0D) {
+            vx /= vlen;
+            vy /= vlen;
+            vz /= vlen;
+            v = new Vec3d(vx, vy, vz);
+        }
+
+        // conservative thresholds
+        final double AIRBORNE_SPEED_MIN = 0.05D;   // require a small horizontal speed before letting throttle give lift
+        final double SMALL_MOTIONY_CLAMP = 0.03D;  // if on ground and motionY smaller than this, zero it before pitch logic
+
+        // Apply vertical thrust only when effectively airborne (or you really want small lift while grounded)
+        if (!levelOff) {
+            // Only give meaningful vertical throttle when airborne AND moving a little.
+            // This prevents tiny vertical impulses from throttle while the vehicle is on flat ground.
+            double horizSpeed = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+            if (!this.onGround && horizSpeed > AIRBORNE_SPEED_MIN) {
+                this.motionY += v.y * throttle / 8.0;
+            } else {
+                // optionally apply a much smaller fraction (or skip entirely). Here we apply none.
+                // this.motionY += v.y * throttle / 32.0; // <-- alternative tiny bump if desired
+            }
+        }
 
         boolean canMove = true;
         if (!this.getAcInfo().canMoveOnGround) {
@@ -941,9 +962,14 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
         if (this.onGround || MCH_Lib.getBlockIdY(this, 1, -2) > 0) {
             this.motionX = this.motionX * this.getAcInfo().motionFactor;
             this.motionZ = this.motionZ * this.getAcInfo().motionFactor;
+
+            // zero very small vertical movement before pitch adjustments so applyOnGroundPitch isn't triggered by tiny spikes
+            if (Math.abs(this.motionY) < SMALL_MOTIONY_CLAMP) {
+                this.motionY = 0.0;
+            }
+
             if (MathHelper.abs(this.getRotPitch()) < 40.0F) {
                 this.applyOnGroundPitch(0.8F);
-                //todo marker
             }
         }
 
@@ -959,6 +985,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             this.unmountEntity();
         }
     }
+
 
     private void collisionEntity(AxisAlignedBB bb) {
         if (bb != null) {
