@@ -1,0 +1,26 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "ICI",
+    "III"
+  ],
+  "key" : {
+    "I": {
+      "item": "#IRON_INGOT"
+    },
+    "C": [
+      {
+        "item": "minecraft:coal",
+        "data": 0
+      },
+      {
+        "item": "minecraft:coal",
+        "data": 1
+      }
+    ]
+  },
+  "result" : {
+    "item": "mcheli:fuel",
+    "count": 1
+  }
+}

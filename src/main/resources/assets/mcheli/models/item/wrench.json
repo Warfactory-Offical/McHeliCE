@@ -1,0 +1,18 @@
+{
+  "parent" : "item/generated",
+  "textures": {
+    "layer0" : "mcheli:items/wrench"
+  },
+    "display": {
+    "thirdperson_righthand": {
+      "rotation": [ 100.0, 180.0, 0.0 ],
+      "translation": [ -6.5, 6.2, 8.5 ],
+      "scale": [ 0.78, 0.78, 0.78 ]
+    },
+    "firstperson_righthand": {
+      "rotation": [ 90, -170, 20 ],
+      "translation": [ -2.1, 2.7, 10.0 ],
+      "scale": [ 1.2, 1.2, 1.2 ]
+    }
+  }
+}
