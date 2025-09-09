@@ -48,6 +48,8 @@ public class ContentRegistry<T extends MCH_BaseInfo> {
             IContentData newContent = ContentRegistries.reparseContent(content, this.dir);
             if (this.contentClass.isInstance(newContent)) {
                 T castedContent = this.contentClass.cast(newContent);
+
+
                 this.registry.replace(key, castedContent);
                 return true;
             }

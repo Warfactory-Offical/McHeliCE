@@ -4,8 +4,11 @@ import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_MOD;
 import com.norwood.mcheli.helper.addon.AddonResourceLocation;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
+import com.norwood.mcheli.vehicle.MCH_ItemVehicle;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,6 +97,7 @@ public class MCH_TankInfo extends MCH_AircraftInfo {
 
     @Override
     public void onPostReload() {
+        item = (MCH_ItemTank) ForgeRegistries.ITEMS.getValue(new ResourceLocation(MCH_MOD.MOD_ID, name));
         MCH_MOD.proxy.registerModelsTank(this, true);
     }
 }

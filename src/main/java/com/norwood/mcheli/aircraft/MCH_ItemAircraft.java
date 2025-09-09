@@ -33,6 +33,7 @@ import java.util.List;
 public abstract class MCH_ItemAircraft extends W_Item {
     private static final boolean isRegistedDispenseBehavior = false;
 
+    boolean BLOCK = true;
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {

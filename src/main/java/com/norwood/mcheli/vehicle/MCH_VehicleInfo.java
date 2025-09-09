@@ -4,6 +4,8 @@ import com.norwood.mcheli.MCH_MOD;
 import com.norwood.mcheli.helper.addon.AddonResourceLocation;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,6 +112,7 @@ public class MCH_VehicleInfo extends MCH_AircraftInfo {
 
     @Override
     public void onPostReload() {
+           item = (MCH_ItemVehicle) ForgeRegistries.ITEMS.getValue(new ResourceLocation(MCH_MOD.MOD_ID, name));
         MCH_MOD.proxy.registerModelsVehicle(this, true);
     }
 

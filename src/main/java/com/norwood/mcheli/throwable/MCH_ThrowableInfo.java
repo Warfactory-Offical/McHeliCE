@@ -2,12 +2,16 @@ package com.norwood.mcheli.throwable;
 
 import com.norwood.mcheli.MCH_BaseInfo;
 import com.norwood.mcheli.MCH_Color;
+import com.norwood.mcheli.MCH_MOD;
 import com.norwood.mcheli.helper.addon.AddonResourceLocation;
 import com.norwood.mcheli.helper.client._IModelCustom;
 import com.norwood.mcheli.helper.info.IItemContent;
+import com.norwood.mcheli.tank.MCH_ItemTank;
 import com.norwood.mcheli.wrapper.W_Item;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -99,6 +103,7 @@ public class MCH_ThrowableInfo extends MCH_BaseInfo implements IItemContent {
 
     @Override
     public void onPostReload() {
+        item = (W_Item) ForgeRegistries.ITEMS.getValue(new ResourceLocation(MCH_MOD.MOD_ID, name));
 
     }
 
@@ -106,7 +111,6 @@ public class MCH_ThrowableInfo extends MCH_BaseInfo implements IItemContent {
     public Item getItem() {
         return this.item;
     }
-
     @Override
     public void loadItemData(String item, String data) {
         if (item.compareTo("displayname") == 0) {
