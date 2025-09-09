@@ -2,6 +2,7 @@ package com.norwood.mcheli.aircraft;
 
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.helper.MCH_CriteriaTriggers;
+import com.norwood.mcheli.weapon.MCH_WeaponSet;
 import com.norwood.mcheli.wrapper.W_EntityPlayer;
 import com.norwood.mcheli.wrapper.W_Item;
 import com.norwood.mcheli.wrapper.W_MovingObjectPosition;
@@ -9,6 +10,7 @@ import com.norwood.mcheli.wrapper.W_WorldFunc;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.BlockSponge;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityMinecartEmpty;
@@ -28,10 +30,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class MCH_ItemAircraft extends W_Item {
     private static final boolean isRegistedDispenseBehavior = false;
+
 
     boolean BLOCK = true;
     @Override
@@ -41,9 +46,9 @@ public abstract class MCH_ItemAircraft extends W_Item {
         MCH_AircraftInfo info = this.getAircraftInfo().category.equals("zzz") ? null : this.getAircraftInfo();
         MCH_EntityAircraft ac = createAircraft(worldIn, -1.0D, -1.0D, -1.0D, stack);
 
-        if (info != null) {
+        if (info != null && ac != null) {
             tooltip.add(TextFormatting.YELLOW + "Category: " + info.category);
-             tooltip.add(TextFormatting.DARK_PURPLE + "Weapon: " + info.weaponSetList);
+            tooltip.add(Arrays.stream(ac.weapons).map(MCH_WeaponSet::getName).collect(Collectors.joining(", ")));
         }
 
         if (ac != null && ac.isNewUAV()) {

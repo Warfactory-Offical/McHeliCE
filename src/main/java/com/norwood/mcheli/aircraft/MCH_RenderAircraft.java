@@ -1082,7 +1082,7 @@ public abstract class MCH_RenderAircraft<T extends MCH_EntityAircraft> extends W
         GlStateManager.popMatrix();
     }
 
-    public boolean shouldRender(MCH_EntityAircraft livingEntity, ICamera camera, double camX, double camY, double camZ) {
+    public final boolean shouldRender(MCH_EntityAircraft livingEntity, ICamera camera, double camX, double camY, double camZ) {
         return false;
     }
 

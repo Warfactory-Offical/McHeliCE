@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FOVModifier;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -25,6 +26,13 @@ public class MCH_CameraManager {
     private static float cameraDistance = 4.0F;
     private static float cameraZoom = 1.0F;
     private static MCH_EntityAircraft ridingAircraft = null;
+
+    @SubscribeEvent
+    public void onRenderCrosshair(RenderGameOverlayEvent event) {
+        if(ridingAircraft != null && event.getType() == RenderGameOverlayEvent.ElementType.CROSSHAIRS)
+            event.setCanceled(true);
+    }
+
 
     @SubscribeEvent
     static void onCameraSetupEvent(CameraSetup event) {
