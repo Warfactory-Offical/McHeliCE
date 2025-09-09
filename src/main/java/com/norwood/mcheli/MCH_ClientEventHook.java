@@ -140,16 +140,33 @@ public class MCH_ClientEventHook extends W_ClientEventHook {
         MCH_ClientLightWeaponTickHandler.markEntity(event.getEntity(), event.getX(), event.getY() + event.getEntity().height / 2.0F, event.getZ());
     }
 
-    @Override
+    //@Override
     public void renderPlayerPre(net.minecraftforge.client.event.RenderPlayerEvent.Pre event) {
         if (event.getEntity() != null) {
-            if (event.getEntity().getRidingEntity() instanceof MCH_EntityAircraft v) {
+            if (event.getEntity().getRidingEntity() instanceof MCH_EntityAircraft) {
+                MCH_EntityAircraft v = (MCH_EntityAircraft)event.getEntity().getRidingEntity();
                 if (v.getAcInfo() != null && v.getAcInfo().hideEntity) {
                     event.setCanceled(true);
                 }
             }
         }
     }
+
+    /**1.7.10
+     * public void renderPlayerPre(net.minecraftforge.client.event.RenderPlayerEvent.Pre event) {
+     *       if(event.entity != null) {
+     *          if(event.entity.ridingEntity instanceof MCH_EntityAircraft) {
+     *             MCH_EntityAircraft v = (MCH_EntityAircraft)event.entity.ridingEntity;
+     *             if(v.getAcInfo() != null && v.getAcInfo().hideEntity) {
+     *                event.setCanceled(true);
+     *                return;
+     *             }
+     *          }
+     *
+     *       }
+     *    }
+     *
+     */
 
     @Override
     public void entityJoinWorldEvent(EntityJoinWorldEvent event) {

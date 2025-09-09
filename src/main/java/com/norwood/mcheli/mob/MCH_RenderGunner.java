@@ -36,21 +36,38 @@ public class MCH_RenderGunner extends RenderLivingBase<MCH_EntityGunner> {
     }
 
     public void doRender(MCH_EntityGunner entity, double x, double y, double z, float entityYaw, float partialTicks) {
+        //EntityLivingBase was MCH_EntityGunner
         GL11.glColor3f(1.0F, 1.0F, 1.0F);
         this.modelArmorChestplate.isSneak = this.modelArmor.isSneak = this.modelBipedMain.isSneak = entity.isSneaking();
-        double d3 = y;
+        double d3 = y - entity.getMountedYOffset();
         if (entity.isSneaking()) {
-            d3 = y - 0.125;
+            d3 -= 0.125;
         }
 
-        MCH_EntityAircraft ac = entity.getAc();
+        MCH_EntityAircraft ac = ((MCH_EntityGunner)entity).getAc();
         if (ac != null && ac.getAcInfo() != null && (!ac.getAcInfo().hideEntity || !ac.isPilot(entity))) {
-            super.doRender(entity, x, d3, z, entityYaw, partialTicks);
+            super.doRender((MCH_EntityGunner) entity, x, d3, z, entityYaw, partialTicks);
         }
 
         this.modelArmorChestplate.isSneak = this.modelArmor.isSneak = this.modelBipedMain.isSneak = false;
         this.modelArmorChestplate.rightArmPose = this.modelArmor.rightArmPose = this.modelBipedMain.rightArmPose = ArmPose.EMPTY;
     }
+
+    /** 1.7.10 method
+     public void doRender(EntityLivingBase p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
+        GL11.glColor3f(1.0F, 1.0F, 1.0F);
+        this.modelBipedMain.isSneak = p_76986_1_.isSneaking();
+        double d3 = p_76986_4_ - p_76986_1_.yOffset;
+        if (p_76986_1_.isSneaking() && !(p_76986_1_ instanceof net.minecraft.client.entity.EntityPlayerSP))
+            d3 -= 0.125D;
+        MCH_EntityAircraft ac = ((MCH_EntityGunner)p_76986_1_).getAc();
+        if (ac != null && ac.getAcInfo() != null && (!(ac.getAcInfo()).hideEntity || !ac.isPilot((Entity)p_76986_1_)))
+            super.doRender(p_76986_1_, p_76986_2_, d3, p_76986_6_, p_76986_8_, p_76986_9_);
+        this.modelBipedMain.aimedBow = false;
+        this.modelBipedMain.isSneak = false;
+        this.modelBipedMain.heldItemRight = 0;
+    }
+     */
 
     protected void preRenderCallback(@NotNull MCH_EntityGunner entitylivingbaseIn, float partialTickTime) {
         float f1 = 0.9375F;
