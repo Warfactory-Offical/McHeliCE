@@ -1,30 +1,75 @@
 DisplayName = C5A galaxy
+AddDisplayName = en_US, C5A galaxy
 AddDisplayName = ja_JP, C5A ギャラクシー
 ItemID = 28739
-MaxHp = 1000
-Speed = 0.8
-Sound = plane
-ThrottleUpDown = 0.4
+MaxHp = 250
+Speed = 1.0266
+
+;590
+
+EnableParachuting = true
+MobDropOption  = 0.97, 1.10, -12.91, 2
+
+ThirdPersonDist = 68
+Sound = c5m
+ThrottleUpDown = 0.1
 MaxFuel         = 20000
 FuelConsumption = 1.6
 InventorySize = 64
 FlareType = 2
 EnableNightVision = true
-EnableEntityRadar = true
-ThirdPersonDist = 68
+EnableEntityRadar = false
+
+StepHeight = -1.0
 
 ; M = Military(軍用機).  C = Transport(輸送機)
 Category = M.C
-HUD = plane,plane
+HUD = planenvg,planenvg, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none, none
 
-MobilityRoll = 0.1
-MobilityYaw = 0.1
-MobilityPitch = 0.1
-MinRotationRoll =-30
-MaxRotationRoll =30
+MobilityRoll = 0.3
+MobilityYaw = 0.3
+MobilityPitch = 0.3
+;MinRotationRoll =-30
+;MaxRotationRoll =30
 
 AddSeat = 0.62, 6.8, 2.4
 AddSeat = -0.62, 6.8, 2.4
+
+AddSeat =  0.58,  4.59,  1.75
+AddSeat = -0.58,  4.59,  1.75
+AddSeat =  0.71,  2.9, -0.38
+AddSeat = -0.71,  2.9,  -0.38
+
+
+AddSeat =  2.6,  2.2,  -7.8
+AddSeat = -2.6,  2.2,  -7.8
+
+AddSeat =  2.6,  2.2,  -8.8
+AddSeat = -2.6,  2.2,  -8.8
+
+AddSeat =  2.6,  2.2,  -9.8
+AddSeat = -2.6,  2.2,  -9.8
+
+AddSeat =  2.6,  2.2,  -10.8
+AddSeat = -2.6,  2.2,  -10.8
+
+AddSeat =  2.6,  2.2,  -11.8
+AddSeat = -2.6,  2.2,  -11.8
+
+AddSeat =  2.6,  2.2,  -12.8
+AddSeat = -2.6,  2.2,  -12.8
+
+AddSeat =  2.6,  2.2,  -13.8
+AddSeat = -2.6,  2.2,  -13.8
+
+AddSeat =  2.6,  2.2,  -14.8
+AddSeat = -2.6,  2.2,  -14.8
+
+AddSeat =  2.6,  2.2,  -15.8
+AddSeat = -2.6,  2.2,  -15.8
+
+AddSeat =  2.6,  2.2,  -16
+
 
 AddPartRotor = 12.0203, 4.1816, -18.57,   0,0,-1
 AddBlade = 1, 0, 12.0203, 4.1816, -18.57, 0,0,-1
@@ -71,18 +116,69 @@ AddPartSlideRotLG = -2, 1.131, 0.6, 3.337, 0.2079, -28.26, 0.0, 1.0, 0.0, -90.0
 AddPartSlideRotLG = 0.8432, 1.3, -1.8, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
 AddPartSlideRotLG = -0.8432, 1.3, -1.8, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
 
-BoundingBox =  0.00, 4.98,  -0.31,  8.0, 6.0
-BoundingBox =  0.00, 4.98,  -8.74,  8.0, 6.0
-BoundingBox =  0.00, 4.98, -21.99,  10.0, 10.0
-BoundingBox =  0.00, 4.98, -34.96,  8.0, 6.0
-BoundingBox =  0.00, 4.98, -48.43,  8.0, 6.0
-BoundingBox =  0.00, 14.16, -57.6,  8.0, 13.0
-BoundingBox = -15.94, 6.43,  -20.14,  10, 10
-BoundingBox =  15.94, 6.43,  -20.14,  10, 10
-BoundingBox = -27.83, 5.55, -29.85,  7.0, 4.0
-BoundingBox =  27.83, 5.55, -29.85,  7.0, 4.0
+BoundingBox =   0.00,  6.70,   -1.89,   4.0, 3.5
+BoundingBox =   0.00,  6.70,  -3.36,   4.0, 3.5
+BoundingBox =   0.00,  6.70,  -7.65,   4.0, 3.5
+BoundingBox =   0.00,  6.70, -11.96,   4.0, 3.5
+BoundingBox =   0.00,  6.70, -17.24,   6.0, 4.0
+BoundingBox =   0.00,  6.70, -23.47,   6.0, 3.5
+BoundingBox =   0.00,  6.70, -28.77,   4.0, 3.5
+BoundingBox =   0.00,  6.70, -33.25,   4.0, 3.5
+BoundingBox =   0.00,  6.90, -37.74,   4.0, 3.5
+BoundingBox =   0.00,  7.10, -42.11,   4.0, 3.5
+BoundingBox =   0.00,  6.02, -46.82,   3.5, 6.0
+BoundingBox =   0.00,  6.70, -51.55,   3.5, 3.5
+BoundingBox =   0.00, 10.67, -55.11,   1.5, 10.0,  0.8
+BoundingBox =   0.00,  9.26, -57.14,   1.3, 6.5,   0.8
+BoundingBox =   0.00, 16.26, -57.14,   1.3, 6.5,   0.8
+BoundingBox =   0.00,  9.78, -59.23,   1.3, 6.0,   0.8
+BoundingBox =   0.00, 15.95, -59.23,   1.3, 6.0,   0.8
+BoundingBox =   0.00, 15.68, -61.31,   1.3, 6.0,   0.8
+BoundingBox =   0.00, 17.01, -63.43,   1.3, 3.0,   0.8
+BoundingBox =   0.00, 10.07, -52.81,   1.3, 3.0,   0.8
 
-AddRecipe = "   ",  "Y C",  "X X",  X, iron_block, Y, diamond, C,chest
+BoundingBox =   0.00,  4.38,   5.60,   3.0, 3.0
+
+BoundingBox =   0.00,  3.67,   0.89,   6.0, 3.2
+BoundingBox =   0.00,  3.34,  -5.58,   6.5, 3.5
+BoundingBox =   0.00,  3.34, -12.62,   6.5, 3.5
+BoundingBox =   0.00,  3.34, -20.11,   6.5, 3.5
+BoundingBox =   0.00,  3.34, -27.02,   6.5, 3.5
+BoundingBox =   0.00,  3.34, -34.04,   6.5, 3.5
+BoundingBox =   0.00,  3.84, -41.27,   6.0, 3.0
+
+BoundingBox =   7.70,  7.20, -22.54,   9.0, 1.0
+BoundingBox =  -7.70,  7.20, -22.54,   9.0, 1.0
+BoundingBox =  16.63,  6.46, -25.40,   8.0, 0.8,  0.9
+BoundingBox = -16.63,  6.46, -25.40,   8.0, 0.8,  0.9
+BoundingBox =  24.14,  5.70, -28.27,   6.0, 0.6,  0.7
+BoundingBox = -24.14,  5.70, -28.27,   6.0, 0.6,  0.7
+BoundingBox =  30.53,  5.05, -30.91,   5.0, 0.5,  0.5
+BoundingBox = -30.53,  5.05, -30.91,   5.0, 0.5,  0.5
+
+BoundingBox =  12.03,  4.18, -15.06,   2.8, 2.8,  1.25
+BoundingBox = -12.03,  4.18, -15.06,   2.8, 2.8,  1.25
+BoundingBox =  12.03,  4.18, -18.23,   2.3, 2.3,  1.25
+BoundingBox = -12.03,  4.18, -18.23,   2.3, 2.3,  1.25
+BoundingBox =  12.03,  4.18, -20.97,   2.0, 2.0,  1.25
+BoundingBox = -12.03,  4.18, -20.97,   2.0, 2.0,  1.25
+
+BoundingBox =  18.60,  3.40, -18.68,   2.8, 2.8,  1.25
+BoundingBox = -18.60,  3.40, -18.68,   2.8, 2.8,  1.25
+BoundingBox =  18.60,  3.40, -21.92,   2.3, 2.3,  1.25
+BoundingBox = -18.60,  3.40, -21.92,   2.3, 2.3,  1.25
+BoundingBox =  18.60,  3.40, -24.70,   2.0, 2.0,  1.25
+BoundingBox = -18.60,  3.40, -24.70,   2.0, 2.0,  1.25
+
+BoundingBox = 2.90, 18.03, -62.23, 4.0, 0.5
+BoundingBox = -2.90, 18.03, -62.23, 4.0, 0.5
+BoundingBox = 6.90, 18.03, -64.23, 4.0, 0.5
+BoundingBox = -6.90, 18.03, -64.23, 4.0, 0.5
+
+
+;basic unarmed transport mil massive plane, AOW3 style
+AddRecipe = "ABC", "DA ", "EAE", A, mcheli:airframebomb, B, mcheli:basicmechanicparts, C, mcheli:engine3, D, mcheli:wheelair, E, mcheli:electronics
+
 
 ; AddRack=Entity type,                    RackPos X,Y,Z,   EntryPos X,Y,Z,   Range,  Open parachute atl,  Yaw, Pitch
 AddRack = mh-60g/mh-60l_dap/sh-60/sh-3,   0, 2.1,  -4.8,   0, 0, -2.5,      11,    100000
@@ -100,3 +196,13 @@ AddRack = container,   2.0, 2.1, -32.5,  0, 0,  -4.3,   15,    20
 AddRack = container,  -2.0, 2.1, -32.5,  0, 0,  -4.3,   15,    20
 AddRack = container,   2.0, 2.1, -34.0,  0, 0,  -4.3,   15,    20
 AddRack = container,  -2.0, 2.1, -34.0,  0, 0,  -4.3,   15,    20
+
+
+DamageFactor = 0.8
+
+unmountposition = 0.62, 1.5, 2.4
+
+enableback = true
+
+RotorSpeed = 2000.0
+DamageFactor = 0.8

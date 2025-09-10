@@ -1,17 +1,16 @@
 DisplayName = SC 50 Bi 50kg
 Type = Bomb
-Power = 12
+Power = 300
 Acceleration = 1.0
-Explosion = 3
-ExplosionInWater = 1
+Explosion = 7
+ExplosionInWater = 4
 Flaming = false
 Sight = None
 Delay = 7
 Round = 4
 ReloadTime = 190
 Sound = bomb_snd
-
 MaxAmmo = 8
-SuppliedNum = 4
+SuppliedNum = 2
 Item =  2, iron_ingot
 Item =  2, gunpowder

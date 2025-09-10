@@ -1,12 +1,14 @@
-DisplayName = A-10 GAU-8 Avenger
+DisplayName = A-10 GAU-8 Avenger [CAS]
 Type = CAS
-Power = 32
+Power = 40
 Acceleration = 4.0
-Explosion = 2
+Explosion = 1
 ExplosionBlock = 1
-Flaming = false
+Flaming = true
 Sight = None
-Delay = 300
+Delay = 500
+ReloadTime = 500
+Accuracy = 3.0
 
 MaxAmmo = 3
 SuppliedNum = 1

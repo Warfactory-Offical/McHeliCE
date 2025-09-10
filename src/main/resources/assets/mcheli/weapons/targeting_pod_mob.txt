@@ -1,7 +1,7 @@
 DisplayName = Spot Monster/Mob
 Type = TargetingPod
 Sight = None
-Delay = 60
+Delay = 6
 Sound = lockon
 
 Length = 100

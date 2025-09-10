@@ -1,8 +1,6 @@
-DisplayName = M134D Minigun
+DisplayName = 7.62mm M134D Minigun
 Type = MachineGun2
-Power = 8
-Acceleration = 8.0
-Explosion = 0
+Power = 9
 Flaming = false
 Sight = MoveSight
 Delay = 0
@@ -11,9 +9,19 @@ Round = 300
 SoundDelay = 3
 Accuracy = 4.0
 SetCartridge = cartridge, 0.0, 0, 0, 2.00, -0.04, 0.40
-Sound = gun_l2_snd
+Sound = minigun
 HeatCount = 2
 MaxHeatCount = 130
+
+Acceleration = 7.5
+Gravity = -0.005
+SoundVolume = 15
+
+
+DamageFactor = tank, 1.0
+DamageFactor = plane, 0.5
+DamageFactor = vehicle, 1.0
+DamageFactor = heli, 0.5
 
 AddMuzzleFlash      =  2.1,      0.22,        1,  150,254,159,84
 AddMuzzleFlash      =  2.0,      0.20,        1,  150,254,219,184

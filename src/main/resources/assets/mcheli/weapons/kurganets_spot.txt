@@ -1,7 +1,7 @@
 DisplayName = Caution Spot System
 Type = TargetingPod
 Sight = None
-Delay = 120
+Delay = 5
 Sound = lockon
 Length = 100
 Radius = 90

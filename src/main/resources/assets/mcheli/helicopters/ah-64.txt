@@ -1,21 +1,22 @@
 DisplayName = AH-64D Apache Longbow
 AddDisplayName = ja_JP, AH-64D アパッチ・ロングボウ
 ItemID = 28800
-MaxHp = 180
+MaxHp = 100
 EnableGunnerMode = true
 EnableFoldBlade = true
 EnableNightVision = true
 EnableEntityRadar = true
-Speed = 0.7
+sound = apache
+soundpitch = 1.3
+soundvolume = 15
+Speed = 1.82
 FlareType = 3
 ; FlareOption = 位置X, 位置Y, 位置Z
 ; TEST
 ; FlareOption = 10.0,  5.0, -20.0
 CameraPosition = 0.0, 1.1, 4.5
 onGroundPitch = 3.5
-ThirdPersonDist = 16
-EntityWidth  = 0.9
-EntityHeight = 0.9
+ThirdPersonDist = 20
 
 ; M = Military(軍用機).  A = Attacker(攻撃機)
 Category = M.A
@@ -64,7 +65,7 @@ AddRotor= 4,90,  0.00,  5.19,  -1.95,  0.0, 1.0, 0.0, true
 AddRotor= 1, 0,  0.85,  4.04, -11.94,  1.0, 0.0, 0.0, false
 
 AddSeat       = 0.00,  1.50, -0.28
-AddGunnerSeat = 0.00,  1.30,  1.26,  0.0, 1.1, 4.5, true
+AddGunnerSeat = 0.00,  1.00,  1.26,  0.0, 1.1, 4.5, true
 
 ;AddWeapon = 武器名, 位置X,Y,Z, Yaw, Pitch, パイロットが使用できる？, 座席番号, DefaultYaw,RangeYaw, MinPitch, MaxPitch
 AddWeapon = targeting_pod1,  0.00, 0.38, 0.90,  0,-1, true,2, 0,-360,360, -20,80
@@ -73,15 +74,15 @@ AddWeapon = m230,  0.00, 0.38, 0.90,  0,-1, true,2, 0,-360,360, -20,80
 ;AddWeapon = dispenser_fire2,   0.00, 0.38, 0.90,  0,-1, true,2, 0,-360,360, -20,80
 ;AddWeapon = dispenser_water2,  0.00, 0.38, 0.90,  0,-1, true,2, 0,-360,360, -20,80
 
-AddWeapon = hydra70,        2.72,  0.81, -2.13,  1, 0,  true,1,  0,0,0, 0, 25
-AddWeapon = hydra70,       -2.72,  0.81, -2.13, -1, 0,  true,1,  0,0,0, 0, 25
+AddWeapon = ahhydra70,        2.72,  0.81, -2.13,  1, 0,  true,1,  0,0,0, 0, 25
+AddWeapon = ahhydra70,       -2.72,  0.81, -2.13, -1, 0,  true,1,  0,0,0, 0, 25
 AddWeapon = hydra70_mpsm,   2.72,  0.81, -2.13,  1, 0,  true,1,  0,0,0, 0, 25
 AddWeapon = hydra70_mpsm,  -2.72,  0.81, -2.13, -1, 0,  true,1,  0,0,0, 0, 25
 
-AddWeapon = aim92,  2.72,  0.89, -1.00,  1, 0
-AddWeapon = aim92, -2.72,  0.89, -1.00, -1, 0
-AddWeapon = aim92,  2.72,  0.89, -1.00,  1, 0
-AddWeapon = aim92, -2.72,  0.89, -1.00, -1, 0
+AddWeapon = aim92_2,  2.72,  0.89, -1.00,  1, 0
+AddWeapon = aim92_2, -2.72,  0.89, -1.00, -1, 0
+AddWeapon = aim92_2,  2.72,  0.89, -1.00,  1, 0
+AddWeapon = aim92_2, -2.72,  0.89, -1.00, -1, 0
 
 AddWeapon = agm114,  1.72,  0.96, -1.64,  1, 0,  true,2
 AddWeapon = agm114, -1.72,  0.96, -1.64, -1, 0,  true,2
@@ -99,12 +100,36 @@ AddWeapon = targeting_pod_mob,     0.0, 1.1, 4.5,   0.0, 0.0,  true, 2
 AddWeapon = targeting_pod_pv10s,   0.0, 1.1, 4.5,   0.0, 0.0,  false,2
 ;AddWeapon = targeting_pod_block,   0.0, 1.1, 4.5,   0.0, 0.0,  false,2
 
-AddRecipe = "X X",  " X ",  "X X",  X, iron_block
+AddWeapon = uhf_radar,  0.00, 3.0, 0.0,    0.0
+
+;advanced armored modern helicopter armed, AOW3 style
+AddRecipe = "ABC", "DEF", "G  ", A, mcheli:airframe3, B, mcheli:heliblade, C, mcheli:engine1, D, mcheli:wheelair, E, mcheli:fcs2, F, mcheli:cannon2, G, mcheli:rocket3
 
 ;RideRack = 乗る機体名, ラック番号 (1～) 
 RideRack = c5, 1
 RideRack = c5, 2
 
 BoundingBox =  0.0, 2.5, -2.0,  2.0, 3.8
-BoundingBox =  0.0, 2.0, -4.5,  2.0, 2.4
-BoundingBox =  0.0, 2.5,-12.0,  2.0, 3.0
+
+BoundingBox =  0.0, 4.0, -2.0,  1.0, 2.5, 1.5
+
+BoundingBox =  0.0, 2.0, -4.0,  2.0, 2.4
+BoundingBox =  0.0, 4.5,-12.0,  2.0, 1.5, 1.25
+BoundingBox =  0.0, 3.0,-12.0,  2.0, 1.5, 1.25
+BoundingBox = 0.0, 1.47, -5.11, 1.0, 1.0
+BoundingBox = 0.0, 1.47, -6.11, 1.0, 1.0
+BoundingBox = 0.0, 1.47, -7.11, 1.0, 1.0
+BoundingBox = 0.0, 1.47, -8.11, 1.0, 1.0
+BoundingBox = 0.0, 1.47, -9.11, 1.0, 1.0
+BoundingBox = 0.0, 1.47, -10.11, 1.0, 1.0
+BoundingBox = 0.0, 1.47, -11.11, 1.0, 1.0
+
+;todo reconsider how helicopter damage is calculated/research helicopters
+
+
+unmountposition = 0.00,  1.50, -0.28
+
+
+DamageFactor = 0.1
+
+ThrottleUpDown = 0.5

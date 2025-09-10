@@ -37,11 +37,14 @@ If = inventory > 0
 	DrawString = 120, -80, "Inventory [ %d ]", INVENTORY
 Endif
 
+; 時計板
+DrawTexture = bnr32_hud, 107, 104  , 32,11,  448,  0, 64,22
+
 ; 色設定(Current Color)
 Color = 0xFF58ffee
 ; 時計(time)
 ; マイクラ内の時間と分を表示
-DrawCenteredString = 0, 40, " [ %02d:%02d ]", MC_THOR, MC_TMIN
+DrawCenteredString = 124, 106, "%02d:%02d", MC_THOR, MC_TMIN
 
 ; 色設定(Current Color)
 Color = 0xFF28d448
@@ -72,6 +75,29 @@ Endif
 If = cam_mode==2
 	DrawString = 30, 50, "THERMAL VISION"
 Endif
+
+; 弾数, 残弾 背景 (Ammo background)
+DrawTexture = plane_hud_wwii, -208, 57,  62,10,  128,192, 128,20
+; 武器名 (Weapon name background)
+DrawTexture = plane_hud_wwii, -208, 68, 106,10,  128,192, 128,20
+
+; 弾数, 残弾 (Ammo) リロード中でなければ白、リロード中であれば赤
+Color = reloading==0? 0xCFFFFFFF: 0xFFDF0408
+DrawString = -207, 58, "%s",  WPN_AMMO
+DrawString = -181, 58, "/",   WPN_AMMO
+DrawString = -172, 58, "%s",  WPN_RM_AMMO
+; 武器名 (Weapon name)
+DrawString = -207, 69, "%s",  WPN_NAME
+
+; 銃身の熱量タイプの場合(Heat)
+If = is_heat_wpn==1
+	Color = 0xCFFFFFFF
+	DrawRect = -145, 57, 43, 10
+	Color = 0xCFAFAFAF
+	DrawRect = -144, 58, 41, 8
+	Color = 0xFFDF0408
+	DrawRect = -144, 58, 41*wpn_heat, 8
+EndIf
 
 If = auto_pilot==1
 	DrawString = 50, 0, "Auto Pilot"

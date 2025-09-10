@@ -442,7 +442,7 @@ public abstract class MCH_EntityAircraft
     }
 
     public float getRotPitch() {
-        return this.rotationPitch;
+        return this.rotationPitch ;//+= 0.35f
     }
 
     public void setRotPitch(float f) {

@@ -1,17 +1,18 @@
 DisplayName = 25mm 2M-3M
+AddDisplayName = en_US, 25mm 2M-3M
 Type = MachineGun2
 Power = 18
 Acceleration = 9.0
-Explosion = 0
 Flaming = false
 Sight = MoveSight
 Delay = 1
 Accuracy = 1.5
 HeatCount = 5
 MaxHeatCount = 150
-Sound = gun_h2_snd
-SoundVolume = 3
-Gravity = -0.01
+Sound = twentymil
+SoundPitch = 0.8
+SoundVolume = 15
+Gravity = -0.001
 BulletColor        = 255, 119, 255, 116
 
 
@@ -19,3 +20,12 @@ MaxAmmo = 900
 SuppliedNum = 180
 Item =  2, iron_ingot
 Item =  2, gunpowder
+
+Acceleration = 7.5
+Piercing = 0
+DamageFactor = tank, 1.0
+DamageFactor = plane, 1.5
+DamageFactor = vehicle, 1.5
+DamageFactor = heli, 1.5
+DamageFactor = player, 20.0
+SoundVolume = 15

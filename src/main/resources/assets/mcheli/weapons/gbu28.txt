@@ -1,12 +1,11 @@
-DisplayName = GBU-28
+DisplayName = GBU-28C
 Type = ASMissile
-Power = 32
+Power = 1000
+radius=1000
 Acceleration = 1.7
-Explosion = 6
-ExplosionBlock = 5
 Flaming = true
 Sight = MoveSight
-Delay = 8
+Delay = 5
 Round = 6
 ReloadTime = 90
 SoundVolume = 3
@@ -15,10 +14,23 @@ Sound = bomb_snd
 ModelBullet = gbu28
 Gravity = -0.01
 DisableSmoke = true
-Piercing  = 1
+Piercing  = 2
+
+;bomb rewrite
+;Acceleration = 0.5
+Explosion = 28
+;Explosive mass	269.9*5 kg kg
+Power = 5080
+ExplosionBlock = 15
+ExplosionInWater = 14
+DamageFactor = tank, 2.0
+DamageFactor = plane, 4.5
+DamageFactor = vehicle 4.5
+DamageFactor = heli, 4.5
+DamageFactor = player, 20.0
 
 MaxAmmo = 12
-SuppliedNum = 3
+SuppliedNum = 1
 Item =  4, iron_ingot
 Item =  4, gunpowder
 Item =  4, redstone

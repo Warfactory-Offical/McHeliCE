@@ -1,13 +1,30 @@
-DisplayName = Plastic Bomb
+DisplayName = 5kg Plastic Bomb
 Type = Bomb
-Power = 1
+Power = 1000
 Acceleration = 0.1
 Explosion = 4
-ExplosionInWater = 0
-Flaming = true
+;5kg
+ExplosionBlock = 2
+ExplosionInWater = 2
+Flaming = false
 Sight = None
 Delay = 5000
 Destruct = true
+
+
+
+;Acceleration = 0.5
+;Explosion = 50
+;Explosive mass	269.9 kg kg
+Power = 1080
+ExplosionBlock = 5
+ExplosionInWater = 0
+DamageFactor = tank, 10.0
+DamageFactor = plane, 4.5
+DamageFactor = vehicle 4.5
+DamageFactor = heli, 4.5
+DamageFactor = player, 20.0
+
 
 MaxAmmo = 1
 SuppliedNum = 1

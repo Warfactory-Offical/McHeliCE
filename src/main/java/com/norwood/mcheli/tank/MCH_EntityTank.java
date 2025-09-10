@@ -408,9 +408,70 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
         }
     }
 
+    /**
+     * public void onUpdateAngles(float partialTicks) {
+     *       if(!this.isDestroyed()) {
+     *          if(super.isGunnerMode) {
+     *             this.setRotPitch(this.getRotPitch() * 0.95F);
+     *             this.setRotYaw(this.getRotYaw() + this.getAcInfo().autoPilotRot * 0.2F);
+     *             if(MathHelper.abs(this.getRotRoll()) > 20.0F) {
+     *                this.setRotRoll(this.getRotRoll() * 0.95F);
+     *             }
+     *          }
+     *
+     *          this.updateRecoil(partialTicks);
+     *          this.setRotPitch(this.getRotPitch() + (this.WheelMng.targetPitch - this.getRotPitch()) * partialTicks);
+     *          this.setRotRoll(this.getRotRoll() + (this.WheelMng.targetRoll - this.getRotRoll()) * partialTicks);
+     *          boolean isFly = MCH_Lib.getBlockIdY(this, 3, -3) == 0;
+     *          //System.out.println("isfly" + isFly);
+     *
+     *          //logic for like rotation
+     *          if(!isFly || this.getAcInfo().isFloat && this.getWaterDepth() > 0.0D) {
+     *             float rotonground = 1.0F;
+     *             if(!isFly) {
+     *                rotonground = this.getAcInfo().mobilityYawOnGround;
+     *                if(!this.getAcInfo().canRotOnGround) {
+     *                   Block pivotTurnThrottle = MCH_Lib.getBlockY(this, 3, -2, false);
+     *                   if(!W_Block.isEqual(pivotTurnThrottle, W_Block.getWater()) && !W_Block.isEqual(pivotTurnThrottle, Blocks.air)) {
+     *                      rotonground = 0.0F;
+     *                   }
+     *                }
+     *             }
+     *
+     *             float pivotTurnThrottle1 = this.getAcInfo().pivotTurnThrottle;
+     *             double dx = super.posX - super.prevPosX;
+     *             double dz = super.posZ - super.prevPosZ;
+     *             double dist = dx * dx + dz * dz;
+     *
+     *             if(pivotTurnThrottle1 <= 0.0F || this.getCurrentThrottle() >= (double)pivotTurnThrottle1 || super.throttleBack >= pivotTurnThrottle1 / 10.0F || dist > (double)super.throttleBack * 0.01D) {
+     *                float sf = (float)Math.sqrt(dist <= 1.0D?dist:1.0D);
+     *                if(pivotTurnThrottle1 <= 0.0F) {
+     *                   sf = 1.0F;
+     *                }
+     *
+     *                float flag = !super.throttleUp && super.throttleDown && this.getCurrentThrottle() < (double)pivotTurnThrottle1 + 0.05D?-1.0F:1.0F;
+     *                if(super.moveLeft && !super.moveRight) {
+     *                   this.setRotYaw(this.getRotYaw() - 0.6F * rotonground * partialTicks * flag * sf);
+     *                }
+     *
+     *                if(super.moveRight && !super.moveLeft) {
+     *                   this.setRotYaw(this.getRotYaw() + 0.6F * rotonground * partialTicks * flag * sf);
+     *                }
+     *
+     *             }
+     *          }
+     *
+     *          this.addkeyRotValue = (float)((double)this.addkeyRotValue * (1.0D - (double)(0.1F * partialTicks)));
+     *       }
+     *    }
+     * 1.7.10 bullshit
+     */
+
     @Override
     public void onUpdateAngles(float partialTicks) {
         if (!this.isDestroyed()) {
+
+            // keep gunner damping / autopilot unchanged
             if (this.isGunnerMode) {
                 this.setRotPitch(this.getRotPitch() * 0.95F);
                 this.setRotYaw(this.getRotYaw() + this.getAcInfo().autoPilotRot * 0.2F);
@@ -420,10 +481,66 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             }
 
             this.updateRecoil(partialTicks);
-            this.setRotPitch(this.getRotPitch() + (this.WheelMng.targetPitch - this.getRotPitch()) * partialTicks);
-            this.setRotRoll(this.getRotRoll() + (this.WheelMng.targetRoll - this.getRotRoll()) * partialTicks);
+
+            // --- SAFER PITCH INTERPOLATION (prevents tiny spikes from producing visible pitch jumps)
+            // Compute base interpolation from WheelMng.targetPitch but scale/clamp it when on ground or under throttle
+            float currentPitch = this.getRotPitch();
+            float targetPitch = this.WheelMng.targetPitch;
+
+            // base interpolation
+            float baseInterp = partialTicks;
+
+            // if on ground (not flying) reduce interpolation strength so wheel pitch adjustments are much slower
             boolean isFly = MCH_Lib.getBlockIdY(this, 3, -3) == 0;
-            if (!isFly || this.getAcInfo().isFloat && this.getWaterDepth() > 0.0) {
+            boolean nearWaterFloat = this.getAcInfo().isFloat && this.getWaterDepth() > 0.0;
+            if (!isFly || nearWaterFloat) {
+                // mobility factor from acInfo (like original code)
+                float gmy = 1.0F;
+                if (!isFly) {
+                    gmy = this.getAcInfo().mobilityYawOnGround;
+                    if (!this.getAcInfo().canRotOnGround) {
+                        Block block = MCH_Lib.getBlockY(this, 3, -2, false);
+                        if (!W_Block.isEqual(block, W_Block.getWater()) && !W_Block.isEqual(block, Blocks.AIR)) {
+                            gmy = 0.0F;
+                        }
+                    }
+                }
+                // reduce pitch interpolation while on ground. multiply by gmy too so immobile vehicles remain locked.
+                baseInterp *= Math.max(0.12F, 0.35F * gmy); // small fraction on ground (12%..35% of normal)
+            }
+
+            // also reduce interpolation when throttle is being applied strongly (prevents throttle spikes causing pitch)
+            double throttle = this.getCurrentThrottle();
+            if (throttle > 0.05D) {
+                // scale down interpolation by up to half when throttle high
+                float throttleFactor = 1.0F - Math.min(0.8F, (float)throttle) * 0.35F;
+                baseInterp *= throttleFactor;
+            }
+
+            // compute the desired new pitch and clamp the per-tick delta to avoid jumps
+            float desiredPitch = currentPitch + (targetPitch - currentPitch) * baseInterp;
+
+            // clamp per-tick pitch change (in degrees) to avoid sudden jumps from small impulses
+            final float MAX_PITCH_DELTA_PER_TICK = 0.9F; // tweak this smaller if you want even gentler motion
+            float pitchDelta = desiredPitch - currentPitch;
+            if (pitchDelta > MAX_PITCH_DELTA_PER_TICK) {
+                pitchDelta = MAX_PITCH_DELTA_PER_TICK;
+            } else if (pitchDelta < -MAX_PITCH_DELTA_PER_TICK) {
+                pitchDelta = -MAX_PITCH_DELTA_PER_TICK;
+            }
+            this.setRotPitch(currentPitch + pitchDelta);
+
+            // --- ROLL interpolation (kept similar to original, but also slightly damped on ground)
+            float currentRoll = this.getRotRoll();
+            float targetRoll = this.WheelMng.targetRoll;
+            float rollInterp = partialTicks;
+            if (!isFly || nearWaterFloat) {
+                rollInterp *= 0.5F; // damp roll interpolation on ground
+            }
+            this.setRotRoll(currentRoll + (targetRoll - currentRoll) * rollInterp);
+
+            // --- YAW (pivot turning) logic follows original but using computed gmy/pivot checks
+            if (!isFly || nearWaterFloat) {
                 float gmy = 1.0F;
                 if (!isFly) {
                     gmy = this.getAcInfo().mobilityYawOnGround;
@@ -439,6 +556,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
                 double dx = this.posX - this.prevPosX;
                 double dz = this.posZ - this.prevPosZ;
                 double dist = dx * dx + dz * dz;
+
                 if (pivotTurnThrottle <= 0.0F
                         || this.getCurrentThrottle() >= pivotTurnThrottle
                         || this.throttleBack >= pivotTurnThrottle / 10.0F
@@ -457,11 +575,37 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
                         this.setRotYaw(this.getRotYaw() + 0.6F * gmy * partialTicks * flag * sf);
                     }
                 }
+            } else {
+                // when flying, yaw is allowed normally (original behavior)
+                float pivotTurnThrottle = this.getAcInfo().pivotTurnThrottle;
+                double dx = this.posX - this.prevPosX;
+                double dz = this.posZ - this.prevPosZ;
+                double dist = dx * dx + dz * dz;
+
+                if (pivotTurnThrottle <= 0.0F
+                        || this.getCurrentThrottle() >= pivotTurnThrottle
+                        || this.throttleBack >= pivotTurnThrottle / 10.0F
+                        || dist > this.throttleBack * 0.01) {
+                    float sf = (float) Math.sqrt(Math.min(dist, 1.0));
+                    if (pivotTurnThrottle <= 0.0F) {
+                        sf = 1.0F;
+                    }
+
+                    float flag = !this.throttleUp && this.throttleDown && this.getCurrentThrottle() < pivotTurnThrottle + 0.05 ? -1.0F : 1.0F;
+                    if (this.moveLeft && !this.moveRight) {
+                        this.setRotYaw(this.getRotYaw() - 0.6F * partialTicks * flag * sf);
+                    }
+
+                    if (this.moveRight && !this.moveLeft) {
+                        this.setRotYaw(this.getRotYaw() + 0.6F * partialTicks * flag * sf);
+                    }
+                }
             }
 
             this.addkeyRotValue = (float) (this.addkeyRotValue * (1.0 - 0.1F * partialTicks));
         }
     }
+
 
     protected void onUpdate_Control() {
         if (this.isGunnerMode && !this.canUseFuel()) {
@@ -510,45 +654,90 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
     }
 
     protected void onUpdate_ControlSub() {
-        if (!this.isGunnerMode) {
+
+        if(!super.isGunnerMode) {
             float throttleUpDown = this.getAcInfo().throttleUpDown;
-            if (this.throttleUp) {
+            if(super.throttleUp) {
                 float f = throttleUpDown;
-                if (this.getRidingEntity() != null) {
+                if(this.getRidingEntity() != null) {
                     double mx = this.getRidingEntity().motionX;
                     double mz = this.getRidingEntity().motionZ;
-                    f = throttleUpDown * (MathHelper.sqrt(mx * mx + mz * mz) * this.getAcInfo().throttleUpDownOnEntity);
+                    f = throttleUpDown * MathHelper.sqrt(mx * mx + mz * mz) * this.getAcInfo().throttleUpDownOnEntity;
                 }
 
-                if (this.getAcInfo().enableBack && this.throttleBack > 0.0F) {
-                    this.throttleBack = (float) (this.throttleBack - 0.01 * f);
+                if(this.getAcInfo().enableBack && super.throttleBack > 0.0F) {
+                    super.throttleBack = (float)((double)super.throttleBack - 0.01D * (double)f);
                 } else {
-                    this.throttleBack = 0.0F;
-                    if (this.getCurrentThrottle() < 1.0) {
-                        this.addCurrentThrottle(0.01 * f);
+                    super.throttleBack = 0.0F;
+                    if(this.getCurrentThrottle() < 1.0D) {
+                        this.addCurrentThrottle(0.01D * (double)f);
+                        //here as well?
                     } else {
-                        this.setCurrentThrottle(1.0);
+                        this.setCurrentThrottle(1.0D);
+                        //implement a new variable here to add throttle control for specific vehicles specifically 1.8D
                     }
                 }
-            } else if (this.throttleDown) {
-                if (this.getCurrentThrottle() > 0.0) {
-                    this.addCurrentThrottle(-0.01 * throttleUpDown);
+
+
+
+            } else if(super.throttleDown) {
+
+
+
+                if(this.getCurrentThrottle() > 0.0D) {
+                    this.addCurrentThrottle(-0.01D * (double)throttleUpDown);
                 } else {
-                    this.setCurrentThrottle(0.0);
-                    if (this.getAcInfo().enableBack) {
-                        this.throttleBack = (float) (this.throttleBack + 0.0025 * throttleUpDown);
-                        if (this.throttleBack > 0.6F) {
-                            this.throttleBack = 0.6F;
+                    this.setCurrentThrottle(0.0D);
+                    if(this.getAcInfo().enableBack) {
+                        // super.throttleBack = (float)((double)super.throttleBack + 0.0025D * (double)throttleUpDown);
+                        super.throttleBack = (float)((double)super.throttleBack + 0.0025D * (double)throttleUpDown * getAcInfo().throttleDownFactor);
+//                  if(super.throttleBack > 0.6F) { //todno: add a new variable here for reversespeed
+//                     super.throttleBack = 0.6F;
+//                  }
+                        float pivotTurnThrottle1 = this.getAcInfo().pivotTurnThrottle;
+                        if (pivotTurnThrottle1 > 0) {
+                            if (super.throttleBack > 0) {
+                                double dx = super.posX - super.prevPosX;
+                                double dz = super.posZ - super.prevPosZ;
+                                double dist = dx * dx + dz * dz;
+                                float sf = (float)Math.sqrt(dist <= 1.0D ? dist : 1.0D);
+                                if (pivotTurnThrottle1 <= 0.0F) {
+                                    sf = 1.0F;
+                                }
+
+                                float rotonground = 1.0F;
+                                boolean isFly = MCH_Lib.getBlockIdY(this, 3, -3) == 0;
+
+                                if (!isFly) {
+                                    rotonground = this.getAcInfo().mobilityYawOnGround;
+                                    if (!this.getAcInfo().canRotOnGround) {
+                                        Block pivotTurnThrottle = MCH_Lib.getBlockY(this, 3, -2, false);
+                                        if (!W_Block.isEqual(pivotTurnThrottle, W_Block.getWater()) && !W_Block.isEqual(pivotTurnThrottle, Blocks.AIR)) {
+                                            rotonground = 0.0F;
+                                        }
+                                    }
+                                }
+
+                                float flag = !super.throttleUp && super.throttleDown && this.getCurrentThrottle() < (double)pivotTurnThrottle1 + 0.05D ? -1.0F : 1.0F;
+                                if(super.moveLeft && !super.moveRight) {
+                                    this.setRotYaw(this.getRotYaw() + 0.6F * rotonground * flag * sf);
+                                }
+
+                                if(super.moveRight && !super.moveLeft) {
+                                    this.setRotYaw(this.getRotYaw() - 0.6F * rotonground * flag * sf);
+                                }
+                            }
                         }
                     }
                 }
-            } else if (this.cs_tankAutoThrottleDown && this.getCurrentThrottle() > 0.0) {
-                this.addCurrentThrottle(-0.005 * throttleUpDown);
-                if (this.getCurrentThrottle() <= 0.0) {
-                    this.setCurrentThrottle(0.0);
+            } else if(super.cs_tankAutoThrottleDown && this.getCurrentThrottle() > 0.0D) {
+                this.addCurrentThrottle(-0.005D * (double)throttleUpDown);
+                if(this.getCurrentThrottle() <= 0.0D) {
+                    this.setCurrentThrottle(0.0D);
                 }
             }
         }
+
     }
 
     protected void onUpdate_Particle2() {
@@ -725,6 +914,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
                 this.motionX *= 0.95;
                 this.motionZ *= 0.95;
                 this.applyOnGroundPitch(0.95F);
+                //todo marker
             }
 
             if (this.isInWater()) {
@@ -749,7 +939,122 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
     public void applyOnGroundPitch(float factor) {
     }
 
+    /***
+     * 1.7.10 method - for reference
+     *
     private void onUpdate_Server() {
+
+        //1.7.10
+
+        //todo gear shifts here
+        Entity rdnEnt = this.getRiddenByEntity();
+        double prevMotion = Math.sqrt(super.motionX * super.motionX + super.motionZ * super.motionZ);
+        double dp = 0.0D;
+        if(this.canFloatWater()) {
+            dp = this.getWaterDepth();
+        }
+
+        boolean levelOff = super.isGunnerMode;
+        if(dp == 0.0D) {
+            if(!levelOff) {
+                super.motionY += 0.04D + (double)(!this.isInWater()?this.getAcInfo().gravity:this.getAcInfo().gravityInWater);
+                super.motionY += -0.047D * (1.0D - this.getCurrentThrottle());
+            } else {
+                super.motionY *= 0.8D;
+            }
+        } else {
+            if(MathHelper.abs(this.getRotRoll()) < 40.0F) {
+                ;
+            }
+
+            if(dp < 1.0D) {
+                super.motionY -= 1.0E-4D;
+                super.motionY += 0.007D * this.getCurrentThrottle();
+            } else {
+                if(super.motionY < 0.0D) {
+                    super.motionY /= 2.0D;
+                }
+
+                super.motionY += 0.007D;
+            }
+        }
+
+        float throttle = (float)(this.getCurrentThrottle() / 10.0D);
+
+        Vec3 v = MCH_Lib.Rot2Vec3(this.getRotYaw(), this.getRotPitch() - 10.0F);
+        if(!levelOff) {
+            super.motionY += v.yCoord * (double)throttle / 8.0D;
+        }
+
+        boolean canMove = true;
+        if(!this.getAcInfo().canMoveOnGround) {
+            Block motion = MCH_Lib.getBlockY(this, 3, -2, false);
+            if(!W_Block.isEqual(motion, W_Block.getWater()) && !W_Block.isEqual(motion, Blocks.air)) {
+                canMove = false;
+            }
+        }
+
+        if(canMove) {
+            if(this.getAcInfo().enableBack && super.throttleBack > 0.0F) {
+                super.motionX -= v.xCoord * (double)super.throttleBack;
+                super.motionZ -= v.zCoord * (double)super.throttleBack;
+            } else {
+                super.motionX += v.xCoord * (double)throttle;
+                super.motionZ += v.zCoord * (double)throttle;
+            }
+        }
+
+        double motion1 = Math.sqrt(super.motionX * super.motionX + super.motionZ * super.motionZ);
+        float speedLimit = this.getMaxSpeed();
+        //todo maybe this is causing the 1.15 max speed hardcap?
+        // we know mcheli is capable of handling way faster speeds so why are ground vehicles limited to 1.15?
+        if(motion1 > (double)speedLimit) {
+            super.motionX *= (double)speedLimit / motion1;
+            super.motionZ *= (double)speedLimit / motion1;
+            motion1 = speedLimit;
+        }
+
+        if(motion1 > prevMotion && super.currentSpeed < (double)speedLimit) {
+            super.currentSpeed += ((double)speedLimit - super.currentSpeed) / 35.0D;
+            if(super.currentSpeed > (double)speedLimit) {
+                super.currentSpeed = (double)speedLimit;
+            }
+        } else {
+            super.currentSpeed -= (super.currentSpeed - 0.07D) / 35.0D;
+            if(super.currentSpeed < 0.07D) {
+                super.currentSpeed = 0.07D;
+            }
+        }
+
+        if(super.onGround || MCH_Lib.getBlockIdY(this, 1, -2) > 0) {
+            super.motionX *= (double)this.getAcInfo().motionFactor;
+            super.motionZ *= (double)this.getAcInfo().motionFactor;
+            if(MathHelper.abs(this.getRotPitch()) < 40.0F) {
+                this.applyOnGroundPitch(0.8F);
+            }
+        }
+
+        this.updateWheels();
+        this.moveEntity(super.motionX, super.motionY, super.motionZ);
+        super.motionY *= 0.95D;
+        super.motionX *= (double)this.getAcInfo().motionFactor;
+        super.motionZ *= (double)this.getAcInfo().motionFactor;
+        this.setRotation(this.getRotYaw(), this.getRotPitch());
+        this.onUpdate_updateBlock();
+        this.updateCollisionBox();
+        if(this.getRiddenByEntity() != null && this.getRiddenByEntity().isDead) {
+            this.unmountEntity();
+            super.riddenByEntity = null;
+        }
+
+        //if(this.) todo gear check
+
+    }
+     **/
+
+    private void onUpdate_Server() {
+        // 1.12.2 - patched: normalize thrust, avoid vertical throttle on-ground,
+        // and clamp pitch changes from applyOnGroundPitch to prevent wobble.
         double prevMotion = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
         double dp = 0.0;
         if (this.canFloatWater()) {
@@ -768,17 +1073,43 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             if (this.motionY < 0.0) {
                 this.motionY /= 2.0;
             }
-
             this.motionY += 0.007;
         } else {
             this.motionY -= 1.0E-4;
             this.motionY = this.motionY + 0.007 * this.getCurrentThrottle();
         }
 
+        // compute throttle & direction vector
         float throttle = (float) (this.getCurrentThrottle() / 10.0);
         Vec3d v = MCH_Lib.Rot2Vec3(this.getRotYaw(), this.getRotPitch() - 10.0F);
+
+        // normalize vector (ensure consistent magnitude like 1.7 behaviour)
+        double vx = v.x;
+        double vy = v.y;
+        double vz = v.z;
+        double vlen = Math.sqrt(vx * vx + vy * vy + vz * vz);
+        if (vlen != 0.0D) {
+            vx /= vlen;
+            vy /= vlen;
+            vz /= vlen;
+            v = new Vec3d(vx, vy, vz);
+        }
+
+        // thresholds
+        final double AIRBORNE_SPEED_MIN = 0.05D;    // require a small horizontal speed before throttle gives lift
+        final double SMALL_MOTIONY_CLAMP = 0.03D;   // zero small vertical motion when on ground
+        final float MAX_PITCH_DELTA = 0.6F;         // maximum pitch change allowed per tick from applyOnGroundPitch
+
+        // apply vertical thrust: only meaningful vertical lift while airborne and moving
         if (!levelOff) {
-            this.motionY = this.motionY + v.y * throttle / 8.0;
+            double horizSpeed = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+            if (!this.onGround && horizSpeed > AIRBORNE_SPEED_MIN) {
+                this.motionY += v.y * throttle / 8.0;
+            } else {
+                // intentionally skip tiny vertical kicks while grounded to avoid pitch wobble
+                // If you want a tiny bump for climbing small obstacles, change the line below:
+                // this.motionY += v.y * throttle / 32.0;
+            }
         }
 
         boolean canMove = true;
@@ -822,8 +1153,25 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
         if (this.onGround || MCH_Lib.getBlockIdY(this, 1, -2) > 0) {
             this.motionX = this.motionX * this.getAcInfo().motionFactor;
             this.motionZ = this.motionZ * this.getAcInfo().motionFactor;
-            if (MathHelper.abs(this.getRotPitch()) < 40.0F) {
-                this.applyOnGroundPitch(0.8F);
+
+            // zero very small vertical movement before pitch adjustments so applyOnGroundPitch isn't triggered by micro-spikes
+            if (Math.abs(this.motionY) < SMALL_MOTIONY_CLAMP) {
+                this.motionY = 0.0;
+            }
+
+            // call applyOnGroundPitch but clamp any sudden rotation delta it creates
+            float prevPitch = this.getRotPitch();
+            this.applyOnGroundPitch(0.8F);
+            float afterPitch = this.getRotPitch();
+            float delta = afterPitch - prevPitch;
+            if (delta > MAX_PITCH_DELTA) {
+                delta = MAX_PITCH_DELTA;
+            } else if (delta < -MAX_PITCH_DELTA) {
+                delta = -MAX_PITCH_DELTA;
+            }
+            // only update rotation to a clamped pitch
+            if (delta != (afterPitch - prevPitch)) {
+                this.setRotation(this.getRotYaw(), prevPitch + delta);
             }
         }
 
@@ -839,6 +1187,8 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             this.unmountEntity();
         }
     }
+
+
 
     private void collisionEntity(AxisAlignedBB bb) {
         if (bb != null) {

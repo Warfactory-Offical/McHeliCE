@@ -1,14 +1,21 @@
 DisplayName = AIM-92 Stinger
 Type = AAMissile
-Power = 42
-Acceleration = 3
+Power = 10
+Acceleration = 2.2
 Explosion = 4
 Flaming = false
 Sight = MissileSight
-Delay = 100
+Delay = 5
+ReloadTime = 1000
+Round = 6
 LockTime = 15
 ProximityFuseDist = 1
 Sound = missile_1_snd
+
+DamageFactor = tank, 1.0
+DamageFactor = plane, 3.0
+DamageFactor = vehicle 2.0
+DamageFactor = heli, 3.0
 
 MaxAmmo = 6
 SuppliedNum = 3

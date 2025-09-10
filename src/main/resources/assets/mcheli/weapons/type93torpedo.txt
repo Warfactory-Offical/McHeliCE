@@ -1,14 +1,17 @@
-DisplayName = Type93 torpedo
+DisplayName = Type 93 Torpedo
 Type = Torpedo
-Power = 35
+Power = 350
 ModelBullet = type93torpedo
 Acceleration = 1.5
 AccelerationInWater = 2.5
-Explosion = 4
-ExplosionInWater = 9
+Explosion = 18
+ExplosionInWater = 18
 Flaming = false
 Sight = None
-Delay = 40
+Delay = 4
+
+ReloadTime = 400
+
 GuidedTorpedo = false
 Gravity = -0.04
 GravityInWater = 0

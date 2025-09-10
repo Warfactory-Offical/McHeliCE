@@ -1,15 +1,29 @@
-DisplayName = SNEB 68mm Rocket
+DisplayName = 68mm SNEB Rocket
 Type = Rocket
-Power = 32
+Power = 400
+DamageFactor = tank, 1.0
+DamageFactor = plane, 3.0
+DamageFactor = vehicle 2.0
+DamageFactor = heli, 3.0
 ModelBullet = hydra70
 Acceleration = 4.0
-Explosion = 2
+Explosion = 3
+ExplosionInWater = 2
 Flaming = false
 Sight = MoveSight
 Delay = 3
 ReloadTime = 80
 Round = 22
 Sound = rocket_snd
+
+Gravity = -0.001
+
+Acceleration = 7.0
+BulletColor        = 255, 255, 100, 100
+Piercing = 0
+
+;AddDisplayName = en_US,
+SoundVolume = 15
 
 MaxAmmo = 22
 SuppliedNum = 11

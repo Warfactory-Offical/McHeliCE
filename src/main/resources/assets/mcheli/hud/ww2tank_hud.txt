@@ -26,6 +26,28 @@ If = cam_zoom>1
 	DrawTexture = tank_scope, -127.5, -128,  256,256, 0,0, 256,256
 EndIf
 
+Color = 0xFFffffff
+DrawLine =   70,  67,   -70,  67
+; 弾数, 残弾 (Ammo) リロード中でなければ白、リロード中であれば赤
+Color = reloading==0? 0xFFffffff: 0xFFDF0408
+DrawCenteredString = -26, 68, "%s",  WPN_AMMO
+DrawCenteredString =   0, 68, "/",   WPN_AMMO
+DrawCenteredString =  26, 68, "%s",  WPN_RM_AMMO
+; 武器名 (Weapon name)
+DrawCenteredString = 0, 57, "%s",  WPN_NAME
+; 銃身の熱量タイプの場合(Heat)
+If = is_heat_wpn==1
+	Color = 0xCFffffff
+	DrawRect = -20, 77, 41, 2
+	Color = 0xFFDF0408
+	DrawRect = -20, 77, 41*wpn_heat, 2
+EndIf
+
+;リロード表示
+;DrawCenteredString =   0, 45, "%.2f%% %.2fsec",   RELOAD_PER, RELOAD_SEC
+DrawTexture = ww2tank_hud, 95,  102,  48, 16,  0, 224,  96,  32
+DrawTexture = ww2tank_hud, 95 + 58*reload_time,  102,  48, 16, 96, 224,  96,  32
+
 ; 耐久値(HP)
 ; HPが20%を超えている場合は白(0xFFffffff)、HPが20%以下の場合は赤(0xFFDF0408)
 Color = hp_rto>0.2? 0xFFffffff: 0xFFDF0408
@@ -34,37 +56,9 @@ DrawString  = 150,    97, "%3.0f", HP_PER
 DrawString  = 150+26, 97, "/ 100", HP_PER
 DrawRect    = 146, 107, hp_rto*60, 6
 
-; 弾数, 残弾 背景 (Ammo background)
-DrawTexture = hud, -208, 57,  62,10,  128,64, 128,20
-; 武器名 (Weapon name background)
-DrawTexture = hud, -208, 68, 106,10,  128,64, 128,20
-
-; 弾数, 残弾 (Ammo) リロード中でなければ白、リロード中であれば赤
-Color = reloading==0? 0xFFffffff: 0xFFDF0408
-DrawString = -207, 58, "%s",  WPN_AMMO
-DrawString = -181, 58, "/",   WPN_AMMO
-DrawString = -172, 58, "%s",  WPN_RM_AMMO
-; 武器名 (Weapon name)
-DrawString = -207, 69, "%s",  WPN_NAME
-
-; 銃身の熱量タイプの場合(Heat)
-If = is_heat_wpn==1
-	Color = 0xFF000000
-	DrawRect = -145, 57, 43, 10
-	Color = 0xFFffffff
-	DrawRect = -144, 58, 41, 8
-	Color = 0xFFDF0408
-	DrawRect = -144, 58, 41*wpn_heat, 8
-EndIf
-
-; 迫撃砲の着弾距離
-Color = 0xFFffffff
-Call = mortar
-
 ; 砲塔コンパス
-DrawTexture = ww2tank_hud, -16,55,  32,32,  0, 0,64,64, yaw - plyr_yaw
-DrawTexture = ww2tank_hud, -16,55,  32,32, 64, 0,64,64, 
-
+DrawTexture = ww2tank_hud,  80, 55,  32,32,  0, 0,64,64, yaw - plyr_yaw
+DrawTexture = ww2tank_hud,  80, 55,  32,32, 64, 0,64,64, 
 
 ; エンジン出力計
 if = time<=13000

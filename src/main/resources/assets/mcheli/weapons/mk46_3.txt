@@ -1,10 +1,10 @@
-DisplayName = Mark 46 torpedo
+DisplayName = Mark 46 Torpedo
 Type = Torpedo
-Power = 35
+Power = 350
 ModelBullet = mk46
 Acceleration = 1.0
 AccelerationInWater = 1.5
-Explosion = 2
+Explosion = 8
 ExplosionInWater = 8
 Flaming = false
 Sight = None
@@ -17,7 +17,7 @@ Round = 3
 Sound = bomb_snd
 
 MaxAmmo = 9
-SuppliedNum = 3
-Item =  2, iron_ingot
-Item =  2, gunpowder
-Item =  2, redstone
+SuppliedNum = 1
+Item =  3, iron_ingot
+Item =  3, gunpowder
+Item =  1, redstone

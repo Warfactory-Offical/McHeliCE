@@ -1,15 +1,20 @@
-DisplayName = ZERO type21
+DisplayName = A6M5 Zero Type 21
+AddDisplayName = en_US, A6M5 Zero Type 21
 AddDisplayName = ja_JP, 零式艦上戦闘機21型
 ItemID = 28708
-MaxHp = 130
-Speed = 0.95
-Sound = prop
+MaxHp = 100
+Speed = 0.61074
+
+RotorSpeed = 2000.0
+
+;351 
+
+Sound = zero
 onGroundPitch = 14.3
-ThrottleUpDown = 0.8
+ThrottleUpDown = 0.3
 MaxFuel         = 1200
 FuelConsumption = 1.0
 ThrottleUpDownOnEntity = 2.0
-ThirdPersonDist = 12
 
 UnmountPosition = 3.0, 1.0, -2.0
 
@@ -40,14 +45,41 @@ AddBlade = 1, 0,  0.00,  1.64, 2.83,   0,0,-1
 AddPartWing =  -5.74, 1.83, 0.00,  0,0,-1, 100
 AddPartWing =   5.74, 1.83, 0.00,  0,0, 1, 100
 
-AddWeapon = mg7_7mm,  0.19, 2.18, 1.62,  0.0, -3.0
-AddWeapon = mg7_7mm, -0.19, 2.18, 1.62,  0.0, -3.0
+AddWeapon = mg7_7mma6,  0.19, 2.18, 1.62,  0.0, -3.0
+AddWeapon = mg7_7mma6, -0.19, 2.18, 1.62,  0.0, -3.0
 
-AddWeapon = mg20mm,  2.00, 1.41, 1.69,   2.0, -5.0
-AddWeapon = mg20mm, -2.00, 1.41, 1.69,  -2.0, -5.0
+AddWeapon = mg20mma6,  2.00, 1.41, 1.69,   2.0, -5.0
+AddWeapon = mg20mma6, -2.00, 1.41, 1.69,  -2.0, -5.0
 
-AddRecipe = "I I",  "PGP",  " I ",  I,iron_block, G,dye,7, P,paper
+;basic ww2 prop plane, AOW3 style
+AddRecipe = "ABC", "DE ", "   ", A, mcheli:airframe, B, mcheli:basicmechanicparts, C, mcheli:engine1, D, mcheli:wheelair, E, mcheli:cannon2
 
-BoundingBox =  0.00, 1.60, -0.00,  2.0, 1.8
-BoundingBox = -2.92, 1.60,  0.30,  2.0, 0.6
-BoundingBox =  2.92, 1.60,  0.30,  2.0, 0.6
+;BoundingBox =  0.00, 1.60, -0.00,  2.0, 1.8
+
+
+BoundingBox = 0.0, 1.70, 2.20, 1.5, 1.5
+BoundingBox = -1.32, 1.60,  0.30,  2.0, 0.6
+BoundingBox =  1.32, 1.60,  0.30,  2.0, 0.6
+BoundingBox = -3.30, 1.60,  0.30,  2.0, 0.6
+BoundingBox =  3.30, 1.60,  0.30,  2.0, 0.6
+
+BoundingBox = 0.0, 1.70, -1.03, 1.3, 1.3
+
+BoundingBox = 0.0, 1.70, -1.93, 1.3, 1.3
+BoundingBox = 0.0, 1.70, -2.93, 1.3, 1.3
+BoundingBox = 0.0, 1.70, -3.93, 1.3, 1.3
+BoundingBox = 0.0, 1.70, -4.93, 1.3, 1.3
+
+BoundingBox = 1.5, 1.70, -4.93, 1.3, 0.3
+BoundingBox = -1.5, 1.70, -4.93, 1.3, 0.3
+
+BoundingBox = 0.0, 2.30, -4.93, 0.5, 2.3
+BoundingBox = 0.0, 2.30, -5.33, 0.5, 2.3
+
+
+UnmountPosition = 0.0,  1.50, 0.40
+
+DamageFactor = 0.8
+
+enableback = true
+DamageFactor = 0.8

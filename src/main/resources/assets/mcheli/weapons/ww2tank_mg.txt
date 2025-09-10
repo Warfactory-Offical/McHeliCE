@@ -1,20 +1,17 @@
 DisplayName = Machinegun
 Type = MachineGun1
 Power = 9
-Acceleration = 10.0
-Explosion = 0
-Flaming = false
+Acceleration = 7
 Sight = None
 Delay = 1
 SoundDelay = 3
 Accuracy = 3.0
-HeatCount = 3
+HeatCount = 1
 MaxHeatCount = 150
 SoundPitch = 1.0
 SoundVolume = 2.0
-Sound = gun_l1_snd
-BulletColor = 255, 119, 255, 116
-
+Sound = MG_Fire_snd
+BulletColor        = 255, 119, 255, 116
 MaxAmmo = 1000
 SuppliedNum = 200
 Item =  2, iron_ingot

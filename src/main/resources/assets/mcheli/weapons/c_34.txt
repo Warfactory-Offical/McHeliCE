@@ -1,12 +1,12 @@
-DisplayName = Krupp C/34 40.6cm
+DisplayName = 40.6cm SK C/34 "Adolf Cannon" [L/4.8 KZ m Hb - HE]
 Type = MachineGun1
 ModelBullet = 91ap_46
 Power = 80
 Acceleration = 8
 AccelerationInWater = 4.0
-Explosion = 12
+Explosion = 10
 ExplosionBlock = 0
-ExplosionInWater = 0
+ExplosionInWater = 5
 Flaming = false
 Sight = None
 Delay = 80

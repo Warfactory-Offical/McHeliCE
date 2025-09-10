@@ -1,30 +1,36 @@
-DisplayName = VADS
-AddDisplayName = ja_JP,対空機関砲 VADS
+DisplayName = M167 VADS
+AddDisplayName = ja_JP,対空機関砲 M167 VADS
 ItemID = 28614
-MaxHP = 250
-EnableNightVision = true
+MaxHP = 100
+Gravity = -9.81
+GravityInWater = -1.0
+EnableNightVision = false
 EnableEntityRadar = true
 HideEntity = false
-MinRotationPitch = -70
+MinRotationPitch = -80
 MaxRotationPitch = 5
-DamageFactor = 0.5
+DamageFactor = 1.0
 CameraZoom = 2
-CameraPosition = 0.00, 1.51, 0.00
-ThirdPersonDist = 8
+CameraPosition = 0.00, 1.41, 0.00
+
+
+unmountposition = 0.00, 1.5, -0.0
 
 ; M = Military,  A = AAGun(対空砲)
 Category = M.A
 
 HUD = vehicle
 
-AddSeat = 0.0, 0.86, -0.00
+AddGunnerSeat = 0.0, 0.46, -0.00, 0.00, 1.51, 0.00
 ;AddSeat = -0.63, 0.65, -0.81
 
 AddPart = true, true, false, 0, 0.0, -0.97, -0.0
 AddChildPart = true, false, true, 0, 0.0, 0.97, 0.47
 AddChildPart = true, false, true, 1, 0.0, 0.97, 0.47
 
-AddTurretWeapon = m61a1_v, 0.0, 0.70, 0.20,  0.0, 0.0,   true,1, 0,-360,360, -80, 25
+AddTurretWeapon = m61a1_v, 0.0, 0.70, 0.20,  0.0, 0.0,   true,1, 0,-360,360, -80, 5
 
-AddRecipe = " Y ",  "ZXX",  "ZXZ",  X, iron_block, Y, glass, Z, iron_ingot
-BoundingBox = -0.23, 1.17, 0.04 1.40 1.65
+;advanced 20mm
+AddRecipe = "AAB", "C  ", "   ", A, mcheli:cannon1, B, mcheli:lap, C, mcheli:electronics
+
+BoundingBox = -0.23, 0.50, 0.04, 1.40, 1.65

@@ -1,16 +1,24 @@
-DisplayName = Minigun(Left)
+DisplayName = 7.62mm Minigun (Left)
 Type = MachineGun1
-Power = 7
-Acceleration = 6.0
-Explosion = 0
+Power = 9
 Flaming = false
 Sight = MoveSight
 Delay = 0
 SoundDelay = 3
 Accuracy = 3.0
-Sound = gun_l2_snd
-HeatCount = 6
+Sound = minigun
+HeatCount = 1
 MaxHeatCount = 150
+
+Acceleration = 7.5
+Gravity = -0.005
+SoundVolume = 15
+
+
+DamageFactor = tank, 1.0
+DamageFactor = plane, 0.5
+DamageFactor = vehicle, 1.0
+DamageFactor = heli, 0.5
 
 MaxAmmo = 400
 SuppliedNum = 100

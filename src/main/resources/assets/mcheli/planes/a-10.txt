@@ -1,18 +1,25 @@
 DisplayName = A-10 Thunderbolt II
+AddDisplayName = en_US, A-10 Thunderbolt II
 AddDisplayName = ja_JP, A-10 サンダーボルトⅡ
 ItemID = 28705
-MaxHp = 280
+MaxHp = 250
+Sound = aten
 EnableNightVision = true
 EnableEntityRadar = true
 EnableEjectionSeat = true
-Speed = 1.0
+Speed = 0.7308
+;420
+
+
 FlareType = 5
-ThrottleUpDown = 0.8
+ThrottleUpDown = 0.2
 MaxFuel         = 1800
 FuelConsumption = 1.0
 ParticlesScale = 0.7
 EnableSeaSurfaceParticle = true
-ThirdPersonDist = 20
+
+EntityWidth  = 0.90
+EntityHeight = 0.90
 
 ; M = Military(軍用機).  A = Attacker(攻撃機)
 Category = M.A
@@ -25,7 +32,7 @@ MobilityYaw = 0.7
 MobilityPitch = 0.7
 MobilityRoll = 0.6
 
-AddSeat = 0.00,  2.80,  0.0
+AddSeat = 0.00,  2.70,  0.0
 
 AddPartCanopy = 0, 3.85, -1.97, -1,0,0,  70
 
@@ -49,8 +56,8 @@ AddWeapon = gau-8,  0.00, 2.00,  3.80,   0.0, -1.0
 AddWeapon = hydra70,  5.43, 1.50, -4.40,   1.0, 0.0
 AddWeapon = hydra70, -5.43, 1.50, -4.40,  -1.0, 0.0
 
-AddWeapon = aim9_l, -6.25, 1.40, -3.13,  -1.0, 0.0
-AddWeapon = aim9_l, -6.97, 1.40, -3.13,  -1.0, 0.0
+AddWeapon = aim9_lwart, -6.25, 1.40, -3.13,  -1.0, 0.0
+AddWeapon = aim9_lwart, -6.97, 1.40, -3.13,  -1.0, 0.0
 
 AddWeapon = agm-65,  4.30, 1.70, -4.21,   1.0, 0.0
 AddWeapon = agm-65, -4.30, 1.70, -4.21,  -1.0, 0.0
@@ -61,10 +68,41 @@ AddWeapon = cbu-87, -2.00, 1.10, -3.9,   0.0, 0.0
 AddWeapon = cbu-72,  0.65, 1.35, -3.9,   0.0, 0.0
 AddWeapon = cbu-72, -0.65, 1.35, -3.9,   0.0, 0.0
 
-AddRecipe = " Y ",  "XDX",  "ZXZ",  X, iron_block, Y, glass, Z, iron_ingot, D, diamond_block
+;modern armored plane, AOW3 style
+AddRecipe = "ABC", "DEF", "GH ", A, mcheli:airframe3, B, mcheli:basicmechanicparts, C, mcheli:engine3, D, mcheli:wheelair, E, mcheli:cannon2, F, mcheli:rocket3, G, mcheli:electronics, H, mcheli:fcs
 
-BoundingBox =  0.00, 2.80, -2.60,  2.0, 2.0
-BoundingBox =  0.00, 2.60, -5.60,  2.0, 2.5
-BoundingBox =  0.00, 3.20, -9.20,  4.0, 2.0
-BoundingBox = -2.92, 2.20, -5.60,  3.0, 1.0
-BoundingBox =  2.92, 2.20, -5.60,  3.0, 1.0
+BoundingBox =  0.00, 3.04, -0.39,  1.8, 2.4
+BoundingBox =  0.00, 2.55,  1.21,  1.5, 1.5
+BoundingBox =  0.00, 2.84, -3.05,  2.0, 2.0
+BoundingBox =  0.00, 2.44, -5.60,  2.0, 2.5
+
+
+BoundingBox =  0.00, 2.7, -7.20,  2.0, 2.0
+BoundingBox =  0.00, 2.65, -9.20,  2.0, 1.6
+BoundingBox =  0.00, 2.45, -11.20,  2.0,  1.2
+
+BoundingBox =  -2.10, 3.20, -9,  2.0, 2.0, 1.5
+
+
+BoundingBox =  2.1, 3.20, -9,  2.0, 2.0, 1.5
+
+BoundingBox =  -2.1, 3.20, -11,  2.0, 2.0, 1.5
+
+
+BoundingBox =  2.1, 3.20, -11,  2.0, 2.0, 1.5
+
+
+BoundingBox = -2.92, 2.19, -6.21,  3.5, 0.7,  0.9
+BoundingBox = -6.83, 2.55, -6.30,  3.0, 0.7,  0.8
+BoundingBox =  2.92, 2.19, -6.21,  3.5, 0.7,  0.9
+BoundingBox =  6.83, 2.55, -6.30,  3.0, 0.7,  0.8
+
+BoundingBox = -1.78, 2.32,-13.54,  2.5, 0.3,  0.8
+BoundingBox =  1.78, 2.32,-13.54,  2.5, 0.3,  0.8
+
+
+DamageFactor = 0.2
+
+UnmountPosition = 0.00,  2.80,  0.0
+
+enableback = true
