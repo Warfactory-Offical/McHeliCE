@@ -1,5 +1,6 @@
 package com.norwood.mcheli;
 
+import com.norwood.mcheli.helper.MCH_SoundEvents;
 import com.norwood.mcheli.helper.addon.AddonManager;
 import com.norwood.mcheli.helper.addon.AddonPack;
 import com.norwood.mcheli.helper.client.MCH_ItemModelRenderers;
@@ -50,6 +51,8 @@ import com.norwood.mcheli.weapon.*;
 import com.norwood.mcheli.wrapper.*;
 import com.norwood.mcheli.wrapper.modelloader.W_ModelCustom;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundHandler;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
@@ -73,6 +76,14 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
     public void postInit(FMLPostInitializationEvent postEvent) {
         MinecraftForge.EVENT_BUS.register(new VehicleRenderManager());
 
+        IReloadableResourceManager manager =
+                (IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager();
+
+        manager.registerReloadListener((resMgr) -> {
+            MCH_SoundEvents.fixSoundEntires();
+        });
+
+        MCH_SoundEvents.fixSoundEntires();
     }
     public static void registerModels_Bullet() {
         for (MCH_WeaponInfo wi : ContentRegistries.weapon().values()) {
@@ -523,6 +534,7 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
     public void init() {
         MinecraftForge.EVENT_BUS.register(new MCH_ParticlesUtil());
         MinecraftForge.EVENT_BUS.register(new MCH_ClientEventHook());
+
     }
 
     @Override

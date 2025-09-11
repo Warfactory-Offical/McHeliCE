@@ -94,6 +94,6 @@ public class MCH_CreativeTabs extends CreativeTabs {
     }
 
     public @NotNull String getTranslationKey() {
-        return "MC Heli";
+        return getTabLabel();
     }
 }

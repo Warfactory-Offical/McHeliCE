@@ -1,6 +1,7 @@
 package com.norwood.mcheli.ship;
 
 import com.norwood.mcheli.MCH_Lib;
+import com.norwood.mcheli.MCH_MOD;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
 import com.norwood.mcheli.aircraft.MCH_ItemAircraft;
 import net.minecraft.item.ItemStack;
@@ -12,6 +13,7 @@ public class MCH_ItemShip extends MCH_ItemAircraft {
     public MCH_ItemShip(int par1) {
         super(par1);
         this.maxStackSize = 1;
+        this.setCreativeTab(MCH_MOD.creativeTabsShip);
     }
 
     @Override
