@@ -36,7 +36,7 @@ public class MCH_PacketHandler extends W_PacketHandler {
             case 268439600 -> MCH_AircraftPacketHandler.onPacketNotifyTVMissileEntity(entityPlayer, data, handler);
             case 268439601 -> MCH_AircraftPacketHandler.onPacketNotifyWeaponID(entityPlayer, data, handler);
             case 268439602 -> MCH_AircraftPacketHandler.onPacketNotifyHitBullet(entityPlayer, data, handler);
-            case 268439604 -> MCH_AircraftPacketHandler.onPacketNotifyAmmoNum(entityPlayer, data, handler);
+            case 268439604 -> MCH_AircraftPacketHandler.onPacketNotifyAmmoNum(entityPlayer, data);
             case 268439632 -> MCH_AircraftPacketHandler.onPacketOnMountEntity(entityPlayer, data, handler);
             case 268439649 -> MCH_AircraftPacketHandler.onPacketStatusResponse(entityPlayer, data, handler);
             case 536872992 -> MCH_CommonPacketHandler.onPacketIndOpenScreen(entityPlayer, data, handler);
@@ -49,7 +49,7 @@ public class MCH_PacketHandler extends W_PacketHandler {
             case 536875024 -> MCH_AircraftPacketHandler.onPacketSeatListRequest(entityPlayer, data, handler);
             case 536875040 -> MCH_AircraftPacketHandler.onPacket_PlayerControl(entityPlayer, data, handler);
             case 536875059 -> MCH_AircraftPacketHandler.onPacketIndReload(entityPlayer, data, handler);
-            case 536875061 -> MCH_AircraftPacketHandler.onPacketIndNotifyAmmoNum(entityPlayer, data, handler);
+            case 536875061 -> MCH_AircraftPacketHandler.onPacketIndNotifyAmmoNum(entityPlayer, data);
             case 536875062 -> MCH_AircraftPacketHandler.onPacketIndRotation(entityPlayer, data, handler);
             case 536875063 -> MCH_AircraftPacketHandler.onPacketNotifyInfoReloaded(entityPlayer, data, handler);
             case 536875072 -> MCH_AircraftPacketHandler.onPacket_ClientSetting(entityPlayer, data, handler);

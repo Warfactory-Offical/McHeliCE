@@ -85,37 +85,71 @@ public class MCH_AircraftPacketHandler {
         }
     }
 
-    @HandleSide({Side.CLIENT})
-    public static void onPacketNotifyAmmoNum(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-        if (player != null && player.world.isRemote) {
+    //@HandleSide({Side.CLIENT})
+    //public static void onPacketNotifyAmmoNum(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
+    //    if (player != null && player.world.isRemote) {
+    //        MCH_PacketNotifyAmmoNum status = new MCH_PacketNotifyAmmoNum();
+    //        status.readData(data);
+    //        if (status.entityID_Ac > 0) {
+    //            scheduler.addScheduledTask(() -> {
+    //                Entity e = player.world.getEntityByID(status.entityID_Ac);
+    //                if (e instanceof MCH_EntityAircraft ac) {
+    //                    StringBuilder msg = new StringBuilder("onPacketNotifyAmmoNum:");
+    //                    msg.append(ac.getAcInfo() != null ? ac.getAcInfo().displayName : "null").append(":");
+    //                    if (status.all) {
+    //                        msg.append("All=true, Num=").append(status.num);
+//
+    //                        for (int i = 0; i < ac.getWeaponNum() && i < status.num; i++) {
+    //                            ac.getWeapon(i).setAmmoNum(status.ammo[i]);
+    //                            ac.getWeapon(i).setRestAllAmmoNum(status.restAmmo[i]);
+    //                            msg.append(", [").append(status.ammo[i]).append("/").append(status.restAmmo[i]).append("]");
+    //                        }
+//
+    //                        MCH_Lib.DbgLog(e.world, msg.toString());
+    //                    } else if (status.weaponID < ac.getWeaponNum()) {
+    //                        msg.append("All=false, WeaponID=").append(status.weaponID).append(", ").append(status.ammo[0]).append(", ").append(status.restAmmo[0]);
+    //                        ac.getWeapon(status.weaponID).setAmmoNum(status.ammo[0]);
+    //                        ac.getWeapon(status.weaponID).setRestAllAmmoNum(status.restAmmo[0]);
+    //                        MCH_Lib.DbgLog(e.world, msg.toString());
+    //                    } else {
+    //                        MCH_Lib.DbgLog(e.world, "Error:" + status.weaponID);
+    //                    }
+    //                }
+    //            });
+    //        }
+    //    }
+    //}
+
+    public static void onPacketNotifyAmmoNum(EntityPlayer player, ByteArrayDataInput data) {
+        if(player != null && player.world.isRemote) {
             MCH_PacketNotifyAmmoNum status = new MCH_PacketNotifyAmmoNum();
             status.readData(data);
-            if (status.entityID_Ac > 0) {
-                scheduler.addScheduledTask(() -> {
-                    Entity e = player.world.getEntityByID(status.entityID_Ac);
-                    if (e instanceof MCH_EntityAircraft ac) {
-                        StringBuilder msg = new StringBuilder("onPacketNotifyAmmoNum:");
-                        msg.append(ac.getAcInfo() != null ? ac.getAcInfo().displayName : "null").append(":");
-                        if (status.all) {
-                            msg.append("All=true, Num=").append(status.num);
+            if(status.entityID_Ac > 0) {
+                Entity e = player.world.getEntityByID(status.entityID_Ac);
+                if(e instanceof MCH_EntityAircraft) {
+                    MCH_EntityAircraft ac = (MCH_EntityAircraft)e;
+                    String msg = "onPacketNotifyAmmoNum:";
+                    msg = msg + (ac.getAcInfo() != null?ac.getAcInfo().displayName:"null") + ":";
+                    if(status.all) {
+                        msg = msg + "All=true, Num=" + status.num;
 
-                            for (int i = 0; i < ac.getWeaponNum() && i < status.num; i++) {
-                                ac.getWeapon(i).setAmmoNum(status.ammo[i]);
-                                ac.getWeapon(i).setRestAllAmmoNum(status.restAmmo[i]);
-                                msg.append(", [").append(status.ammo[i]).append("/").append(status.restAmmo[i]).append("]");
-                            }
-
-                            MCH_Lib.DbgLog(e.world, msg.toString());
-                        } else if (status.weaponID < ac.getWeaponNum()) {
-                            msg.append("All=false, WeaponID=").append(status.weaponID).append(", ").append(status.ammo[0]).append(", ").append(status.restAmmo[0]);
-                            ac.getWeapon(status.weaponID).setAmmoNum(status.ammo[0]);
-                            ac.getWeapon(status.weaponID).setRestAllAmmoNum(status.restAmmo[0]);
-                            MCH_Lib.DbgLog(e.world, msg.toString());
-                        } else {
-                            MCH_Lib.DbgLog(e.world, "Error:" + status.weaponID);
+                        for(int i = 0; i < ac.getWeaponNum() && i < status.num; ++i) {
+                            ac.getWeapon(i).setAmmoNum(status.ammo[i]);
+                            ac.getWeapon(i).setRestAllAmmoNum(status.restAmmo[i]);
+                            msg = msg + ", [" + status.ammo[i] + "/" + status.restAmmo[i] + "]";
                         }
+
+                        MCH_Lib.DbgLog(e.world, msg, new Object[0]);
+                    } else if(status.weaponID < ac.getWeaponNum()) {
+                        msg = msg + "All=false, WeaponID=" + status.weaponID + ", " + status.ammo[0] + ", " + status.restAmmo[0];
+                        ac.getWeapon(status.weaponID).setAmmoNum(status.ammo[0]);
+                        ac.getWeapon(status.weaponID).setRestAllAmmoNum(status.restAmmo[0]);
+                        MCH_Lib.DbgLog(e.world, msg, new Object[0]);
+                    } else {
+                        MCH_Lib.DbgLog(e.world, "Error:" + status.weaponID, new Object[0]);
                     }
-                });
+                }
+
             }
         }
     }
@@ -136,22 +170,40 @@ public class MCH_AircraftPacketHandler {
         }
     }
 
-    @HandleSide({Side.SERVER})
-    public static void onPacketIndNotifyAmmoNum(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-        if (!player.world.isRemote) {
+    //@HandleSide({Side.SERVER})
+    //public static void onPacketIndNotifyAmmoNum(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
+    //    if (!player.world.isRemote) {
+    //        MCH_PacketIndNotifyAmmoNum req = new MCH_PacketIndNotifyAmmoNum();
+    //        req.readData(data);
+    //        if (req.entityID_Ac > 0) {
+    //            scheduler.addScheduledTask(() -> {
+    //                Entity e = player.world.getEntityByID(req.entityID_Ac);
+    //                if (e instanceof MCH_EntityAircraft) {
+    //                    if (req.weaponID >= 0) {
+    //                        MCH_PacketNotifyAmmoNum.sendAmmoNum((MCH_EntityAircraft) e, player, req.weaponID);
+    //                    } else {
+    //                        MCH_PacketNotifyAmmoNum.sendAllAmmoNum((MCH_EntityAircraft) e, player);
+    //                    }
+    //                }
+    //            });
+    //        }
+    //    }
+    //}
+
+    public static void onPacketIndNotifyAmmoNum(EntityPlayer player, ByteArrayDataInput data) {
+        if(!player.world.isRemote) {
             MCH_PacketIndNotifyAmmoNum req = new MCH_PacketIndNotifyAmmoNum();
             req.readData(data);
-            if (req.entityID_Ac > 0) {
-                scheduler.addScheduledTask(() -> {
-                    Entity e = player.world.getEntityByID(req.entityID_Ac);
-                    if (e instanceof MCH_EntityAircraft) {
-                        if (req.weaponID >= 0) {
-                            MCH_PacketNotifyAmmoNum.sendAmmoNum((MCH_EntityAircraft) e, player, req.weaponID);
-                        } else {
-                            MCH_PacketNotifyAmmoNum.sendAllAmmoNum((MCH_EntityAircraft) e, player);
-                        }
+            if(req.entityID_Ac > 0) {
+                Entity e = player.world.getEntityByID(req.entityID_Ac);
+                if(e instanceof MCH_EntityAircraft) {
+                    if(req.weaponID >= 0) {
+                        MCH_PacketNotifyAmmoNum.sendAmmoNum((MCH_EntityAircraft)e, player, req.weaponID);
+                    } else {
+                        MCH_PacketNotifyAmmoNum.sendAllAmmoNum((MCH_EntityAircraft)e, player);
                     }
-                });
+                }
+
             }
         }
     }
