@@ -932,164 +932,195 @@ public abstract class MCH_EntityAircraft
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damageSource, float org_damage) {
-        float damageFactor = this.lastBBDamageFactor;
+    public boolean attackEntityFrom(DamageSource damageSource, float originalDamage) {
+        if (shouldIgnoreDamage(damageSource)) {
+            return false;
+        }
+
+        String type = damageSource.getDamageType();
+
+        // Client side just returns true
+        if (this.world.isRemote) {
+            return true;
+        }
+
+        // Calculate base damage
+        float damage = calculateDamage(damageSource, originalDamage, this.lastBBDamageFactor);
         this.lastBBDamageFactor = 1.0F;
-        if (this.isEntityInvulnerable(damageSource)) {
+
+        if (damage <= 0.0F) {
             return false;
-        } else if (this.isDead) {
-            return false;
-        } else if (this.timeSinceHit > 0) {
-            return false;
-        } else {
-            String dmt = damageSource.getDamageType();
-            if (dmt.equalsIgnoreCase("inFire")) {
-                return false;
-            } else if (dmt.equalsIgnoreCase("cactus")) {
-                return false;
-            } else if (this.world.isRemote) {
+        }
+
+        Entity attacker = damageSource.getTrueSource();
+        boolean isPlayerAttack = false;
+        boolean playDamageSound = !(attacker instanceof EntityPlayer);
+
+        if (attacker instanceof EntityLivingBase) {
+            this.lastAttackedEntity = attacker;
+        }
+
+        if (attacker instanceof EntityPlayer player) {
+            isPlayerAttack = evaluatePlayerAttack(player, type, damage);
+            playDamageSound = true;
+        }
+
+        if (!this.isDestroyed()) {
+            if (!isPlayerAttack) {
+                applyDamage(damageSource, damage, type, damage);
+            }
+
+            this.markVelocityChanged();
+            if (this.getDamageTaken() >= this.getMaxHP() || isPlayerAttack) {
+                handleDestruction(damageSource, attacker, type, isPlayerAttack);
+            }
+        } else if (isPlayerAttack && attacker instanceof EntityPlayer player && player.capabilities.isCreativeMode) {
+            this.setDead(true);
+        }
+
+        if (playDamageSound) {
+            playDamageSound();
+        }
+
+        return true;
+    }
+
+    private boolean shouldIgnoreDamage(DamageSource src) {
+        String type = src.getDamageType();
+        return this.isEntityInvulnerable(src)
+                || this.isDead
+                || this.timeSinceHit > 0
+                || type.equalsIgnoreCase("inFire")
+                || type.equalsIgnoreCase("cactus");
+    }
+
+    private float calculateDamage(DamageSource src, float base, float factor) {
+        float damage = MCH_Config.applyDamageByExternal(this, src, base);
+
+        if (this.getAcInfo() != null && this.getAcInfo().invulnerable) {
+            return 0.0F;
+        }
+
+        if (src == DamageSource.OUT_OF_WORLD) {
+            this.setDead();
+        }
+
+        if (!MCH_Multiplay.canAttackEntity(src, this)) {
+            return 0.0F;
+        }
+
+        String type = src.getDamageType();
+
+        if (type.equalsIgnoreCase("lava")) {
+            damage *= this.rand.nextInt(8) + 2;
+            this.timeSinceHit = 2;
+        } else if (type.startsWith("explosion")) {
+            this.timeSinceHit = 1;
+        } else if (type.equalsIgnoreCase("onFire")) {
+            this.timeSinceHit = 10;
+        }
+
+        MCH_AircraftInfo acInfo = this.getAcInfo();
+        if (acInfo != null && !type.equalsIgnoreCase("lava") && !type.equalsIgnoreCase("onFire")) {
+            damage = Math.min(damage, acInfo.armorMaxDamage);
+            if (factor <= 1.0F) {
+                damage *= factor;
+            }
+            damage *= acInfo.armorDamageFactor;
+            damage -= acInfo.armorMinDamage;
+
+            if (damage <= 0.0F) {
+                return 0.0F;
+            }
+
+            if (factor > 1.0F) {
+                damage *= factor;
+            }
+        }
+
+        return damage;
+    }
+
+    private boolean evaluatePlayerAttack(EntityPlayer player, String type, float damage) {
+        boolean creative = player.capabilities.isCreativeMode;
+        boolean sneaking = player.isSneaking();
+
+        if (type.equalsIgnoreCase("player")) {
+            if (creative) {
                 return true;
-            } else {
-                float damage = MCH_Config.applyDamageByExternal(this, damageSource, org_damage);
-                if (this.getAcInfo() != null && this.getAcInfo().invulnerable) {
-                    damage = 0.0F;
-                }
-
-                if (damageSource == DamageSource.OUT_OF_WORLD) {
-                    this.setDead();
-                }
-
-                if (!MCH_Multiplay.canAttackEntity(damageSource, this)) {
-                    return false;
+            }
+            if (this.getAcInfo() != null && !this.getAcInfo().creativeOnly && !MCH_Config.PreventingBroken.prmBool) {
+                if (MCH_Config.BreakableOnlyPickaxe.prmBool) {
+                    if (!player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem() instanceof ItemPickaxe) {
+                        return true;
+                    }
                 } else {
-                    if (dmt.equalsIgnoreCase("lava")) {
-                        damage *= this.rand.nextInt(8) + 2;
-                        this.timeSinceHit = 2;
-                    }
-
-                    if (dmt.startsWith("explosion")) {
-                        this.timeSinceHit = 1;
-                    } else if (this.isMountedEntity(damageSource.getTrueSource())) {
-                        return false;
-                    }
-
-                    if (dmt.equalsIgnoreCase("onFire")) {
-                        this.timeSinceHit = 10;
-                    }
-
-                    boolean isCreative = false;
-                    boolean isSneaking = false;
-                    Entity entity = damageSource.getTrueSource();
-                    if (entity instanceof EntityLivingBase) {
-                        this.lastAttackedEntity = entity;
-                    }
-
-                    boolean isDamegeSourcePlayer = false;
-                    boolean playDamageSound = false;
-                    if (entity instanceof EntityPlayer player) {
-                        isCreative = player.capabilities.isCreativeMode;
-                        isSneaking = player.isSneaking();
-                        if (dmt.equalsIgnoreCase("player")) {
-                            if (isCreative) {
-                                isDamegeSourcePlayer = true;
-                            } else if (this.getAcInfo() != null && !this.getAcInfo().creativeOnly && !MCH_Config.PreventingBroken.prmBool) {
-                                if (MCH_Config.BreakableOnlyPickaxe.prmBool) {
-                                    if (!player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem() instanceof ItemPickaxe) {
-                                        isDamegeSourcePlayer = true;
-                                    }
-                                } else {
-                                    isDamegeSourcePlayer = !this.isRidePlayer();
-                                }
-                            }
-                        }
-
-                        W_WorldFunc.MOD_playSoundAtEntity(this, "hit", damage > 0.0F ? 1.0F : 0.5F, 1.0F);
-                    } else {
-                        playDamageSound = true;
-                    }
-
-                    if (!this.isDestroyed()) {
-                        if (!isDamegeSourcePlayer) {
-                            MCH_AircraftInfo acInfo = this.getAcInfo();
-                            if (acInfo != null && !dmt.equalsIgnoreCase("lava") && !dmt.equalsIgnoreCase("onFire")) {
-                                if (damage > acInfo.armorMaxDamage) {
-                                    damage = acInfo.armorMaxDamage;
-                                }
-
-                                if (damageFactor <= 1.0F) {
-                                    damage *= damageFactor;
-                                }
-
-                                damage *= acInfo.armorDamageFactor;
-                                damage -= acInfo.armorMinDamage;
-                                if (damage <= 0.0F) {
-                                    MCH_Lib.DbgLog(
-                                            this.world, "MCH_EntityAircraft.attackEntityFrom:no damage=%.1f -> %.1f(factor=%.2f):%s", org_damage, damage, damageFactor, dmt
-                                    );
-                                    return false;
-                                }
-
-                                if (damageFactor > 1.0F) {
-                                    damage *= damageFactor;
-                                }
-                            }
-
-                            MCH_Lib.DbgLog(this.world, "MCH_EntityAircraft.attackEntityFrom:damage=%.1f(factor=%.2f):%s", damage, damageFactor, dmt);
-                            this.setDamageTaken(this.getDamageTaken() + (int) damage);
-                        }
-
-                        this.markVelocityChanged();
-                        if (this.getDamageTaken() >= this.getMaxHP() || isDamegeSourcePlayer) {
-                            if (!isDamegeSourcePlayer) {
-                                this.setDamageTaken(this.getMaxHP());
-                                this.destroyAircraft();
-                                this.timeSinceHit = 20;
-                                String cmd = this.getCommand().trim();
-                                if (cmd.startsWith("/")) {
-                                    cmd = cmd.substring(1);
-                                }
-
-                                if (!cmd.isEmpty()) {
-                                    MCH_DummyCommandSender.execCommand(cmd);
-                                }
-
-                                if (dmt.equalsIgnoreCase("inWall")) {
-                                    this.explosionByCrash(0.0);
-                                    this.damageSinceDestroyed = this.getMaxHP();
-                                } else {
-                                    MCH_Explosion.newExplosion(this.world, null, entity, this.posX, this.posY, this.posZ, 2.0F, 2.0F, true, true, true, true, 5);
-                                }
-                            } else {
-                                if (this.getAcInfo() != null && this.getAcInfo().getItem() != null) {
-                                    if (isCreative) {
-                                        if (MCH_Config.DropItemInCreativeMode.prmBool && !isSneaking) {
-                                            this.dropItemWithOffset(this.getAcInfo().getItem(), 1, 0.0F);
-                                        }
-
-                                        if (!MCH_Config.DropItemInCreativeMode.prmBool && isSneaking) {
-                                            this.dropItemWithOffset(this.getAcInfo().getItem(), 1, 0.0F);
-                                        }
-                                    } else {
-                                        this.dropItemWithOffset(this.getAcInfo().getItem(), 1, 0.0F);
-                                    }
-                                }
-
-                                this.setDead(true);
-                            }
-                        }
-                    } else if (isDamegeSourcePlayer && isCreative) {
-                        this.setDead(true);
-                    }
-
-                    if (playDamageSound) {
-                        W_WorldFunc.MOD_playSoundAtEntity(this, "helidmg", 1.0F, 0.9F + this.rand.nextFloat() * 0.1F);
-                    }
-
-                    return true;
+                    return !this.isRidePlayer();
                 }
             }
         }
+
+        W_WorldFunc.MOD_playSoundAtEntity(this, "hit", damage > 0.0F ? 1.0F : 0.5F, 1.0F);
+        return false;
     }
+
+    private void applyDamage(DamageSource src, float damage, String type, float factor) {
+        MCH_Lib.DbgLog(this.world,
+                "MCH_EntityAircraft.attackEntityFrom:damage=%.1f(factor=%.2f):%s",
+                damage, factor, type
+        );
+        this.setDamageTaken(this.getDamageTaken() + (int) damage);
+    }
+
+    private void handleDestruction(DamageSource src, Entity attacker, String type, boolean byPlayer) {
+        if (!byPlayer) {
+            this.setDamageTaken(this.getMaxHP());
+            this.destroyAircraft();
+            this.timeSinceHit = 20;
+
+            String cmd = this.getCommand().trim();
+            if (cmd.startsWith("/")) cmd = cmd.substring(1);
+            if (!cmd.isEmpty()) {
+                MCH_DummyCommandSender.execCommand(cmd);
+            }
+
+            if (type.equalsIgnoreCase("inWall")) {
+                this.explosionByCrash(0.0);
+                this.damageSinceDestroyed = this.getMaxHP();
+            } else {
+                MCH_Explosion.newExplosion(
+                        this.world, null, attacker, this.posX, this.posY, this.posZ,
+                        2.0F, 2.0F, true, true, true, true, 5
+                );
+            }
+        } else {
+            dropItemIfNeeded((EntityPlayer) attacker);
+            this.setDead(true);
+        }
+    }
+
+    private void dropItemIfNeeded(EntityPlayer player) {
+        if (this.getAcInfo() != null && this.getAcInfo().getItem() != null) {
+            boolean creative = player.capabilities.isCreativeMode;
+            boolean sneaking = player.isSneaking();
+
+            if (creative) {
+                if (MCH_Config.DropItemInCreativeMode.prmBool && !sneaking) {
+                    this.dropItemWithOffset(this.getAcInfo().getItem(), 1, 0.0F);
+                }
+                if (!MCH_Config.DropItemInCreativeMode.prmBool && sneaking) {
+                    this.dropItemWithOffset(this.getAcInfo().getItem(), 1, 0.0F);
+                }
+            } else {
+                this.dropItemWithOffset(this.getAcInfo().getItem(), 1, 0.0F);
+            }
+        }
+    }
+
+    private void playDamageSound() {
+        W_WorldFunc.MOD_playSoundAtEntity(this, "helidmg", 1.0F, 0.9F + this.rand.nextFloat() * 0.1F);
+    }
+
 
     public boolean isExploded() {
         return this.isDestroyed() && this.damageSinceDestroyed > this.getMaxHP() / 10 + 1;
