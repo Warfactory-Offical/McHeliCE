@@ -253,28 +253,53 @@ public class MCH_AircraftPacketHandler {
         }
     }
 
-    @HandleSide({Side.CLIENT})
-    public static void onPacketNotifyWeaponID(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-        if (player.world.isRemote) {
+    //@HandleSide({Side.CLIENT})
+    //public static void onPacketNotifyWeaponID(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
+    //    if (player.world.isRemote) {
+    //        MCH_PacketNotifyWeaponID status = new MCH_PacketNotifyWeaponID();
+    //        status.readData(data);
+    //        if (status.entityID_Ac > 0) {
+    //            scheduler.addScheduledTask(() -> {
+    //                Entity e = player.world.getEntityByID(status.entityID_Ac);
+    //                if (e instanceof MCH_EntityAircraft ac) {
+    //                    if (ac.isValidSeatID(status.seatID)) {
+    //                        ac.getWeapon(status.weaponID).setAmmoNum(status.ammo);
+    //                        ac.getWeapon(status.weaponID).setRestAllAmmoNum(status.restAmmo);
+    //                        MCH_Lib.DbgLog(true, "onPacketNotifyWeaponID:WeaponID=%d (%d / %d)", status.weaponID, status.ammo, status.restAmmo);
+    //                        if (W_Lib.isClientPlayer(ac.getEntityBySeatId(status.seatID))) {
+    //                            MCH_Lib.DbgLog(true, "onPacketNotifyWeaponID:#discard:SeatID=%d, WeaponID=%d", status.seatID, status.weaponID);
+    //                        } else {
+    //                            MCH_Lib.DbgLog(true, "onPacketNotifyWeaponID:SeatID=%d, WeaponID=%d", status.seatID, status.weaponID);
+    //                            ac.updateWeaponID(status.seatID, status.weaponID);
+    //                        }
+    //                    }
+    //                }
+    //            });
+    //        }
+    //    }
+    //}
+
+    public static void onPacketNotifyWeaponID(EntityPlayer player, ByteArrayDataInput data) {
+        if(player.world.isRemote) {
             MCH_PacketNotifyWeaponID status = new MCH_PacketNotifyWeaponID();
             status.readData(data);
-            if (status.entityID_Ac > 0) {
-                scheduler.addScheduledTask(() -> {
-                    Entity e = player.world.getEntityByID(status.entityID_Ac);
-                    if (e instanceof MCH_EntityAircraft ac) {
-                        if (ac.isValidSeatID(status.seatID)) {
-                            ac.getWeapon(status.weaponID).setAmmoNum(status.ammo);
-                            ac.getWeapon(status.weaponID).setRestAllAmmoNum(status.restAmmo);
-                            MCH_Lib.DbgLog(true, "onPacketNotifyWeaponID:WeaponID=%d (%d / %d)", status.weaponID, status.ammo, status.restAmmo);
-                            if (W_Lib.isClientPlayer(ac.getEntityBySeatId(status.seatID))) {
-                                MCH_Lib.DbgLog(true, "onPacketNotifyWeaponID:#discard:SeatID=%d, WeaponID=%d", status.seatID, status.weaponID);
-                            } else {
-                                MCH_Lib.DbgLog(true, "onPacketNotifyWeaponID:SeatID=%d, WeaponID=%d", status.seatID, status.weaponID);
-                                ac.updateWeaponID(status.seatID, status.weaponID);
-                            }
+            if(status.entityID_Ac > 0) {
+                Entity e = player.world.getEntityByID(status.entityID_Ac);
+                if(e instanceof MCH_EntityAircraft) {
+                    MCH_EntityAircraft ac = (MCH_EntityAircraft)e;
+                    if(ac.isValidSeatID(status.seatID)) {
+                        ac.getWeapon(status.weaponID).setAmmoNum(status.ammo);
+                        ac.getWeapon(status.weaponID).setRestAllAmmoNum(status.restAmmo);
+                        MCH_Lib.DbgLog(true, "onPacketNotifyWeaponID:WeaponID=%d (%d / %d)", new Object[]{Integer.valueOf(status.weaponID), Short.valueOf(status.ammo), Short.valueOf(status.restAmmo)});
+                        if(W_Lib.isClientPlayer(ac.getEntityBySeatId(status.seatID))) {
+                            MCH_Lib.DbgLog(true, "onPacketNotifyWeaponID:#discard:SeatID=%d, WeaponID=%d", new Object[]{Integer.valueOf(status.seatID), Integer.valueOf(status.weaponID)});
+                        } else {
+                            MCH_Lib.DbgLog(true, "onPacketNotifyWeaponID:SeatID=%d, WeaponID=%d", new Object[]{Integer.valueOf(status.seatID), Integer.valueOf(status.weaponID)});
+                            ac.updateWeaponID(status.seatID, status.weaponID);
                         }
                     }
-                });
+                }
+
             }
         }
     }

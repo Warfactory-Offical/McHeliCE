@@ -34,7 +34,7 @@ public class MCH_PacketHandler extends W_PacketHandler {
             case 268438272 -> MCH_CommandPacketHandler.onPacketTitle(entityPlayer, data, handler);
             case 268439569 -> MCH_AircraftPacketHandler.onPacketSeatListResponse(entityPlayer, data, handler);
             case 268439600 -> MCH_AircraftPacketHandler.onPacketNotifyTVMissileEntity(entityPlayer, data, handler);
-            case 268439601 -> MCH_AircraftPacketHandler.onPacketNotifyWeaponID(entityPlayer, data, handler);
+            case 268439601 -> MCH_AircraftPacketHandler.onPacketNotifyWeaponID(entityPlayer, data);
             case 268439602 -> MCH_AircraftPacketHandler.onPacketNotifyHitBullet(entityPlayer, data, handler);
             case 268439604 -> MCH_AircraftPacketHandler.onPacketNotifyAmmoNum(entityPlayer, data);
             case 268439632 -> MCH_AircraftPacketHandler.onPacketOnMountEntity(entityPlayer, data, handler);
