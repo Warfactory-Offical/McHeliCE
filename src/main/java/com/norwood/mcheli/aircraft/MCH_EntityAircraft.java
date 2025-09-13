@@ -1,5 +1,6 @@
 package com.norwood.mcheli.aircraft;
 
+import com.hbm.render.amlfrom1710.Vec3;
 import com.norwood.mcheli.*;
 import com.norwood.mcheli.chain.MCH_EntityChain;
 import com.norwood.mcheli.command.MCH_Command;
@@ -48,11 +49,8 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ReportedException;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.BlockPos.PooledMutableBlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.*;
 import net.minecraft.world.border.WorldBorder;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -1702,52 +1700,46 @@ public abstract class MCH_EntityAircraft
         this.prevPosition.put(new Vec3d(this.posX, this.posY, this.posZ));
     }
 
-    /***
-     * oh my fucking god why I hate porting to 1.12 I hate porting to 1.12
-     * 
-    private void updateSearchlightBlocks() {
-        Set<ChunkCoordinates> newLights = new HashSet<>();
-
-        if (!world.isRemote && haveSearchLight() && isSearchLightON()) {
-            for (Object o : this.getAcInfo().searchLights) {
-                MCH_AircraftInfo.SearchLight sl = (MCH_AircraftInfo.SearchLight) o;
-                Vec3 p = getTransformedPosition(sl.pos);
-
-                int bx = MathHelper.floor_double(p.xCoord);
-                int by = MathHelper.floor_double(p.yCoord);
-                int bz = MathHelper.floor_double(p.zCoord);
-
-                ChunkCoordinates coord = new ChunkCoordinates(bx, by, bz);
-                newLights.add(coord);
-
-                // Only place if the spot is pure air
-                if (worldObj.isAirBlock(bx, by, bz) && worldObj.getBlock(bx, by, bz) != MCH_MOD.lightBlock) {
-                    //maybe remove worldObj.getBlock(bx, by, bz) != MCH_MOD.lightBlock? idk doesn't seem like a good idea to me.
-                    worldObj.setBlock(bx, by, bz, MCH_MOD.lightBlock, 0, 2);
-                    worldObj.markBlockForUpdate(bx, by, bz);
-                    worldObj.updateLightByType(EnumSkyBlock.Block, bx, by, bz);
-                }
-                // If it's already our light block, just refresh it in newLights
-            }
-        }
-
-        // Remove old light blocks that are no longer needed
-        for (ChunkCoordinates oldCoord : activeLights) {
-            if (!newLights.contains(oldCoord)) {
-                int x = oldCoord.posX, y = oldCoord.posY, z = oldCoord.posZ;
-                // Only remove if it's still our light block
-                if (worldObj.getBlock(x, y, z) == MCH_MOD.lightBlock) {
-                    worldObj.setBlockToAir(x, y, z);
-                    worldObj.markBlockForUpdate(x, y, z);
-                    worldObj.updateLightByType(EnumSkyBlock.Block, x, y, z);
-                }
-            }
-        }
-
-        activeLights.clear();
-        activeLights.addAll(newLights);
-    }
-    ***/
+    //Fixed for you furboy
+//    private void updateSearchlightBlocks() {
+//        Set<BlockPos> newLights = new HashSet<>();
+//
+//        if (!world.isRemote && haveSearchLight() && isSearchLightON()) {
+//            for (Object o : this.getAcInfo().searchLights) {
+//                MCH_AircraftInfo.SearchLight sl = (MCH_AircraftInfo.SearchLight) o;
+//                Vec3d pos = getTransformedPosition(sl.pos);
+//
+//                BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos(MathHelper.floor(pos.x),
+//                 MathHelper.floor(pos.y),
+//                 MathHelper.floor(pos.z));
+//
+//                newLights.add(blockPos);
+//
+//                // Only place if the spot is pure air
+//                if (world.isAirBlock(blockPos) && world.getBlockState(blockPos).getBlock() != MCH_MOD.lightBlock) {
+//                    //maybe remove world.getBlock(blockPos) != MCH_MOD.lightBlock? idk doesn't seem like a good idea to me.
+//                    world.setBlockState(blockPos, MCH_MOD.lightBlock.getDefaultState(), 0, 2);
+//                    world.checkLightFor(EnumSkyBlock.BLOCK, blockPos);
+//
+//                }
+//                // If it's already our light block, just refresh it in newLights
+//            }
+//        }
+//
+//        // Remove old light blocks that are no longer needed
+//        for (BlockPos.MutableBlockPos oldPos : activeLights) {
+//            if (!newLights.contains(oldPos)) {
+//                // Only remove if it's still our light block
+//                if (world.getBlockState(oldPos) == MCH_MOD.lightBlock) {
+//                    world.setBlockToAir(oldPos);
+//                    world.checkLightFor(EnumSkyBlock.BLOCK, oldPos);
+//                }
+//            }
+//        }
+//
+//        activeLights.clear();
+//        activeLights.addAll(newLights);
+//    }
 
     private void updateNoCollisionEntities() {
         if (!this.world.isRemote) {
