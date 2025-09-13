@@ -58,6 +58,7 @@ public class MCH_ItemModelRenderers {
         ContentRegistries.vehicle().forEachValue(MCH_ItemModelRenderers::registerLegacyModelLocation);
         ContentRegistries.ship().forEachValue(MCH_ItemModelRenderers::registerLegacyModelLocation);
         ContentRegistries.throwable().forEachValue(MCH_ItemModelRenderers::registerLegacyModelLocation);
+        //ContentRegistries.
     }
 
     @SubscribeEvent
