@@ -10,6 +10,7 @@ import com.norwood.mcheli.helper.addon.AddonManager;
 import com.norwood.mcheli.helper.addon.AddonPack;
 import com.norwood.mcheli.helper.addon.AddonResourceLocation;
 import com.norwood.mcheli.helper.info.ContentRegistries;
+import com.norwood.mcheli.helper.info.ContentType;
 import com.norwood.mcheli.plane.MCP_PlaneInfo;
 import com.norwood.mcheli.ship.MCH_ShipInfo;
 import com.norwood.mcheli.tank.MCH_TankInfo;
@@ -211,7 +212,7 @@ public class MCH_CommonProxy {
     }
 
     public boolean canLoadContentDirName(String dir) {
-        return MCH_Utils.inArray(CONTENT_DIRS, dir);
+        return ContentType.validateDirName(dir);
     }
 
     public void updateGeneratedLanguage() {

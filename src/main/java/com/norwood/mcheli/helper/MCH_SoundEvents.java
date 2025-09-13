@@ -2,6 +2,7 @@ package com.norwood.mcheli.helper;
 
 import com.google.common.collect.Sets;
 import com.norwood.mcheli.MCH_Lib;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -46,11 +47,16 @@ public class MCH_SoundEvents {
         return Objects.requireNonNull(sound);
     }
 
-    @Nullable
+    //THIS IS NOT FUCKING NULLABLE
     public static SoundEvent getSound(ResourceLocation location) {
         SoundEvent sound = ForgeRegistries.SOUND_EVENTS.getValue(location);
         if (sound == null) {
             MCH_Lib.Log("[WARNING] Sound event does not found. event name= " + location);
+            return SoundEvents.BLOCK_STONE_BREAK;
+        }
+        if (sound.getSoundName() == null ) {
+            MCH_Lib.Log("[WARNING] Sound event is empty. event name= " + location);
+            return SoundEvents.BLOCK_STONE_BREAK;
         }
 
         return sound;
