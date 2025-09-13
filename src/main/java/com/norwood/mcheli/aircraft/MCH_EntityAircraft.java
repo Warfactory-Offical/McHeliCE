@@ -4988,117 +4988,144 @@ public abstract class MCH_EntityAircraft
     }
 
     public void updateWeapons() {
-        if (this.getAcInfo() != null) {
-            if (this.getAcInfo().getWeaponCount() > 0) {
+        if(this.getAcInfo() != null) {
+            if(this.getAcInfo().getWeaponNum() > 0) {
                 int prevUseWeaponStat = this.useWeaponStat;
-                if (!this.world.isRemote) {
-                    this.useWeaponStat = this.useWeaponStat | this.getUsedWeaponStat();
-                    this.dataManager.set(USE_WEAPON, this.useWeaponStat);
+                if(!super.world.isRemote) {
+                    this.useWeaponStat |= this.getUsedWeaponStat();
+                    //1.7 method
+                    this.getDataWatcher().updateObject(24, new Integer(this.useWeaponStat));
                     this.useWeaponStat = 0;
                 } else {
-                    this.useWeaponStat = this.dataManager.get(USE_WEAPON);
+                    this.useWeaponStat = this.getDataWatcher().getWatchableObjectInt(24);
                 }
 
                 float yaw = MathHelper.wrapDegrees(this.getRotYaw());
                 float pitch = MathHelper.wrapDegrees(this.getRotPitch());
                 int id = 0;
+                int wid = 0;
 
-                for (int wid = 0; wid < this.weapons.length; wid++) {
+                while(wid < this.weapons.length) {
                     MCH_WeaponSet w = this.weapons[wid];
                     boolean isLongDelay = false;
-                    if (w.getFirstWeapon() != null) {
+                    if(w.getFirstWeapon() != null) {
                         isLongDelay = w.isLongDelayWeapon();
                     }
 
                     boolean isSelected = false;
+                    int[] isWpnUsed = this.currentWeaponID;
+                    int wi = isWpnUsed.length;
+                    int entity = 0;
 
-                    for (int swid : this.currentWeaponID) {
-                        if (swid == wid) {
+                    while(true) {
+                        if(entity < wi) {
+                            int ep = isWpnUsed[entity];
+                            if(ep != wid) {
+                                ++entity;
+                                continue;
+                            }
+
                             isSelected = true;
-                            break;
-                        }
-                    }
-
-                    boolean isWpnUsed = false;
-
-                    for (int index = 0; index < w.getWeaponsCount(); index++) {
-                        boolean isPrevUsed = id < 32 && (prevUseWeaponStat & 1 << id) != 0;
-                        boolean isUsed = id < 32 && (this.useWeaponStat & 1 << id) != 0;
-                        if (isLongDelay && isPrevUsed && isUsed) {
-                            isUsed = false;
                         }
 
-                        isWpnUsed |= isUsed;
-                        if (!isPrevUsed && isUsed) {
-                            float recoil = w.getInfo().recoil;
-                            if (recoil > 0.0F) {
-                                this.recoilCount = 30;
-                                this.recoilValue = recoil;
-                                this.recoilYaw = w.rotationYaw;
+                        boolean var16 = false;
+
+                        float ey;
+                        for(wi = 0; wi < w.getWeaponNum(); ++wi) {
+                            boolean var18 = id < 32 && (prevUseWeaponStat & 1 << id) != 0;
+                            boolean var20 = id < 32 && (this.useWeaponStat & 1 << id) != 0;
+                            if(isLongDelay && var18 && var20) {
+                                var20 = false;
                             }
-                        }
 
-                        if (this.world.isRemote && isUsed) {
-                            Vec3d wrv = MCH_Lib.RotVec3(0.0, 0.0, -1.0, -w.rotationYaw - yaw, -w.rotationPitch);
-                            Vec3d spv = w.getCurrentWeapon().getShotPos(this);
-                            this.spawnParticleMuzzleFlash(this.world, w.getInfo(), this.posX + spv.x, this.posY + spv.y, this.posZ + spv.z, wrv);
-                        }
-
-                        w.updateWeapon(this, isUsed, index);
-                        id++;
-                    }
-
-                    w.update(this, isSelected, isWpnUsed);
-                    MCH_AircraftInfo.Weapon wi = this.getAcInfo().getWeaponById(wid);
-                    if (wi != null && !this.isDestroyed()) {
-                        Entity entity = this.getEntityBySeatId(this.getWeaponSeatID(this.getWeaponInfoById(wid), wi));
-                        if (wi.canUsePilot && !(entity instanceof EntityPlayer) && !(entity instanceof MCH_EntityGunner)) {
-                            entity = this.getEntityBySeatId(0);
-                        }
-
-                        if (!(entity instanceof EntityPlayer) && !(entity instanceof MCH_EntityGunner)) {
-                            w.rotationTurretYaw = this.getLastRiderYaw() - this.getRotYaw();
-                            if (this.getTowedChainEntity() != null || this.getRidingEntity() != null) {
-                                w.rotationYaw = 0.0F;
-                            }
-                        } else {
-                            if ((int) wi.minYaw != 0 || (int) wi.maxYaw != 0) {
-                                float ty = wi.turret ? MathHelper.wrapDegrees(this.getLastRiderYaw()) - yaw : 0.0F;
-                                float ey = MathHelper.wrapDegrees(entity.rotationYaw - yaw - wi.defaultYaw - ty);
-                                if (Math.abs((int) wi.minYaw) < 360 && Math.abs((int) wi.maxYaw) < 360) {
-                                    float targetYaw = MCH_Lib.RNG(ey, wi.minYaw, wi.maxYaw);
-                                    float wy = w.rotationYaw - wi.defaultYaw - ty;
-                                    if (targetYaw < wy) {
-                                        if (wy - targetYaw > 15.0F) {
-                                            wy -= 15.0F;
-                                        } else {
-                                            wy = targetYaw;
-                                        }
-                                    } else if (targetYaw > wy) {
-                                        if (targetYaw - wy > 15.0F) {
-                                            wy += 15.0F;
-                                        } else {
-                                            wy = targetYaw;
-                                        }
-                                    }
-
-                                    w.rotationYaw = wy + wi.defaultYaw + ty;
-                                } else {
-                                    w.rotationYaw = ey + ty;
+                            var16 |= var20;
+                            if(!var18 && var20) {
+                                ey = w.getInfo().recoil;
+                                if(ey > 0.0F) {
+                                    this.recoilCount = 30;
+                                    this.recoilValue = ey;
+                                    this.recoilYaw = w.rotationYaw;
                                 }
                             }
 
-                            float ep = MathHelper.wrapDegrees(entity.rotationPitch - pitch);
-                            w.rotationPitch = MCH_Lib.RNG(ep, wi.minPitch, wi.maxPitch);
-                            w.rotationTurretYaw = 0.0F;
+                            if(super.world.isRemote && var20) {
+                                Vec3d var21 = MCH_Lib.RotVec3(0.0D, 0.0D, -1.0D, -w.rotationYaw - yaw, -w.rotationPitch);
+                                Vec3d targetYaw = w.getCurrentWeapon().getShotPos(this);
+                                this.spawnParticleMuzzleFlash(super.world, w.getInfo(), super.posX + targetYaw.x, super.posY + targetYaw.y, super.posZ + targetYaw.z, var21);
+                            }
+
+                            w.updateWeapon(this, var20, wi);
+                            ++id;
                         }
+
+                        w.update(this, isSelected, var16);
+                        MCH_AircraftInfo.Weapon var17 = this.getAcInfo().getWeaponById(wid);
+                        if(var17 != null && !this.isDestroyed()) {
+                            Entity var19 = this.getEntityBySeatId(this.getWeaponSeatID(this.getWeaponInfoById(wid), var17));
+                            if(var17.canUsePilot && !(var19 instanceof EntityPlayer) && !(var19 instanceof MCH_EntityGunner) ) { //
+                                var19 = this.getEntityBySeatId(0);
+                            }
+
+
+
+
+                            if(var19 instanceof EntityPlayer || var19 instanceof MCH_EntityGunner) {
+                                float var22;
+                                if((int)var17.minYaw != 0 || (int)var17.maxYaw != 0) {
+                                    var22 = var17.turret?MathHelper.wrapDegrees(this.getLastRiderYaw()) - yaw:0.0F;
+                                    ey = MathHelper.wrapDegrees(var19.rotationYaw - yaw - var17.defaultYaw - var22);
+                                    if(Math.abs((int)var17.minYaw) < 360 && Math.abs((int)var17.maxYaw) < 360) {
+                                        float var23 = MCH_Lib.RNG(ey, var17.minYaw, var17.maxYaw);
+                                        float wy = w.rotationYaw - var17.defaultYaw - var22;
+                                        if(var23 < wy) {
+                                            if(wy - var23 > 15.0F) {
+                                                wy -= 15.0F;
+                                            } else {
+                                                wy = var23;
+                                            }
+                                        } else if(var23 > wy) {
+                                            if(var23 - wy > 15.0F) {
+                                                wy += 15.0F;
+                                            } else {
+                                                wy = var23;
+                                            }
+                                        }
+
+                                        w.rotationYaw = wy + var17.defaultYaw + var22;
+                                    } else {
+                                        w.rotationYaw = ey + var22;
+                                    }
+                                }
+
+                                var22 = MathHelper.wrapDegrees(var19.rotationPitch - pitch);
+                                w.rotationPitch = MCH_Lib.RNG(var22, var17.minPitch, var17.maxPitch);
+                                w.rotationTurretYaw = 0.0F;
+                            } else {
+                                w.rotationTurretYaw = this.getLastRiderYaw() - this.getRotYaw();
+                                if(this.getRidingEntity() != null) {
+                                    w.rotationYaw = 0.0F;
+                                }
+                            }
+                        }
+
+                        //if (!(entity instanceof EntityPlayer) && !(entity instanceof mcheli.mob.MCH_EntityGunner)) {
+                        ///* 5064 */             w.rotationTurretYaw = getLastRiderYaw() - getRotYaw();
+                        ///* 5065 */             if (this.ridingEntity != null) {
+                        ///* 5066 */               w.rotationYaw = 0.0F;
+                        ///*      */             }
+                        ///*      */           } else {
+                        //this is the worst fucking code i have ever dealt with
+
+                        ++wid;
+                        break;
                     }
                 }
 
                 this.updateWeaponBay();
-                if (this.hitStatus > 0) {
-                    this.hitStatus--;
+                if(this.hitStatus > 0) {
+                    --this.hitStatus;
                 }
+
             }
         }
     }

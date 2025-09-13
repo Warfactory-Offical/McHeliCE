@@ -566,6 +566,11 @@ public abstract class MCH_AircraftInfo extends MCH_BaseInfo implements IItemCont
         return this.weaponSetList.size();
     }
 
+    //shut up I know it's the same shit
+    public int getWeaponNum() {
+        return this.weaponSetList.size();
+    }
+
     @Override
     public void loadItemData(String item, String data) {
         if (item.compareTo("displayname") == 0) {

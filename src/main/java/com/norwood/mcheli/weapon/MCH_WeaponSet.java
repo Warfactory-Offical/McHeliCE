@@ -98,6 +98,10 @@ public class MCH_WeaponSet {
     //    MCH_Lib.DbgLog(this.getFirstWeapon().worldObj, "MCH_WeaponSet.setRestAllAmmoNum:%s %d->%d (%d)", this.getName(), debugBefore, this.numRestAllAmmo, n);
     //}
 
+    public int getWeaponNum() {
+        return this.weapons != null?this.weapons.length:0;
+    }
+
     public void setRestAllAmmoNum(int n) {
         int debugBefore = this.numRestAllAmmo;
         int m = this.getInfo().maxAmmo - this.getAmmoNum();
