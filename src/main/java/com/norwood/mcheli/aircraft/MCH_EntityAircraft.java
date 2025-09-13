@@ -2551,16 +2551,21 @@ public abstract class MCH_EntityAircraft
                             ItemStack itemStack = var9.inventory.mainInventory.get(i);
                             if(itemStack != null && itemStack.isItemEqual(ri.itemStack)) {
                                 if(itemStack.getItem() != W_Item.getItemByName("water_bucket") && itemStack.getItem() != W_Item.getItemByName("lava_bucket")) {
-                                    if(itemStack.stackSize > num) {
-                                        itemStack.stackSize -= num;
+                                    if (itemStack.getCount() > num) {
+                                        itemStack.setCount(itemStack.getCount() - num);
                                         num = 0;
+
                                     } else {
-                                        num -= itemStack.stackSize;
-                                        itemStack.stackSize = 0;
-                                        var9.inventory.mainInventory.set(i, null);
+                                        num -= itemStack.getCount();
+                                        itemStack.setCount(0);
+                                        var9.inventory.mainInventory.set(i, ItemStack.EMPTY);
                                     }
-                                } else if(itemStack.stackSize == 1) {
-                                    var9.inventory.setInventorySlotContents(i, new ItemStack(W_Item.getItemByName("bucket"), 1));
+
+                                } else if (itemStack.getCount() == 1) {
+                                    var9.inventory.setInventorySlotContents(
+                                            i,
+                                            new ItemStack(W_Item.getItemByName("bucket"), 1)
+                                    );
                                     --num;
                                 }
                             }
@@ -2638,8 +2643,8 @@ public abstract class MCH_EntityAircraft
                     while(true) {
                         if(i$1 < len$) {
                             ItemStack itemStack = arr$[i$1];
-                            if(itemStack != null && itemStack.isItemEqual(ri.itemStack)) {
-                                num -= itemStack.stackSize;
+                            if (!itemStack.isEmpty() && itemStack.isItemEqual(ri.itemStack)) {
+                                num -= itemStack.getCount();
                             }
 
                             if(num > 0) {
