@@ -56,6 +56,7 @@ public class MCH_ItemModelRenderers {
         ContentRegistries.plane().forEachValue(MCH_ItemModelRenderers::registerLegacyModelLocation);
         ContentRegistries.tank().forEachValue(MCH_ItemModelRenderers::registerLegacyModelLocation);
         ContentRegistries.vehicle().forEachValue(MCH_ItemModelRenderers::registerLegacyModelLocation);
+        ContentRegistries.ship().forEachValue(MCH_ItemModelRenderers::registerLegacyModelLocation);
         ContentRegistries.throwable().forEachValue(MCH_ItemModelRenderers::registerLegacyModelLocation);
     }
 

@@ -25,7 +25,6 @@ import java.io.File;
 import java.util.List;
 
 public class MCH_CommonProxy {
-    protected static final String[] CONTENT_DIRS = new String[]{"helicopters", "planes", "tanks", "vehicles", "weapons", "throwable"};
     public MCH_Config config = null;
     public String lastConfigFileName;
 

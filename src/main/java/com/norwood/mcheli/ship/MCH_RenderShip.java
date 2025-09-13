@@ -33,7 +33,7 @@ public class MCH_RenderShip extends MCH_RenderAircraft<MCH_EntityShip> {
                 GlStateManager.rotate(yaw, 0.0F, -1.0F, 0.0F);
                 GlStateManager.rotate(pitch, 1.0F, 0.0F, 0.0F);
                 GlStateManager.rotate(roll, 0.0F, 0.0F, 1.0F);
-                this.bindTexture("textures/planes/" + plane.getTextureName() + ".png", plane);
+                this.bindTexture("textures/ships/" + plane.getTextureName() + ".png", plane);//I <3 string references being in random places
                 if (planeInfo.haveNozzle() && plane.partNozzle != null) {
                     this.renderNozzle(plane, planeInfo, tickTime);
                 }
