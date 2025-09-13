@@ -91,11 +91,18 @@ public class MCH_WeaponSet {
         return this.numRestAllAmmo;
     }
 
+    //public void setRestAllAmmoNum(int n) {
+    //    int debugBefore = this.numRestAllAmmo;
+    //    int m = this.getInfo().maxAmmo - this.getAmmoNum();
+    //    this.numRestAllAmmo = Math.min(n, m);
+    //    MCH_Lib.DbgLog(this.getFirstWeapon().worldObj, "MCH_WeaponSet.setRestAllAmmoNum:%s %d->%d (%d)", this.getName(), debugBefore, this.numRestAllAmmo, n);
+    //}
+
     public void setRestAllAmmoNum(int n) {
         int debugBefore = this.numRestAllAmmo;
         int m = this.getInfo().maxAmmo - this.getAmmoNum();
-        this.numRestAllAmmo = Math.min(n, m);
-        MCH_Lib.DbgLog(this.getFirstWeapon().worldObj, "MCH_WeaponSet.setRestAllAmmoNum:%s %d->%d (%d)", this.getName(), debugBefore, this.numRestAllAmmo, n);
+        this.numRestAllAmmo = n <= m?n:m;
+        MCH_Lib.DbgLog(this.getFirstWeapon().worldObj, "MCH_WeaponSet.setRestAllAmmoNum:%s %d->%d (%d)", new Object[]{this.getName(), Integer.valueOf(debugBefore), Integer.valueOf(this.numRestAllAmmo), Integer.valueOf(n)});
     }
 
     public int getAllAmmoNum() {
