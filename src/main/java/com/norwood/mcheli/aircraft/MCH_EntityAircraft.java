@@ -86,6 +86,7 @@ public abstract class MCH_EntityAircraft
     private static final DataParameter<String> TEXTURE_NAME = EntityDataManager.createKey(MCH_EntityAircraft.class, DataSerializers.STRING);
     private static final DataParameter<Integer> UAV_STATION = EntityDataManager.createKey(MCH_EntityAircraft.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> STATUS = EntityDataManager.createKey(MCH_EntityAircraft.class, DataSerializers.VARINT);
+    //TODO: check this to see it's being PROPERLY parsed how 1.7 does it. This might be the cause of our infinite ammo bug.
     private static final DataParameter<Integer> USE_WEAPON = EntityDataManager.createKey(MCH_EntityAircraft.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> FUEL = EntityDataManager.createKey(MCH_EntityAircraft.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> ROT_ROLL = EntityDataManager.createKey(MCH_EntityAircraft.class, DataSerializers.VARINT);
@@ -409,6 +410,7 @@ public abstract class MCH_EntityAircraft
         this.dataManager.register(ID_TYPE, "");
         this.dataManager.register(DAMAGE, 0);
         this.dataManager.register(STATUS, 0);
+        //TODO: marker
         this.dataManager.register(USE_WEAPON, 0);
         this.dataManager.register(FUEL, 0);
         this.dataManager.register(TEXTURE_NAME, "");
@@ -4993,11 +4995,15 @@ public abstract class MCH_EntityAircraft
                 int prevUseWeaponStat = this.useWeaponStat;
                 if(!super.world.isRemote) {
                     this.useWeaponStat |= this.getUsedWeaponStat();
-                    //1.7 method
-                    this.getDataWatcher().updateObject(24, new Integer(this.useWeaponStat));
+                    //TODO: MARKER
+                    //1.7 method below, CHECK to ensure this is properly being parsed (*how it should be) and not SHITTED in.
+                    //this.getDataWatcher().updateObject(24, new Integer(this.useWeaponStat));
+                    this.dataManager.set(USE_WEAPON, this.useWeaponStat);
                     this.useWeaponStat = 0;
                 } else {
-                    this.useWeaponStat = this.getDataWatcher().getWatchableObjectInt(24);
+                    //also 1.7 method:
+                    //this.useWeaponStat = this.getDataWatcher().getWatchableObjectInt(24);
+                    this.useWeaponStat = this.dataManager.get(USE_WEAPON);
                 }
 
                 float yaw = MathHelper.wrapDegrees(this.getRotYaw());
