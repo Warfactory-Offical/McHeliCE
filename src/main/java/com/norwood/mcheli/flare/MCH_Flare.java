@@ -16,7 +16,7 @@ import java.util.Random;
 
 public class MCH_Flare {
     private static MCH_Flare.FlareParam[] FLARE_DATA = null;
-    public final World worldObj;
+    public final World world;
     public final MCH_EntityAircraft aircraft;
     public final Random rand;
     public int numFlare;
@@ -24,7 +24,7 @@ public class MCH_Flare {
     private int flareType;
 
     public MCH_Flare(World w, MCH_EntityAircraft ac) {
-        this.worldObj = w;
+        this.world = w;
         this.aircraft = ac;
         this.rand = new Random();
         this.tick = 0;
@@ -61,7 +61,7 @@ public class MCH_Flare {
     }
 
     public void spawnParticle(String name, int num, float size) {
-        if (this.worldObj.isRemote) {
+        if (this.world.isRemote) {
             if (name.isEmpty() || num < 1 || num > 50) {
                 return;
             }
@@ -72,7 +72,7 @@ public class MCH_Flare {
 
             for (int i = 0; i < num; i++) {
                 MCH_ParticleParam prm = new MCH_ParticleParam(
-                        this.worldObj, "smoke", this.aircraft.prevPosX + x * i, this.aircraft.prevPosY + y * i, this.aircraft.prevPosZ + z * i
+                        this.world, "smoke", this.aircraft.prevPosX + x * i, this.aircraft.prevPosY + y * i, this.aircraft.prevPosZ + z * i
                 );
                 prm.size = size + this.rand.nextFloat();
                 MCH_ParticlesUtil.spawnParticle(prm);
@@ -87,7 +87,7 @@ public class MCH_Flare {
         if (type <= 0 && type >= FLARE_DATA.length) {
             return false;
         } else {
-            if (this.worldObj.isRemote) {
+            if (this.world.isRemote) {
                 if (this.tick == 0) {
                     this.tick = FLARE_DATA[this.getFlareType()].tickWait;
                     result = true;
@@ -112,7 +112,7 @@ public class MCH_Flare {
                 this.tick--;
             }
 
-            if (!this.worldObj.isRemote && this.tick > 0 && this.tick % FLARE_DATA[type].interval == 0 && this.numFlare < FLARE_DATA[type].numFlareMax) {
+            if (!this.world.isRemote && this.tick > 0 && this.tick % FLARE_DATA[type].interval == 0 && this.numFlare < FLARE_DATA[type].numFlareMax) {
                 Vec3d v = this.aircraft.getAcInfo().flare.pos;
                 v = this.aircraft.getTransformedPosition(v.x, v.y, v.z, this.aircraft.prevPosX, this.aircraft.prevPosY, this.aircraft.prevPosZ);
                 this.spawnFlare(v);
@@ -131,14 +131,14 @@ public class MCH_Flare {
         double x = v.x - this.aircraft.motionX * 2.0;
         double y = v.y - this.aircraft.motionY * 2.0 - 1.0;
         double z = v.z - this.aircraft.motionZ * 2.0;
-        this.worldObj
+        this.world
                 .playSound(
                         null,
                         new BlockPos(x, y, z),
                         SoundEvents.BLOCK_FIRE_EXTINGUISH,
                         SoundCategory.BLOCKS,
                         0.5F,
-                        2.6F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.8F
+                        2.6F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.8F
                 );
 
         for (int i = 0; i < num; i++) {
@@ -196,7 +196,7 @@ public class MCH_Flare {
                 fuseCount = 10;
             }
 
-            MCH_EntityFlare e = new MCH_EntityFlare(this.worldObj, x, y, z, tx * 0.5, ty * 0.5, tz * 0.5, 6.0F, fuseCount);
+            MCH_EntityFlare e = new MCH_EntityFlare(this.world, x, y, z, tx * 0.5, ty * 0.5, tz * 0.5, 6.0F, fuseCount);
             e.rotationPitch = this.rand.nextFloat() * 360.0F;
             e.rotationYaw = this.rand.nextFloat() * 360.0F;
             e.prevRotationPitch = this.rand.nextFloat() * 360.0F;
@@ -206,7 +206,7 @@ public class MCH_Flare {
                 e.airResistance = 0.995;
             }
 
-            this.worldObj.spawnEntity(e);
+            this.world.spawnEntity(e);
         }
     }
 

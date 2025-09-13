@@ -1549,6 +1549,10 @@ public abstract class MCH_EntityAircraft
             }
         }
 
+
+        //updateSearchlightBlocks();
+
+
         super.onUpdate();
         if (this.getParts() != null) {
             for (Entity e : this.getParts()) {
@@ -1673,7 +1677,7 @@ public abstract class MCH_EntityAircraft
 
     /***
      * oh my fucking god why I hate porting to 1.12 I hate porting to 1.12
-     * 
+     *
     private void updateSearchlightBlocks() {
         Set<ChunkCoordinates> newLights = new HashSet<>();
 
