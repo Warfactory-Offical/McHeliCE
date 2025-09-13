@@ -882,7 +882,7 @@ public abstract class MCH_EntityAircraft
         this.setFuel(nbt.getInteger("AcFuel"));
         int[] wa_list = nbt.getIntArray("AcWeaponsAmmo");
 
-        for (int i = 0; i < wa_list.length; i++) {
+        for(int i = 0; i < wa_list.length; ++i) {
             this.getWeapon(i).setRestAllAmmoNum(wa_list[i]);
             this.getWeapon(i).reloadMag();
         }
@@ -2505,64 +2505,67 @@ public abstract class MCH_EntityAircraft
     }
 
     public void updateSupplyAmmo() {
-        if (!this.world.isRemote) {
-            boolean isReloading = this.getRiddenByEntity() instanceof EntityPlayer
-                    && !this.getRiddenByEntity().isDead
-                    && ((EntityPlayer) this.getRiddenByEntity()).openContainer instanceof MCH_AircraftGuiContainer;
+        if(!super.world.isRemote) {
+            boolean isReloading = false;
+            if(this.getRiddenByEntity() instanceof EntityPlayer && !this.getRiddenByEntity().isDead && ((EntityPlayer)this.getRiddenByEntity()).openContainer instanceof MCH_AircraftGuiContainer) {
+                isReloading = true;
+            }
 
             this.setCommonStatus(2, isReloading);
-            if (!this.isDestroyed() && this.beforeSupplyAmmo && !isReloading) {
+            if(!this.isDestroyed() && this.beforeSupplyAmmo && !isReloading) {
                 this.reloadAllWeapon();
-                MCH_PacketNotifyAmmoNum.sendAllAmmoNum(this, null);
+                MCH_PacketNotifyAmmoNum.sendAllAmmoNum(this, (EntityPlayer)null);
             }
 
             this.beforeSupplyAmmo = isReloading;
         }
 
-        if (this.getCommonStatus(2)) {
+        if(this.getCommonStatus(2)) {
             this.supplyAmmoWait = 20;
         }
 
-        if (this.supplyAmmoWait > 0) {
-            this.supplyAmmoWait--;
+        if(this.supplyAmmoWait > 0) {
+            --this.supplyAmmoWait;
         }
+
     }
 
     public void supplyAmmo(int weaponID) {
-        if (this.world.isRemote) {
-            MCH_WeaponSet ws = this.getWeapon(weaponID);
-            ws.supplyRestAllAmmo();
+        if(super.world.isRemote) {
+            MCH_WeaponSet player = this.getWeapon(weaponID);
+            player.supplyRestAllAmmo();
         } else {
-            if (this.getRiddenByEntity() instanceof EntityPlayerMP) {
-                MCH_CriteriaTriggers.SUPPLY_AMMO.trigger((EntityPlayerMP) this.getRiddenByEntity());
-            }
-
-            if (this.getRiddenByEntity() instanceof EntityPlayer player) {
-                if (this.canPlayerSupplyAmmo(player, weaponID)) {
+            //MCH_Achievement.addStat(super.riddenByEntity, MCH_Achievement.supplyAmmo, 1);
+            MCH_CriteriaTriggers.SUPPLY_AMMO.trigger((EntityPlayerMP) this.getRiddenByEntity());
+            if(this.getRiddenByEntity() instanceof EntityPlayer) {
+                EntityPlayer var9 = (EntityPlayer)this.getRiddenByEntity();
+                if(this.canPlayerSupplyAmmo(var9, weaponID)) {
                     MCH_WeaponSet ws = this.getWeapon(weaponID);
+                    Iterator i$ = ws.getInfo().roundItems.iterator();
 
-                    for (MCH_WeaponInfo.RoundItem ri : ws.getInfo().roundItems) {
+                    while(i$.hasNext()) {
+                        MCH_WeaponInfo.RoundItem ri = (MCH_WeaponInfo.RoundItem)i$.next();
                         int num = ri.num;
 
-                        for (int i = 0; i < player.inventory.mainInventory.size(); i++) {
-                            ItemStack itemStack = player.inventory.mainInventory.get(i);
-                            if (!itemStack.isEmpty() && itemStack.isItemEqual(ri.itemStack)) {
-                                if (itemStack.getItem() != W_Item.getItemByName("water_bucket") && itemStack.getItem() != W_Item.getItemByName("lava_bucket")) {
-                                    if (itemStack.getCount() > num) {
-                                        itemStack.shrink(num);
+                        for(int i = 0; i < var9.inventory.mainInventory.size(); ++i) { //length in 1.7
+                            ItemStack itemStack = var9.inventory.mainInventory.get(i);
+                            if(itemStack != null && itemStack.isItemEqual(ri.itemStack)) {
+                                if(itemStack.getItem() != W_Item.getItemByName("water_bucket") && itemStack.getItem() != W_Item.getItemByName("lava_bucket")) {
+                                    if(itemStack.stackSize > num) {
+                                        itemStack.stackSize -= num;
                                         num = 0;
                                     } else {
-                                        num -= itemStack.getCount();
-                                        itemStack.setCount(0);
-                                        player.inventory.mainInventory.set(i, ItemStack.EMPTY);
+                                        num -= itemStack.stackSize;
+                                        itemStack.stackSize = 0;
+                                        var9.inventory.mainInventory.set(i, null);
                                     }
-                                } else if (itemStack.getCount() == 1) {
-                                    player.inventory.setInventorySlotContents(i, new ItemStack(W_Item.getItemByName("bucket"), 1));
-                                    num--;
+                                } else if(itemStack.stackSize == 1) {
+                                    var9.inventory.setInventorySlotContents(i, new ItemStack(W_Item.getItemByName("bucket"), 1));
+                                    --num;
                                 }
                             }
 
-                            if (num <= 0) {
+                            if(num <= 0) {
                                 break;
                             }
                         }
@@ -2572,30 +2575,32 @@ public abstract class MCH_EntityAircraft
                 }
             }
         }
+
     }
 
     public void supplyAmmoToOtherAircraft() {
-        float range = this.getAcInfo() != null ? this.getAcInfo().ammoSupplyRange : 0.0F;
-        if (!(range <= 0.0F)) {
-            if (!this.world.isRemote && this.getCountOnUpdate() % 40 == 0) {
-                List<MCH_EntityAircraft> list = this.world
-                        .getEntitiesWithinAABB(MCH_EntityAircraft.class, this.getCollisionBoundingBox().grow(range, range, range));
+        float range = this.getAcInfo() != null?this.getAcInfo().ammoSupplyRange:0.0F;
+        if(range > 0.0F) {
+            //todo umm what the figma no fuck you no more free nukes wtf
+            if(!super.world.isRemote && this.getCountOnUpdate() % 40 == 0) {
+                List list = super.world.getEntitiesWithinAABB(MCH_EntityAircraft.class, this.getCollisionBoundingBox().expand((double)range, (double)range, (double)range));
 
-                for (MCH_EntityAircraft ac : list) {
-                    if (!W_Entity.isEqual(this, ac) && ac.canSupply()) {
-                        for (int wid = 0; wid < ac.getWeaponNum(); wid++) {
+                for(int i = 0; i < list.size(); ++i) {
+                    MCH_EntityAircraft ac = (MCH_EntityAircraft)list.get(i);
+                    if(!W_Entity.isEqual(this, ac) && ac.canSupply()) {
+                        for(int wid = 0; wid < ac.getWeaponNum(); ++wid) {
                             MCH_WeaponSet ws = ac.getWeapon(wid);
                             int num = ws.getRestAllAmmoNum() + ws.getAmmoNum();
-                            if (num < ws.getAllAmmoNum()) {
+                            if(num < ws.getAllAmmoNum()) {
                                 int ammo = ws.getAllAmmoNum() / 10;
-                                if (ammo < 1) {
+                                if(ammo < 1) {
                                     ammo = 1;
                                 }
 
                                 ws.setRestAllAmmoNum(num + ammo);
                                 EntityPlayer player = ac.getEntityByWeaponId(wid);
-                                if (num != ws.getRestAllAmmoNum() + ws.getAmmoNum()) {
-                                    if (ws.getAmmoNum() <= 0) {
+                                if(num != ws.getRestAllAmmoNum() + ws.getAmmoNum()) {
+                                    if(ws.getAmmoNum() <= 0) {
                                         ws.reloadMag();
                                     }
 
@@ -2606,34 +2611,47 @@ public abstract class MCH_EntityAircraft
                     }
                 }
             }
+
         }
     }
 
     public boolean canPlayerSupplyAmmo(EntityPlayer player, int weaponId) {
-        if (MCH_Lib.getBlockIdY(this, 1, -3) == 0) {
+        //if on rack (eg: aircraft carrier
+        if(MCH_Lib.getBlockIdY(this, 1, -3) == 0) {
             return false;
-        } else if (!this.canSupply()) {
+        } else if(!this.canSupply()) {
             return false;
         } else {
             MCH_WeaponSet ws = this.getWeapon(weaponId);
-            if (ws.getRestAllAmmoNum() + ws.getAmmoNum() >= ws.getAllAmmoNum()) {
+            if(ws.getRestAllAmmoNum() + ws.getAmmoNum() >= ws.getAllAmmoNum()) {
                 return false;
             } else {
-                for (MCH_WeaponInfo.RoundItem ri : ws.getInfo().roundItems) {
+                Iterator i$ = ws.getInfo().roundItems.iterator();
+
+                while(i$.hasNext()) {
+                    MCH_WeaponInfo.RoundItem ri = (MCH_WeaponInfo.RoundItem)i$.next();
                     int num = ri.num;
+                    ItemStack[] arr$ = player.inventory.mainInventory.toArray(new ItemStack[0]);
+                    int len$ = arr$.length;
+                    int i$1 = 0;
 
-                    for (ItemStack itemStack : player.inventory.mainInventory) {
-                        if (!itemStack.isEmpty() && itemStack.isItemEqual(ri.itemStack)) {
-                            num -= itemStack.getCount();
+                    while(true) {
+                        if(i$1 < len$) {
+                            ItemStack itemStack = arr$[i$1];
+                            if(itemStack != null && itemStack.isItemEqual(ri.itemStack)) {
+                                num -= itemStack.stackSize;
+                            }
+
+                            if(num > 0) {
+                                ++i$1;
+                                continue;
+                            }
                         }
 
-                        if (num <= 0) {
-                            break;
+                        if(num > 0) {
+                            return false;
                         }
-                    }
-
-                    if (num > 0) {
-                        return false;
+                        break;
                     }
                 }
 
