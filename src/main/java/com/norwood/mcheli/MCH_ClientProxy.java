@@ -258,6 +258,7 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
             executor.shutdown();
             return null;
         });
+       allTasks.join();
     }
 
 
