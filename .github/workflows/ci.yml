@@ -22,17 +22,14 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '21'
-          cache: 'gradle'
-
-      - name: Cache Gradle project-local state
-        uses: actions/cache@v4
-        with:
-          path: .gradle
-          key: ${{ runner.os }}-gradle-project-${{ github.ref }}-${{ hashFiles('**/*.gradle*', '**/gradle.properties', 'src/main/resources/hbm_at.cfg') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-project-${{ github.ref }}-
+          cache: gradle
+          cache-dependency-path: |
+            **/*.gradle*
+            **/gradle.properties
+            **/gradle-wrapper.properties
+            **/gradle.lockfile
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
