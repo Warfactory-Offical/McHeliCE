@@ -4729,6 +4729,7 @@ public abstract class MCH_EntityAircraft
         }
     }
 
+
     @Nullable
     public MCH_WeaponSet getWeaponByName(String name) {
         for (MCH_WeaponSet ws : this.weapons) {
@@ -4754,6 +4755,7 @@ public abstract class MCH_EntityAircraft
         return -1;
     }
 
+    //TODO marker
     public void reloadAllWeapon() {
         for (int i = 0; i < this.getWeaponNum(); i++) {
             this.getWeapon(i).reloadMag();
@@ -4766,6 +4768,7 @@ public abstract class MCH_EntityAircraft
                 : this.getWeapon(0);
     }
 
+    //TODO marker
     public void initCurrentWeapon(Entity entity) {
         int sid = this.getSeatIdByEntity(entity);
         MCH_Lib.DbgLog(this.world, "initCurrentWeapon:" + W_Entity.getEntityId(entity) + ":%d", sid);
@@ -4829,6 +4832,7 @@ public abstract class MCH_EntityAircraft
         return this.useCurrentWeapon(prm);
     }
 
+    //TODO marker
     public boolean useCurrentWeapon(MCH_WeaponParam prm) {
         prm.isInfinity = this.isInfinityAmmo(prm.user);
         if (prm.user != null) {
@@ -4944,6 +4948,7 @@ public abstract class MCH_EntityAircraft
         return this.getCommonStatus(2) || this.supplyAmmoWait > 0;
     }
 
+    //TODO marker
     public int getUsedWeaponStat() {
         if (this.getAcInfo() == null) {
             return 0;

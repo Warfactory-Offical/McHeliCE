@@ -8,6 +8,7 @@ import com.norwood.mcheli.wrapper.W_Network;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+//TODO marker
 public class MCH_PacketIndNotifyAmmoNum extends MCH_Packet {
     public int entityID_Ac = -1;
     public byte weaponID = -1;
