@@ -187,35 +187,35 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
 
         CompletableFuture<Void> heliFuture = CompletableFuture.runAsync(() -> {
             long start = System.nanoTime();
-            ContentRegistries.heli().forEachValue(info -> this.registerModelsHeli(info, false));
+            ContentRegistries.heli().forEachValueParallel(info -> this.registerModelsHeli(info, false));
             long end = System.nanoTime();
             System.out.println("[MCH-LOADER][HELI] Loaded in " + ((end - start) / 1_000_000) + " ms");
         });
 
         CompletableFuture<Void> planeFuture = CompletableFuture.runAsync(() -> {
             long start = System.nanoTime();
-            ContentRegistries.plane().forEachValue(info -> this.registerModelsPlane(info, false));
+            ContentRegistries.plane().forEachValueParallel(info -> this.registerModelsPlane(info, false));
             long end = System.nanoTime();
             System.out.println("[MCH-LOADER][PLANE] Loaded in " + ((end - start) / 1_000_000) + " ms");
         });
 
         CompletableFuture<Void> shipFuture = CompletableFuture.runAsync(() -> {
             long start = System.nanoTime();
-            ContentRegistries.ship().forEachValue(info -> this.registerModelsShip(info, false));
+            ContentRegistries.ship().forEachValueParallel(info -> this.registerModelsShip(info, false));
             long end = System.nanoTime();
             System.out.println("[MCH-LOADER][SHIP] Loaded in " + ((end - start) / 1_000_000) + " ms");
         });
 
         CompletableFuture<Void> tankFuture = CompletableFuture.runAsync(() -> {
             long start = System.nanoTime();
-            ContentRegistries.tank().forEachValue(info -> this.registerModelsTank(info, false));
+            ContentRegistries.tank().forEachValueParallel(info -> this.registerModelsTank(info, false));
             long end = System.nanoTime();
             System.out.println("[MCH-LOADER][TANK] Loaded in " + ((end - start) / 1_000_000) + " ms");
         });
 
         CompletableFuture<Void> vehicleFuture = CompletableFuture.runAsync(() -> {
             long start = System.nanoTime();
-            ContentRegistries.vehicle().forEachValue(info -> this.registerModelsVehicle(info, false));
+            ContentRegistries.vehicle().forEachValueParallel(info -> this.registerModelsVehicle(info, false));
             long end = System.nanoTime();
             System.out.println("[MCH-LOADER][VEHICLE] Loaded in " + ((end - start) / 1_000_000) + " ms");
         });
@@ -258,7 +258,6 @@ public class MCH_ClientProxy extends MCH_CommonProxy {
             executor.shutdown();
             return null;
         });
-       allTasks.join();
     }
 
 
