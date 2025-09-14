@@ -1,6 +1,5 @@
 package com.norwood.mcheli.aircraft;
 
-import com.hbm.render.amlfrom1710.Vec3;
 import com.norwood.mcheli.*;
 import com.norwood.mcheli.chain.MCH_EntityChain;
 import com.norwood.mcheli.command.MCH_Command;
@@ -49,9 +48,15 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ReportedException;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.PooledMutableBlockPos;
-import net.minecraft.world.*;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.Explosion;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.border.WorldBorder;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
@@ -316,13 +321,6 @@ public abstract class MCH_EntityAircraft
         return rider != null && rider.getRidingEntity() instanceof MCH_EntitySeat;
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean isInRangeToRenderDist(double dist){
-        return true;
-    }
-
-
     private static boolean getCollisionBoxes(@Nullable Entity entityIn, AxisAlignedBB aabb, List<AxisAlignedBB> outList) {
         int i = MathHelper.floor(aabb.minX) - 1;
         int j = MathHelper.ceil(aabb.maxX) + 1;
@@ -402,6 +400,12 @@ public abstract class MCH_EntityAircraft
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public boolean isInRangeToRenderDist(double dist) {
+        return true;
+    }
+
+    @Override
     protected void entityInit() {
         super.entityInit();
         this.dataManager.register(ID_TYPE, "");
@@ -437,7 +441,7 @@ public abstract class MCH_EntityAircraft
     }
 
     public float getRotPitch() {
-        return this.rotationPitch ;//+= 0.35f
+        return this.rotationPitch;//+= 0.35f
     }
 
     public void setRotPitch(float f) {
@@ -767,7 +771,7 @@ public abstract class MCH_EntityAircraft
                 }
 
                 int k = MathHelper.floor(this.posY + fo + d0);
-                int val = this.world.getCombinedLight(new BlockPos(i, k, j),0);
+                int val = this.world.getCombinedLight(new BlockPos(i, k, j), 0);
                 int low = val & 65535;
                 int high = val >> 16 & 65535;
                 if (high < this.brightnessHigh) {
@@ -936,23 +940,20 @@ public abstract class MCH_EntityAircraft
         }
 
         String type = damageSource.getDamageType();
+        Entity attacker = damageSource.getTrueSource();
+        boolean isPlayerAttack = false;
+        boolean playDamageSound = !(attacker instanceof EntityPlayer);
 
         // Client side just returns true
         if (this.world.isRemote) {
             return true;
         }
 
+
         // Calculate base damage
         float damage = calculateDamage(damageSource, originalDamage, this.lastBBDamageFactor);
         this.lastBBDamageFactor = 1.0F;
 
-        if (damage <= 0.0F) {
-            return false;
-        }
-
-        Entity attacker = damageSource.getTrueSource();
-        boolean isPlayerAttack = false;
-        boolean playDamageSound = !(attacker instanceof EntityPlayer);
 
         if (attacker instanceof EntityLivingBase) {
             this.lastAttackedEntity = attacker;
@@ -961,6 +962,16 @@ public abstract class MCH_EntityAircraft
         if (attacker instanceof EntityPlayer player) {
             isPlayerAttack = evaluatePlayerAttack(player, type, damage);
             playDamageSound = true;
+        }
+        if (isPlayerAttack && attacker instanceof EntityPlayer player && player.capabilities.isCreativeMode) {
+            this.setDead(true);
+            playDamageSound();
+            return true;
+        }
+
+
+        if (damage <= 0.0F) {
+            return false;
         }
 
         if (!this.isDestroyed()) {
@@ -972,8 +983,6 @@ public abstract class MCH_EntityAircraft
             if (this.getDamageTaken() >= this.getMaxHP() || isPlayerAttack) {
                 handleDestruction(damageSource, attacker, type, isPlayerAttack);
             }
-        } else if (isPlayerAttack && attacker instanceof EntityPlayer player && player.capabilities.isCreativeMode) {
-            this.setDead(true);
         }
 
         if (playDamageSound) {
