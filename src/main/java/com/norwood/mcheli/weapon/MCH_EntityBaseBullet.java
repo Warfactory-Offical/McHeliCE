@@ -842,11 +842,11 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
                     } else {
                         this.newExplosion(m.hitVec.x + dx, m.hitVec.y + dy, m.hitVec.z + dz, expPower, this.getInfo().explosionBlock, false);
                     }
-                } else if (this.isInWater()
-                        || MCH_Lib.isBlockInWater(this.world, m.getBlockPos().getX(), m.getBlockPos().getY(), m.getBlockPos().getZ())) {
-                    this.newExplosion(
-                            m.getBlockPos().getX(), m.getBlockPos().getY(), m.getBlockPos().getZ(), expPowerInWater, expPowerInWater, true
-                    );
+                } else //noinspection ConstantValue
+                    if (this.isInWater() || m.getBlockPos() != null &&
+                                            MCH_Lib.isBlockInWater(this.world, m.getBlockPos().getX(), m.getBlockPos().getY(),
+                                                    m.getBlockPos().getZ())) {
+                        this.newExplosion(m.hitVec.x + dx, m.hitVec.y + dy, m.hitVec.z + dz, expPowerInWater, expPowerInWater, true);
                 } else if (expPower > 0.0F) {
                     this.newExplosion(m.hitVec.x + dx, m.hitVec.y + dy, m.hitVec.z + dz, expPower, this.getInfo().explosionBlock, false);
                 } else if (expPower < 0.0F) {
