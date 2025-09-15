@@ -22,6 +22,7 @@ import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.item.MCH_Item;
 import com.norwood.mcheli.item.MCH_ItemInfo;
 import com.norwood.mcheli.item.MCH_ItemInfoManager;
+import com.norwood.mcheli.light.BlockLight;
 import com.norwood.mcheli.lweapon.MCH_ItemLightWeaponBase;
 import com.norwood.mcheli.lweapon.MCH_ItemLightWeaponBullet;
 import com.norwood.mcheli.mob.MCH_EntityGunner;
@@ -114,6 +115,7 @@ public class MCH_MOD {
     public static MCH_CreativeTabs creativeTabsItem;
     public static MCH_CreativeTabs creativeTabsTank;
     public static MCH_CreativeTabs creativeTabsVehicle;
+    public static BlockLight lightBlock;
     public static MCH_DraftingTableBlock blockDraftingTable;
     public static MCH_DraftingTableBlock blockDraftingTableLit;
     private static File sourceFile;
