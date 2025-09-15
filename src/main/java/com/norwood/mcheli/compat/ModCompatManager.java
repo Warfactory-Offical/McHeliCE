@@ -10,6 +10,7 @@ public class ModCompatManager {
     public static final Map<String, Boolean> LOADED_CACHE = new ConcurrentHashMap<>();
 
     public static final String MODID_HBM = "hbm";
+    public static final String MODID_TOP = "theoneprobe";
 
     public static boolean isLoaded(String modid) {
         return LOADED_CACHE.computeIfAbsent(modid, Loader::isModLoaded);

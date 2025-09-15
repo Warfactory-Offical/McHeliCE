@@ -1325,7 +1325,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
                         int bx = (int) (v.x + x - 0.5);
                         int by = (int) (v.y + y - 1.0);
                         int bz = (int) (v.z + z - 0.5);
-                        BlockPos blockpos = new BlockPos(bx, by, bz);
+                        BlockPos blockpos = new BlockPos(bx,by,bz);
                         IBlockState iblockstate = this.world.getBlockState(blockpos);
                         Block block = by >= 0 && by < 256 ? iblockstate.getBlock() : Blocks.AIR;
                         Material mat = iblockstate.getMaterial();

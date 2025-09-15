@@ -20,23 +20,26 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '21' #It builds with anything 17+ it seems
-          cache: 'gradle'
-
-      - name: Cache Gradle project-local state
-        uses: actions/cache@v4
-        with:
-          path: .gradle
-          key: ${{ runner.os }}-gradle-project-${{ github.ref }}-${{ hashFiles('**/*.gradle*', '**/gradle.properties', 'src/main/resources/hbm_at.cfg') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-project-${{ github.ref }}-
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+          cache-dependency-path: |
+            **/*.gradle*
+            **/gradle.properties
+            **/gradle-wrapper.properties
+            **/gradle.lockfile
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
         run: ./gradlew build --no-daemon
+
+      - name: Find mod jar
+        run: |
+          FILE=$(ls build/libs | grep -E '^NTM-CE.*\.jar$' | grep -vE '(-dev|-sources|-api)' | head -n1)
+          echo "FILE=$FILE" >> $GITHUB_ENV
+
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

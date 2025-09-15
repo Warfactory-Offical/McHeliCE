@@ -6,6 +6,8 @@ import com.norwood.mcheli.block.MCH_DraftingTableTileEntity;
 import com.norwood.mcheli.chain.MCH_EntityChain;
 import com.norwood.mcheli.chain.MCH_ItemChain;
 import com.norwood.mcheli.command.MCH_Command;
+import com.norwood.mcheli.compat.ModCompatManager;
+import com.norwood.mcheli.compat.oneprobe.AircraftInfoProvider;
 import com.norwood.mcheli.container.MCH_EntityContainer;
 import com.norwood.mcheli.container.MCH_ItemContainer;
 import com.norwood.mcheli.flare.MCH_EntityFlare;
@@ -388,6 +390,9 @@ public class MCH_MOD {
     @EventHandler
     public void onLoadComplete(FMLLoadCompleteEvent evt) {
         MCH_WeaponInfoManager.setRoundItems();
+        if(ModCompatManager.isLoaded(ModCompatManager.MODID_TOP))
+            AircraftInfoProvider.register();
+
     }
 
     @EventHandler
