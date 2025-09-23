@@ -3,7 +3,7 @@ package com.norwood.mcheli.uav;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
 import com.norwood.mcheli.helicopter.MCH_HeliInfoManager;
 import com.norwood.mcheli.helicopter.MCH_ItemHeli;
-import com.norwood.mcheli.networking.packet.MCH_UavPacketStatus;
+import com.norwood.mcheli.networking.packet.PacketUavStatus;
 import com.norwood.mcheli.plane.MCP_ItemPlane;
 import com.norwood.mcheli.plane.MCP_PlaneInfoManager;
 import com.norwood.mcheli.ship.MCH_ItemShip;
@@ -12,13 +12,12 @@ import com.norwood.mcheli.tank.MCH_ItemTank;
 import com.norwood.mcheli.tank.MCH_TankInfoManager;
 import com.norwood.mcheli.wrapper.W_GuiContainer;
 import com.norwood.mcheli.wrapper.W_McClient;
-import com.norwood.mcheli.wrapper.W_Network;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import net.minecraft.client.renderer.GlStateManager;
 
 public class MCH_GuiUavStation extends W_GuiContainer {
     static final int BX = 20;
@@ -72,7 +71,7 @@ public class MCH_GuiUavStation extends W_GuiContainer {
 
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
         W_McClient.MOD_bindTexture("textures/gui/uav_station.png");
-         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         int x = (this.width - this.xSize) / 2;
         int y = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
@@ -85,12 +84,12 @@ public class MCH_GuiUavStation extends W_GuiContainer {
                         && !this.uavStation.isDead
                         && this.uavStation.getLastControlAircraft() != null
                         && !this.uavStation.getLastControlAircraft().isDead) {
-                    MCH_UavPacketStatus data = new MCH_UavPacketStatus();
+                    var data = new PacketUavStatus();
                     data.posUavX = (byte) this.uavStation.posUavX;
                     data.posUavY = (byte) this.uavStation.posUavY;
                     data.posUavZ = (byte) this.uavStation.posUavZ;
                     data.continueControl = true;
-                    W_Network.sendToServer(data);
+                    data.sendToServer();
                 }
 
                 this.buttonContinue.enabled = false;
@@ -109,11 +108,12 @@ public class MCH_GuiUavStation extends W_GuiContainer {
                 }
 
                 if (this.uavStation.posUavX != pos[0] || this.uavStation.posUavY != pos[1] || this.uavStation.posUavZ != pos[2]) {
-                    MCH_UavPacketStatus data = new MCH_UavPacketStatus();
+                    var data = new PacketUavStatus();
                     data.posUavX = (byte) pos[0];
                     data.posUavY = (byte) pos[1];
                     data.posUavZ = (byte) pos[2];
-                    W_Network.sendToServer(data);
+                    data.sendToServer();
+
                 }
             }
         }
