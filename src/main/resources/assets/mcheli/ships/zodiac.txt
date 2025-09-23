@@ -1,4 +1,4 @@
-DisplayName =Zodiac Boat
+DisplayName = Zodiac Boat
 AddDisplayName = ja_JP, ゴムボート
 ItemID = 28743
 MaxHp = 100
