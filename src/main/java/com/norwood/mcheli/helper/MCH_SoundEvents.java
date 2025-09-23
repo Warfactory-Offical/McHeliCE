@@ -2,15 +2,18 @@ package com.norwood.mcheli.helper;
 
 import com.google.common.collect.Sets;
 import com.norwood.mcheli.MCH_Lib;
+import net.minecraft.client.Minecraft;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent.Register;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -54,7 +57,7 @@ public class MCH_SoundEvents {
             MCH_Lib.Log("[WARNING] Sound event does not found. event name= " + location);
             return SoundEvents.BLOCK_STONE_BREAK;
         }
-        if (sound.getSoundName() == null ) {
+        if (FMLCommonHandler.instance().getSide() ==  Side.CLIENT && sound.getSoundName() == null ) {
             MCH_Lib.Log("[WARNING] Sound event is empty. event name= " + location);
             return SoundEvents.BLOCK_STONE_BREAK;
         }
