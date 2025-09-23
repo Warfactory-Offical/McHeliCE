@@ -9,7 +9,6 @@ import com.norwood.mcheli.helper.MCH_Utils;
 import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.helper.network.HandleSide;
 import com.norwood.mcheli.networking.packet.*;
-import com.norwood.mcheli.weapon.MCH_EntityTvMissile;
 import com.norwood.mcheli.wrapper.W_Entity;
 import com.norwood.mcheli.wrapper.W_Lib;
 import net.minecraft.entity.Entity;
@@ -132,13 +131,12 @@ public class MCH_AircraftPacketHandler {
                 scheduler.addScheduledTask(() -> {
                     Entity e = player.world.getEntityByID(req.entityID_AC);
                     if (e instanceof MCH_EntityAircraft) {
-                        MCH_PacketStatusResponse.sendStatus((MCH_EntityAircraft) e, player);
+                        PacketStatusResponse.sendStatus((MCH_EntityAircraft) e, player);
                     }
                 });
             }
         }
     }
-
 
 
     @HandleSide({Side.SERVER})
@@ -158,33 +156,33 @@ public class MCH_AircraftPacketHandler {
         }
     }
 
-    @HandleSide({Side.CLIENT})
-    public static void onPacketStatusResponse(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-        if (player.world.isRemote) {
-            MCH_PacketStatusResponse status = new MCH_PacketStatusResponse();
-            status.readData(data);
-            if (status.entityID_AC > 0) {
-                scheduler.addScheduledTask(() -> {
-                    StringBuilder msg = new StringBuilder("onPacketStatusResponse:EID=" + status.entityID_AC + ":");
-                    Entity e = player.world.getEntityByID(status.entityID_AC);
-                    if (e instanceof MCH_EntityAircraft ac) {
-                        if (status.seatNum > 0 && status.weaponIDs != null && status.weaponIDs.length == status.seatNum) {
-                            msg.append("seatNum=").append(status.seatNum).append(":");
-
-                            for (int i = 0; i < status.seatNum; i++) {
-                                ac.updateWeaponID(i, status.weaponIDs[i]);
-                                msg.append("[").append(i).append(",").append(status.weaponIDs[i]).append("]");
-                            }
-                        } else {
-                            msg.append("Error seatNum=").append(status.seatNum);
-                        }
-                    }
-
-                    MCH_Lib.DbgLog(true, msg.toString());
-                });
-            }
-        }
-    }
+//    @HandleSide({Side.CLIENT})
+//    public static void onPacketStatusResponse(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
+//        if (player.world.isRemote) {
+//            MCH_PacketStatusResponse status = new MCH_PacketStatusResponse();
+//            status.readData(data);
+//            if (status.entityID_AC > 0) {
+//                scheduler.addScheduledTask(() -> {
+//                    StringBuilder msg = new StringBuilder("onPacketStatusResponse:EID=" + status.entityID_AC + ":");
+//                    Entity e = player.world.getEntityByID(status.entityID_AC);
+//                    if (e instanceof MCH_EntityAircraft ac) {
+//                        if (status.seatNum > 0 && status.weaponIDs != null && status.weaponIDs.length == status.seatNum) {
+//                            msg.append("seatNum=").append(status.seatNum).append(":");
+//
+//                            for (int i = 0; i < status.seatNum; i++) {
+//                                ac.updateWeaponID(i, status.weaponIDs[i]);
+//                                msg.append("[").append(i).append(",").append(status.weaponIDs[i]).append("]");
+//                            }
+//                        } else {
+//                            msg.append("Error seatNum=").append(status.seatNum);
+//                        }
+//                    }
+//
+//                    MCH_Lib.DbgLog(true, msg.toString());
+//                });
+//            }
+//        }
+//    }
 
     @HandleSide({Side.CLIENT})
     public static void onPacketNotifyWeaponID(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {

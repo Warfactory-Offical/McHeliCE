@@ -9,6 +9,7 @@ import hohserg.elegant.networking.api.ServerToClientPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 @ElegantPacket
 public class PacketNotifyLock extends PacketBase implements ServerToClientPacket, ClientToServerPacket {
@@ -27,7 +28,7 @@ public class PacketNotifyLock extends PacketBase implements ServerToClientPacket
     @Override//Server
     public void onReceive(EntityPlayerMP player) {
         if (this.entityID >= 0) {
-            getScheduler().addScheduledTask(() -> {
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                 Entity target = player.world.getEntityByID(this.entityID);
                 if (target != null) {
                     MCH_EntityAircraft ac;
@@ -57,6 +58,6 @@ public class PacketNotifyLock extends PacketBase implements ServerToClientPacket
 
     @Override//Client
     public void onReceive(Minecraft mc) {
-        getScheduler().addScheduledTask(() -> MCH_MOD.proxy.clientLocked());
+        mc.addScheduledTask(() -> MCH_MOD.proxy.clientLocked());
     }
 }
