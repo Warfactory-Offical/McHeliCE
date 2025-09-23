@@ -246,31 +246,31 @@ public class MCH_AircraftPacketHandler {
         }
     }
 
-    @HandleSide({Side.CLIENT})
-    public static void onPacketNotifyTVMissileEntity(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-        if (player.world.isRemote) {
-            MCH_PacketNotifyTVMissileEntity packet = new MCH_PacketNotifyTVMissileEntity();
-            packet.readData(data);
-            if (packet.entityID_Ac <= 0) {
-                return;
-            }
-
-            if (packet.entityID_TVMissile <= 0) {
-                return;
-            }
-
-            scheduler.addScheduledTask(() -> {
-                Entity e = player.world.getEntityByID(packet.entityID_Ac);
-                if (e instanceof MCH_EntityAircraft ac) {
-                    e = player.world.getEntityByID(packet.entityID_TVMissile);
-                    if (e instanceof MCH_EntityTvMissile) {
-                        ((MCH_EntityTvMissile) e).shootingEntity = player;
-                        ac.setTVMissile((MCH_EntityTvMissile) e);
-                    }
-                }
-            });
-        }
-    }
+//    @HandleSide({Side.CLIENT})
+//    public static void onPacketNotifyTVMissileEntity(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
+//        if (player.world.isRemote) {
+//            MCH_PacketNotifyTVMissileEntity packet = new MCH_PacketNotifyTVMissileEntity();
+//            packet.readData(data);
+//            if (packet.entityID_Ac <= 0) {
+//                return;
+//            }
+//
+//            if (packet.entityID_TVMissile <= 0) {
+//                return;
+//            }
+//
+//            scheduler.addScheduledTask(() -> {
+//                Entity e = player.world.getEntityByID(packet.entityID_Ac);
+//                if (e instanceof MCH_EntityAircraft ac) {
+//                    e = player.world.getEntityByID(packet.entityID_TVMissile);
+//                    if (e instanceof MCH_EntityTvMissile) {
+//                        ((MCH_EntityTvMissile) e).shootingEntity = player;
+//                        ac.setTVMissile((MCH_EntityTvMissile) e);
+//                    }
+//                }
+//            });
+//        }
+//    }
 
     @HandleSide({Side.CLIENT})
     public static void onPacketSeatListResponse(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
