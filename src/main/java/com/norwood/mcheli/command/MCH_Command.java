@@ -3,12 +3,12 @@ package com.norwood.mcheli.command;
 import com.google.gson.JsonParseException;
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_MOD;
-import com.norwood.mcheli.networking.packet.MCH_PacketTitle;
-import com.norwood.mcheli.networking.packet.MCH_PacketNotifyServerSettings;
 import com.norwood.mcheli.Tags;
 import com.norwood.mcheli.helper.MCH_Utils;
 import com.norwood.mcheli.multiplay.MCH_MultiplayPacketHandler;
 import com.norwood.mcheli.multiplay.MCH_PacketIndClient;
+import com.norwood.mcheli.networking.packet.MCH_PacketNotifyServerSettings;
+import com.norwood.mcheli.networking.packet.PacketTitle;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.*;
@@ -35,7 +35,10 @@ import net.minecraftforge.event.CommandEvent;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 public class MCH_Command extends CommandBase {
@@ -176,7 +179,7 @@ public class MCH_Command extends CommandBase {
 
                     try {
                         ITextComponent ichatcomponent = Serializer.jsonToComponent(s);
-                        MCH_PacketTitle.send(ichatcomponent, 20 * showTime, pos);
+                        PacketTitle.send(ichatcomponent, 20 * showTime, pos);
                     } catch (JsonParseException var9) {
                         Throwable throwable = ExceptionUtils.getRootCause(var9);
                         throw new SyntaxErrorException("com.norwood.mcheli.title.jsonException", throwable == null ? "" : throwable.getMessage());

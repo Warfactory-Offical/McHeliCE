@@ -1,6 +1,7 @@
 package com.norwood.mcheli.networking.packet;
 
 import com.google.common.io.ByteArrayDataInput;
+import hohserg.elegant.networking.api.ElegantPacket;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
