@@ -16,6 +16,7 @@ import com.norwood.mcheli.mob.MCH_GuiSpawnGunner;
 import com.norwood.mcheli.multiplay.MCH_GuiScoreboard;
 import com.norwood.mcheli.multiplay.MCH_GuiTargetMarker;
 import com.norwood.mcheli.multiplay.MCH_MultiplayClient;
+import com.norwood.mcheli.networking.packet.MCH_PacketIndOpenScreen;
 import com.norwood.mcheli.plane.MCP_ClientPlaneTickHandler;
 import com.norwood.mcheli.plane.MCP_EntityPlane;
 import com.norwood.mcheli.plane.MCP_GuiPlane;

@@ -1,4 +1,4 @@
-package com.norwood.mcheli;
+package com.norwood.mcheli.networking.packet;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.norwood.mcheli.wrapper.W_Network;

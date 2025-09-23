@@ -1,7 +1,7 @@
 package com.norwood.mcheli.multiplay;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.norwood.mcheli.MCH_Packet;
+import com.norwood.mcheli.networking.packet.MCH_Packet;
 import com.norwood.mcheli.wrapper.W_Network;
 import net.minecraft.entity.EntityLivingBase;
 

@@ -2,7 +2,6 @@ package com.norwood.mcheli.networking.packet;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.norwood.mcheli.MCH_Config;
-import com.norwood.mcheli.MCH_Packet;
 import com.norwood.mcheli.wrapper.W_EntityRenderer;
 import com.norwood.mcheli.wrapper.W_Network;
 

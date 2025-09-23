@@ -2,7 +2,7 @@ package com.norwood.mcheli.multiplay;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.norwood.mcheli.MCH_Lib;
-import com.norwood.mcheli.MCH_PacketNotifyServerSettings;
+import com.norwood.mcheli.networking.packet.MCH_PacketNotifyServerSettings;
 import com.norwood.mcheli.helper.MCH_Utils;
 import com.norwood.mcheli.helper.network.HandleSide;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
@@ -16,8 +16,6 @@ import net.minecraft.util.IThreadListener;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.DataOutputStream;
 import java.io.File;

@@ -3,7 +3,7 @@ package com.norwood.mcheli.aircraft;
 import com.norwood.mcheli.MCH_ClientTickHandlerBase;
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_Key;
-import com.norwood.mcheli.MCH_PacketIndOpenScreen;
+import com.norwood.mcheli.networking.packet.MCH_PacketIndOpenScreen;
 import com.norwood.mcheli.networking.packet.MCH_PacketPlayerControlBase;
 import com.norwood.mcheli.networking.packet.MCH_PacketSeatPlayerControl;
 import com.norwood.mcheli.wrapper.W_Network;

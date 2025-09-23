@@ -1,6 +1,7 @@
 package com.norwood.mcheli;
 
 import com.norwood.mcheli.helper.world.MCH_ExplosionV2;
+import com.norwood.mcheli.networking.packet.MCH_PacketEffectExplosion;
 import com.norwood.mcheli.wrapper.W_Entity;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;

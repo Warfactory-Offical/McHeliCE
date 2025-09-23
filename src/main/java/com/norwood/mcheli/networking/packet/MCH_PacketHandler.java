@@ -1,19 +1,14 @@
-package com.norwood.mcheli;
+package com.norwood.mcheli.networking.packet;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.norwood.mcheli.networking.packet.MCH_AircraftPacketHandler;
+import com.norwood.mcheli.MCH_Lib;
+import com.norwood.mcheli.networking.handlers.*;
 import com.norwood.mcheli.block.MCH_DraftingTablePacketHandler;
-import com.norwood.mcheli.command.MCH_CommandPacketHandler;
 import com.norwood.mcheli.gltd.MCH_GLTDPacketHandler;
-import com.norwood.mcheli.helicopter.MCH_HeliPacketHandler;
+import com.norwood.mcheli.networking.handlers.MCH_HeliPacketHandler;
 import com.norwood.mcheli.lweapon.MCH_LightWeaponPacketHandler;
 import com.norwood.mcheli.multiplay.MCH_MultiplayPacketHandler;
-import com.norwood.mcheli.plane.MCP_PlanePacketHandler;
-import com.norwood.mcheli.ship.MCH_ShipPacketHandler;
-import com.norwood.mcheli.tank.MCH_TankPacketHandler;
-import com.norwood.mcheli.tool.MCH_ToolPacketHandler;
-import com.norwood.mcheli.uav.MCH_UavPacketHandler;
-import com.norwood.mcheli.vehicle.MCH_VehiclePacketHandler;
+import com.norwood.mcheli.networking.handlers.MCP_PlanePacketHandler;
 import com.norwood.mcheli.wrapper.W_PacketHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
@@ -36,7 +31,7 @@ public class MCH_PacketHandler extends W_PacketHandler {
             case 268439600 -> MCH_AircraftPacketHandler.onPacketNotifyTVMissileEntity(entityPlayer, data, handler);
             case 268439601 -> MCH_AircraftPacketHandler.onPacketNotifyWeaponID(entityPlayer, data, handler);
             case 268439602 -> MCH_AircraftPacketHandler.onPacketNotifyHitBullet(entityPlayer, data, handler);
-            case 268439604 -> MCH_AircraftPacketHandler.onPacketNotifyAmmoNum(entityPlayer, data, handler);
+            //case 268439604 -> MCH_AircraftPacketHandler.onPacketNotifyAmmoNum(entityPlayer, data, handler);
             case 268439632 -> MCH_AircraftPacketHandler.onPacketOnMountEntity(entityPlayer, data, handler);
             case 268439649 -> MCH_AircraftPacketHandler.onPacketStatusResponse(entityPlayer, data, handler);
             case 536872992 -> MCH_CommonPacketHandler.onPacketIndOpenScreen(entityPlayer, data, handler);

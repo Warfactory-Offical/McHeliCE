@@ -1,30 +1,26 @@
-package com.norwood.mcheli.command;
+package com.norwood.mcheli.networking.packet;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.norwood.mcheli.MCH_Packet;
-import com.norwood.mcheli.wrapper.W_Network;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class MCH_PacketCommandSave extends MCH_Packet {
-    public String str = "";
-
-    public static void send(String cmd) {
-        MCH_PacketCommandSave s = new MCH_PacketCommandSave();
-        s.str = cmd;
-        W_Network.sendToServer(s);
-    }
+public class MCH_PacketVehiclePlayerControl extends MCH_PacketPlayerControlBase {
+    public byte switchFold = -1;
+    public int unhitchChainId = -1;
 
     @Override
     public int getMessageID() {
-        return 536873729;
+        return 537002000;
     }
 
     @Override
     public void readData(ByteArrayDataInput data) {
+        super.readData(data);
+
         try {
-            this.str = data.readUTF();
+            this.switchFold = data.readByte();
+            this.unhitchChainId = data.readInt();
         } catch (Exception var3) {
             var3.printStackTrace();
         }
@@ -32,8 +28,11 @@ public class MCH_PacketCommandSave extends MCH_Packet {
 
     @Override
     public void writeData(DataOutputStream dos) {
+        super.writeData(dos);
+
         try {
-            dos.writeUTF(this.str);
+            dos.writeByte(this.switchFold);
+            dos.writeInt(this.unhitchChainId);
         } catch (IOException var3) {
             var3.printStackTrace();
         }

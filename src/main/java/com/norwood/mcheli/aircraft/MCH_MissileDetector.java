@@ -1,6 +1,6 @@
 package com.norwood.mcheli.aircraft;
 
-import com.norwood.mcheli.MCH_PacketNotifyLock;
+import com.norwood.mcheli.networking.packet.MCH_PacketNotifyLock;
 import com.norwood.mcheli.weapon.MCH_EntityBaseBullet;
 import com.norwood.mcheli.wrapper.W_Lib;
 import com.norwood.mcheli.wrapper.W_McClient;

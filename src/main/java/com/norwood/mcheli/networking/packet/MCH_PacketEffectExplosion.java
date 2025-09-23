@@ -1,4 +1,4 @@
-package com.norwood.mcheli;
+package com.norwood.mcheli.networking.packet;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.ByteArrayDataInput;
@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class MCH_PacketEffectExplosion extends MCH_Packet {
-    MCH_PacketEffectExplosion.ExplosionParam prm = new ExplosionParam(this);
+    public MCH_PacketEffectExplosion.ExplosionParam prm = new ExplosionParam(this);
 
     public static MCH_PacketEffectExplosion.ExplosionParam create() {
         return new MCH_PacketEffectExplosion().aaa();

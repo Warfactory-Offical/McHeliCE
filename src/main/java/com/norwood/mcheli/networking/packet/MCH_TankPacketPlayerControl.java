@@ -1,18 +1,16 @@
-package com.norwood.mcheli.helicopter;
+package com.norwood.mcheli.networking.packet;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.norwood.mcheli.networking.packet.MCH_PacketPlayerControlBase;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class MCH_HeliPacketPlayerControl extends MCH_PacketPlayerControlBase {
-    public byte switchFold = -1;
-    public int unhitchChainId = -1;
+public class MCH_TankPacketPlayerControl extends MCH_PacketPlayerControlBase {
+    public byte switchVtol = -1;
 
     @Override
     public int getMessageID() {
-        return 536879120;
+        return 537919504;
     }
 
     @Override
@@ -20,8 +18,7 @@ public class MCH_HeliPacketPlayerControl extends MCH_PacketPlayerControlBase {
         super.readData(data);
 
         try {
-            this.switchFold = data.readByte();
-            this.unhitchChainId = data.readInt();
+            this.switchVtol = data.readByte();
         } catch (Exception var3) {
             var3.printStackTrace();
         }
@@ -32,8 +29,7 @@ public class MCH_HeliPacketPlayerControl extends MCH_PacketPlayerControlBase {
         super.writeData(dos);
 
         try {
-            dos.writeByte(this.switchFold);
-            dos.writeInt(this.unhitchChainId);
+            dos.writeByte(this.switchVtol);
         } catch (IOException var3) {
             var3.printStackTrace();
         }

@@ -1,11 +1,16 @@
-package com.norwood.mcheli;
+package com.norwood.mcheli.networking.handlers;
 
 import com.google.common.io.ByteArrayDataInput;
+import com.norwood.mcheli.*;
 import com.norwood.mcheli.helper.network.HandleSide;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_EntitySeat;
 import com.norwood.mcheli.helper.world.MCH_ExplosionV2;
 import com.norwood.mcheli.lweapon.MCH_ClientLightWeaponTickHandler;
+import com.norwood.mcheli.networking.packet.MCH_PacketEffectExplosion;
+import com.norwood.mcheli.networking.packet.MCH_PacketIndOpenScreen;
+import com.norwood.mcheli.networking.packet.MCH_PacketNotifyLock;
+import com.norwood.mcheli.networking.packet.MCH_PacketNotifyServerSettings;
 import com.norwood.mcheli.wrapper.W_Reflection;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;

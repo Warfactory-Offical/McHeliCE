@@ -1,32 +1,33 @@
-package com.norwood.mcheli.ship;
+package com.norwood.mcheli.networking.handlers;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.norwood.mcheli.helper.network.HandleSide;
 import com.norwood.mcheli.aircraft.MCH_EntitySeat;
-import com.norwood.mcheli.ship.MCH_EntityShip;
+import com.norwood.mcheli.networking.packet.MCP_PlanePacketPlayerControl;
+import com.norwood.mcheli.plane.MCP_EntityPlane;
 import com.norwood.mcheli.uav.MCH_EntityUavStation;
 import com.norwood.mcheli.weapon.MCH_WeaponParam;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class MCH_ShipPacketHandler {
+public class MCP_PlanePacketHandler {
     @HandleSide({Side.SERVER})
     public static void onPacket_PlayerControl(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
         if (!player.world.isRemote) {
-            MCH_ShipPacketPlayerControl pc = new MCH_ShipPacketPlayerControl();
+            MCP_PlanePacketPlayerControl pc = new MCP_PlanePacketPlayerControl();
             pc.readData(data);
             scheduler.addScheduledTask(() -> {
-                MCH_EntityShip plane = null;
-                if (player.getRidingEntity() instanceof MCH_EntityShip) {
-                    plane = (MCH_EntityShip) player.getRidingEntity();
+                MCP_EntityPlane plane = null;
+                if (player.getRidingEntity() instanceof MCP_EntityPlane) {
+                    plane = (MCP_EntityPlane) player.getRidingEntity();
                 } else if (player.getRidingEntity() instanceof MCH_EntitySeat) {
-                    if (((MCH_EntitySeat) player.getRidingEntity()).getParent() instanceof MCH_EntityShip) {
-                        plane = (MCH_EntityShip) ((MCH_EntitySeat) player.getRidingEntity()).getParent();
+                    if (((MCH_EntitySeat) player.getRidingEntity()).getParent() instanceof MCP_EntityPlane) {
+                        plane = (MCP_EntityPlane) ((MCH_EntitySeat) player.getRidingEntity()).getParent();
                     }
                 } else if (player.getRidingEntity() instanceof MCH_EntityUavStation uavStation) {
-                    if (uavStation.getControlAircract() instanceof MCH_EntityShip) {
-                        plane = (MCH_EntityShip) uavStation.getControlAircract();
+                    if (uavStation.getControlAircract() instanceof MCP_EntityPlane) {
+                        plane = (MCP_EntityPlane) uavStation.getControlAircract();
                     }
                 }
 

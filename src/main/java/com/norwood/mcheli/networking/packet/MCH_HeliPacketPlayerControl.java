@@ -1,18 +1,17 @@
-package com.norwood.mcheli.vehicle;
+package com.norwood.mcheli.networking.packet;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.norwood.mcheli.networking.packet.MCH_PacketPlayerControlBase;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class MCH_PacketVehiclePlayerControl extends MCH_PacketPlayerControlBase {
+public class MCH_HeliPacketPlayerControl extends MCH_PacketPlayerControlBase {
     public byte switchFold = -1;
     public int unhitchChainId = -1;
 
     @Override
     public int getMessageID() {
-        return 537002000;
+        return 536879120;
     }
 
     @Override

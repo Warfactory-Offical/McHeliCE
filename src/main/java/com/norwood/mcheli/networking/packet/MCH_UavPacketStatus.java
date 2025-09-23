@@ -1,7 +1,6 @@
-package com.norwood.mcheli.uav;
+package com.norwood.mcheli.networking.packet;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.norwood.mcheli.MCH_Packet;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

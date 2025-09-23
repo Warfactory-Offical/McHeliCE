@@ -1,6 +1,7 @@
 package com.norwood.mcheli.gltd;
 
 import com.norwood.mcheli.*;
+import com.norwood.mcheli.networking.packet.MCH_PacketGLTDPlayerControl;
 import com.norwood.mcheli.wrapper.W_Network;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

@@ -6,6 +6,7 @@ import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.MCH_ViewEntityDummy;
 import com.norwood.mcheli.aircraft.MCH_AircraftClientTickHandler;
 import com.norwood.mcheli.aircraft.MCH_EntitySeat;
+import com.norwood.mcheli.networking.packet.MCH_PacketVehiclePlayerControl;
 import com.norwood.mcheli.wrapper.W_Entity;
 import com.norwood.mcheli.wrapper.W_Network;
 import com.norwood.mcheli.wrapper.W_Reflection;

@@ -1,7 +1,6 @@
-package com.norwood.mcheli.command;
+package com.norwood.mcheli.networking.packet;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.norwood.mcheli.MCH_Packet;
 import com.norwood.mcheli.wrapper.W_Network;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextComponent.Serializer;

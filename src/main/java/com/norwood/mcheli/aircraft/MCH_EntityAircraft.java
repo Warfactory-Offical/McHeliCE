@@ -2542,7 +2542,7 @@ public abstract class MCH_EntityAircraft
             this.setCommonStatus(2, isReloading);
             if (!this.isDestroyed() && this.beforeSupplyAmmo && !isReloading) {
                 this.reloadAllWeapon();
-                MCH_PacketNotifyAmmoNum.sendAllAmmoNum(this, null);
+                PacketNotifyAmmoNum.sendAllAmmoNum(this, null);
             }
 
             this.beforeSupplyAmmo = isReloading;
@@ -2628,7 +2628,7 @@ public abstract class MCH_EntityAircraft
                                         ws.reloadMag();
                                     }
 
-                                    MCH_PacketNotifyAmmoNum.sendAmmoNum(ac, player, wid);
+                                    PacketNotifyAmmoNum.sendAmmoNum(ac, player, wid);
                                 }
                             }
                         }

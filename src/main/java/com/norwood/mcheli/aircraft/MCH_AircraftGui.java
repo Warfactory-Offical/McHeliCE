@@ -1,7 +1,7 @@
 package com.norwood.mcheli.aircraft;
 
-import com.norwood.mcheli.MCH_PacketIndOpenScreen;
-import com.norwood.mcheli.command.MCH_PacketCommandSave;
+import com.norwood.mcheli.networking.packet.MCH_PacketIndOpenScreen;
+import com.norwood.mcheli.networking.packet.MCH_PacketCommandSave;
 import com.norwood.mcheli.multiplay.MCH_PacketIndMultiplayCommand;
 import com.norwood.mcheli.networking.packet.MCH_PacketIndReload;
 import com.norwood.mcheli.weapon.MCH_WeaponDummy;

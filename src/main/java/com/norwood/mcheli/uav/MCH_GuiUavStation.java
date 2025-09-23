@@ -3,6 +3,7 @@ package com.norwood.mcheli.uav;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
 import com.norwood.mcheli.helicopter.MCH_HeliInfoManager;
 import com.norwood.mcheli.helicopter.MCH_ItemHeli;
+import com.norwood.mcheli.networking.packet.MCH_UavPacketStatus;
 import com.norwood.mcheli.plane.MCP_ItemPlane;
 import com.norwood.mcheli.plane.MCP_PlaneInfoManager;
 import com.norwood.mcheli.ship.MCH_ItemShip;
@@ -17,7 +18,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class MCH_GuiUavStation extends W_GuiContainer {
     static final int BX = 20;

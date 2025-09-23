@@ -1,7 +1,6 @@
-package com.norwood.mcheli.plane;
+package com.norwood.mcheli.networking.packet;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.norwood.mcheli.networking.packet.MCH_PacketPlayerControlBase;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

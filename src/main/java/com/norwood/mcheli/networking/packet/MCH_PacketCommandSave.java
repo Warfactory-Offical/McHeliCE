@@ -1,4 +1,4 @@
-package com.norwood.mcheli;
+package com.norwood.mcheli.networking.packet;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.norwood.mcheli.wrapper.W_Network;
@@ -6,26 +6,24 @@ import com.norwood.mcheli.wrapper.W_Network;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class MCH_PacketIndOpenScreen extends MCH_Packet {
-    public int guiID = -1;
+public class MCH_PacketCommandSave extends MCH_Packet {
+    public String str = "";
 
-    public static void send(int gui_id) {
-        if (gui_id >= 0) {
-            MCH_PacketIndOpenScreen s = new MCH_PacketIndOpenScreen();
-            s.guiID = gui_id;
-            W_Network.sendToServer(s);
-        }
+    public static void send(String cmd) {
+        MCH_PacketCommandSave s = new MCH_PacketCommandSave();
+        s.str = cmd;
+        W_Network.sendToServer(s);
     }
 
     @Override
     public int getMessageID() {
-        return 536872992;
+        return 536873729;
     }
 
     @Override
     public void readData(ByteArrayDataInput data) {
         try {
-            this.guiID = data.readInt();
+            this.str = data.readUTF();
         } catch (Exception var3) {
             var3.printStackTrace();
         }
@@ -34,7 +32,7 @@ public class MCH_PacketIndOpenScreen extends MCH_Packet {
     @Override
     public void writeData(DataOutputStream dos) {
         try {
-            dos.writeInt(this.guiID);
+            dos.writeUTF(this.str);
         } catch (IOException var3) {
             var3.printStackTrace();
         }

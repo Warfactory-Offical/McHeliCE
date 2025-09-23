@@ -1,4 +1,4 @@
-package com.norwood.mcheli.tool;
+package com.norwood.mcheli.networking.handlers;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.norwood.mcheli.MCH_Config;
