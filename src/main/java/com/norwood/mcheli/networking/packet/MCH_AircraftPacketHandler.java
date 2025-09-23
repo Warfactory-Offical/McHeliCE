@@ -1,8 +1,10 @@
-package com.norwood.mcheli.aircraft;
+package com.norwood.mcheli.networking.packet;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.MCH_MOD;
+import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
+import com.norwood.mcheli.aircraft.MCH_EntitySeat;
 import com.norwood.mcheli.helper.MCH_Utils;
 import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.helper.network.HandleSide;

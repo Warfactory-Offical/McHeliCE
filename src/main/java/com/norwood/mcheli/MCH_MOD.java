@@ -74,12 +74,9 @@ import java.util.Map.Entry;
         name = "MC Helicopter MOD"
 )
 public class MCH_MOD {
-    public static final String MOD_ID = "mcheli";
+    public static final String MOD_ID = Tags.MODID;
     @Deprecated
-    public static final String DOMAIN = "mcheli";
-    public static final String MOD_NAME = "MC Helicopter MOD";
-    public static final String MCVER = "1.12.2";
-    public static final String MOD_CH = "MCHeli_CH";
+    public static final String DOMAIN = MOD_ID;
     public static final String ADDON_FOLDER_NAME = "mcheli_addons";
     public static final MCH_PacketHandler packetHandler = new MCH_PacketHandler();
     public static String VER = "";

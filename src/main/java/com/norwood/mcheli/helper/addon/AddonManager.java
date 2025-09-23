@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.norwood.mcheli.MCH_MOD;
+import com.norwood.mcheli.Tags;
 import com.norwood.mcheli.helper.MCH_Utils;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLModContainer;
@@ -105,7 +106,7 @@ public class AddonManager {
     @SideOnly(Side.CLIENT)
     private static void addReloadableResource(AddonPack addonPack, Class<?> clazz) {
         Map<String, Object> descriptor = Maps.newHashMap();
-        descriptor.put("modid", "mcheli");
+        descriptor.put("modid", Tags.MODID);
         descriptor.put("name", "MCHeli#" + addonPack.getName());
         descriptor.put("version", addonPack.getVersion());
         File file = addonPack.getFile();

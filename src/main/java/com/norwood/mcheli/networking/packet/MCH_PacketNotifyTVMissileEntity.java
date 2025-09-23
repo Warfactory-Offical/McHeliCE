@@ -1,34 +1,33 @@
-package com.norwood.mcheli.aircraft;
+package com.norwood.mcheli.networking.packet;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.norwood.mcheli.MCH_Packet;
-import com.norwood.mcheli.wrapper.W_Entity;
 import com.norwood.mcheli.wrapper.W_Network;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class MCH_PacketIndNotifyAmmoNum extends MCH_Packet {
+public class MCH_PacketNotifyTVMissileEntity extends MCH_Packet {
     public int entityID_Ac = -1;
-    public byte weaponID = -1;
+    public int entityID_TVMissile = -1;
 
-    public static void send(MCH_EntityAircraft ac, int wid) {
-        MCH_PacketIndNotifyAmmoNum s = new MCH_PacketIndNotifyAmmoNum();
-        s.entityID_Ac = W_Entity.getEntityId(ac);
-        s.weaponID = (byte) wid;
-        W_Network.sendToServer(s);
+    public static void send(int heliEntityID, int tvMissileEntityID) {
+        MCH_PacketNotifyTVMissileEntity s = new MCH_PacketNotifyTVMissileEntity();
+        s.entityID_Ac = heliEntityID;
+        s.entityID_TVMissile = tvMissileEntityID;
+        W_Network.sendToAllPlayers(s);
     }
 
     @Override
     public int getMessageID() {
-        return 536875061;
+        return 268439600;
     }
 
     @Override
     public void readData(ByteArrayDataInput data) {
         try {
             this.entityID_Ac = data.readInt();
-            this.weaponID = data.readByte();
+            this.entityID_TVMissile = data.readInt();
         } catch (Exception var3) {
             var3.printStackTrace();
         }
@@ -38,7 +37,7 @@ public class MCH_PacketIndNotifyAmmoNum extends MCH_Packet {
     public void writeData(DataOutputStream dos) {
         try {
             dos.writeInt(this.entityID_Ac);
-            dos.writeByte(this.weaponID);
+            dos.writeInt(this.entityID_TVMissile);
         } catch (IOException var3) {
             var3.printStackTrace();
         }

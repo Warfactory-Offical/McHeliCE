@@ -8,7 +8,7 @@ import com.norwood.mcheli.MCH_MOD;
 import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
-import com.norwood.mcheli.aircraft.MCH_PacketNotifyInfoReloaded;
+import com.norwood.mcheli.networking.packet.MCH_PacketNotifyInfoReloaded;
 import com.norwood.mcheli.multiplay.MCH_GuiTargetMarker;
 import com.norwood.mcheli.weapon.MCH_WeaponInfo;
 import com.norwood.mcheli.wrapper.W_GuiButton;
@@ -24,7 +24,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 package com.norwood.mcheli.helicopter;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.norwood.mcheli.aircraft.MCH_PacketPlayerControlBase;
+import com.norwood.mcheli.networking.packet.MCH_PacketPlayerControlBase;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

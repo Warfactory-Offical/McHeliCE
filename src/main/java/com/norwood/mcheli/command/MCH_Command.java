@@ -4,6 +4,7 @@ import com.google.gson.JsonParseException;
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_MOD;
 import com.norwood.mcheli.MCH_PacketNotifyServerSettings;
+import com.norwood.mcheli.Tags;
 import com.norwood.mcheli.helper.MCH_Utils;
 import com.norwood.mcheli.multiplay.MCH_MultiplayPacketHandler;
 import com.norwood.mcheli.multiplay.MCH_PacketIndClient;
@@ -96,7 +97,7 @@ public class MCH_Command extends CommandBase {
     }
 
     public @NotNull String getName() {
-        return "mcheli";
+        return Tags.MODID;
     }
 
     public boolean canCommandSenderUseCommand(ICommandSender player) {

@@ -1,5 +1,6 @@
 package com.norwood.mcheli.wrapper;
 
+import com.norwood.mcheli.Tags;
 import com.norwood.mcheli.helper.client._IModelCustom;
 import com.norwood.mcheli.helper.client._IModelCustomLoader;
 import com.norwood.mcheli.helper.client._ModelFormatException;
@@ -15,7 +16,7 @@ public abstract class W_ModelBase extends ModelBase {
     private static final _IModelCustomLoader tcnLoader = new TechneModelLoader();
 
     public static _IModelCustom loadModel(String name) throws IllegalArgumentException, _ModelFormatException {
-        ResourceLocation resource = new ResourceLocation("mcheli", name);
+        ResourceLocation resource = new ResourceLocation(Tags.MODID, name);
         String path = resource.getPath();
         int i = path.lastIndexOf(46);
         if (i == -1) {

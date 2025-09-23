@@ -11,6 +11,7 @@ import com.norwood.mcheli.helper.entity.ITargetMarkerObject;
 import com.norwood.mcheli.mob.MCH_EntityGunner;
 import com.norwood.mcheli.mob.MCH_ItemSpawnGunner;
 import com.norwood.mcheli.multiplay.MCH_Multiplay;
+import com.norwood.mcheli.networking.packet.*;
 import com.norwood.mcheli.parachute.MCH_EntityParachute;
 import com.norwood.mcheli.particles.MCH_ParticleParam;
 import com.norwood.mcheli.particles.MCH_ParticlesUtil;
@@ -4792,7 +4793,7 @@ public abstract class MCH_EntityAircraft
         return this.getWeapon(this.getCurrentWeaponID(entity));
     }
 
-    protected MCH_WeaponSet getWeapon(int id) {
+    public MCH_WeaponSet getWeapon(int id) {
         return id >= 0 && this.weapons.length > 0 && id < this.weapons.length ? this.weapons[id] : this.dummyWeapon;
     }
 

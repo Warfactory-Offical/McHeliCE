@@ -1,6 +1,7 @@
 package com.norwood.mcheli.helper.addon;
 
 import com.google.common.base.Strings;
+import com.norwood.mcheli.Tags;
 import com.norwood.mcheli.helper.MCH_Utils;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -53,10 +54,10 @@ public class AddonResourceLocation extends ResourceLocation {
 
         ret[1] = Strings.isNullOrEmpty(ret[1]) ? "<!mcheli_share_domain>" : ret[1].toLowerCase(Locale.ROOT);
         if (ret[0].equals("minecraft")) {
-            ret[0] = "mcheli";
-        } else if (!spl[0].equals("mcheli")) {
-            MCH_Utils.logger().warn("Invalid mod domain '{}', replace at '{}'. path:'{}'", ret[0], "mcheli", ret[2]);
-            ret[0] = "mcheli";
+            ret[0] = Tags.MODID;
+        } else if (!spl[0].equals(Tags.MODID)) {
+            MCH_Utils.logger().warn("Invalid mod domain '{}', replace at '{}'. path:'{}'", ret[0], Tags.MODID, ret[2]);
+            ret[0] = Tags.MODID;
         }
 
         return ret;

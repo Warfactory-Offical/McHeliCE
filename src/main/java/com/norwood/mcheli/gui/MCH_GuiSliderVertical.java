@@ -1,6 +1,7 @@
 package com.norwood.mcheli.gui;
 
 import com.norwood.mcheli.MCH_Key;
+import com.norwood.mcheli.Tags;
 import com.norwood.mcheli.wrapper.W_GuiButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -132,7 +133,7 @@ public class MCH_GuiSliderVertical extends W_GuiButton {
     public void drawButton(@NotNull Minecraft mc, int x, int y, float partialTicks) {
         if (this.isVisible()) {
             FontRenderer fontrenderer = mc.fontRenderer;
-            mc.getTextureManager().bindTexture(new ResourceLocation("mcheli", "textures/gui/widgets.png"));
+            mc.getTextureManager().bindTexture(new ResourceLocation(Tags.MODID, "textures/gui/widgets.png"));
              GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             this.setOnMouseOver(x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height);
             int k = this.getHoverState(this.isOnMouseOver());

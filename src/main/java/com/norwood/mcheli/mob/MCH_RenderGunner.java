@@ -1,5 +1,6 @@
 package com.norwood.mcheli.mob;
 
+import com.norwood.mcheli.Tags;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelBiped.ArmPose;
@@ -18,7 +19,7 @@ import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManage
 @SideOnly(Side.CLIENT)
 public class MCH_RenderGunner extends RenderLivingBase<MCH_EntityGunner> {
     public static final IRenderFactory<MCH_EntityGunner> FACTORY = MCH_RenderGunner::new;
-    private static final ResourceLocation steveTextures = new ResourceLocation("mcheli", "textures/mob/heligunner.png");
+    private static final ResourceLocation steveTextures = new ResourceLocation(Tags.MODID, "textures/mob/heligunner.png");
     public final ModelBiped modelBipedMain = (ModelBiped) this.mainModel;
     public final ModelBiped modelArmorChestplate = new ModelBiped(1.0F);
     public final ModelBiped modelArmor = new ModelBiped(0.5F);

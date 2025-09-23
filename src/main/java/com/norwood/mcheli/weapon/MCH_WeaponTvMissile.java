@@ -1,7 +1,7 @@
 package com.norwood.mcheli.weapon;
 
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
-import com.norwood.mcheli.aircraft.MCH_PacketNotifyTVMissileEntity;
+import com.norwood.mcheli.networking.packet.MCH_PacketNotifyTVMissileEntity;
 import com.norwood.mcheli.wrapper.W_Entity;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;

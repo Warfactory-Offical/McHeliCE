@@ -1,5 +1,6 @@
 package com.norwood.mcheli.hud;
 
+import com.norwood.mcheli.Tags;
 import com.norwood.mcheli.wrapper.W_TextureUtil;
 import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
@@ -41,7 +42,7 @@ public class MCH_HudItemTexture extends MCH_HudItem {
         if (this.textureWidth == 0 || this.textureHeight == 0) {
             int w = 0;
             int h = 0;
-            W_TextureUtil.TextureParam prm = W_TextureUtil.getTextureInfo("mcheli", "textures/gui/" + this.name + ".png");
+            W_TextureUtil.TextureParam prm = W_TextureUtil.getTextureInfo(Tags.MODID, "textures/gui/" + this.name + ".png");
             w = prm.width;
             h = prm.height;
 

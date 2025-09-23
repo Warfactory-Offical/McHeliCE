@@ -1,5 +1,6 @@
 package com.norwood.mcheli.helper.client.model;
 
+import com.norwood.mcheli.Tags;
 import net.minecraft.client.renderer.block.model.ModelBlock;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourceManager;
@@ -22,7 +23,7 @@ public enum LegacyModelLoader implements ICustomModelLoader {
         if (!(modelLocation instanceof ModelResourceLocation location)) {
             return false;
         } else {
-            return location.getNamespace().equals("mcheli") && location.getVariant().equals("mcheli_legacy");
+            return location.getNamespace().equals(Tags.MODID) && location.getVariant().equals("mcheli_legacy");
         }
     }
 

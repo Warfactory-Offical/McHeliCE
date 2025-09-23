@@ -1,29 +1,28 @@
-package com.norwood.mcheli.aircraft;
+package com.norwood.mcheli.networking.packet;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.norwood.mcheli.MCH_Packet;
+import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.wrapper.W_Entity;
 import com.norwood.mcheli.wrapper.W_Network;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class MCH_PacketIndReload extends MCH_Packet {
+public class MCH_PacketIndNotifyAmmoNum extends MCH_Packet {
     public int entityID_Ac = -1;
-    public int weaponID = -1;
+    public byte weaponID = -1;
 
-    public static void send(MCH_EntityAircraft ac, int weaponId) {
-        if (ac != null) {
-            MCH_PacketIndReload s = new MCH_PacketIndReload();
-            s.entityID_Ac = W_Entity.getEntityId(ac);
-            s.weaponID = weaponId;
-            W_Network.sendToServer(s);
-        }
+    public static void send(MCH_EntityAircraft ac, int wid) {
+        MCH_PacketIndNotifyAmmoNum s = new MCH_PacketIndNotifyAmmoNum();
+        s.entityID_Ac = W_Entity.getEntityId(ac);
+        s.weaponID = (byte) wid;
+        W_Network.sendToServer(s);
     }
 
     @Override
     public int getMessageID() {
-        return 536875059;
+        return 536875061;
     }
 
     @Override

@@ -39,6 +39,10 @@
  */
 dependencies {
     compileOnly rfg.deobf("curse.maven:hbm-nuclear-tech-mod-community-edition-1312314:6890855")
+
+    implementation "io.gitlab.hohserg.elegant.networking:elegant-networking-1.12:3.14"
+    annotationProcessor "org.projectlombok:lombok:1.18.42", "io.gitlab.hohserg.elegant.networking:annotation-processor:3.14"
+    //use compileOnly or `apt` plugin for gradle less that 4.8
 //    runtimeOnly rfg.deobf("curse.maven:ftb-utilities-forge-237102:3157548")
 //    runtimeOnly rfg.deobf("curse.maven:ftb-library-legacy-forge-237167:2985811")
 //    runtimeOnly rfg.deobf("curse.maven:entity-distance-1-12-2-917379:5380539")

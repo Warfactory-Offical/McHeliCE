@@ -3,6 +3,7 @@ package com.norwood.mcheli.block;
 import com.norwood.mcheli.MCH_IRecipeList;
 import com.norwood.mcheli.MCH_MOD;
 import com.norwood.mcheli.MCH_ModelManager;
+import com.norwood.mcheli.Tags;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfoManager;
 import com.norwood.mcheli.plane.MCP_PlaneInfo;
@@ -55,7 +56,7 @@ public class MCH_CurrentRecipe {
                 String name = info.name;
                 this.model = MCH_ModelManager.get(dir, name);
                 if (this.model != null) {
-                    this.modelTexture = new ResourceLocation("mcheli", "textures/" + dir + "/" + name + ".png");
+                    this.modelTexture = new ResourceLocation(Tags.MODID, "textures/" + dir + "/" + name + ".png");
                     this.descMaxPage++;
                     if (list instanceof MCP_PlaneInfoManager || list instanceof MCH_ShipInfoManager) {
                         this.modelRot = 0;
@@ -195,7 +196,7 @@ public class MCH_CurrentRecipe {
                 itemName = "textures/drafting_table_desc/" + itemName + "#" + i + ".png";
                 File filePng = new File(MCH_MOD.sourcePath, "/assets/mcheli/" + itemName);
                 if (filePng.exists()) {
-                    list.add(new ResourceLocation("mcheli", itemName));
+                    list.add(new ResourceLocation(Tags.MODID, itemName));
                 }
             }
         }

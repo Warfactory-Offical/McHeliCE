@@ -1,4 +1,4 @@
-package com.norwood.mcheli.aircraft;
+package com.norwood.mcheli.networking.packet;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.norwood.mcheli.MCH_Config;

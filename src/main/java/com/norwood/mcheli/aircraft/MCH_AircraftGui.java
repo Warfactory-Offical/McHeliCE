@@ -3,6 +3,7 @@ package com.norwood.mcheli.aircraft;
 import com.norwood.mcheli.MCH_PacketIndOpenScreen;
 import com.norwood.mcheli.command.MCH_PacketCommandSave;
 import com.norwood.mcheli.multiplay.MCH_PacketIndMultiplayCommand;
+import com.norwood.mcheli.networking.packet.MCH_PacketIndReload;
 import com.norwood.mcheli.weapon.MCH_WeaponDummy;
 import com.norwood.mcheli.weapon.MCH_WeaponInfo;
 import com.norwood.mcheli.weapon.MCH_WeaponSet;
@@ -12,7 +13,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 

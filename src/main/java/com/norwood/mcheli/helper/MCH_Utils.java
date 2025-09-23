@@ -1,6 +1,7 @@
 package com.norwood.mcheli.helper;
 
 import com.norwood.mcheli.MCH_MOD;
+import com.norwood.mcheli.Tags;
 import com.norwood.mcheli.helper.addon.AddonResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
@@ -13,7 +14,7 @@ import java.util.Objects;
 
 public class MCH_Utils {
     public static ResourceLocation suffix(String name) {
-        return new ResourceLocation("mcheli", name);
+        return new ResourceLocation(Tags.MODID, name);
     }
 
     public static AddonResourceLocation addon(String domain, String path) {

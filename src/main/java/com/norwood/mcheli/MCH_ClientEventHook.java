@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MCH_ClientEventHook extends W_ClientEventHook {
-    private static final ResourceLocation ir_strobe = new ResourceLocation("mcheli", "textures/ir_strobe.png");
+    private static final ResourceLocation ir_strobe = new ResourceLocation(Tags.MODID, "textures/ir_strobe.png");
     public static final List<MCH_EntityAircraft> haveSearchLightAircraft = new ArrayList<>();
     private static boolean cancelRender = true;
     MCH_TextureManagerDummy dummyTextureManager = null;

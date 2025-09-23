@@ -1,31 +1,36 @@
-package com.norwood.mcheli.aircraft;
+package com.norwood.mcheli.networking.packet;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.norwood.mcheli.MCH_Packet;
-import com.norwood.mcheli.wrapper.W_Entity;
 import com.norwood.mcheli.wrapper.W_Network;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class MCH_PacketSeatListRequest extends MCH_Packet {
-    public int entityID_AC = -1;
+public class MCH_PacketNotifyInfoReloaded extends MCH_Packet {
+    public int type = -1;
 
-    public static void requestSeatList(MCH_EntityAircraft ac) {
-        MCH_PacketSeatListRequest s = new MCH_PacketSeatListRequest();
-        s.entityID_AC = W_Entity.getEntityId(ac);
+    public static void sendRealodAc() {
+        MCH_PacketNotifyInfoReloaded s = new MCH_PacketNotifyInfoReloaded();
+        s.type = 0;
+        W_Network.sendToServer(s);
+    }
+
+    public static void sendRealodAllWeapon() {
+        MCH_PacketNotifyInfoReloaded s = new MCH_PacketNotifyInfoReloaded();
+        s.type = 1;
         W_Network.sendToServer(s);
     }
 
     @Override
     public int getMessageID() {
-        return 536875024;
+        return 536875063;
     }
 
     @Override
     public void readData(ByteArrayDataInput data) {
         try {
-            this.entityID_AC = data.readInt();
+            this.type = data.readInt();
         } catch (Exception var3) {
             var3.printStackTrace();
         }
@@ -34,7 +39,7 @@ public class MCH_PacketSeatListRequest extends MCH_Packet {
     @Override
     public void writeData(DataOutputStream dos) {
         try {
-            dos.writeInt(this.entityID_AC);
+            dos.writeInt(this.type);
         } catch (IOException var3) {
             var3.printStackTrace();
         }

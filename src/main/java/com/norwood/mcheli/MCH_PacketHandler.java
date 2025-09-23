@@ -1,7 +1,7 @@
 package com.norwood.mcheli;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.norwood.mcheli.aircraft.MCH_AircraftPacketHandler;
+import com.norwood.mcheli.networking.packet.MCH_AircraftPacketHandler;
 import com.norwood.mcheli.block.MCH_DraftingTablePacketHandler;
 import com.norwood.mcheli.command.MCH_CommandPacketHandler;
 import com.norwood.mcheli.gltd.MCH_GLTDPacketHandler;

@@ -6,6 +6,7 @@ import com.google.common.collect.Multimap;
 import com.norwood.mcheli.MCH_BaseInfo;
 import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.MCH_MOD;
+import com.norwood.mcheli.Tags;
 import com.norwood.mcheli.helicopter.MCH_HeliInfo;
 import com.norwood.mcheli.helper.addon.AddonManager;
 import com.norwood.mcheli.helper.addon.AddonPack;
@@ -183,7 +184,7 @@ public class ContentRegistries {
         if (parts.length < i + 4) return false;
         String modDir = parts[i + 1];
         String infoDir = parts[i + 2];
-        return "mcheli".equals(modDir) && MCH_MOD.proxy.canLoadContentDirName(infoDir);
+        return Tags.MODID.equals(modDir) && MCH_MOD.proxy.canLoadContentDirName(infoDir);
     }
 
     private static Predicate<String> getFilterOnly(String dir) {
@@ -194,7 +195,7 @@ public class ContentRegistries {
             if (parts.length < i + 4) return false;
             String modDir = parts[i + 1];
             String infoDir = parts[i + 2];
-            return "mcheli".equals(modDir) && dir.equals(infoDir);
+            return Tags.MODID.equals(modDir) && dir.equals(infoDir);
         };
     }
 }
