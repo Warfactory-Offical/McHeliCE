@@ -1,20 +1,20 @@
 package com.norwood.mcheli.networking.handlers;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.norwood.mcheli.*;
-import com.norwood.mcheli.helper.network.HandleSide;
+import com.norwood.mcheli.MCH_Config;
+import com.norwood.mcheli.MCH_Lib;
+import com.norwood.mcheli.MCH_MOD;
+import com.norwood.mcheli.MCH_ServerSettings;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
-import com.norwood.mcheli.aircraft.MCH_EntitySeat;
+import com.norwood.mcheli.helper.network.HandleSide;
 import com.norwood.mcheli.helper.world.MCH_ExplosionV2;
 import com.norwood.mcheli.lweapon.MCH_ClientLightWeaponTickHandler;
 import com.norwood.mcheli.networking.packet.MCH_PacketEffectExplosion;
 import com.norwood.mcheli.networking.packet.MCH_PacketIndOpenScreen;
-import com.norwood.mcheli.networking.packet.MCH_PacketNotifyLock;
 import com.norwood.mcheli.networking.packet.MCH_PacketNotifyServerSettings;
 import com.norwood.mcheli.wrapper.W_Reflection;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
@@ -95,39 +95,39 @@ public class MCH_CommonPacketHandler {
         }
     }
 
-    @HandleSide({Side.CLIENT, Side.SERVER})
-    public static void onPacketNotifyLock(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-        MCH_PacketNotifyLock pkt = new MCH_PacketNotifyLock();
-        pkt.readData(data);
-        if (!player.world.isRemote) {
-            if (pkt.entityID >= 0) {
-                scheduler.addScheduledTask(() -> {
-                    Entity target = player.world.getEntityByID(pkt.entityID);
-                    if (target != null) {
-                        MCH_EntityAircraft ac;
-                        if (target instanceof MCH_EntityAircraft) {
-                            ac = (MCH_EntityAircraft) target;
-                        } else if (target instanceof MCH_EntitySeat) {
-                            ac = ((MCH_EntitySeat) target).getParent();
-                        } else {
-                            ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(target);
-                        }
-
-                        if (ac != null && ac.haveFlare() && !ac.isDestroyed()) {
-                            for (int i = 0; i < 2; i++) {
-                                Entity entity = ac.getEntityBySeatId(i);
-                                if (entity instanceof EntityPlayerMP) {
-                                    MCH_PacketNotifyLock.sendToPlayer((EntityPlayerMP) entity);
-                                }
-                            }
-                        } else if (target.getRidingEntity() != null && target instanceof EntityPlayerMP) {
-                            MCH_PacketNotifyLock.sendToPlayer((EntityPlayerMP) target);
-                        }
-                    }
-                });
-            }
-        } else {
-            scheduler.addScheduledTask(() -> MCH_MOD.proxy.clientLocked());
-        }
-    }
+//    @HandleSide({Side.CLIENT, Side.SERVER})
+//    public static void onPacketNotifyLock(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
+//        MCH_PacketNotifyLock pkt = new MCH_PacketNotifyLock();
+//        pkt.readData(data);
+//        if (!player.world.isRemote) {
+//            if (pkt.entityID >= 0) {
+//                scheduler.addScheduledTask(() -> {
+//                    Entity target = player.world.getEntityByID(pkt.entityID);
+//                    if (target != null) {
+//                        MCH_EntityAircraft ac;
+//                        if (target instanceof MCH_EntityAircraft) {
+//                            ac = (MCH_EntityAircraft) target;
+//                        } else if (target instanceof MCH_EntitySeat) {
+//                            ac = ((MCH_EntitySeat) target).getParent();
+//                        } else {
+//                            ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(target);
+//                        }
+//
+//                        if (ac != null && ac.haveFlare() && !ac.isDestroyed()) {
+//                            for (int i = 0; i < 2; i++) {
+//                                Entity entity = ac.getEntityBySeatId(i);
+//                                if (entity instanceof EntityPlayerMP) {
+//                                    MCH_PacketNotifyLock.sendToPlayer((EntityPlayerMP) entity);
+//                                }
+//                            }
+//                        } else if (target.getRidingEntity() != null && target instanceof EntityPlayerMP) {
+//                            MCH_PacketNotifyLock.sendToPlayer((EntityPlayerMP) target);
+//                        }
+//                    }
+//                });
+//            }
+//        } else {
+//            scheduler.addScheduledTask(() -> MCH_MOD.proxy.clientLocked());
+//        }
+//    }
 }

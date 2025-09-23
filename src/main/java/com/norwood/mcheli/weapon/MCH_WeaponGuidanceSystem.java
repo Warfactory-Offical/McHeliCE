@@ -1,8 +1,8 @@
 package com.norwood.mcheli.weapon;
 
 import com.norwood.mcheli.MCH_Lib;
-import com.norwood.mcheli.networking.packet.MCH_PacketNotifyLock;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
+import com.norwood.mcheli.networking.packet.PacketNotifyLock;
 import com.norwood.mcheli.uav.MCH_EntityUavStation;
 import com.norwood.mcheli.wrapper.W_Entity;
 import com.norwood.mcheli.wrapper.W_Lib;
@@ -167,8 +167,8 @@ public class MCH_WeaponGuidanceSystem {
                         double range = this.lockRange * stealth;
                         float angle = this.lockAngle * (stealth / 2.0F + 0.5F);
                         if (d < range * range && d < dist && inLockRange(entityLocker, user.rotationYaw, user.rotationPitch, entity, angle)) {
-                            Vec3d v1 =new Vec3d( entityLocker.posX, entityLocker.posY, entityLocker.posZ);
-                            Vec3d v2 =new Vec3d( entity.posX, entity.posY + entity.height / 2.0F, entity.posZ);
+                            Vec3d v1 = new Vec3d(entityLocker.posX, entityLocker.posY, entityLocker.posZ);
+                            Vec3d v2 = new Vec3d(entity.posX, entity.posY + entity.height / 2.0F, entity.posZ);
                             RayTraceResult m = W_WorldFunc.clip(this.worldObj, v1, v2, false, true, false);
                             if (m == null || W_MovingObjectPosition.isHitTypeEntity(m)) {
                                 tgtEnt = entity;
@@ -201,7 +201,7 @@ public class MCH_WeaponGuidanceSystem {
                     double range = this.lockRange * stealth;
                     if (dx * dx + dy * dy + dz * dz < range * range) {
                         if (this.worldObj.isRemote && this.lockSoundCount == 1) {
-                            MCH_PacketNotifyLock.send(this.getTargetEntity());
+                            PacketNotifyLock.send(this.getTargetEntity());
                         }
 
                         this.lockSoundCount = (this.lockSoundCount + 1) % 15;
