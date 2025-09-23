@@ -2,10 +2,12 @@ package com.norwood.mcheli.networking.packet;
 
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.weapon.MCH_EntityTvMissile;
+import hohserg.elegant.networking.api.ElegantPacket;
 import hohserg.elegant.networking.api.ServerToClientPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 
+@ElegantPacket
 public class PacketNotifyTVMissileEntity extends PacketBase implements ServerToClientPacket {
 
     public int entityID_Ac = -1;
