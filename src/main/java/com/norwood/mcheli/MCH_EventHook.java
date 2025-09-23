@@ -139,6 +139,9 @@ public class MCH_EventHook extends W_EventHook {
     public MCH_EntityAircraft getRiddenAircraft(Entity entity) {
         MCH_EntityAircraft ac = null;
         Entity ridden = entity.getRidingEntity();
+        if(ridden == null){
+            return null;
+        }
         if (ridden instanceof MCH_EntityAircraft) {
             ac = (MCH_EntityAircraft) ridden;
         } else if (ridden instanceof MCH_EntitySeat) {
