@@ -1,30 +1,25 @@
 DisplayName = MiG-29 Fulcrum
 AddDisplayName = ja_JP, MiG-29 フルクラム
 ItemID = 28717
-MaxHp = 100
-Speed = 1.52
-;1,520
-
+MaxHp = 140
+Speed = 1.15
 EnableNightVision = true
 EnableEntityRadar = true
 EnableEjectionSeat = true
-ThrottleUpDown = 0.6
+ThrottleUpDown = 0.5
 FlareType = 4
 ParticlesScale = 0.7
 EnableSeaSurfaceParticle = true
 MaxFuel         = 1000
 FuelConsumption = 1.0
-Sound = migtwentynine
+ThirdPersonDist = 16
 
 ; M = Military(軍用機).  F = Fighter(戦闘機)
 Category = M.F
 
-HUD = planenvg
+HUD = plane
 
-EntityWidth  = 0.75
-EntityHeight = 0.75
-
-AddSeat = 0.0, 2.0, -0.5
+AddSeat = 0.0, 2.15, -0.6
 
 AddPartCanopy = 0.00,3.45,-2.0,-1,0,0,60
 
@@ -38,94 +33,25 @@ AddPartLG =  1.83, 1.73, -6.80,  0,0,-1,  95
 AddPartLG =  1.80, 1.05, -5.42,  0,0,-1,  63
 AddPartLG =  1.66, 1.75, -8.00, -1,0, 0,  90, 0,-1,0,90
 
-AddPartWeaponMissile = r73mig29,  false, false, false,   5.13, 1.75, -6.70
-AddPartWeaponMissile = r73mig29,  false, false, false,  -5.13, 1.75, -6.70
-AddPartWeaponMissile = mig29kh-25, false, false, false,   3.66, 1.65, -5.65
-AddPartWeaponMissile = mig29kh-25, false, false, false,  -3.66, 1.65, -5.65
+AddPartWeaponMissile = r-60,  false, false, false,   5.13, 1.75, -6.70
+AddPartWeaponMissile = r-60,  false, false, false,  -5.13, 1.75, -6.70
+AddPartWeaponMissile = kh-25, false, false, false,   3.66, 1.65, -5.65
+AddPartWeaponMissile = kh-25, false, false, false,  -3.66, 1.65, -5.65
 
-;150rnd
-AddWeapon = mig29gsh-30-1,  0.75, 1.94, -0.30,   0.0, -1.0
-
-;40
-AddWeapon = mig29s8,       -2.55, 1.57, -5.14,   0.0, -1.0
-AddWeapon = mig29s8,        2.55, 1.57, -5.14,   0.0, -1.0
-
-;2
-AddWeapon = mig29kh-25,     3.66, 1.65, -5.65,   0.0, -1.0
-AddWeapon = mig29kh-25,    -3.66, 1.65, -5.65,   0.0, -1.0
-
-;2
-AddWeapon = r73mig29,      5.13, 1.75, -6.70,   0.0, -1.0
-AddWeapon = r73mig29,     -5.13, 1.75, -6.70,   0.0, -1.0
-
-AddTexture = mig29mu1
+AddWeapon = gsh-30-1,  0.75, 1.94, -0.30,   0.0, -1.0
+AddWeapon = s8,       -2.55, 1.57, -5.14,   0.0, -1.0
+AddWeapon = s8,        2.55, 1.57, -5.14,   0.0, -1.0
+AddWeapon = kh-25,     3.66, 1.65, -5.65,   0.0, -1.0
+AddWeapon = kh-25,    -3.66, 1.65, -5.65,   0.0, -1.0
+AddWeapon = r-60,      5.13, 1.75, -6.70,   0.0, -1.0
+AddWeapon = r-60,     -5.13, 1.75, -6.70,   0.0, -1.0
 
 AddWeapon = targeting_pod_ph50s,   0.0, 3.1,-0.6,    0.0, 0.0
 
-;modern medium light plane (jet), AOW3 style
-AddRecipe = "ABC", "DEG", " HR", A, mcheli:airframe2, B, mcheli:basicmechanicparts, C, mcheli:engine3, D, mcheli:wheelair, E, mcheli:cannon1, G, mcheli:electronics, H, mcheli:fcs2, R, mcheli:rocket2
+AddRecipe = "DRX", "XXF", "IIP", D,dye,1, R,redstone, X,iron_block, F,furnace, I,iron_ingot, P,piston
 
-BoundingBox =  0.0, 2.1842, -2.5,  2.25, 1.4
-BoundingBox =  0.0, 1.8, -4.5,  3.0, 2.3
-BoundingBox =  0.0, 1.8, -7.0,  3.0, 1.9
-BoundingBox =  0.0, 1.6842, -9.5,  2.5, 1.2
-BoundingBox =  0.0, 1.542, -10.5,  2.5, 1.0
-BoundingBox =  0.0, 1.542, -10.5,  2.5, 1.0
-
-BoundingBox =  2.2, 1.5842, -11.8,  1.25, 0.2
-BoundingBox =  -2.2, 1.5842, -11.8, 1.25, 0.2
-
-BoundingBox =  3.2, 1.5842, -13.0,  1.25, 0.2
-BoundingBox =  -3.2, 1.5842, -13.0,  1.25, 0.2
-
-BoundingBox =  -1.8, 3.7842, -12,  1.0, 2.3
-BoundingBox =  1.8, 3.7842, -12,  1.0, 2.3
-
-
-BoundingBox =  -1.8, 3.4842, -11,  1.0, 2.3
-BoundingBox =  1.8, 3.4842, -11,  1.0, 2.3
-
-
-BoundingBox =  -1.8, 2.9842, -10.5, 0.5, 1.8
-BoundingBox =  1.8, 2.9842, -10.5,  0.5, 1.8
-]
-BoundingBox =  -1.8, 2.6842, -10, 0.5, 1.6
-BoundingBox =  1.8, 2.6842, -10,  0.5, 1.6
-
-
-BoundingBox =  -1.8, 2.3842, -9.5, 0.5, 1.4
-BoundingBox =  1.8, 2.3842, -9.5,  0.5, 1.4
-
-
-BoundingBox =  -1.8, 2.0842, -9, 0.5, 1.4
-BoundingBox =  1.8, 2.0842, -9,  0.5, 1.4
-
-
-BoundingBox =  -1.8, 2.0842, -12,  1.0, 1.5
-BoundingBox =  1.8, 2.0842, -12,  1.0, 1.5
-
-
-BoundingBox =  -1.8, 2.0842, -11,  1.0, 1.5
-BoundingBox =  1.8, 2.0842, -11,  1.0, 1.5
-
-
-BoundingBox =  -1.8, 2.0842, -10,  1.0, 1.5
-BoundingBox =  1.8, 2.0842, -10,  1.0, 1.5
-
-
-
-
-BoundingBox = -2.9, 1.95, -7.5,  3.0, 0.3
-BoundingBox =  2.9, 1.95, -7.5,  3.0, 0.3
-
-BoundingBox = -4.7, 2, -8.4,  2.5, 0.3
-BoundingBox =  4.7, 2, -8.4,  2.5, 0.3
-
-UnmountPosition = 0.0, 1.5, -0.6
-
-DamageFactor = 0.8
-
-
-enableback = true
-
-DamageFactor = 0.8
+BoundingBox =  0.00, 2.20, -1.00,  2.0, 1.4
+BoundingBox =  0.00, 1.60, -4.50,  3.0, 1.8
+BoundingBox =  0.00, 1.60, -8.00,  3.0, 1.8
+BoundingBox = -2.92, 1.70, -8.00,  3.0, 0.8
+BoundingBox =  2.92, 1.70, -8.00,  3.0, 0.8

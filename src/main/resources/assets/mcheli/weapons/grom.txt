@@ -2,20 +2,18 @@ DisplayName = GROM Anti-Air Missile
 Type = AAMissile
 Power = 40
 Acceleration = 4
-Explosion = 3
+Explosion = 4
 Flaming = false
 Sight = MissileSight
-Delay = 5
+Delay = 100
 LockTime = 40
 Sound = missile_1_snd
 Zoom = 1.8
-Round = 8
-ReloadTime = 1000
+Round = 2
+ReloadTime = 80
 
-DamageFactor = tank, 1.5
-DamageFactor = plane, 3.0
-DamageFactor = vehicle 2.0
-DamageFactor = heli, 3.0
+DamageFactor = plane, 1.8
+DamageFactor = helicopter, 1.8
 
 ; DEBUG
 ;RigidityTime = 30

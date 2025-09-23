@@ -1,38 +1,19 @@
 DisplayName = AGM-65 Maverick
-Type = TVMissile
-Power = 1000
-Acceleration = 2.7
+Type = ASMissile
+Power = 40
+Acceleration = 4.0
+Explosion = 6
 Flaming = true
 Sight = MoveSight
+Delay = 260
 ModelBullet = agm65e
-Sound = mlrs
-SoundPitch = 0.8
-SoundVolume = 15
-
-Delay = 5
-ReloadTime = 1000
-Round = 2
-
-
-Explosion = 9
-ExplosionBlock = 5
-ExplosionInWater = 5
-ModeNum = 2
-DamageFactor = tank, 2.0
-DamageFactor = plane, 2.0
-DamageFactor = vehicle 4.5
-DamageFactor = heli, 4.5
-DamageFactor = player, 20.0
-
-
+Sound = missile_2_snd
 
 MaxAmmo = 2
 SuppliedNum = 1
-Item =  2, iron_ingot
-Item =  4, gunpowder
-Item =  4, redstone
-
-
+Item =  1, iron_ingot
+Item =  2, gunpowder
+Item =  2, redstone
 
 ;DEBUG:テスト用
 ;目標から30m以内に入ると爆発

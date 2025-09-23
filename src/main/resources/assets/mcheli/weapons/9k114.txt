@@ -1,9 +1,8 @@
-DisplayName = 9M114 Shturm
+DisplayName = 9M114
 Type = ATMissile
-Power = 560
+Power = 52
 Acceleration = 2.0
 Explosion = 4
-ExplosionInWater = 2
 Flaming = true
 Sight = MissileSight
 Delay = 100
@@ -11,25 +10,10 @@ ModeNum = 2
 Sound = missile_1_snd
 RidableOnly = true
 
-Delay = 100
-ReloadTime = 100
-Group = MainGun
-;Acceleration = 7.0
-BulletColor        = 255, 255, 100, 100
-;ModelBullet = bullet105mm
-Piercing = 0
-;Accuracy = 0.0
 DamageFactor = tank, 2.0
-DamageFactor = plane, 4.5
-DamageFactor = vehicle 4.5
-DamageFactor = heli, 4.5
-DamageFactor = player, 20.0
-AddDisplayName = en_US, 9M114 [ATGM]
-SoundVolume = 15
-
 
 MaxAmmo = 8
-SuppliedNum = 1
-Item =  2, iron_ingot
-Item =  4, gunpowder
-Item =  2, redstone
+SuppliedNum = 2
+Item =  1, iron_ingot
+Item =  1, gunpowder
+Item =  1, redstone

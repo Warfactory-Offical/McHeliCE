@@ -1,9 +1,8 @@
 DisplayName = MGM-21A
 Type = ASMissile
-Power = 400
+Power = 32
 Acceleration = 1.7
-Explosion = 12
-ExplosionInWater = 6
+Explosion = 5
 Flaming = true
 Sight = MoveSight
 Round = 2
@@ -12,19 +11,8 @@ ReloadTime = 240
 ModelBullet = mgm21a
 Sound = missile_1_snd
 
-DamageFactor = tank, 1.0
-DamageFactor = plane, 3.0
-DamageFactor = vehicle 2.0
-DamageFactor = heli, 3.0
-
-Delay = 100
-ReloadTime = 240
-;Group = MainGun
-;Acceleration = 7.0
-
-
 MaxAmmo = 4
 SuppliedNum = 1
-Item =  2, iron_ingot
-Item =  4, gunpowder
-Item =  2, redstone
+Item =  1, iron_ingot
+Item =  2, gunpowder
+Item =  1, redstone

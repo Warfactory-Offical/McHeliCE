@@ -1,13 +1,12 @@
-DisplayName = AGM-154 JSOW A
-Type = Bomb
-Power = 1000
-Acceleration = 1.9
-Explosion = 10
-ExplosionInWater = 5
+DisplayName = AGM-154
+Type = ASMissile
+Power = 32
+Acceleration = 1.7
+Explosion = 5
 ExplosionBlock = 4
 Flaming = true
 Sight = MoveSight
-Delay = 8
+Delay = 160
 Round = 6
 ReloadTime = 190
 SoundVolume = 3
@@ -16,18 +15,18 @@ Sound = bomb_snd
 ModelBullet = agm154
 Gravity = -0.01
 DisableSmoke = true
-Piercing  = 2
+Piercing  = 1
 
 ;15Tick後に15個の子弾をばらまく
-;Bomblet = 30
-;BombletSTime = 85
-;BombletDiff = 0.95
-;ModelBomblet = cbc
+Bomblet = 15
+BombletSTime = 15
+BombletDiff = 1.1
+ModelBomblet = cbc
 ;目標から30m以内に入ると爆発
-;ProximityFuseDist = 30
+ProximityFuseDist = 30
 
 MaxAmmo = 12
-SuppliedNum = 1
-Item =  6, iron_ingot
-Item =  5, gunpowder
+SuppliedNum = 3
+Item =  4, iron_ingot
+Item =  4, gunpowder
 Item =  4, redstone

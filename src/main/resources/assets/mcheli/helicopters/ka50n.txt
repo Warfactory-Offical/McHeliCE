@@ -1,25 +1,20 @@
 DisplayName = Ka-50N Hokum A
 AddDisplayName = ja_JP, Ka-50N ホーカムA
 ItemID = 28818
-MaxHp = 100
-Speed = 1.96
-soundpitch = 1.4
-ThirdPersonDist = 20
-
-EnableEjectionSeat = true
-
+MaxHp = 160
+Speed = 0.65
 ThrottleUpDown = 1.0
+ThirdPersonDist = 12
 
 ; M = Military(軍用機).  A = Attacker(攻撃機)
 Category = M.A
 
-HUD = helinvg
+HUD = heli
 
 MaxFuel         = 1200
 FuelConsumption = 1.0
 
 Sound = heli_k
-soundvolume = 15
 
 MobilityYaw = 1.2
 MobilityPitch = 1.2
@@ -39,7 +34,6 @@ CameraPosition = 0.00, 0.24, 5.50
 CameraZoom = 16
 
 AddPartWeapon        = 2a42_ka50,    true,  true,  true,    0.00, 0.70,  0.00
-AddPartWeapon        = 2a42_ka50he,    true,  true,  true,    0.00, 0.70,  0.00
 AddPartWeapon        = s-8_ka50,     false, false, true,    0.00, 0.70, -0.50
 AddPartWeaponMissile = 9K121_ka50,   false, false, false,   3.12, 0.35,  2.00
 AddPartWeaponMissile = 9K121_ka50,   false, false, false,   3.12, 0.35,  2.00
@@ -48,57 +42,32 @@ AddPartWeaponMissile = 9K121tv_ka50, false, false, false,   3.12, 0.35,  2.00
 AddPartWeaponMissile = 9K121tv_ka50, false, false, false,   3.12, 0.35,  2.00
 AddPartWeaponMissile = 9K121tv_ka50, false, false, false,   3.12, 0.35,  2.00
 
-AddWeapon = 2a42_ka50,    -1.04, 0.65, 0.00,  0,-1,  true,2,  0,-3,6, 0, 30
-AddWeapon = 2a42_ka50he,    -1.04, 0.65, 0.00,  0,-1,  true,2,  0,-3,6, 0, 30
-;idk why but the rocket pods just refuse to not turn left and right. YAY.
-AddWeapon = s-8_ka50,      2.12, 0.55, 2.00,  1, 0,  true,1,  0,0,0, 0, 25
-AddWeapon = s-8_ka50,     -2.12, 0.55, 2.00,  1, 0,  true,1,  0,0,0, 0, 25
-
-
+AddWeapon = 2a42_ka50,    -1.04, 0.65, 2.00,  0,-1,  true,2,  0,-3,6, 0, 30
+AddWeapon = s-8_ka50,      2.12, 0.55, 2.00,  1, 0,  true,1,  0, 0,0, 0, 20
+AddWeapon = s-8_ka50,     -2.12, 0.55, 2.00, -1, 0,  true,1,  0, 0,0, 0, 20
 AddWeapon = 9K121_ka50,    3.12, 0.35, 2.00,  1, 0,  true,2
 AddWeapon = 9K121_ka50,    3.12, 0.35, 2.00,  1, 0,  true,2
 AddWeapon = 9K121_ka50,    3.12, 0.35, 2.00,  1, 0,  true,2
 AddWeapon = 9K121tv_ka50,  3.12, 0.35, 2.00,  1, 0,  true,2
 AddWeapon = 9K121tv_ka50,  3.12, 0.35, 2.00,  1, 0,  true,2
 AddWeapon = 9K121tv_ka50,  3.12, 0.35, 2.00,  1, 0,  true,2
+AddWeapon = 9K38_ka50,    -3.12, 0.35, 2.00, -1, 0
+AddWeapon = 9K38_ka50,    -3.12, 0.35, 2.00, -1, 0
+AddWeapon = 9K38_ka50,    -3.12, 0.35, 2.00, -1, 0
+AddWeapon = 9K38_ka50,    -3.12, 0.35, 2.00, -1, 0
+AddWeapon = 9K38_ka50,    -3.12, 0.35, 2.00, -1, 0
+AddWeapon = 9K38_ka50,    -3.12, 0.35, 2.00, -1, 0
 
 AddWeapon = targeting_pod_mob,     0.00, 0.24, 5.5,   0.0, 0.0,  true, 2
 AddWeapon = targeting_pod_pv10s,   0.00, 0.24, 5.5,   0.0, 0.0,  false,2
-
-AddWeapon = uhf_radar,  0.00, 3.0, 0.0,    0.0
 
 FlareType = 3
 EnableEntityRadar = true
 EnableNightVision = true
 EnableGunnerMode = true
 
-BoundingBox = 0.0, 0.8, 3.5, 1.5, 1.5
-
-
-
-BoundingBox = 0.0, 1.2, 2.0, 2.0, 2.5
-
-BoundingBox =  0.0, 1.2,  0.0,  2.0, 2.5
-
-BoundingBox = 0.0, 3.7, 0.0, 1.0, 2.5, 1.5
-
-BoundingBox =  0.0, 1.6, -1.8,  1.7, 1.8
+BoundingBox =  0.0, 2.2,  0.0,  2.0, 3.8
 BoundingBox =  0.0, 1.6, -2.0,  1.7, 1.8
-BoundingBox =  0.0, 1.6, -3.3,  1.0, 1.5
-BoundingBox =  0.0, 1.6, -4.3,  1.0, 1.5
-BoundingBox =  0.0, 1.6, -5.3,  1.0, 1.5
-BoundingBox =  0.0, 1.7, -6.3,  1.0, 1.0
-BoundingBox =  0.0, 1.7, -7.3,  1.0, 1.0
-BoundingBox =  0.0, 2.7, -7.8,  1.0, 1.5
+BoundingBox =  0.0, 1.6, -4.0,  1.0, 1.5
 
-
-unmountposition = 0.00,  1.50,  2.40
-
-;advanced armored modern helicopter armed no tail rotor, AOW3 style
-AddRecipe = "ABC", "DEF", "G  ", A, mcheli:airframe3, B, mcheli:heliblade2, C, mcheli:engine1, D, mcheli:wheelair, E, mcheli:fcs2, F, mcheli:cannon2, G, mcheli:rocket3
-
-
-DamageFactor = 0.3
-
-
-ThrottleUpDown = 0.5
+AddRecipe = "DX ",  "XRX",  " X ",  X, iron_block, R,redstone_block,  D,dispenser

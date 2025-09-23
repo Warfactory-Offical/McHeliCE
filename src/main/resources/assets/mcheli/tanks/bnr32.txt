@@ -1,39 +1,30 @@
-﻿﻿DisplayName = Nissan Skyline GT-R R32
-AddDisplayName = en_US, Nissan Skyline GT-R R32
-AddDisplayName = ja_JP, スカイラインGT-R 
+﻿DisplayName = Skyline GT-R BNR32
+AddDisplayName = ja_JP, スカイラインGT-R BNR32
 ItemID = 28745
-MaxHp = 200
-ThrottleUpDown = 0.92
-;5.6s
-Speed = 1.56
-MobilityYawOnGround = 8.5
+MaxHp = 120
+ThrottleUpDown = 10.0
+Speed = 0.8
+MobilityYawOnGround = 5.0
 StepHeight = 1.2
-Sound = rbtwentyfive
+Sound = prop
 MinRotationPitch = -90
 MaxRotationPitch = 90
 MobilityRoll     = 0
-Gravity = -0.61
-GravityInWater = -1.0
-DamageFactor   = 1.00
+Gravity        = -0.15
+GravityInWater = -0.1
+DamageFactor   = 0.85
 EnableNightVision = true
 MaxFuel           = 1200
-FuelConsumption   = 1.2
+FuelConsumption   = 1.0
 ThirdPersonDist = 8
-
-EntityPitch = -20
-
-EntityWidth  = 0.95
-EntityHeight = 0.95
-
-WeightedCenterZ = 0.8
 
 OnGroundPitchFactor = 18.0
 OnGroundRollFactor  = 4.8
 
-CameraPosition =  0.54,  1.23, -0.02, true
-CameraPosition = -0.88,  0.50,  0.72, true, -130, 0
-CameraPosition = -0.70,  1.40, -0.44, true, -40, 20
-CameraPosition =  1.80,  0.20,  1.50, true,  15, 0
+CameraPosition = -0.54,  1.22, -0.02, true
+CameraPosition =  0.90,  0.50,  0.70, true, 130, 0
+CameraPosition =  0.70,  1.40, -0.50, true, 40, 20
+CameraPosition =  1.80,  0.20,  1.50, true, 15, 0
 
 VariableSweepWing  = true
 SweepWingSpeed  = 0.0
@@ -41,8 +32,6 @@ SweepWingSpeed  = 0.0
 AddTexture = bnr32_1
 AddTexture = bnr32_2
 AddTexture = bnr32_3
-AddTexture = bnr32_4
-AddTexture = bnr32_5
 
 ;後退可能にする
 EnableBack = true
@@ -54,14 +43,12 @@ WeightType = Car
 
 ;SetWheelPos =  X座標, Y座標,  Z座標1, Z座標2, Z座標3 ...
 ; X座標のマイナス側は必要なし
-SetWheelPos =  0.80,  -0.24,  1.965, -1.789
+SetWheelPos =  1.05,  -0.24,  1.965, -1.789
 
-HUD = bnr32_hud, none, none,none
+HUD = bnr32_hud, none
 
-AddSeat =  0.54,  0.02, -0.30
-AddSeat = -0.54,  0.12, -0.30
-AddSeat = -0.54,  0.22, -1.30
-AddSeat =  0.54,  0.22, -1.30
+AddSeat = -0.54,  0.12, -0.02
+AddSeat =  0.54,  0.22, -0.02
 
 ;PivotTurnThrottle を0より大きい値にすると超信地旋回ができなくなる。デフォルトは0
 PivotTurnThrottle = 0.1
@@ -74,33 +61,21 @@ AddPartWheel     =  1.05,  0.157,  1.965, 30
 AddPartWheel     = -1.05,  0.157, -1.789
 AddPartWheel     =  1.05,  0.157, -1.789
 
-AddPartSteeringWheel =   0.5386,  0.8820,  0.4793,  0.0, 1.0, -1.73,   130
+AddPartSteeringWheel =  -0.5386,  0.8820,  0.4793,  0.0, 1.0, -1.73,   130
 
-
-AddPartSteeringWheel =   1.05,  0.157,  1.965,  0.0, 1.0, 0.0,   30
-AddPartSteeringWheel =  -1.05,  0.157,  1.965,  0.0, 1.0, 0.0,   30
-
-AddPartThrottle =  0.623, 0.882, 0.800,  0,1,-1.73, -220
-AddPartThrottle =  0.453, 0.882, 0.800,  0,1,-1.73, -175
+AddPartThrottle = -0.454, 0.882, 0.800,  0,1,-1.73, -220
+AddPartThrottle = -0.623, 0.882, 0.800,  0,1,-1.73, -175
 AddPartThrottle = -0.623, 0.882, 0.800,  0,1,-1.73, 0
 
-AddPartCanopy   =  1.18, 0.32, 1.20,  0, 1, 0, -70
-AddPartCanopy   =  1.18, 0.32, 1.20,  0, 1, 0, -70
-AddPartCanopy   =  1.18, 0.32, 1.20,  0, 1, 0, -70
-AddPartCanopy   =  0.000, 0.000, 0.000,  0,0,0, 0
-
-;AddPartHatch    =     0.00,   0.62,   1.28,   1,0,0,   5
+AddPartHatch    =     0.00,   0.62,   1.28,   1,0,0,   5
 
 InventorySize = 9
 
-;faster civ car expensiv
-AddRecipe = "ABC", "DEF", "   ", A, mcheli:lightchassis, B, mcheli:wheel4, C, mcheli:engine1, D, mcheli:basicmechanicparts, E, gold_nugget, F, glass_pane
+AddRecipe = " G ",  "I I",  "RIR",   G, glass, I, iron_ingot, R, redstone
 
 ;ヘッドライト
-AddFixedSearchLight =  0.77, 0.62, 3.09,   0x50FFFFFF,   0x00FFFFC0,    0.25, 0.55,  -5,  0
-AddFixedSearchLight = -0.77, 0.62, 3.09,   0x50FFFFFF,   0x00FFFFC0,    0.25, 0.55,   5,  0
-
-;0xFF12edff xenon
+AddFixedSearchLight =  0.77, 0.62, 2.85,   0x50FFFFFF,   0x00FFFFC0,    27.0, 15.0,  -5,  0
+AddFixedSearchLight = -0.77, 0.62, 2.85,   0x50FFFFFF,   0x00FFFFC0,    27.0, 15.0,   5,  0
 
 ;テールランプ
 AddFixedSearchLight =  0.97, 0.78,-3.05,   0xFFFF0000,   0x10FF0000,    0.05, 0.25,  6.0,  0
@@ -108,23 +83,3 @@ AddFixedSearchLight =  0.62, 0.78,-3.09,   0xFFFF0000,   0x10FF0000,    0.05, 0.
 AddFixedSearchLight = -0.62, 0.78,-3.09,   0xFFFF0000,   0x10FF0000,    0.05, 0.25, -6.0,  0
 AddFixedSearchLight = -0.97, 0.78,-3.05,   0xFFFF0000,   0x10FF0000,    0.05, 0.25, -6.0,  0
 
-AddWeapon = smoke_none, 1.2,  -0.3,-1.7592,   1.0, 0.0
-AddWeapon = L_Claxon,    0.00, 0.00, 0.00,  0.0,0.0
-
-;engine?
-BoundingBox =  0.0, 0.60,  2.1,   0.8, 0.6
-;mid
-BoundingBox = 0.0, 0.10, 0.0, 2.5, 0.2
-;front
-BoundingBox = 0.0, 0.05, 1.65, 2.5, 0.2
-
-BoundingBox = 0.0, 0.00, 2.15, 2.1, 0.2
-
-;rear
-BoundingBox = 0.0, 0.10, -1.8, 2.3, 0.2
-Regeneration = false
-ArmorDamageFactor = 2.32
-
-UnmountPosition = 0.54,  2.20, -0.30
-
-ArmorMinDamage = 2

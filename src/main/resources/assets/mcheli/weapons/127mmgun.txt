@@ -1,43 +1,20 @@
-DisplayName = 127mm Otobreda 127/64 Naval Gun [HE]
+DisplayName = OtoMelara127mm gun
 Type = MachineGun2
 Power = 40
 ModelBullet = bullet76mm
-Acceleration = 5.0
-Explosion = 4
-
-ExplosionInWater = 2
-
-ExplosionBlock = 3
+Acceleration = 8.0
+Explosion = 3
+ExplosionBlock = 2
 Flaming = false
 Sight = MoveSight
-Delay = 15
-
-HeatCount = 40
+Delay = 13
+ModeNum = 2
+HeatCount = 20
 MaxHeatCount = 120
-;SoundVolume = 1.6
+SoundVolume = 1.6
 SetCartridge = cartridge, 0.4,  0, 0, 7.50, -0.04, 0.40
-Sound = naval
-Gravity = -0.005
+Sound = cannon_1_snd
 ProximityFuseDist = 2
-SoundPitch = 0.9
-
-Gravity = -0.005
-
-
-ReloadTime = 150
-Group = MainGun
-Acceleration = 7.0
-BulletColor        = 255, 255, 100, 100
-;ModelBullet = bullet105mm
-Piercing = 0
-Accuracy = 0.0
-DamageFactor = tank, 2.0
-DamageFactor = plane, 4.5
-DamageFactor = vehicle 4.5
-DamageFactor = heli, 4.5
-DamageFactor = player, 20.0
-
-SoundVolume = 15
 
 AddMuzzleFlash      = 8.1,      0.85,        1,  150,254,219,154
 AddMuzzleFlash      = 8.0,      0.80,        1,  150,254,219,184

@@ -1,33 +1,18 @@
-DisplayName = 80mm S-8DM Rocket [Thermobaric]
+DisplayName = S-8DM 80mmThermobaric
 Type = Rocket
-Power = 300
-
+Power = 10
 ModelBullet = hydra70
 Acceleration = 4.0
-Explosion = 4
-ExplosionInWater = 2
+Explosion = 5
 Flaming = false
 Sight = MoveSight
-Delay = 1
+Delay = 10
 ReloadTime = 110
 Round = 2
 FAE = true
-Sound = hydraseventy
-
-Gravity = -0.005
-
-Acceleration = 7.0
-BulletColor        = 255, 255, 100, 100
-Piercing = 0
-DamageFactor = tank, 2.0
-DamageFactor = plane, 4.5
-DamageFactor = vehicle 4.5
-DamageFactor = heli, 4.5
-DamageFactor = player, 20.0
-;AddDisplayName = en_US,
-SoundVolume = 15
+Sound = rocket_snd
 
 MaxAmmo = 10
-SuppliedNum = 2
+SuppliedNum = 5
 Item =  4, iron_ingot
 Item =  4, gunpowder

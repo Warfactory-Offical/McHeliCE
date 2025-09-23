@@ -1,30 +1,19 @@
-DisplayName = 40mm Bofors L/60 Autocannon [M81A1 - AP-T]
+DisplayName = Bofors 40mm gun
 Type = MachineGun2
-Power = 72
+Power = 30
 ModelBullet = bullet76mm
-Acceleration = 7.0
+Acceleration = 5.0
+Explosion = 2
+ExplosionBlock = 1
 Flaming = false
 Sight = MoveSight
 Delay = 5
 HeatCount = 18
 MaxHeatCount = 150
 ReloadTime = 30
+Sound = cannon_2_snd
 
-
-
-;SoundPitch = 0.6
-SoundVolume = 15
-
-Gravity = -0.001
-SoundVolume = 15
-Sound = bofors
-
-MaxAmmo = 240
-SuppliedNum = 120
+MaxAmmo = 480
+SuppliedNum = 80
 Item =  2, iron_ingot
 Item =  2, gunpowder
-DamageFactor = tank, 1.0
-DamageFactor = plane, 4.5
-DamageFactor = vehicle 4.5
-DamageFactor = heli, 4.5
-DamageFactor = player, 20.0

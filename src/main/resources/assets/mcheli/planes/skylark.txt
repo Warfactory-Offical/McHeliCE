@@ -2,7 +2,7 @@ DisplayName = Elbit Skylark
 AddDisplayName = ja_JP, エルビット スカイラーク
 ItemID = 28745
 MaxHp = 20
-Speed = 0.9
+Speed = 0.6
 EnableNightVision = true
 EnableEntityRadar = true
 EnableGunnerMode = true
@@ -14,9 +14,6 @@ FuelConsumption = 0.2
 SmallUAV = true
 HUD = plane
 ThirdPersonDist = 4
-ThrottleUpDown = 0.9
-
-RotorSpeed = 200.0
 
 ; M = Military(軍用機).  Q = Drone(無人航空機)
 Category = M.Q
@@ -32,11 +29,8 @@ AddWeapon = targeting_pod_block, 0.0, 0.4, 0.3,  0.0, 0.0
 
 AddTexture = skylark_camo
 
-;basic unarmed prop drone (modern drone), AOW3 style
-AddRecipe = "ABC", "   ", "   ", A, mcheli:item.ingot_aluminum, B, mcheli:basicmechanicparts, C, mcheli:electronics
-
+AddRecipe = " I ",  " I ",  " F ",  I,iron_ingot, F,furnace
 
 AddPartRotor =      0.00,  0.00,  0.00,   1,0,0
 AddBlade = 1, 0,  0.00,  0.00,  0.00,   0,0,-1
 
-DamageFactor = 0.8

@@ -1,24 +1,14 @@
 DisplayName = PZL M-18 Dromader
-AddDisplayName = en_US, PZL M-18 Dromader
 AddDisplayName = ja_JP, PZL M-18 ドロマーデル
 ItemID = 28733
 MaxHp = 100
-Speed = 0.2436
-
-;140
-;.140*1.74
-
-RotorSpeed = 2000.0
-
-
-Sound = dromader
-ThrottleUpDown = 0.3
+Speed = 0.7
+Sound = prop
+ThrottleUpDown = 0.7
 MaxFuel         = 1300
 FuelConsumption = 1.0
 onGroundPitch = 13.0
-
-EntityWidth  = 0.86
-EntityHeight = 0.86
+ThirdPersonDist = 12
 
 ; C = Civilian(民間機)
 Category = C
@@ -27,7 +17,7 @@ HUD = plane_wwii
 
 AddTexture = pzl-m18_2
 
-AddSeat =  0.0, 2.47, -2.95
+AddSeat =  0.0, 2.67, -2.95
 
 AddPartCanopy = 0.40, 3.94, -2.99, 0, -0.16, 275, 70
 
@@ -38,31 +28,8 @@ AddWeapon = dispenser_fertilizer,  0.0, 0.0, 0.54,   1.0, 0.0
 AddPartRotor =    0.00, 1.91, 2.83,   1,0,0
 AddBlade = 1, 0,  0.00, 1.91, 2.83,   0,0,-1
 
-;basic unarmed prop plane, AOW3 style
-AddRecipe = "ABC", "D  ", "   ", A, mcheli:airframe, B, mcheli:basicmechanicparts, C, mcheli:engine1, D, mcheli:wheelair
+AddRecipe = " PI",  "FXI",  "HSB",  X,iron_block, I,iron_ingot, F,furnace, W,water_bucket, H,stone_hoe, S,wheat_seeds, B,dye,15
 
-BoundingBox =  0.00,  2.0,  2.0,  1.3, 1.3
-BoundingBox =  0.00,  2.2, -0.2,  1.8, 1.8
-;BoundingBox =  0.00,  2.5, -3.4,  1.5, 1.5
-
-
-BoundingBox = 1.5, 1.5, -1.0, 2.0, 0.2
-BoundingBox = 2.5, 1.5, -1.0, 2.0, 0.2
-BoundingBox = 4.5, 1.5, -1.0, 2.0, 0.2
-BoundingBox = 6.5, 1.5, -1.0, 2.0, 0.2
-
-BoundingBox = -1.5, 1.5, -1.0, 2.0, 0.2
-BoundingBox = -2.5, 1.5, -1.0, 2.0, 0.2
-BoundingBox = -4.5, 1.5, -1.0, 2.0, 0.2
-BoundingBox = -6.5, 1.5, -1.0, 2.0, 0.2
-
-BoundingBox = 0.00, 2.68, -4.87, 2.0, 0.5
-BoundingBox = 0.00, 3.04, -7.10, 2.0, 1.5
-BoundingBox = 1.80, 3.04, -7.10, 2.0, 1.5
-BoundingBox = -1.80, 3.04, -7.10, 2.0, 1.5
-BoundingBox = 0.00, 4.24, -7.30, 1.5, 1.5
-
-unmountposition = 0.0, 2.17, -2.95
-
-enableback = true
-DamageFactor = 0.8
+BoundingBox =  0.00,  2.5,  2.0,  1.3, 1.3
+BoundingBox =  0.00,  2.5, -0.2,  1.8, 1.8
+BoundingBox =  0.00,  2.5, -3.4,  1.5, 1.5

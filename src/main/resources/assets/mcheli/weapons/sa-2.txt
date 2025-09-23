@@ -1,21 +1,15 @@
-DisplayName = SA-2 Guideline [SAM]
+DisplayName = SA-2 Guidline
 Type = AAMissile
-Power = 195
-DamageFactor = tank, 1.5
-DamageFactor = plane, 3.0
-DamageFactor = vehicle 2.0
-DamageFactor = heli, 3.0
+Power = 150
 Acceleration = 3.5
-Explosion = 13
+Explosion = 9
 Flaming = true
 Sight = MissileSight
-Delay = 5
-ReloadTime = 1000
-LockTime = 25
+Delay = 400
+LockTime = 50
 ModelBullet = sa2missile
-Round = 1
 
-MaxAmmo = 1
+MaxAmmo = 4
 SuppliedNum = 1
 Item =  4, iron_ingot
 Item =  4, gunpowder

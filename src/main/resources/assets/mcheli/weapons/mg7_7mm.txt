@@ -1,6 +1,8 @@
-DisplayName = 7.7mm Machine Gun
+DisplayName = 7.7mm Machine gun
 Type = MachineGun1
 Power = 7
+Acceleration = 8.0
+Explosion = 0
 Flaming = false
 Sight = MoveSight
 Delay = 0
@@ -10,19 +12,6 @@ HeatCount = 1
 MaxHeatCount = 150
 SoundPitch = 1.0
 Sound = gun_l1_snd
-
-Acceleration = 7.5
-Gravity = -0.005
-
-Acceleration = 7.5
-Piercing = 0
-DamageFactor = tank, 1.0
-DamageFactor = plane, 0.5
-DamageFactor = vehicle, 1.0
-DamageFactor = heli, 0.5
-;DamageFactor = player, 20.0
-;AddDisplayName = en_US,
-SoundVolume = 15
 
 MaxAmmo = 1200
 SuppliedNum = 200

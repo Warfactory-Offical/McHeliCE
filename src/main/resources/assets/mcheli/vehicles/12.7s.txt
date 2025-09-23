@@ -1,43 +1,35 @@
-DisplayName = 12.7 cm/40 Type 89 Naval Gun Shield Variant
-AddDisplayName = en_US, 12.7 cm/40 Type 89 Naval Gun Shield Variant
+DisplayName = 12.7cmAACanon shield
 AddDisplayName = ja_JP, 12.7cm連装高角砲シールド付き
 ItemID = 28606
 MaxHp = 200
-HideEntity = false
+HideEntity = true
 MinRotationPitch = -80
 MaxRotationPitch =  8
-DamageFactor = 0.8
+DamageFactor = 0.1
 CameraZoom = 4
-CameraPosition = 2.5, 2.02, 1.0
-Gravity = -9.81
-GravityInWater = -1.0
+CameraPosition = 0.0, 1.50, 0.0
+ThirdPersonDist = 8
 
 ; W = WWII,  A = AAGun(対空砲)
 Category = W.A
 
 HUD = vehicle_wwii
 
-unmountposition = 0.00, 1.5, -0.0
-;AddSeat = 0.00,  0.50, 0.00
-
-AddGunnerSeat = 2.6,  0.52, -1.00, 0.0, 3.02, 0.0, false, -80, 8, true
-
-
+AddSeat = 0.00,  0.50, 0.00
 
 ; AddPart = DrawFirstPerson[T/F], RotationYaw[T/F], RotationPitch[T/F], PartType[0~], PoxX, PoxY, PoxZ
 ;本体-砲身
 AddPart	= true,  true, false, 0,   0.00, 0.00, 0.00
-AddPart	= true, true, true,  0,   0.00, 0.00, 0.00
-AddPart	= true, true, true,  2,   0.00, 0.00, 0.00, 0.5
-AddPart	= true, true, true,  2,   0.00, 0.00, 0.00, 0.5
+AddPart	= false, true, true,  0,   0.00, 0.00, 0.00
+AddPart	= false, true, true,  2,   0.00, 0.00, 0.00, 0.5
+AddPart	= false, true, true,  2,   0.00, 0.00, 0.00, 0.5
 
-AddTurretWeapon = 12_7cm,      -0.36, 1.35, 0.0,   0.0, 0.0,   true,1, 0,-360,360, -80, 8
-AddTurretWeapon = 12_7cm,       0.73, 1.35, 0.0,   0.0, 0.0,   true,1, 0,-360,360, -80, 8
-;;AddTurretWeapon = type3bullet, -0.36, 1.35, 5.83,   0.0, -1.0,   true,1, 0,-360,360, -80, 8
-;;AddTurretWeapon = type3bullet,  0.73, 1.35, 5.83,   0.0, -1.0,   true,1, 0,-360,360, -80, 8
+AddTurretWeapon = 12_7cm,      -0.36, 1.35, 5.83,   0.0, -1.0,   true,1, 0,-360,360, -80, 8
+AddTurretWeapon = 12_7cm,       0.73, 1.35, 5.83,   0.0, -1.0,   true,1, 0,-360,360, -80, 8
+AddTurretWeapon = type3bullet, -0.36, 1.35, 5.83,   0.0, -1.0,   true,1, 0,-360,360, -80, 8
+AddTurretWeapon = type3bullet,  0.73, 1.35, 5.83,   0.0, -1.0,   true,1, 0,-360,360, -80, 8
 
-;light aa turret not modern less complex stage 2 naval can shield
-AddRecipe = "ABA", "BB ", "   ", A, mcheli:cannon2, B, mcheli:map
+AddRecipe = "I I",  "DXD",  "XXX",  X, iron_block, I, iron_ingot, D, dispenser
 
 
-BoundingBox =  0.0, 1.20, 0.0,  4.0, 3.05
+BoundingBox =  0.0, 1.5, 0.0,  4.0, 3.0

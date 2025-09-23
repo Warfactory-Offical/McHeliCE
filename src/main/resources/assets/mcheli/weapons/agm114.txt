@@ -1,14 +1,11 @@
 DisplayName = AGM-114 Hellfire
 Type = ATMissile
-Power = 1000
+Power = 62
 Acceleration = 4.0
-Explosion = 5
-ExplosionInWater = 3
-ExplosionBlock = 5
+Explosion = 4
 Flaming = true
 Sight = MissileSight 
-Delay = 5
-ReloadTime = 1000
+Delay = 100
 LockTime = 20
 ModeNum = 2
 ProximityFuseDist = 1
@@ -17,13 +14,9 @@ Sound = missile_1_snd
 RidableOnly = true
 
 DamageFactor = tank, 2.0
-DamageFactor = plane, 1.0
-DamageFactor = vehicle 4.5
-DamageFactor = heli, 4.5
-DamageFactor = player, 20.0
 
 MaxAmmo = 4
-SuppliedNum = 1
-Item =  4, iron_ingot
-Item =  6, gunpowder
-Item =  2, redstone
+SuppliedNum = 2
+Item =  1, iron_ingot
+Item =  1, gunpowder
+Item =  1, redstone

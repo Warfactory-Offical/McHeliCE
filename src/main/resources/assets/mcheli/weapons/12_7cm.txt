@@ -1,47 +1,18 @@
-DisplayName = 12.7cm 5 inch/40 Type 89 Gun [127mm HE - HE]
+DisplayName = 12.7cm Gun
 Type = MachineGun2
-Power = 25
+Power = 30
 ModelBullet = bullet76mm
 Acceleration = 6.0
 Explosion = 3
-ExplosionBlock = 3
-
-ExplosionInWater = 2
-
+ExplosionBlock = 1
 Flaming = false
 Sight = MoveSight
 Delay = 10
-
+ModeNum = 1
 HeatCount = 25
-MaxHeatCount = 160
-SoundVolume = 15
-Sound = naval
-
-Gravity = -0.005
-
-Delay = 10
-ReloadTime = 150
-Group = MainGun
-Acceleration = 7.0
-;BulletColor        = 255, 255, 100, 100
-;ModelBullet = bullet105mm
-Piercing = 0
-Accuracy = 0.0
-DamageFactor = tank, 2.0
-DamageFactor = plane, 4.5
-DamageFactor = vehicle 4.5
-DamageFactor = heli, 4.5
-DamageFactor = player, 20.0
-AddDisplayName = en_US, 12.7cm Gun
-SoundVolume = 15
-
-AddMuzzleFlash      =  9.3,      2.10,        7,  220,254,159,74
-AddMuzzleFlash      =  9.2,      2.05,        6,  220,254,219,104
-AddMuzzleFlash      =  9.1,      2.00,        5,  220,254,219,184
-AddMuzzleFlashSmoke =  9.3, 30,  12.0,  4.0, 65,  220,160,140,120
-AddMuzzleFlashSmoke = 11.3, 20,  13.0,  7.0, 55,  200,190,170,150
-
-
+MaxHeatCount = 60
+SoundVolume = 0.6
+Sound = cannon_1_snd
 
 MaxAmmo = 120
 SuppliedNum = 30

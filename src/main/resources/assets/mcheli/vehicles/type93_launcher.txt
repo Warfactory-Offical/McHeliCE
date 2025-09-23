@@ -1,20 +1,14 @@
-DisplayName = Type 93 Torpedo Launcher
+DisplayName = Type 93 torpedo
 AddDisplayName = ja_JP, 九三式魚雷
 ItemID = 28609
 MaxHp = 100
-Gravity = -9.81
-GravityInWater = -1.0
 HideEntity = true
 MinRotationPitch = -15
 MaxRotationPitch = 15
-DamageFactor = 1.0
+DamageFactor = 0.5
 CameraZoom = 3
 CameraPosition = 0.0, 4.0, 0.0
-
-
-unmountposition = 0.00, 1.5, -0.0
-
-
+ThirdPersonDist = 12
 
 ; M = Military,  T = Torpedo(魚雷)
 Category = M.T
@@ -31,8 +25,6 @@ AddWeapon = type93torpedo,  0.89, 0.71, 0.52,   0.0, 0.0
 AddWeapon = type93torpedo, -0.89, 0.71, 0.52,   0.0, 0.0
 AddWeapon = type93torpedo, -2.40, 0.71, 0.52,   0.0, 0.0
 
-;torp launchr 4 turret
-AddRecipe = "BBB", "BCD", "   ", B, mcheli:lap, C, mcheli:electronics, D, mcheli:map
-
+AddRecipe = " XX",  "FXX",  " RG",  X, iron_block, R, redstone_block, F, fish, G, gunpowder
 
 BoundingBox =  0.0, 1.5, 0.0,  6.0, 3.0

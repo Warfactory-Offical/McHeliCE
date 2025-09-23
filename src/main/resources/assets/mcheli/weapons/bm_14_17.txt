@@ -1,34 +1,19 @@
-DisplayName = 140mm BM-14-17 Rocket
+DisplayName = BM-14-17 140mm Rocket
 Type = Rocket
-Power = 700
+Power = 42
 ModelBullet = hydra70
 Acceleration = 5.0
-Explosion = 4
-ExplosionInWater = 2
+Explosion = 2
 Flaming = false
 Sight = MoveSight
 Delay = 3
 ReloadTime = 110
 Round = 17
-Sound = grad
+Sound = missile_4_snd
 Gravity = -0.03
-Accuracy = 3.0
-
-Acceleration = 7.0
-BulletColor        = 255, 255, 100, 100
-;ModelBullet = bullet105mm
-Piercing = 0
-;Accuracy = 0.0
-DamageFactor = tank, 2.0
-DamageFactor = plane, 4.5
-DamageFactor = vehicle 4.5
-DamageFactor = heli, 4.5
-DamageFactor = player, 20.0
-;AddDisplayName = en_US,
-SoundVolume = 15
-
+Accuracy = 5.0
 
 MaxAmmo = 34
-SuppliedNum = 17
-Item =  4, iron_ingot
-Item =  4, gunpowder
+SuppliedNum = 34
+Item =  8, iron_ingot
+Item =  7, gunpowder

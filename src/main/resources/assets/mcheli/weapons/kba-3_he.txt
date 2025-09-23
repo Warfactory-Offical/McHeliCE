@@ -1,27 +1,22 @@
-DisplayName = 125mm KBA-3 Cannon [3OF26 - HE]
+DisplayName = 125mm KBA-3 [HE]
 Type = MachineGun2
-Power = 42
-Explosion = 3
-
-ExplosionInWater = 2
-
-ExplosionBlock = 5
-
+Power = 40
+Explosion = 5
+ExplosionBlock = 4
+Acceleration = 10.0
 Sight = None
-
-
-Sound = teightymain
-
-
-
+Delay = 125
+SoundVolume = 10.0
+Sound = cannon_4_snd
+Accuracy = 0.5
+ModelBullet = bullet105mm
 BulletColor        = 255, 255, 100, 100
+DamageFactor = plane, 3.0
+DamageFactor = helicopter, 3.0
 
-
-Gravity = -0.005
+Gravity = -0.01
 Group = MainGun
 Recoil = 2.5
-DisplayMortarDistance = true
-
 
 AddMuzzleFlash      =  8.2,      2.10,        7,  220,254,159,74
 AddMuzzleFlash      =  8.1,      2.05,        6,  220,254,219,104
@@ -31,25 +26,7 @@ AddMuzzleFlashSmoke = 10.2, 20,  13.0,  7.0, 55,  200,190,170,150
 
 RecoilBufCount = 40, 5
 
-;28 rdy
-
-Round = 8
-Delay = 140
-ReloadTime = 180
-Group = MainGun
-Acceleration = 7.0
-ModelBullet = bullet
-Piercing = 0
-Accuracy = 0.0
-DamageFactor = tank, 2.0
-DamageFactor = plane, 4.5
-DamageFactor = vehicle 4.5
-DamageFactor = heli, 4.5
-DamageFactor = player, 20.0
-;AddDisplayName = en_US,
-SoundVolume = 15
-
-MaxAmmo = 10
-SuppliedNum = 2
-Item =  1, iron_ingot
+MaxAmmo = 24
+SuppliedNum = 12
+Item =  2, iron_ingot
 Item =  3, gunpowder

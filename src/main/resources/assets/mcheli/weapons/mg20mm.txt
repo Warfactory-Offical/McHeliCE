@@ -1,26 +1,15 @@
-DisplayName = 20mm Automatic Cannon
+DisplayName = 20mm Machine gun
 Type = MachineGun1
 Power = 16
+Acceleration = 8.0
+Explosion = 0
 Flaming = false
 Sight = MoveSight
 Delay = 1
 SoundVolume = 10
 HeatCount = 3
 MaxHeatCount = 60
-Sound = twentymil
-Acceleration = 7.5
-Gravity = -0.005
-
-Acceleration = 7.5
-Piercing = 0
-DamageFactor = tank, 1.0
-DamageFactor = plane, 1.5
-DamageFactor = vehicle, 1.5
-DamageFactor = heli, 1.5
-DamageFactor = player, 20.0
-;AddDisplayName = en_US,
-SoundVolume = 15
-
+Sound = gun_h2_snd
 
 MaxAmmo = 800
 SuppliedNum = 200

@@ -1,2 +1,0 @@
-DisplayName = Flap Up
-Type = Dummy

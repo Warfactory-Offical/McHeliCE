@@ -1,23 +1,16 @@
-DisplayName = 7.62mm M60 Machine Gun
+DisplayName = M60 7.62mm
 Type = MachineGun2
 Power = 8
-Acceleration = 7.0
+Acceleration = 8.0
 Flaming = false
 Sight = MoveSight
 Delay = 1
-SoundVolume = 15.0
+SoundVolume = 0.6
 SoundPitch = 1.0
-Sound = msixty
+Sound = gun_h1_snd
 Accuracy = 0.3
 HeatCount = 4
 MaxHeatCount = 150
-
-Gravity = -0.005
-
-DamageFactor = tank, 1.0
-DamageFactor = plane, 0.5
-DamageFactor = vehicle, 1.0
-DamageFactor = heli, 0.5
 
 AddMuzzleFlash      =  1.6,      0.22,        1,  100,254,159,84
 AddMuzzleFlash      =  1.5,      0.20,        1,  120,254,219,184

@@ -1,2 +1,0 @@
-DisplayName = Weapon Bay Closed
-Type = Dummy

@@ -1,28 +1,21 @@
-DisplayName =  Type 96 25mm Tri-mounted Anti-Aircraft Gun 
-AddDisplayName = en_US, Type 96 25mm Tri-mounted Anti-Aircraft Gun
+DisplayName = 25mmMachineGun
 AddDisplayName = ja_JP, 25mm三連装機銃
 ItemID = 28608
 MaxHp = 100
-HideEntity = false
-MinRotationPitch = -85
-MaxRotationPitch =  10
-DamageFactor = 1.0
-CameraZoom = 2
-CameraPosition = -1.31, 1.65, 0.0
-Gravity = -9.81
-GravityInWater = -1.0
+HideEntity = true
+MinRotationPitch = -80
+MaxRotationPitch =  25
+DamageFactor = 0.8
+CameraZoom = 1
+CameraPosition = 0.0, 2.40, 0.0
+ThirdPersonDist = 4
 
-unmountposition = -1.31, 1.5, -0.0
 ; W = WWII,  A = AAGun(対空砲)
 Category = W.A
 
 HUD = vehicle_wwii
 
-;AddSeat = 0.00,  1.40, 0.00
-
-AddGunnerSeat = -1.31,  0.481, 0, -1.31, 2.00, 0.0, false, -80, 25, true
-
-
+AddSeat = 0.00,  1.40, 0.00
 
 ; AddPart = DrawFirstPerson[T/F], RotationYaw[T/F], RotationPitch[T/F], PartType[0~], PoxX, PoxY, PoxZ
 ;本体-砲身
@@ -33,7 +26,6 @@ AddTurretWeapon = mg25mm,  -0.40, 1.43, -0.04,   0.0, -1.0,   true,1, 0,-360,360
 AddTurretWeapon = mg25mm,   0.00, 1.43, -0.04,   0.0, -1.0,   true,1, 0,-360,360, -80, 25
 AddTurretWeapon = mg25mm,   0.40, 1.43, -0.04,   0.0, -1.0,   true,1, 0,-360,360, -80, 25
 
-;basic 20mm x3
-AddRecipe = "AAB", "AAA", "AB ", A, mcheli:cannon1, B, mcheli:lap
+AddRecipe = "III",  "DDD",  "XXX",  X, iron_block, I, iron_ingot, D, dispenser
 
-BoundingBox =  0.0, 1.0, 0.0,  1.5, 1.5
+BoundingBox =  0.0, 1.0, 0.0,  2.5, 2.0

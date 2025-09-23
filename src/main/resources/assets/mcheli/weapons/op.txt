@@ -1,3 +1,0 @@
-DisplayName = Open Hatch
-Type = Dummy
-Sight = None

@@ -1,26 +1,21 @@
-DisplayName = Mk.32 Torpedo Tube
+DisplayName = Mk.32 Torpedo tube
 AddDisplayName = ja_JP, Mk 32 短魚雷発射管
 ItemID = 28605
-MaxHp = 80
-Gravity = -9.81
-GravityInWater = -1.0
-HideEntity = false
+MaxHp = 50
+HideEntity = true
 MinRotationPitch = -2
 MaxRotationPitch = 2
-DamageFactor = 1.0
+DamageFactor = 0.5
 CameraZoom = 2
-CameraPosition = 0.0, 1.0, -1.5
-
-Unmountposition = 0.0, 1.0, -1.5
+CameraPosition = 0.0, 2.0, 0.0
+ThirdPersonDist = 8
 
 ; M = Military,  T = Torpedo(魚雷)
 Category = M.T
 
 HUD = vehicle_wwii
 
-
-
-AddGunnerSeat = 0.00,  -0.44, -1.5, 0.00,  1.44, -1.2, false, -90, 90, true
+AddSeat = 0.00,  1.0, 0.00
 
 ; AddPart = DrawFirstPerson[T/F], RotationYaw[T/F], RotationPitch[T/F], PartType[0~], PoxX, PoxY, PoxZ
 AddPart	= true, true, false, 0,   0.00, 0.00, 0.00
@@ -29,8 +24,7 @@ AddWeapon = mk46_3,  0.00, 0.62, 1.72,   0.0, 0.0
 AddWeapon = mk46_3,  0.18, 0.28, 1.72,   0.0, 0.0
 AddWeapon = mk46_3, -0.28, 0.28, 1.72,   0.0, 0.0
 
-;torp launchr 3
-AddRecipe = "BBB", " C ", "   ", B, mcheli:lap, C, mcheli:electronics
+AddRecipe = " F ",  "FIF",  "IRI",  I, iron_block, R, redstone_block, F, fish
 
 
-BoundingBox =  0.0, 0.5, 0.0,  1.25, 0.9
+BoundingBox =  0.0, 0.5, 0.0,  1.5, 1.0

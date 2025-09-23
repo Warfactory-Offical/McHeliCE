@@ -1,15 +1,11 @@
-DisplayName = Kawanishi H8K "Emily"
-AddDisplayName = en_US, Kawanishi H8K "Emily"
+DisplayName = Kawanishi H8K
 AddDisplayName = ja_JP, 二式飛行艇
 ItemID = 28719
-MaxHp = 250
-Speed = 0.50286
-
-;289 
-
-Sound = prop_bomber
+MaxHp = 280
+Speed = 0.80
+Sound = prop
 Float = true
-ThrottleUpDown = 0.1
+ThrottleUpDown = 0.5
 MaxFuel         = 3000
 FuelConsumption = 1.5
 ThirdPersonDist = 28
@@ -17,79 +13,51 @@ ThirdPersonDist = 28
 ; W = WWII.  F = Fighter(戦闘機)
 Category = W.F
 
-DamageFactor = 0.8
-enableback = true
-
-CameraZoom = 2
-
-HUD = plane_wwii, plane_wwii, gunner, gunner, gunner, gunner, gunner
+HUD = plane_wwii, none, gunner, gunner, gunner, gunner, gunner
 
 MobilityYaw   = 0.6
 MobilityPitch = 0.6
 MobilityRoll  = 0.3
-;MinRotationPitch = -60
-;MaxRotationPitch =  60
-;MinRotationRoll  = -60
-;MaxRotationRoll  =  60
+MinRotationPitch = -60
+MaxRotationPitch =  60
+MinRotationRoll  = -60
+MaxRotationRoll  =  60
 
 ;AddSeat =  X, Y, Z
 AddSeat =  0.70,  1.80,  0.10
-
-unmountposition = 0.70,  2.10,  0.10
-
-AddSeat = -0.70,  1.90,  0.10
+AddSeat = -0.70,  1.80,  0.10
 ;AddGunnerSeat =  X,Y,Z, CamX,CamY,CamZ
-;front
-AddGunnerSeat =  0.00, 1.05,   3.70,    0.00, 1.62,   4.46, false, -65, 45, false
-;midsec
-AddGunnerSeat =  0.00, 2.91, -13.65,    0.00, 4.11, -13.35, false, -90, 25, false
-;rear
-AddGunnerSeat =  0.00, 2.35, -22.00,    0.00, 3.20, -22.87, false, -45, 45, false
-;l
-AddGunnerSeat =  0.30, 2.05,  -11.0,    1.32, 3.00, -11.65, false, -35, 35, false
-;r
-AddGunnerSeat =  -0.30, 2.05,  -11.0,   -1.32, 3.00, -11.65, false, -35, 35, false
+AddGunnerSeat =  0.00, 1.11,   3.00,    0.00, 1.62,   4.46
+AddGunnerSeat =  0.00, 2.11, -13.65,    0.00, 4.11, -13.35
+AddGunnerSeat =  0.00, 2.11, -18.00,    0.00, 3.20, -22.87
+AddGunnerSeat =  0.00, 2.11,  -2.52,    1.32, 3.00, -11.65
+AddGunnerSeat =  0.00, 2.11,  -4.52,   -1.32, 3.00, -11.65
 
-AddPartWeapon = h8mg20mm_f,  false, true, true,  0.00, 1.34,   4.81
-AddPartWeapon = h8mg20mm_t,  false, true, true,  0.00, 3.82, -14.05
-AddPartWeapon = h8mg20mm_rr, false, true, true,  0.00, 2.88, -23.13
-AddPartWeapon = h8mg20mm_sl, false, true, true,  1.06, 2.94, -11.68
-AddPartWeapon = h8mg20mm_sr, false, true, true, -1.06, 2.94, -11.68
-AddPartWeaponMissile = h8type91torpedo, false, false, false, -4.93, 3.31, -9.57
-AddPartWeaponMissile = h8type91torpedo, false, false, false,  4.93, 3.31, -9.57
+AddPartWeapon = mg20mm_f,  false, true, true,  0.00, 1.34,   4.81
+AddPartWeapon = mg20mm_t,  false, true, true,  0.00, 3.82, -14.05
+AddPartWeapon = mg20mm_rr, false, true, true,  0.00, 2.88, -23.13
+AddPartWeapon = mg20mm_sl, false, true, true,  1.06, 2.94, -11.68
+AddPartWeapon = mg20mm_sr, false, true, true, -1.06, 2.94, -11.68
+AddPartWeaponMissile = type91torpedo, false, false, false, -4.93, 3.31, -9.57
+AddPartWeaponMissile = type91torpedo, false, false, false,  4.93, 3.31, -9.57
 
-AddPartRotor =    7.3342,  3.9014, -2.07,   1,0, 0
+AddPartRotor =    7.33,  3.56, -2.07,   1,0, 0
 AddBlade = 1, 0,  7.33,  3.56, -2.07,   0,0, 1
-
-
-AddPartRotor =    3.3671,  3.6234, -2.6033,   1,0, 0
-AddBlade = 1, 0,  3.3671,  3.28, -1.86,   0,0, 1
-
-
-AddPartRotor =   -3.3671,  3.6234, -2.6033,   1,0, 0
-AddBlade = 1, 0, -3.3671,  3.28, -1.86,   0,0,-1
-
-
-AddPartRotor =   -7.33,  3.9014, -2.07,   1,0, 0
+AddPartRotor =    3.35,  3.28, -1.86,   1,0, 0
+AddBlade = 1, 0,  3.35,  3.28, -1.86,   0,0, 1
+AddPartRotor =   -3.35,  3.28, -1.86,   1,0, 0
+AddBlade = 1, 0, -3.35,  3.28, -1.86,   0,0,-1
+AddPartRotor =   -7.33,  3.56, -2.07,   1,0, 0
 AddBlade = 1, 0, -7.33,  3.56, -2.07,   0,0,-1
 
 
-AddWeapon = h8type91torpedo,  -4.93, 3.31, -9.57,  0.0, 0.0
-AddWeapon = h8type91torpedo,   4.93, 3.31, -9.57,  0.0, 0.0
-
-;front
-AddWeapon = h8mg20mm_f,   0.00, 1.34,   4.81,   0.0, 0.0, false, 3,    0, -40, 40, -65,45
-
-;mid sec
-AddWeapon = h8mg20mm_t,   0.00, 3.62, -14.05,   0.0, 0.0, false, 4, -180, -90, 90, -90, 25
-
-;rear
-AddWeapon = h8mg20mm_rr,  0.00, 2.88, -23.13,   0.0, 0.0, false, 5, -180, -37, 37, -45,45
-
-;l
-AddWeapon = h8mg20mm_sl,  1.06, 2.94, -11.68,   0.0, 0.0, false, 6, -180,   10, 80, -35,35
-;r
-AddWeapon = h8mg20mm_sr, -1.06, 2.94, -11.68,   0.0, 0.0, false, 7, -180, -80,  10, -35,35
+AddWeapon = type91torpedo,  -4.93, 3.31, -9.57,  0.0, 0.0
+AddWeapon = type91torpedo,   4.93, 3.31, -9.57,  0.0, 0.0
+AddWeapon = mg20mm_f,   0.00, 1.34,   4.81,   0.0, 0.0, false, 3,    0, -60, 60, -60,60
+AddWeapon = mg20mm_t,   0.00, 3.62, -14.05,   0.0, 0.0, false, 4, -180, -90, 90, -60, 3
+AddWeapon = mg20mm_rr,  0.00, 2.88, -23.13,   0.0, 0.0, false, 5, -180, -60, 60, -75,30
+AddWeapon = mg20mm_sl,  1.06, 2.94, -11.68,   0.0, 0.0, false, 6, -180,   0, 80, -10,75
+AddWeapon = mg20mm_sr, -1.06, 2.94, -11.68,   0.0, 0.0, false, 7, -180, -80,  0, -10,75
 
 ;AddParticleSplash = 座標X,   Y,    Z,   表示数, サイズ,  速度,  表示時間, 上昇, 重力
 AddParticleSplash =   1.56, -0.84,  -4.62,   3,   20.0,  1.2, 80, 0.02, -0.001
@@ -100,68 +68,11 @@ AddParticleSplash =  12.09, -0.39,  -5.47,   2,   15.0,  1.1, 60, 0.02, -0.001
 AddParticleSplash = -12.09, -0.39,  -5.47,   2,   15.0,  1.1, 60, 0.02, -0.001
 
 
-;large WW2 prop plane bomber, AOW3 style
-AddRecipe = "ABC", "DAD", "E  ", A, mcheli:airframebomb, B, mcheli:basicmechanicparts, C, mcheli:engine3, D, mcheli:wheelair, E, mcheli:cannon3
+AddRecipe = " X ",  "XXX",  "FXF",  X, iron_block, F, fish
 
-BoundingBox =  0.0, 1.3, -1.0,  3.0, 2.4
-BoundingBox =  0.0, 1.4, -4.0,  3.0, 4.4
-BoundingBox =  0.0, 1.6, -7.0,  3.0, 4.0
-BoundingBox =  0.0, 1.6,-9,  2.0, 3.5
-
-BoundingBox =  0.0, 1.0,-11,  2.0, 2.5
-
-BoundingBox =  0.0, 1.8, -13.0,  2.0, 3.5
-
-BoundingBox =  0.0, 2.0, -15.0,  2.0, 3.2
-BoundingBox =  0.0, 2.2, -17.0,  2.0, 2.8
-BoundingBox =  0.0, 2.4, -19.0,  2.0, 2.4
-BoundingBox =  0.0, 2.8, -20.8,  1.7, 1.7
-
-
-BoundingBox = -4.0, 3.4, -7.0,  5.0, 1.0
-BoundingBox =  4.0, 3.4, -7.0,  5.0, 1.0
-
-BoundingBox = -9.0, 3.8, -7.0,  5.0, 1.0
-BoundingBox =  9.0, 3.8, -7.0,  5.0, 1.0
-BoundingBox = -14.0, 4.2, -7.0,  5.0, 0.4, 0.8
-BoundingBox =  14.0, 4.2, -7.0,  5.0, 0.4, 0.8
-
-
-BoundingBox = -3.35, 3.35, -2.70, 1.0, 1.2, 1.5
-BoundingBox = 3.35, 3.35, -2.70, 1.0, 1.2, 1.5
-
-BoundingBox = -7.28, 3.55, -2.90, 1.0, 1.2, 1.5
-BoundingBox = 7.28, 3.55, -2.90, 1.0, 1.2, 1.5
-
-
-BoundingBox = -3.35, 3.35, -3.70, 1.0, 1.2, 1.5
-BoundingBox = 3.35, 3.35, -3.70, 1.0, 1.2, 1.5
-
-BoundingBox = -7.28, 3.55, -3.90, 1.0, 1.2, 1.5
-BoundingBox = 7.28, 3.55, -3.90, 1.0, 1.2, 1.5
-
-BoundingBox = -3.35, 3.35, -4.70, 1.0, 1.2, 1.5
-BoundingBox = 3.35, 3.35, -4.70, 1.0, 1.2, 1.5
-
-BoundingBox = -7.28, 3.55, -4.90, 1.0, 1.2, 1.5
-BoundingBox = 7.28, 3.55, -4.90, 1.0, 1.2, 1.5
-
-
-
-BoundingBox = -1.95, 3.4, -21.13, 2.2, 0.3
-BoundingBox = 1.95, 3.4, -21.13, 2.2, 0.3
-
-BoundingBox = -3.25, 3.4, -21.13, 1.9, 0.3
-BoundingBox = 3.25, 3.4, -21.13, 1.9, 0.3
-
-
-BoundingBox = 0.0, 4.25, -19.10, 0.5, 1.5
-BoundingBox = 0.0, 4.95, -19.60, 0.5, 2.5
-BoundingBox = 0.0, 5.25, -20.10, 0.5, 3.5
-BoundingBox = 0.0, 5.75, -20.60, 0.5, 4.0
-BoundingBox = 0.0, 5.75, -21.10, 0.5, 4.0
-BoundingBox = 0.0, 5.75, -21.60, 0.5, 4.0
-BoundingBox = 0.0, 5.25, -22.10, 0.5, 3.5
-
-RotorSpeed = 500.0
-DamageFactor = 0.8
+BoundingBox =  0.0, 1.4, -1.0,  3.0, 4.4
+BoundingBox =  0.0, 1.4, -4.5,  3.0, 4.4
+BoundingBox =  0.0, 1.6, -8.0,  3.0, 4.0
+BoundingBox =  0.0, 1.6,-12.5,  3.0, 3.5
+BoundingBox = -5.0, 3.0, -7.0,  5.0, 1.0
+BoundingBox =  5.0, 3.0, -7.0,  5.0, 1.0

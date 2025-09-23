@@ -1,11 +1,11 @@
 DisplayName = Ka-29 Helix B
 AddDisplayName = ja_JP, Ka-29 ヘリックスB
 ItemID = 28826
-MaxHp = 100
+MaxHp = 180
 EnableGunnerMode = true
 EnableFoldBlade = true
 EnableNightVision = true
-Speed = 1.74
+Speed = 0.6
 ThrottleUpDown = 0.8
 FlareType = 3
 CameraPosition = 0.0, 0.6, 2.0
@@ -13,15 +13,12 @@ EnableEntityRadar = true
 MaxFuel         = 1200
 FuelConsumption = 1.0
 Sound = heli_k
-ThirdPersonDist = 20
+ThirdPersonDist = 16
 
 ; M = Military(軍用機).  M = Multi-Mission(多目的機)
 Category = M.M
 
-HUD = helinvg, heli_gnrnvg, none, none, none, none, none, none
-
-sound = hind
-soundvolume = 15
+HUD = heli, heli_gnr, none, none, none, none, none, none
 
 MobilityYaw   = 0.9
 MobilityPitch = 0.9
@@ -46,41 +43,22 @@ AddSeat =-0.60,  1.70, -4.20
 AddPartHatch = 1.10, 1.46, -6.25, 0,0,1, -151
 AddPartHatch = 0.99, 3.11, -6.25, 0,0,1, 90
 
-AddWeapon = ka2a42_ka50,      1.450, 1.800,-0.167, 0,0
-AddWeapon = ka2a42_ka50he,      1.450, 1.800,-0.167, 0,0
-AddWeapon = s-8hm2,            2.587, 0.943,-0.910, 0,0
-AddWeapon = s-8hm2,           -2.587, 0.943,-0.910, 0,0
-AddWeapon = ka9k114,          3.6,   1.1,  -1.2,   0,0
-AddWeapon = ka9k114,         -3.6,   1.1,  -1.2,   0,0
-AddWeapon = kagshg7_62mm,    -0.600, 1.659, 2.133, 0,0, false, 2, 0, -30, 30, -17, 40
+AddWeapon = 2a42_ka50,      1.450, 1.800,-0.167, 0,0
+AddWeapon = s-8,            2.587, 0.943,-0.910, 0,0
+AddWeapon = s-8,           -2.587, 0.943,-0.910, 0,0
+AddWeapon = 9k114,          3.6,   1.1,  -1.2,   0,0
+AddWeapon = 9k114,         -3.6,   1.1,  -1.2,   0,0
+AddWeapon = gshg7_62mm,    -0.600, 1.659, 2.133, 0,0, false, 2, 0, -30, 30, -17, 40
 
 AddWeapon = targeting_pod_mob,     0.0, 0.6, 2.0,   0.0, 0.0,  true, 2
 AddWeapon = targeting_pod_pv10s,   0.0, 0.6, 2.0,   0.0, 0.0,  false,2
 
 ;AddPartWeaponBay = 武器名1 / 武器名2 / 武器名3, 位置X, 位置Y, 位置Z, 回転軸X, 回転軸Y, 回転軸Z, 回転角度 0～180
-AddPartWeaponBay = kagshg7_62mm,  0, 1.57, 1.96,  1,0,0,  60
-AddPartRotWeapon = kagshg7_62mm, false, true,  true, -0.600, 1.659, 2.133
+AddPartWeaponBay = gshg7_62mm,  0, 1.57, 1.96,  1,0,0,  60
+AddPartRotWeapon = gshg7_62mm, false, true,  true, -0.600, 1.659, 2.133
 
-;advanced modern helicopter med size armed, AOW3 style
-AddRecipe = "ABC", "DEF", "G  ", A, mcheli:airframe2, B, mcheli:heliblade2, C, mcheli:engine1, D, mcheli:wheelair, E, mcheli:fcs, F, mcheli:cannon2, G, mcheli:rocket2
+AddRecipe = "X X",  "X X",  "GXG",  X, iron_block, G, gunpowder
 
-;BoundingBox =  0.0, 3.0, -1.0,  2.0, 4.8
-;BoundingBox =  0.0, 2.5, -3.5,  2.0, 3.8
-;BoundingBox =  0.0, 2.5, -6.0,  2.0, 3.0
-
-BoundingBox = 0.0, 3.81, -1.5, 2.5, 1.5
-BoundingBox = 0.0, 3.81, -4.0, 2.5, 1.5
-
-BoundingBox = 0.0, 2.00, -7.50, 2.0, 2.0
-BoundingBox = 0.0, 2.6, -9.1, 1.5, 1.0
-BoundingBox = 0.0, 2.8, -11.0, 2.5, 1.5, 1.25
-
-BoundingBox = 0.0, 5.8, -3.0, 1.0, 2.5, 1.5
-
-unmountposition = 0.70,  1.50,  0.76
-
-DamageFactor = 0.8
-
-
-ThrottleUpDown = 0.5
-DamageFactor = 0.8
+BoundingBox =  0.0, 3.0, -1.0,  2.0, 4.8
+BoundingBox =  0.0, 2.5, -3.5,  2.0, 3.8
+BoundingBox =  0.0, 2.5, -6.0,  2.0, 3.0

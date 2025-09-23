@@ -1,7 +1,7 @@
 DisplayName = Spot Player/Vehicle 30s
 Type = TargetingPod
 Sight = None
-Delay = 16
+Delay = 160
 Sound = lockon
 
 Length = 150

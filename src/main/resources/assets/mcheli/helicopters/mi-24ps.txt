@@ -1,18 +1,14 @@
-DisplayName = Mi-24PS Hind (Unarmed)
-AddDisplayName = en_US, Mi-24PS Hind (Unarmed)
+DisplayName = Mi-24PS Hind
 AddDisplayName = ja_JP, Mi-24PS ハインド警察仕様
 ItemID = 28831
-MaxHp = 100
+MaxHp = 200
 EnableGunnerMode = true
-Speed = 2.08
+Speed = 0.6
 CameraPosition = 0.00,  0.30,   5.937
 MaxFuel = 2400
 FuelConsumption = 1.0
 onGroundPitch = 4.56
 ThirdPersonDist = 20
-
-sound = hind
-soundvolume = 15
 
 ; C = Civilian(民間機)
 Category = C
@@ -60,27 +56,10 @@ AddPartHatch =  0.94,  0.75,  1.83,  0, 0,-1, 130
 AddPartHatch = -1.02,  2.07,  1.83,  0, 0,-1, 85
 AddPartHatch = -0.94,  0.75,  1.83,  0, 0, 1, 130
 
-;basic unarmed modern helicopter, AOW3 style
-AddRecipe = "ABC", "DE ", "   ", A, mcheli:airframe, B, mcheli:heliblade, C, mcheli:engine2, D, mcheli:wheelair, E, mcheli:electronics
+AddRecipe = "XYX", "XGX", "DI ", X, iron_block, Y, glass, G, feather, I, iron_ingot, D, redstone_lamp
 
-BoundingBox =  0.0,  0.80,  5.80,  1.2, 1.2
-BoundingBox =  0.0,  1.12,  4.59,  2.2, 2.2
+BoundingBox =  0.0,  1.12,  4.49,  2.2, 2.2
 BoundingBox =  0.0,  1.72,  2.49,  2.2, 3.0
-BoundingBox =  0.0,  1.72,  2.00,  2.2, 3.0
 BoundingBox =  0.0,  1.96,  0.01,  2.2, 3.5
 BoundingBox =  0.0,  2.02, -5.06,  2.2, 2.2
-BoundingBox =  0.0,  4.26,-12.42,  2.2, 2.2, 1.25
-
-BoundingBox = 0.0, 3.7, 0.0, 1.0, 1.5, 1.5
-
-BoundingBox = 0.0, 2.02, -1.06,  2.2, 2.2
-BoundingBox = 0.0, 2.02, -3.06,  2.2, 2.2
-BoundingBox = 0.0, 2.02, -7.06,  2.2, 2.2
-BoundingBox = 0.0, 2.02, -9.06,  2.2, 2.2
-
-
-unmountposition = 0.00,  1.50,  3.73
-
-
-ThrottleUpDown = 0.5
-DamageFactor = 0.8
+BoundingBox =  0.0,  3.26,-11.42,  2.2, 2.2

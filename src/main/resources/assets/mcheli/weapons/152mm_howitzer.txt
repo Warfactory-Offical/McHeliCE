@@ -1,32 +1,18 @@
-DisplayName = 152mm Howitzer
+DisplayName = 152mm howitzer
 Type = MachineGun2
-Power = 86
-Explosion = 2
-ExplosionBlock = 2
+Power = 140
+Acceleration = 6.0
+Explosion = 6
+ExplosionBlock = 5
 Sight = None
+ReloadTime = 170
 Round = 1
+Delay = 170
 SoundVolume = 16.0
 Accuracy = 2.0
-Gravity = -0.005
-Sound = big
+Gravity = -0.04
+Sound = cannon_4_snd
 Recoil = 2.5
-
-Delay = 240
-ReloadTime = 240
-Group = MainGun
-Acceleration = 7.0
-BulletColor        = 255, 255, 100, 100
-ModelBullet = bullet105mm
-Piercing = 0
-Accuracy = 0.0
-DamageFactor = tank, 2.0
-DamageFactor = plane, 4.5
-DamageFactor = vehicle 4.5
-DamageFactor = heli, 4.5
-DamageFactor = player, 20.0
-AddDisplayName = en_US, 152mm Howitzer
-SoundVolume = 15
-
 
 AddMuzzleFlash      =  7.2,      1.80,        7,  200,254,129,44
 AddMuzzleFlash      =  7.1,      1.75,        6,  200,254,219,104

@@ -1,34 +1,17 @@
-DisplayName = 250kg Bomb
+DisplayName = 250kg bomb
 Type = Bomb
-
-
-
+Power = 50
+Acceleration = 0.1
+Explosion = 4
+ExplosionBlock = 2
+ExplosionInWater = 0
 Flaming = false
 Sight = None
 Delay = 5
 Sound = bomb_snd
 
-;bomb rewrite
-Acceleration = 0.5
-Explosion = 11
-;Explosive mass	125 kg
-Power = 500
-ExplosionBlock = 2
-ExplosionInWater = 5
-DamageFactor = tank, 2.0
-DamageFactor = plane, 4.5
-DamageFactor = vehicle 4.5
-DamageFactor = heli, 4.5
-DamageFactor = player, 20.0
-
-
-
-
-
-
-
-ReloadTime = 1500
-Round = 64
+ReloadTime = 150
+Round = 32
 MaxAmmo = 64
 SuppliedNum = 8
 

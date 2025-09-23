@@ -1,7 +1,7 @@
 DisplayName = 60mm Mortar
 Type = MachineGun1
-Power = 40
-Explosion = 1
+Power = 20
+Explosion = 3
 ExplosionBlock = 2
 Acceleration = 4.0
 Gravity = -0.07
@@ -14,17 +14,15 @@ Sound = gun_l4_snd
 Accuracy = 1.5
 ModelBullet = bullet76mm
 BulletColor = 255, 255, 100, 100
-DamageFactor = tank, 1.5
 DamageFactor = plane, 3.0
-DamageFactor = vehicle 2.0
-DamageFactor = heli, 3.0
+DamageFactor = helicopter, 3.0
 
 ; 着弾距離の表示
 DisplayMortarDistance = true
 ; カメラの垂直方向を0に固定する
 FixCameraPitch = true
 ; カメラの回転速度の倍率(小さくするとより細かく着弾地点が調整ができる)
-CameraRotationSpeedPitch = 0.8
+CameraRotationSpeedPitch = 0.2
 
 
 ; AddMuzzleFlash = 発射元からの距離, サイズ, 表示時間,  A,  R,  G,  B

@@ -1,32 +1,21 @@
 DisplayName = CBU-100 Cluster Bomb
 Type = Bomb
-Power = 190
-;Acceleration = 0.1
-Explosion = 1
-ExplosionInWater = 1
+Power = 18
+Acceleration = 0.1
+Explosion = 3
+ExplosionInWater = 0
 Flaming = false
 Sight = None
-Delay = 5
-Bomblet = 247
+Delay = 400
+Bomblet = 25
 BombletSTime = 20
 BombletDiff = 1.2
 Sound = bomb_snd
 
-ReloadTime = 120
-Round = 2
-
-Acceleration = 0.5
-;DamageFactor = tank, 2.0
-DamageFactor = plane, 4.5
-DamageFactor = vehicle 4.5
-DamageFactor = heli, 4.5
-DamageFactor = player, 20.0
-
 ModelBullet = cbu87
-ModelBomblet = bullet
+ModelBomblet = cbc
 
-MaxAmmo = 2
-SuppliedNum = 1
-Item = 4, iron_ingot
-Item = 8, gunpowder
-Item = 1, redstone
+MaxAmmo = 4
+SuppliedNum = 2
+Item =  2, iron_ingot
+Item =  2, gunpowder

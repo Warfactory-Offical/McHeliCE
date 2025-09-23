@@ -5,20 +5,15 @@ Acceleration = 10.0
 Explosion = 0
 Flaming = false
 Sight = None
-Delay = 1
+Delay = 2
 SoundDelay = 3
 Accuracy = 3.0
-HeatCount = 1
+HeatCount = 3
 MaxHeatCount = 150
 SoundPitch = 1.0
 SoundVolume = 2.0
-Sound = ww2tankcoax_snd
-BulletColor        = 255, 119, 255, 116
-
-DamageFactor = tank, 1.0
-DamageFactor = plane, 0.5
-DamageFactor = vehicle, 1.0
-DamageFactor = heli, 0.5
+Sound = gun_h1_snd
+BulletColor = 255, 119, 255, 116
 
 MaxAmmo = 1000
 SuppliedNum = 200

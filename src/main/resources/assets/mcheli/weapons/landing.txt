@@ -1,2 +1,0 @@
-DisplayName = Landing
-Type = Dummy

@@ -1,2 +1,0 @@
-DisplayName = Stabilizer Down
-Type = Dummy

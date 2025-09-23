@@ -1,8 +1,8 @@
-DisplayName = World Tech Elite Goblin 2.4GHz 4.5CH RC Goblin
-AddDisplayName = ja_JP, World Tech Elite Goblin 2.4GHz 4.5CH RC Goblin
+DisplayName = RC Goblin
+AddDisplayName = ja_JP, RC Goblin
 ItemID = 28814
 MaxHp = 15
-Speed = 1.55
+Speed = 0.4
 CameraPosition = 0.00, -0.05, 0.18
 SmallUAV = true
 Sound = radicon_heli
@@ -17,7 +17,7 @@ HUD = heli
 ; C = Civilian(–¯ŠÔ‹@)
 Category = C
 
-AddSeat =  0.0, 0.0, 0.0
+AddSeat =  0.0, 2.0, 0.0
 
 AddTexture = rc-goblin-1
 AddTexture = rc-goblin-2
@@ -27,7 +27,5 @@ AddRotor = 1, 0, 0.00, -0.00, -0.65,  1, 0, 0
 
 
 
-;basic unarmed drone
-AddRecipe = "ABC", "   ", "   ", A, mcheli:item.ingot_aluminum, B, mcheli:electronics, C, mcheli:basicmechanicparts
+AddRecipe = "SSS",  "PRI",  "B  ",  I, iron_ingot,  R, redstone,  S, stick,  P, glass_pane,  B, Iron_Bars
 
-ThrottleUpDown = 0.8

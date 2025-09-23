@@ -1,35 +1,18 @@
-DisplayName = 7.62mm M134 Minigun
+DisplayName = M134 Minigun
 Type = MachineGun1
 Power = 9
+Acceleration = 4.0
+Explosion = 0
 Flaming = false
 Sight = MoveSight
-Delay = 0
+Delay = 1
 ReloadTime = 100
-Round = 100
+Round = 50
 SoundDelay = 3
 Accuracy = 4.0
 ; SetCartridge = model_name, Acceleration, Yaw, Pitch, ModelScale, Gravity, Bound
 SetCartridge = cartridge, 0.0, 0, 0, 2.00, -0.04, 0.40
-Sound = minigun
-HeatCount = 2
-MaxHeatCount = 130
-
-Acceleration = 7.5
-Gravity = -0.005
-SoundVolume = 15
-
-
-
-Acceleration = 7.5
-Piercing = 0
-DamageFactor = tank, 1.0
-DamageFactor = plane, 0.5
-DamageFactor = vehicle, 1.0
-DamageFactor = heli, 0.5
-;DamageFactor = player, 20.0
-AddDisplayName = en_US,
-SoundVolume = 15
-
+Sound = gun_l2_snd
 
 AddMuzzleFlash      =  0.1,      0.22,        1,  150,254,159,84
 AddMuzzleFlash      =  0.0,      0.20,        1,  150,254,219,184

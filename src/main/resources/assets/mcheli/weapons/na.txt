@@ -1,2 +1,0 @@
-DisplayName = No Weapons Available
-Type = Dummy

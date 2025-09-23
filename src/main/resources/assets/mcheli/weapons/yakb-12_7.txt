@@ -1,12 +1,13 @@
-DisplayName = 12.7mm Yak B Chain Gun
+DisplayName = YakB-12.7 Chain gun
 Type = MachineGun2
-Power = 31
+Power = 9
 Acceleration = 7.0
+Explosion = 0
 Flaming = false
 Sight = MoveSight
 Delay = 0
 ReloadTime = 70
-Round = 1470
+Round = 50
 SoundVolume = 3
 SoundPitch = 1.0
 Sound = gun_l3_snd
@@ -15,21 +16,15 @@ Accuracy = 3.0
 ModeNum = 0
 HeatCount = 3
 MaxHeatCount = 100
+
 AddMuzzleFlash      =  0.6,      0.22,        2,  170,254,159,84
 AddMuzzleFlash      =  0.5,      0.20,        1,  150,254,219,184
 AddMuzzleFlashSmoke =  2.2,  1,   5.0,  2.0, 15,  180,250,245,240
 AddMuzzleFlashSmoke =  3.2,  1,   3.0,  1.0,  5,  180,220,217,214
+
 SetCartridge = cartridge, 0,   0, 0, 2.00, -0.04, 0.50
-Acceleration = 7.5
-Piercing = 0
-DamageFactor = tank, 1.0
-DamageFactor = plane, 0.5
-DamageFactor = vehicle, 1.0
-DamageFactor = heli, 0.5
-DamageFactor = player, 1.0
-;AddDisplayName = en_US,
-SoundVolume = 15
-MaxAmmo = 1470
-SuppliedNum = 147
-Item =  1, iron_ingot
-Item =  1, gunpowder
+
+MaxAmmo = 1200
+SuppliedNum = 200
+Item =  2, iron_ingot
+Item =  2, gunpowder

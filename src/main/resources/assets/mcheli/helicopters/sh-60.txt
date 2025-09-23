@@ -1,28 +1,23 @@
-DisplayName = SH-60 Seahawk (Lamps III)
-AddDisplayName = ja_JP, SH-60 シーホーク (Lamps III)
+DisplayName = SH-60 Seahawk
+AddDisplayName = ja_JP, SH-60 シーホーク
 ItemID = 28803
-MaxHp = 100
+MaxHp = 200
 EnableGunnerMode = true
 EnableFoldBlade = true
 EnableNightVision = true
 EnableEntityRadar = true
-Speed = 1.68
+Speed = 0.6
 ThrottleUpDown = 0.6
 FlareType = 3
 CameraPosition = 0.0, 0.7, 3.5
 MaxFuel         = 1800
 FuelConsumption = 1.0
-Stealth = 0.2
 ThirdPersonDist = 20
-
-sound = apache
-soundpitch = 1.3
-soundvolume = 15
 
 ; M = Military(軍用機).  S = Antisubmarine(対潜機)
 Category = M.S
 
-HUD = heli, heli_gnr, gunner, none, none, none, none, none
+HUD = heli, heli_gnr, gunner, none, none, none, none
 
 MobilityYaw = 0.9
 MobilityPitch = 0.9
@@ -49,60 +44,31 @@ AddRack = zodiac,      0.0, 0.3, -3.0,   0.0, 0.0, -3.0,   12.0,   40
 
 AddPartCamera = 0.0, 0.52, 2.84
 
-AddPartWeapon = shm3m_r, false, true, true,  -1.88, 1.28, -2.18
-AddPartWeaponMissile = shagm114tv, false, false, false,  2.36, 0.41,-1.03
-AddPartWeaponMissile = shagm114tv, false, false, false,  2.36, 0.41,-1.03
-AddPartWeaponMissile = shagm119, false, false, false,  2.36, 0.41,-1.03
-AddPartWeaponMissile = shagm119, false, false, false,  2.36, 0.41,-1.03
-AddPartWeaponMissile = shmk46_4,     false, false, false, -1.53, 0.75,-3.40
-AddPartWeaponMissile = shmk46_4,     false, false, false, 1.53, 0.75,-3.40
+AddPartWeapon = m3m_r, false, true, true,  -1.88, 1.28, -2.18
+AddPartWeaponMissile = agm114tv, false, false, false,  2.36, 0.41,-1.03
+AddPartWeaponMissile = agm114tv, false, false, false,  2.36, 0.41,-1.03
+AddPartWeaponMissile = agm114tv, false, false, false,  2.36, 0.41,-1.03
+AddPartWeaponMissile = agm114tv, false, false, false,  2.36, 0.41,-1.03
+AddPartWeaponMissile = mk46,     false, false, false, -1.53, 0.75,-3.40
 
-AddWeapon = shagm114tv,  2.36, 0.41,-1.03,   0.0, 0.0, true,  2
-AddWeapon = shagm114tv,  2.36, 0.41,-1.03,   0.0, 0.0, true,  2
-;AddWeapon = shagm114tv,  2.36, 0.41,-1.03,   0.0, 0.0, true,  2
-;AddWeapon = agm114tv,  2.36, 0.41,-1.03,   0.0, 0.0, true,  2
-AddWeapon = shagm119,    2.36, 0.41,-3.03,   0.0, 0.0
-AddWeapon = shagm119,    2.36, 0.41,-3.03,   0.0, 0.0
+AddWeapon = agm114tv,  2.36, 0.41,-1.03,   0.0, 0.0, true,  2
+AddWeapon = agm114tv,  2.36, 0.41,-1.03,   0.0, 0.0, true,  2
+AddWeapon = agm114tv,  2.36, 0.41,-1.03,   0.0, 0.0, true,  2
+AddWeapon = agm114tv,  2.36, 0.41,-1.03,   0.0, 0.0, true,  2
+AddWeapon = agm119,    2.36, 0.41,-3.03,   0.0, 0.0
+AddWeapon = mk46,     -1.53, 0.75,-3.40,   0.0, 0.0, true,  2
+AddWeapon = m3m_r,    -1.88, 1.28,-2.18,   0.0, 0.0, false, 3, 90,-80,80, -50,80
 
-AddWeapon = shmk46_4,     -1.53, 0.75,-3.40,   0.0, 0.0, true,  2
-AddWeapon = shmk46_4,     1.53, 0.75,-3.40,   0.0, 0.0, true,  2
-AddWeapon = shm3m_r,    -1.88, 1.28,-2.18,   0.0, 0.0, false, 3, 90,-80,80, -50,80
+AddWeapon = targeting_pod_mob,     0.0, 0.7, 3.5,   0.0, 0.0,  true, 2
+AddWeapon = targeting_pod_pv10s,   0.0, 0.7, 3.5,   0.0, 0.0,  false,2
 
-AddWeapon = targeting_pod_mob,     0.0, 0.7, 3.5,   0.0, 0.0,  false, 2
-AddWeapon = targeting_pod_pv10s,   0.0, 0.7, 3.5,   0.0, 0.0,  true,2
-
-;advanced modern helicopter med size, AOW3 style
-AddRecipe = "ABC", "DEF", "G  ", A, mcheli:airframe2, B, mcheli:heliblade, C, mcheli:engine1, D, mcheli:wheelair, E, mcheli:fcs2, F, mcheli:rocket2, G, mcheli:cannon1
-
-AddRecipe = "ABC", "   ", "   ", A, mcheli:uh-60j, B, mcheli:cannon1, C, mcheli:rocket2
-
-AddRecipe = "ABC", "   ", "   ", A, mcheli:uh-60ja, B, mcheli:cannon1, C, mcheli:rocket2
+AddRecipe = " X ",  "X X",  "X X",  X, iron_block
+AddRecipe = " X ",  "F X",  "X X",  X, iron_block, F, fish
 
 InventorySize = 27
 
 AddRepellingHook = -1.64, 2.18, -2.30, 30
 
-BoundingBox = 0.0, 3.5, -2.35, 1.0, 1.5, 1.5
-
-BoundingBox =  0.0, 1.8, -5.5,  2.8, 2.4
-BoundingBox = 0.0, 1.5, -7.40, 1.0, 2.0
-BoundingBox = 0.0, 1.5, -8.40, 1.0, 2.0
-BoundingBox = 0.0, 1.5, -9.40, 1.0, 2.0
-BoundingBox = 0.0, 1.5, -10.40, 1.0, 2.0
-BoundingBox = 0.0, 1.5, -11.40, 1.0, 2.0
-BoundingBox = 0.0, 1.5, -12.40, 1.0, 2.0
-BoundingBox = 0.0, 1.5, -13.40, 1.0, 2.0
-
-BoundingBox = 0.0, 2.92, -1.00, 3.0, 1.0
-BoundingBox = 0.0, 2.92, -2.60, 3.0, 1.0
-
-BoundingBox =  0.0, 3.5,-14.5,  2.0, 2.0, 1.25
-unmountposition = -0.85,  1.50,  1.45
-
-
-DamageFactor = 0.8
-
-
-ThrottleUpDown = 0.5
-
-DamageFactor = 0.8
+BoundingBox =  0.0, 2.3, -2.0,  2.8, 3.8
+BoundingBox =  0.0, 1.8, -4.5,  2.8, 2.4
+BoundingBox =  0.0, 3.5,-14.5,  2.0, 3.0

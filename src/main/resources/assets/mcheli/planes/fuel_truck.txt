@@ -1,7 +1,7 @@
 DisplayName = Fuel truck
 AddDisplayName = ja_JP, 燃料補給車
 ItemID = 28722
-MaxHp = 100
+MaxHp = 1000
 Speed = 0
 DamageFactor = 2
 ThrottleUpDown = 0.0
@@ -12,4 +12,3 @@ AddSeat = 0.00,  0.80,  0.0
 
 ;Creative only
 ;AddRecipe = "XXX",  "XCX",  "XXX",  X, iron_block, C, coal
-DamageFactor = 0.8

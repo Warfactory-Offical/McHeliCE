@@ -1,8 +1,8 @@
-DisplayName = 20mm GAU-4 Automatic Cannon
+DisplayName = M61A1 Vulcan
 Type = MachineGun2
 ModelBullet = bullet
-Power = 25
-Acceleration = 7.0
+Power = 12
+Acceleration = 8.0
 Explosion = 0
 Flaming = false
 Sight = MoveSight
@@ -12,29 +12,12 @@ SoundPitch = 0.7
 Accuracy = 3.0
 HeatCount = 1
 MaxHeatCount = 210
-
-Gravity = -0.001
-
-
-Delay = 0
-SoundVolume = 5.5
-SoundPitch = 5.5
-Accuracy = 3
-HeatCount = 1
-MaxHeatCount = 150
-Sound = gun_m61a1_snd
-Power = 40
-Acceleration = 8.0
+Sound = gun_l2_snd
 
 Piercing = 2
 SetCartridge = cartridge, 0.3,  180, 5, 3.00, -0.04, 0.40
 
-DamageFactor = tank, 1.0
-DamageFactor = plane, 0.5
-DamageFactor = vehicle, 1.0
-DamageFactor = heli, 0.5
-
-MaxAmmo = 3600
-SuppliedNum = 1800
+MaxAmmo = 2400
+SuppliedNum = 600
 Item =  5, iron_ingot
 Item =  5, gunpowder

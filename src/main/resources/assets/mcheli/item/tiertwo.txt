@@ -1,3 +1,0 @@
-DisplayName = Tier 2
-AddDisplayName = ja_JP, Tier 2
-StackSize = 64

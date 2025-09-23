@@ -1,30 +1,23 @@
 DisplayName = AC-130H Spectre
-AddDisplayName = en_US, AC-130H Spectre
 AddDisplayName = ja_JP, AC-130 H スペクター
 ItemID = 28713
-MaxHp = 250
-Speed = 0.52026
-
-;299mph
-Sound = conethirty
-ThrottleUpDown = 0.1
-AutoPilotRot = -0.12
+MaxHp = 800
+Speed = 0.8
+Sound = turboprop
+ThrottleUpDown = 0.3
+AutoPilotRot = -0.60
 CameraPosition = 2.0, 1.40, -4.0
 EnableNightVision = true
 EnableEntityRadar = true
 EnableGunnerMode = true
 ConcurrentGunnerMode = true
 FlareType = 2
-InventorySize = 9
+InventorySize = 18
 MaxFuel         = 4800
 FuelConsumption = 2.0
 ParticlesScale = 0.7
 EnableSeaSurfaceParticle = true
 ThirdPersonDist = 28
-
-CameraZoom = 10
-
-RotorSpeed = 500.0
 
 ; M = Military(軍用機).  A = Attacker(攻撃機)
 Category = M.A
@@ -36,8 +29,8 @@ MobilityPitch = 0.4
 MobilityRoll = 0.2
 MinRotationPitch = -60
 MaxRotationPitch =  60
-;MinRotationRoll  = -60
-;MaxRotationRoll  =  60
+MinRotationRoll  = -60
+MaxRotationRoll  =  60
 
 AddSeat =  0.65,  2.43,  2.00
 AddGunnerSeat =  0.00,  1.00,-7.50
@@ -48,9 +41,9 @@ AddSeat = -0.65,  2.43,  0.75
 AddSeat =  0.65,  2.43, -0.50
 AddSeat = -0.65,  2.43, -0.50
 
-AddPartRotWeapon = ac130m61a1_1,    true,  true,  true,   1.65,  1.483,  -2.255, -1,0,0
-AddPartWeapon    = ac130bofors40mm, true,  true,  true,   1.85,  1.75,  -10.96,  0.5
-AddPartRotWeapon = ac130m61a1_2,    true,  true,  true,   1.65,  1.483,  -3.056, -1,0,0
+AddPartRotWeapon = m61a1_1,    true,  true,  true,   1.65,  1.483,  -2.255, -1,0,0
+AddPartWeapon    = bofors40mm, true,  true,  true,   1.85,  1.75,  -10.96,  0.5
+AddPartRotWeapon = m61a1_2,    true,  true,  true,   1.65,  1.483,  -3.056, -1,0,0
 AddPartWeapon    = m102_105mm, true,  true,  true,   1.87,  1.75,  -12.51,  1.0
 
 ;AddPartWeapon = 連動する武器名(無しの時はnone), ガンナー時非表示？, Yaw連動, Pitch連動, 回転座標X,Y,Z, 駐退距離
@@ -69,69 +62,23 @@ AddBlade = 4,90, 4.67,  3.40,  -1.94,   0, 0, 1
 AddPartRotor =  -4.67,  3.40,  -1.94,   0, 0, 1
 AddBlade = 4,90,-4.67,  3.40,  -1.94,   0, 0, 1
 
-;large aircraft CAS modern (cannon), AOW3 style
-AddRecipe = "ABC", "DEF", "G  ", A, mcheli:airframebomb, B, mcheli:basicmechanicparts, C, mcheli:engine3, D, mcheli:wheelair, E, mcheli:cannon3, F, mcheli:cannon2, G, mcheli:electronics
+AddRecipe = "ISI",  "GDC",  "IRI",  I,iron_block, S,stone, G,gunpowder, D,diamond_block, C,chest, R,glass
 
 AddPartHatch =   0.00, 3.62, -18.65, -1, 0,0, 27
 AddPartHatch =   0.00, 0.81, -13.46, -1, 0,0, 48
 
 
-AddWeapon = ac130m61a1_1,     1.65,  1.48,  -2.26,  0, 0, true,  1, -90, -50,50,  -20,70
-AddWeapon = ac130bofors40mm,  1.85,  1.75, -10.96, 10, 0, true,  1, -90, -50,50,  -20,70
+AddWeapon = m61a1_1,     1.65,  1.48,  -2.26,  0, 0, true,  1, -90, -50,50,  -20,70
+AddWeapon = bofors40mm,  1.85,  1.75, -10.96, 10, 0, true,  1, -90, -50,50,  -20,70
 
-AddWeapon = ac130m61a1_2,     1.65,  1.48,  -3.06,  0, 0, false, 2, -90, -50,50,  -20,70
+AddWeapon = m61a1_2,     1.65,  1.48,  -3.06,  0, 0, false, 2, -90, -50,50,  -20,70
 AddWeapon = m102_105mm,  1.87,  1.75, -12.51, 10, 0, true,  2, -90, -50,50,  -20,70
 
 BoundingBox =  0.00, 2.60,  -1.60,  4.0, 4.0
 BoundingBox =  0.00, 2.60,  -6.60,  4.0, 4.0
 BoundingBox =  0.00, 2.60, -11.60,  4.0, 4.0
-
-BoundingBox = -2.92, 4.00,  -6.60,  4.0, 1.0
-BoundingBox =  2.92, 4.00,  -6.60,  4.0, 1.0
-
-
 BoundingBox = -4.92, 4.00,  -6.60,  4.0, 1.0
 BoundingBox =  4.92, 4.00,  -6.60,  4.0, 1.0
 
-BoundingBox = -7.92, 4.00,  -6.60,  4.0, 1.0
-BoundingBox =  7.92, 4.00,  -6.60,  4.0, 1.0
-
-BoundingBox = -10.92, 4.00,  -6.60,  4.0, 1.0
-BoundingBox =  10.92, 4.00,  -6.60,  4.0, 1.0
-
-BoundingBox = -13.92, 4.00,  -6.60,  4.0, 1.0
-BoundingBox =  13.92, 4.00,  -6.60,  4.0, 1.0
-
-BoundingBox =  0.00, 2.60, -9.60,  4.0, 4.0
-BoundingBox =  0.00, 2.60,  -4.60,  4.0, 4.0
-BoundingBox =  0.00, 2.90, -14.60,  3.5, 3.5
-BoundingBox =  0.00, 3.20, -17.60,  3.5, 3.0
-BoundingBox =  0.00, 3.80, -19.60,  3.0, 2.0
-BoundingBox =  0.00, 6.96, -22.75,  3.0, 7.0
-
-BoundingBox =  2.00, 4.96, -22.75,  3.0, 2.0
-BoundingBox =  -2.00, 4.96, -22.75,  3.0, 2.0
-
-BoundingBox = 4.0, 4.80, -22.75, 3.0, 1.0
-BoundingBox = -4.0, 4.80, -22.75, 3.0, 1.0
-BoundingBox = 6.0, 4.80, -22.75, 3.0, 1.0
-BoundingBox = -6.0, 4.80, -22.75, 3.0, 1.0
-
-BoundingBox = -4.62, 3.24, -3.26, 1.5, 1.5  , 1.5
-BoundingBox = -9.47, 3.24, -3.26, 1.5, 1.5  , 1.5
-BoundingBox = 4.62, 3.24, -3.26, 1.5, 1.5   , 1.5
-BoundingBox = 9.47, 3.24, -3.26, 1.5, 1.5   , 1.5
-
-
-
-
-
 ; AddRack=Entity type, RackPos X,Y,Z,   EntryPos X,Y,Z,   Range,  Open parachute alt
 AddRack = container,   0.0, 1.4, -4.7,  0.0, 0.0, -16.1,  8.0,    20.0
-
-
-unmountposition = 0.65,  2.43,  2.00
-
-enableback = true
-
-DamageFactor = 0.8

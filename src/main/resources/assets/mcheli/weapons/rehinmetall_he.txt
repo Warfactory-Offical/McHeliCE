@@ -1,7 +1,7 @@
-DisplayName = Rehinmetall Smoothbore Cannon [HE]
+DisplayName = Rehinmetall Smoothbore Gun[HE]
 Type = MachineGun1
 Power = 40
-Explosion = 3
+Explosion = 4
 ExplosionBlock = 3
 Acceleration = 7.0
 Sight = None
@@ -9,19 +9,13 @@ Delay = 100
 ReloadTime = 100
 Round = 1
 SoundVolume = 10.0
-Sound = leotwoafourmain
+Sound = cannon_1_snd
 Accuracy = 0.5
 ModelBullet = bullet105mm
 BulletColor        = 255, 255, 100, 100
 Recoil = 1.8
-DamageFactor = tank, 1.0
 DamageFactor = plane, 3.0
-DamageFactor = vehicle 2.0
-DamageFactor = heli, 3.0
-Gravity = -0.005
-
-DisplayMortarDistance = true
-
+DamageFactor = helicopter, 3.0
 
 ; AddMuzzleFlash = 発射元からの距離, サイズ, 表示時間,  A,  R,  G,  B
 AddMuzzleFlash      =           8.2,   2.10,        7,  220,254,159,74
@@ -34,23 +28,6 @@ AddMuzzleFlashSmoke   =             10.2,     20,   13.0,  7.0,       55,  200,1
 RecoilBufCount = 40, 5
 
 Group = MainGun
-
-Delay = 140
-ReloadTime = 140
-Group = MainGun
-Acceleration = 7.0
-BulletColor        = 255, 255, 100, 100
-ModelBullet = bullet105mm
-Piercing = 0
-Accuracy = 0.0
-DamageFactor = tank, 2.0
-DamageFactor = plane, 4.5
-DamageFactor = vehicle 4.5
-DamageFactor = heli, 4.5
-DamageFactor = player, 20.0
-;AddDisplayName = en_US,
-SoundVolume = 15
-
 
 MaxAmmo = 40
 SuppliedNum = 10

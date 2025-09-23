@@ -1,4 +1,4 @@
-DisplayName = 15.5cm Type 3 Anti-Air Shell [AA]
+DisplayName =15.5cm Type3 Anti-Air Shell[AA]
 Type = Rocket
 Power = 20
 ModelBullet = type3_15_5
@@ -7,29 +7,15 @@ Explosion = 2
 ExplosionBlock = 1
 Flaming = false
 Sight = MoveSight
-
-ModelBomblet = bullet
-
+Delay = 20
+ReloadTime = 80
 Round = 3
 Bomblet = 25
 BombletDiff = 2.0
 DisableSmoke = true
-Delay = 15
-Round = 3
-ReloadTime = 525
-SoundDelay = 4
-SoundPitch = 0.3
-Gravity = -0.005
-Group = MainGun
-Sound = cannon_1_snd
-DamageFactor = tank, 1.0
-DamageFactor = plane, 3.0
-DamageFactor = vehicle 2.0
-DamageFactor = heli, 3.0
-
-HeatCount = 500
-MaxHeatCount = 1450
-
+Sound = rocket_snd
+DamageFactor = helicopter, 2.5
+DamageFactor = plane,      2.5
 
 MaxAmmo = 12
 SuppliedNum = 6

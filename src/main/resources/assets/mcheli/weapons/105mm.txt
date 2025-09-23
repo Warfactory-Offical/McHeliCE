@@ -1,52 +1,19 @@
-DisplayName = 105mmgun [APFSDS] 
+DisplayName = 105mmgun
 Type = MachineGun2
-Power = 353
+Power = 80
 ModelBullet = bullet105mm
 Acceleration = 4.8
 Explosion = 3
-ExplosionBlock = 1
+ExplosionBlock = 3
 Flaming = false
 Sight = MoveSight
 Delay = 84
 ModeNum = 1
 Piercing  = 0
-SoundPitch = 1.6
+SoundPitch = 0.7
 SoundVolume = 20
-Sound = centauro
-Recoil = 2
-
-Delay = 90
-ReloadTime = 100
-Group = MainGun
-Acceleration = 7.0
-;ModelBullet = bullet105mm
-Piercing = 2
-Accuracy = 0.0
-DamageFactor = tank, 10.0
-DamageFactor = plane, 1.5
-DamageFactor = vehicle 2.0
-DamageFactor = heli, 2.0
-DamageFactor = player, 10.0
-AddDisplayName = en_US, 105mm [APDS]
-SoundVolume = 15
-Gravity = -0.001
-
-
-
-Group = MainGun
-Acceleration = 7.0
-ModelBullet = bullet105mm
-Piercing = 5
-Accuracy = 0.0
-DamageFactor = tank, 10.0
-DamageFactor = plane, 1.5
-DamageFactor = vehicle 2.0
-DamageFactor = heli, 2.0
-DamageFactor = player, 10.0
-;AddDisplayName = en_US,
-SoundVolume = 15
-
-
+Sound = cannon_1_snd
+Recoil = 2.5
 
 AddMuzzleFlash      =  7.2,      1.80,        7,  200,254,129,44
 AddMuzzleFlash      =  7.1,      1.75,        6,  200,254,219,104
@@ -57,7 +24,7 @@ AddMuzzleFlashSmoke = 10.2, 10,  11.0,  6.0, 35,  200,190,170,150
 ; RecoilBufCount = 駐退カウント, 後退中のカウント倍率
 RecoilBufCount = 40, 5
 
-MaxAmmo = 50
+MaxAmmo = 100
 SuppliedNum = 20
 Item =  3, iron_ingot
 Item =  2, gunpowder

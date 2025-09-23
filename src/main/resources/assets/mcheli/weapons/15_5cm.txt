@@ -1,43 +1,23 @@
-
-DisplayName = 15.5 cm/60 3rd Year Type Naval Gun [Type 91 APHE - APCBC]
+DisplayName = 15.5cm Type91[AP]
 Type = MachineGun1
 ModelBullet = 91ap_15_5
-Power = 313
+Power = 60
 Acceleration = 5.7
-Explosion = 3
-ExplosionBlock = 2
-ExplosionInWater = 2
-HeatCount = 500
-MaxHeatCount = 1450
+Explosion = 5
+ExplosionBlock = 3
+ExplosionInWater = 4
+HeatCount = 50
+MaxHeatCount = 145
 Flaming = false
 Sight = MoveSight
 Delay = 15
 Round = 3
-ReloadTime = 525
-Gravity = -0.005
-Group = MainGun
+ReloadTime = 125
 SoundDelay = 4
 SoundPitch = 0.3
 Sound = cannon_1_snd
 
-Delay = 15
-ReloadTime = 125
-Group = MainGun
-;Acceleration = 7.0
-BulletColor        = 255, 255, 100, 100
-;ModelBullet = bullet105mm
-Piercing = 2
-Accuracy = 0.0
-DamageFactor = tank, 3.0
-DamageFactor = plane, 1.5
-DamageFactor = vehicle 2.0
-DamageFactor = heli, 2.0
-DamageFactor = player, 20.0
-AddDisplayName = en_US, 15.5cm Type91[AP]
-SoundVolume = 15
-
-
-MaxAmmo = 30
-SuppliedNum = 15
+MaxAmmo = 60
+SuppliedNum = 20
 Item =  6, iron_ingot
 Item =  6, gunpowder

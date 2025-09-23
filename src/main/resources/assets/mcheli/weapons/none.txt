@@ -1,2 +1,2 @@
-DisplayName = None
+DisplayName = none
 Type = Dummy

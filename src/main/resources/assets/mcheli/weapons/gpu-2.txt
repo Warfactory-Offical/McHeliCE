@@ -1,7 +1,9 @@
-DisplayName = 20mm M197 Rotary Cannon
+DisplayName = GPU-2[M197]
 Type = MachineGun1
 ModelBullet = bullet
 Power = 11
+Acceleration = 8.0
+Explosion = 0
 Flaming = false
 Sight = MoveSight
 Delay = 0
@@ -10,20 +12,7 @@ SoundPitch = 0.9
 Accuracy = 4.5
 HeatCount = 4
 MaxHeatCount = 130
-Sound = ah
-;ModeNum = 2
-Gravity = -0.005
-
-Acceleration = 7.5
-Piercing = 0
-DamageFactor = tank, 1.0
-DamageFactor = plane, 1.5
-DamageFactor = vehicle, 1.5
-DamageFactor = heli, 1.5
-DamageFactor = player, 20.0
-;AddDisplayName = en_US,
-SoundVolume = 15
-
+Sound = gun_l2_snd
 
 MaxAmmo = 1000
 SuppliedNum = 200

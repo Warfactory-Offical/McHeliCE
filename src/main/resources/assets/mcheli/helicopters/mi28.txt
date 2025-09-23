@@ -1,11 +1,11 @@
 DisplayName = Mi-28N Havoc
 AddDisplayName = ja_JP, Mi-28N ハボック
 ItemID = 28817
-MaxHp = 100
+MaxHp = 210
 EnableGunnerMode = true
 EnableNightVision = true
 EnableEntityRadar = true
-Speed = 1.86
+Speed = 0.6
 FlareType = 3
 CameraPosition = 0.0, 0.8, 4.0
 onGroundPitch = 4.5
@@ -13,12 +13,7 @@ MaxFuel         = 1200
 FuelConsumption = 1.0
 ThirdPersonDist = 20
 
-
 HUD = heli, heli_gnr
-
-Sound = heli_k
-soundvolume = 15
-soundpitch = 1.4
 
 ; M = Military(軍用機).  A = Attacker(攻撃機)
 Category = M.A
@@ -38,81 +33,38 @@ AddSeat       = 0.00,  1.76,  0.77
 AddGunnerSeat = 0.00,  1.23,  2.19,  0.0, 0.8, 4.0,  true
 
 ;AddPartWeapon = 連動する武器名(無しの時はnone), ガンナー時非表示？, Yaw連動, Pitch連動, 回転座標X,Y,Z
-AddPartWeapon = mi282a42/mi282a42_30mmhei,  true,  true,  true,   0.00, 0.11, 2.65
-
+AddPartWeapon = 2a42,  true,  true,  true,   0.00, 0.11, 2.65
 AddPartWeapon = s-8,   false, false, true,   0.00, 1.03, -1.46
-;;AddPartWeaponMissile = 9m39,    false, false, false, -2.18,  0.38, -0.38
-;;AddPartWeaponMissile = 9m39,    false, false, false, -2.73,  0.38, -0.38
-
-
-AddPartWeaponMissile = mi289k118,   false, false, false,  2.13,  0.92, -0.44
-AddPartWeaponMissile = mi289k118,   false, false, false,  2.13,  0.57, -0.44
-
-AddPartWeaponMissile = mi289k118,   false, false, false,  -2.13,  0.92, -0.44
-AddPartWeaponMissile = mi289k118,   false, false, false,  -2.13,  0.57, -0.44
-
-
-
-AddPartWeaponMissile = mi289k118tv, false, false, false,  2.78,  0.92, -0.44
-AddPartWeaponMissile = mi289k118tv, false, false, false,  2.78,  0.57, -0.44
-
-AddPartWeaponMissile = mi289k118tv, false, false, false,  -2.78,  0.92, -0.44
-AddPartWeaponMissile = mi289k118tv, false, false, false,  -2.78,  0.57, -0.44
+AddPartWeaponMissile = 9m39,    false, false, false, -2.18,  0.38, -0.38
+AddPartWeaponMissile = 9m39,    false, false, false, -2.73,  0.38, -0.38
+AddPartWeaponMissile = 9k118,   false, false, false,  2.13,  0.92, -0.44
+AddPartWeaponMissile = 9k118,   false, false, false,  2.13,  0.57, -0.44
+AddPartWeaponMissile = 9k118tv, false, false, false,  2.78,  0.92, -0.44
+AddPartWeaponMissile = 9k118tv, false, false, false,  2.78,  0.57, -0.44
 
 ;AddWeapon = 武器名, 位置X,Y,Z, Yaw, Pitch, パイロットが使用できる？, 座席番号, DefaultYaw,RangeYaw, MinPitch, MaxPitch
-AddWeapon = mi282a42,     0.00,  0.05,  2.68,  0,-1,  true,2,  0,-360,360, -20,80
-AddWeapon = mi282a42_30mmhei,     0.00,  0.05,  2.68,  0,-1,  true,2,  0,-360,360, -20,80
-AddWeapon = mi28s-8_h2,      1.33,  0.72, -0.45,  1, 0,  true,1,  0,0,0, 0, 25
-AddWeapon = mi28s-8_h2,     -1.33,  0.72, -0.45, -1, 0,  true,1,  0,0,0, 0, 25
-AddWeapon = mi28s-8dm,    1.33,  0.72, -0.45,  1, 0,  true,1,  0,0,0, 0, 25
-AddWeapon = mi28s-8dm,   -1.33,  0.72, -0.45, -1, 0,  true,1,  0,0,0, 0, 25
-AddWeapon = mi28s-8s,     1.33,  0.72, -0.45,  1, 0,  true,1,  0,0,0, 0, 25
-AddWeapon = mi28s-8s,    -1.33,  0.72, -0.45, -1, 0,  true,1,  0,0,0, 0, 25
-AddWeapon = mi28s-8tsm,   1.33,  0.72, -0.45,  1, 0,  true,1,  0,0,0, 0, 25
-AddWeapon = mi28s-8tsm,  -1.33,  0.72, -0.45, -1, 0,  true,1,  0,0,0, 0, 25
+AddWeapon = 2a42,     0.00,  0.05,  2.68,  0,-1,  true,2,  0,-360,360, -20,80
+AddWeapon = s-8,      1.33,  0.72, -0.45,  1, 0,  true,1,  0,0,0, 0, 25
+AddWeapon = s-8,     -1.33,  0.72, -0.45, -1, 0,  true,1,  0,0,0, 0, 25
+AddWeapon = s-8dm,    1.33,  0.72, -0.45,  1, 0,  true,1,  0,0,0, 0, 25
+AddWeapon = s-8dm,   -1.33,  0.72, -0.45, -1, 0,  true,1,  0,0,0, 0, 25
+AddWeapon = s-8s,     1.33,  0.72, -0.45,  1, 0,  true,1,  0,0,0, 0, 25
+AddWeapon = s-8s,    -1.33,  0.72, -0.45, -1, 0,  true,1,  0,0,0, 0, 25
+AddWeapon = s-8tsm,   1.33,  0.72, -0.45,  1, 0,  true,1,  0,0,0, 0, 25
+AddWeapon = s-8tsm,  -1.33,  0.72, -0.45, -1, 0,  true,1,  0,0,0, 0, 25
+AddWeapon = 9m39,    -2.18,  0.38, -0.38,  1, 0
+AddWeapon = 9m39,    -2.73,  0.38, -0.38, -1, 0
+AddWeapon = 9k118,    2.13,  0.92, -0.44,  1, 0,  true,2
+AddWeapon = 9k118,    2.13,  0.57, -0.44, -1, 0,  true,2
+AddWeapon = 9k118tv,  2.78,  0.92, -0.44, -1, 0,  true,2
+AddWeapon = 9k118tv,  2.78,  0.57, -0.44, -1, 0,  true,2
 
-AddWeapon = mi289k118,    2.13,  0.92, -0.44,  1, 0,  true,2
-AddWeapon = mi289k118,    2.13,  0.57, -0.44, -1, 0,  true,2
-AddWeapon = mi289k118,    -2.13,  0.92, -0.44,  1, 0,  true,2
-AddWeapon = mi289k118,    -2.13,  0.57, -0.44, -1, 0,  true,2
-AddWeapon = mi289k118tv,  2.78,  0.92, -0.44, -1, 0,  true,2
-AddWeapon = mi289k118tv,  2.78,  0.57, -0.44, -1, 0,  true,2
-AddWeapon = mi289k118tv,  -2.78,  0.92, -0.44, 1, 0,  true,2
-AddWeapon = mi289k118tv,  -2.78,  0.57, -0.44, 1, 0,  true,2
+AddWeapon = targeting_pod_mob,     0.0, 0.8, 4.0,   0.0, 0.0,  true, 2
+AddWeapon = targeting_pod_pv10s,   0.0, 0.8, 4.0,   0.0, 0.0,  false,2
 
+AddRecipe = "X X",  " I ",  "X X",  X, iron_block, I, iron_ingot
 
-
-
-;AddWeapon = 9m39,    -2.18,  0.38, -0.38,  1, 0
-;AddWeapon = 9m39,    -2.73,  0.38, -0.38, -1, 0
-
-;not in txt
-
-
-EnableEntityRadar = true
-AddWeapon = uhf_radar,  0.00, 3.0, 0.0,    0.0
-
-AddWeapon = targeting_pod_mob,     0.0, 0.8, 4.0,   0.0, 0.0,  false, 2
-AddWeapon = targeting_pod_pv10s,   0.0, 0.8, 4.0,   0.0, 0.0,  true,2
-
-;advanced modern helicopter armed, AOW3 style
-AddRecipe = "ABC", "DEF", "G  ", A, mcheli:airframe2, B, mcheli:heliblade, C, mcheli:engine2, D, mcheli:wheelair, E, mcheli:fcs2, F, mcheli:cannon2, G, mcheli:rocket3
-
-
-
-BoundingBox =  0.0, 2.0, -1.0,  2.2, 3.0
-BoundingBox =  0.0, 2.0, -3.1,  2.2, 2.5
-BoundingBox =  0.0, 1.8, -5.0,  1.8, 2.0
-BoundingBox =  0.0, 1.8, -7.0,  1.8, 2.0
-BoundingBox =  0.0, 1.8, -9.0,  1.8, 2.0
-BoundingBox =  0.0, 1.8, -11.0,  1.8, 2.0
-BoundingBox =  0.0, 3.0,-13.0,  2.0, 2.5, 1.25
-
-BoundingBox = 0.0, 4.0, -1.0, 1.0, 1.5, 1.5
-
-unmountposition = 0.00,  1.50,  0.77
-
-DamageFactor = 0.3
-
-
-ThrottleUpDown = 0.5
+BoundingBox =  0.0, 2.5, -1.0,  2.2, 3.0
+BoundingBox =  0.0, 2.5, -3.5,  2.2, 2.5
+BoundingBox =  0.0, 2.2, -6.0,  1.8, 2.0
+BoundingBox =  0.0, 3.0,-13.0,  2.0, 2.5

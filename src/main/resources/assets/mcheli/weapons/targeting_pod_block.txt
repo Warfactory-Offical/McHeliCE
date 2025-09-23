@@ -1,8 +1,7 @@
 DisplayName = Mark Block
 Type = TargetingPod
 Sight = MoveSight
-Delay = 0
-radius = 2000
+Delay = 60
 Sound = lockon
 
 Target = block

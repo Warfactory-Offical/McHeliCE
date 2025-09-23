@@ -1,6 +1,8 @@
 DisplayName = GBU-44/B Viper Strike
 Type = ATMissile
+Power = 70
 Acceleration = 1.5
+Explosion = 5
 Flaming = true
 Sight = MissileSight
 Delay = 200
@@ -12,21 +14,10 @@ ProximityFuseDist = 1
 ModelBullet = sdb
 RidableOnly = true
 
-;bomb rewrite
-;Acceleration = 0.5
-Explosion = 2
-;Explosive mass	125 kg
-Power = 300
-ExplosionBlock = 2
-ExplosionInWater = 1
 DamageFactor = tank, 2.0
-DamageFactor = plane, 4.5
-DamageFactor = vehicle 4.5
-DamageFactor = heli, 4.5
-DamageFactor = player, 20.0
 
 MaxAmmo = 6
-SuppliedNum = 1
+SuppliedNum = 2
 Item =  2, iron_ingot
 Item =  2, gunpowder
 Item =  2, redstone

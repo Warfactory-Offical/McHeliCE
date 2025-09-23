@@ -1,12 +1,11 @@
-DisplayName = AGM-114 Hellfire ATGM
+DisplayName = TV-Guided ATGM
 Type = TVMissile
-Power = 1000
-Acceleration = 4.8
-Explosion = 5
-ExplosionInWater = 3
-ExplosionBlock = 5
+Power = 52
+Acceleration = 2.0
+Explosion = 3
+ExplosionBlock = 0
 Sight = MoveSight
-Delay = 5
+Delay = 80
 ModelBullet = agm114
 Sound = missile_1_snd
 TimeFuse = 200
@@ -14,7 +13,7 @@ Round = 2
 ReloadTime = 80
 
 MaxAmmo = 16
-SuppliedNum = 1
+SuppliedNum = 4
 Item =  3, iron_ingot
 Item =  3, gunpowder
 Item =  3, redstone
