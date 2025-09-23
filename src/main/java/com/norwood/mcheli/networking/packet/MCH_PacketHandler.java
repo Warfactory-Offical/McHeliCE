@@ -39,7 +39,7 @@ public class MCH_PacketHandler extends W_PacketHandler {
             case 536873216 -> MCH_ToolPacketHandler.onPacket_IndSpotEntity(entityPlayer, data, handler);
             case 536873472 -> MCH_MultiplayPacketHandler.onPacket_LargeData(entityPlayer, data, handler);
             case 536873473 -> MCH_MultiplayPacketHandler.onPacket_ModList(entityPlayer, data, handler);
-            case 536873729 -> MCH_CommandPacketHandler.onPacketSave(entityPlayer, data, handler);
+//            case 536873729 -> MCH_CommandPacketHandler.onPacketSave(entityPlayer, data, handler);
             case 536873984 -> MCH_CommonPacketHandler.onPacketNotifyLock(entityPlayer, data, handler);
             case 536875024 -> MCH_AircraftPacketHandler.onPacketSeatListRequest(entityPlayer, data, handler);
             case 536875040 -> MCH_AircraftPacketHandler.onPacket_PlayerControl(entityPlayer, data, handler);

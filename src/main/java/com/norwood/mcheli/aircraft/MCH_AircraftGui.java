@@ -1,9 +1,9 @@
 package com.norwood.mcheli.aircraft;
 
-import com.norwood.mcheli.networking.packet.MCH_PacketIndOpenScreen;
-import com.norwood.mcheli.networking.packet.MCH_PacketCommandSave;
 import com.norwood.mcheli.multiplay.MCH_PacketIndMultiplayCommand;
+import com.norwood.mcheli.networking.packet.MCH_PacketIndOpenScreen;
 import com.norwood.mcheli.networking.packet.MCH_PacketIndReload;
+import com.norwood.mcheli.networking.packet.PacketCommandSave;
 import com.norwood.mcheli.weapon.MCH_WeaponDummy;
 import com.norwood.mcheli.weapon.MCH_WeaponInfo;
 import com.norwood.mcheli.weapon.MCH_WeaponSet;
@@ -11,9 +11,9 @@ import com.norwood.mcheli.wrapper.W_GuiContainer;
 import com.norwood.mcheli.wrapper.W_McClient;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import org.jetbrains.annotations.NotNull;
-import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 
@@ -71,7 +71,7 @@ public class MCH_AircraftGui extends W_GuiContainer {
     }
 
     public void closeScreen() {
-        MCH_PacketCommandSave.send(this.editCommand.getText());
+        PacketCommandSave.send(this.editCommand.getText());
         this.mc.player.closeScreen();
     }
 
@@ -195,7 +195,7 @@ public class MCH_AircraftGui extends W_GuiContainer {
 
     protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
         W_McClient.MOD_bindTexture("textures/gui/gui.png");
-         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         int x = (this.width - this.xSize) / 2;
         int y = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
