@@ -139,25 +139,7 @@ public class MCH_AircraftPacketHandler {
         }
     }
 
-    @HandleSide({Side.SERVER})
-    public static void onPacketIndNotifyAmmoNum(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-        if (!player.world.isRemote) {
-            MCH_PacketIndNotifyAmmoNum req = new MCH_PacketIndNotifyAmmoNum();
-            req.readData(data);
-            if (req.entityID_Ac > 0) {
-                scheduler.addScheduledTask(() -> {
-                    Entity e = player.world.getEntityByID(req.entityID_Ac);
-                    if (e instanceof MCH_EntityAircraft) {
-                        if (req.weaponID >= 0) {
-                            PacketNotifyAmmoNum.sendAmmoNum((MCH_EntityAircraft) e, player, req.weaponID);
-                        } else {
-                            PacketNotifyAmmoNum.sendAllAmmoNum((MCH_EntityAircraft) e, player);
-                        }
-                    }
-                });
-            }
-        }
-    }
+
 
     @HandleSide({Side.SERVER})
     public static void onPacketIndReload(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {

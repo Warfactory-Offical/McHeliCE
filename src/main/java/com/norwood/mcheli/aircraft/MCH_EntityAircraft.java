@@ -4779,7 +4779,7 @@ public abstract class MCH_EntityAircraft
                 this.currentWeaponID[sid] = this.getNextWeaponID(entity, 1);
                 this.switchWeapon(entity, this.getCurrentWeaponID(entity));
                 if (this.world.isRemote) {
-                    MCH_PacketIndNotifyAmmoNum.send(this, -1);
+                    PacketIndNotifyAmmoNum.send(this, -1);
                 }
             }
         }

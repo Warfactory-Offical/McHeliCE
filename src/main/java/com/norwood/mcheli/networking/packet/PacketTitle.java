@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.ITextComponent;
 
 @ElegantPacket
-public class PacketTitle implements ServerToClientPacket {
+public class PacketTitle extends PacketBase implements ServerToClientPacket {
 
     public String chatComponent = null;
     public int showTime = 1;

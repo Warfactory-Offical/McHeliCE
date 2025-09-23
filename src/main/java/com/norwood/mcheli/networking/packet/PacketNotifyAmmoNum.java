@@ -11,7 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 @ElegantPacket
-public class PacketNotifyAmmoNum implements ServerToClientPacket {
+public class PacketNotifyAmmoNum extends PacketBase implements ServerToClientPacket {
     public int entityID_Ac = -1;
     public boolean all = false;
     public byte weaponID = -1;

@@ -44,7 +44,7 @@ public class MCH_PacketHandler extends W_PacketHandler {
             case 536875024 -> MCH_AircraftPacketHandler.onPacketSeatListRequest(entityPlayer, data, handler);
             case 536875040 -> MCH_AircraftPacketHandler.onPacket_PlayerControl(entityPlayer, data, handler);
             case 536875059 -> MCH_AircraftPacketHandler.onPacketIndReload(entityPlayer, data, handler);
-            case 536875061 -> MCH_AircraftPacketHandler.onPacketIndNotifyAmmoNum(entityPlayer, data, handler);
+//            case 536875061 -> MCH_AircraftPacketHandler.onPacketIndNotifyAmmoNum(entityPlayer, data, handler);
             case 536875062 -> MCH_AircraftPacketHandler.onPacketIndRotation(entityPlayer, data, handler);
             case 536875063 -> MCH_AircraftPacketHandler.onPacketNotifyInfoReloaded(entityPlayer, data, handler);
             case 536875072 -> MCH_AircraftPacketHandler.onPacket_ClientSetting(entityPlayer, data, handler);
