@@ -21,16 +21,11 @@ public class MCH_PacketHandler extends W_PacketHandler {
             case 268437761 -> MCH_MultiplayPacketHandler.onPacket_NotifySpotedEntity(entityPlayer, data, handler);
             case 268437762 -> MCH_MultiplayPacketHandler.onPacket_NotifyMarkPoint(entityPlayer, data, handler);
             case 268438032 -> MCH_MultiplayPacketHandler.onPacket_IndClient(entityPlayer, data, handler);
-            case 268439569 -> MCH_AircraftPacketHandler.onPacketSeatListResponse(entityPlayer, data, handler);
-            case 268439601 -> MCH_AircraftPacketHandler.onPacketNotifyWeaponID(entityPlayer, data, handler);
-            case 268439602 -> MCH_AircraftPacketHandler.onPacketNotifyHitBullet(entityPlayer, data, handler);
-            case 268439632 -> MCH_AircraftPacketHandler.onPacketOnMountEntity(entityPlayer, data, handler);
             case 536872992 -> MCH_CommonPacketHandler.onPacketIndOpenScreen(entityPlayer, data, handler);
             case 536873088 -> MCH_MultiplayPacketHandler.onPacket_Command(entityPlayer, data, handler);
             case 536873216 -> MCH_ToolPacketHandler.onPacket_IndSpotEntity(entityPlayer, data, handler);
             case 536873472 -> MCH_MultiplayPacketHandler.onPacket_LargeData(entityPlayer, data, handler);
             case 536873473 -> MCH_MultiplayPacketHandler.onPacket_ModList(entityPlayer, data, handler);
-            case 536875024 -> MCH_AircraftPacketHandler.onPacketSeatListRequest(entityPlayer, data, handler);
             case 536879120 -> MCH_HeliPacketHandler.onPacket_PlayerControl(entityPlayer, data, handler);
             case 536903696 -> MCP_PlanePacketHandler.onPacket_PlayerControl(entityPlayer, data, handler);
             case 536936464 -> MCH_LightWeaponPacketHandler.onPacket_PlayerControl(entityPlayer, data, handler);

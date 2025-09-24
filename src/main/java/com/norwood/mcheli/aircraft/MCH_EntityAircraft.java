@@ -3699,7 +3699,7 @@ public abstract class MCH_EntityAircraft
         if (b) {
             if (this.seatSearchCount > 40) {
                 if (this.world.isRemote) {
-                    MCH_PacketSeatListRequest.requestSeatList(this);
+                    PacketRequestSeatList.requestSeatList(this);
                 } else {
                     this.searchSeat();
                 }
@@ -4704,7 +4704,7 @@ public abstract class MCH_EntityAircraft
                 MCH_WeaponSet ws = this.getCurrentWeapon(entity);
                 ws.onSwitchWeapon(this.world.isRemote, this.isInfinityAmmo(entity));
                 if (!this.world.isRemote) {
-                    MCH_PacketNotifyWeaponID.send(this, sid, id, ws.getAmmoNum(), ws.getRestAllAmmoNum());
+                    PacketSyncWeapon.send(this, sid, id, ws.getAmmoNum(), ws.getRestAllAmmoNum());
                 }
             }
         }

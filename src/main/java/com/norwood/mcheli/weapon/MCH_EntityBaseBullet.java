@@ -4,14 +4,14 @@ import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_Explosion;
 import com.norwood.mcheli.MCH_HBMUtil;
 import com.norwood.mcheli.MCH_Lib;
-import com.norwood.mcheli.compat.ModCompatManager;
-import com.norwood.mcheli.helper.MCH_CriteriaTriggers;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_EntityHitBox;
 import com.norwood.mcheli.aircraft.MCH_EntitySeat;
-import com.norwood.mcheli.networking.packet.MCH_PacketNotifyHitBullet;
 import com.norwood.mcheli.chain.MCH_EntityChain;
+import com.norwood.mcheli.compat.ModCompatManager;
+import com.norwood.mcheli.helper.MCH_CriteriaTriggers;
 import com.norwood.mcheli.helper.world.MCH_ExplosionV2;
+import com.norwood.mcheli.networking.packet.PacketNotifyHit;
 import com.norwood.mcheli.particles.MCH_ParticleParam;
 import com.norwood.mcheli.particles.MCH_ParticlesUtil;
 import com.norwood.mcheli.wrapper.W_Entity;
@@ -21,7 +21,6 @@ import com.norwood.mcheli.wrapper.W_WorldFunc;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -677,8 +676,8 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
         RayTraceResult m = null;
 
         for (int i = 0; i < 5; i++) {
-            Vec3d vec3 =new Vec3d( this.posX, this.posY, this.posZ);
-            Vec3d vec31 =new Vec3d( this.posX + mx, this.posY + my, this.posZ + mz);
+            Vec3d vec3 = new Vec3d(this.posX, this.posY, this.posZ);
+            Vec3d vec31 = new Vec3d(this.posX + mx, this.posY + my, this.posZ + mz);
             m = W_WorldFunc.clip(this.world, vec3, vec31);
             boolean continueClip = false;
             if (this.shootingEntity != null && W_MovingObjectPosition.isHitTypeTile(m)) {
@@ -696,8 +695,8 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
             }
         }
 
-        Vec3d vec3x =new Vec3d( this.posX, this.posY, this.posZ);
-        Vec3d vec31x =new Vec3d( this.posX + mx, this.posY + my, this.posZ + mz);
+        Vec3d vec3x = new Vec3d(this.posX, this.posY, this.posZ);
+        Vec3d vec31x = new Vec3d(this.posX + mx, this.posY + my, this.posZ + mz);
         if (this.getInfo().delayFuse > 0) {
             if (m != null) {
                 this.boundBullet(m.sideHit);
@@ -707,7 +706,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
             }
         } else {
             if (m != null) {
-                vec31x =new Vec3d( m.hitVec.x, m.hitVec.y, m.hitVec.z);
+                vec31x = new Vec3d(m.hitVec.x, m.hitVec.y, m.hitVec.z);
             }
 
             Entity entity = null;
@@ -789,11 +788,11 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
 
     public void notifyHitBullet() {
         if (this.shootingAircraft instanceof MCH_EntityAircraft && W_EntityPlayer.isPlayer(this.shootingEntity)) {
-            MCH_PacketNotifyHitBullet.send((MCH_EntityAircraft) this.shootingAircraft, (EntityPlayer) this.shootingEntity);
+            PacketNotifyHit.send((MCH_EntityAircraft) this.shootingAircraft, (EntityPlayerMP) this.shootingEntity);
         }
 
         if (W_EntityPlayer.isPlayer(this.shootingEntity)) {
-            MCH_PacketNotifyHitBullet.send(null, (EntityPlayer) this.shootingEntity);
+            PacketNotifyHit.send(null, (EntityPlayerMP) this.shootingEntity);
         }
     }
 
@@ -802,7 +801,7 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
         if (!this.world.isRemote) {
 
             try {
-                if(this.getInfo().chemYield > 0 && ModCompatManager.isLoaded(ModCompatManager.MODID_HBM) ) {
+                if (this.getInfo().chemYield > 0 && ModCompatManager.isLoaded(ModCompatManager.MODID_HBM)) {
                     System.out.println("chem yield detected");
                     MCH_HBMUtil.ExplosionChaos_spawnChlorine(world, posX, posY + 0.5, posZ, this.getInfo().chemYield, this.getInfo().chemSpeed, this.getInfo().chemType);
                 }
@@ -843,14 +842,14 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
                     }
                 } else //noinspection ConstantValue
                     if (this.isInWater() || m.getBlockPos() != null &&
-                                            MCH_Lib.isBlockInWater(this.world, m.getBlockPos().getX(), m.getBlockPos().getY(),
-                                                    m.getBlockPos().getZ())) {
+                            MCH_Lib.isBlockInWater(this.world, m.getBlockPos().getX(), m.getBlockPos().getY(),
+                                    m.getBlockPos().getZ())) {
                         this.newExplosion(m.hitVec.x + dx, m.hitVec.y + dy, m.hitVec.z + dz, expPowerInWater, expPowerInWater, true);
-                } else if (expPower > 0.0F) {
-                    this.newExplosion(m.hitVec.x + dx, m.hitVec.y + dy, m.hitVec.z + dz, expPower, this.getInfo().explosionBlock, false);
-                } else if (expPower < 0.0F) {
-                    this.playExplosionSound();
-                }
+                    } else if (expPower > 0.0F) {
+                        this.newExplosion(m.hitVec.x + dx, m.hitVec.y + dy, m.hitVec.z + dz, expPower, this.getInfo().explosionBlock, false);
+                    } else if (expPower < 0.0F) {
+                        this.playExplosionSound();
+                    }
 
                 this.setDead();
             }
@@ -944,8 +943,8 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
             );
         }
 
-        if(this.getInfo().nukeYield > 0 && ModCompatManager.isLoaded(ModCompatManager.MODID_HBM)) {
-            if(!this.getInfo().nukeEffectOnly) {
+        if (this.getInfo().nukeYield > 0 && ModCompatManager.isLoaded(ModCompatManager.MODID_HBM)) {
+            if (!this.getInfo().nukeEffectOnly) {
                 world.spawnEntity(MCH_HBMUtil.EntityNukeExplosionMK5_statFac(world, this.getInfo().nukeYield, this.posX + 0.5, this.posY + 0.5, this.posZ + 0.5));
             }
             MCH_HBMUtil.EntityNukeTorex_statFac(world, this.posX + 0.5, this.posY + 0.5, this.posZ + 0.5, (float) this.getInfo().nukeYield);
