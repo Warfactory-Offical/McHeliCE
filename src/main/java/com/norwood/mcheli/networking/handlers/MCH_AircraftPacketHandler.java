@@ -115,21 +115,21 @@ public class MCH_AircraftPacketHandler {
 //        }
 //    }
 
-    @HandleSide({Side.SERVER})
-    public static void onPacketStatusRequest(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-        if (!player.world.isRemote) {
-            MCH_PacketStatusRequest req = new MCH_PacketStatusRequest();
-            req.readData(data);
-            if (req.entityID_AC > 0) {
-                scheduler.addScheduledTask(() -> {
-                    Entity e = player.world.getEntityByID(req.entityID_AC);
-                    if (e instanceof MCH_EntityAircraft) {
-                        PacketStatusResponse.sendStatus((MCH_EntityAircraft) e, player);
-                    }
-                });
-            }
-        }
-    }
+//    @HandleSide({Side.SERVER})
+//    public static void onPacketStatusRequest(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
+//        if (!player.world.isRemote) {
+//            MCH_PacketStatusRequest req = new MCH_PacketStatusRequest();
+//            req.readData(data);
+//            if (req.entityID_AC > 0) {
+//                scheduler.addScheduledTask(() -> {
+//                    Entity e = player.world.getEntityByID(req.entityID_AC);
+//                    if (e instanceof MCH_EntityAircraft) {
+//                        PacketStatusResponse.sendStatus((MCH_EntityAircraft) e, player);
+//                    }
+//                });
+//            }
+//        }
+//    }
 
 
     @HandleSide({Side.SERVER})

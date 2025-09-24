@@ -5,6 +5,7 @@ import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.networking.packet.MCH_PacketStatusRequest;
+import com.norwood.mcheli.networking.packet.PacketStatusRequest;
 import com.norwood.mcheli.weapon.MCH_WeaponParam;
 import com.norwood.mcheli.weapon.MCH_WeaponSet;
 import com.norwood.mcheli.wrapper.W_Entity;
@@ -203,7 +204,7 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
             if (!this.isRequestedSyncStatus) {
                 this.isRequestedSyncStatus = true;
                 if (this.world.isRemote) {
-                    MCH_PacketStatusRequest.requestStatus(this);
+                    PacketStatusRequest.requestStatus(this);
                 }
             }
 

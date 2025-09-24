@@ -7,6 +7,7 @@ import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_EntitySeat;
 import com.norwood.mcheli.networking.packet.MCH_PacketStatusRequest;
 import com.norwood.mcheli.aircraft.MCH_Rotor;
+import com.norwood.mcheli.networking.packet.PacketStatusRequest;
 import com.norwood.mcheli.particles.MCH_ParticleParam;
 import com.norwood.mcheli.particles.MCH_ParticlesUtil;
 import com.norwood.mcheli.wrapper.W_Entity;
@@ -326,7 +327,7 @@ public class MCH_EntityHeli extends MCH_EntityAircraft {
                         this.forceFoldBlade();
                     }
 
-                    MCH_PacketStatusRequest.requestStatus(this);
+                    PacketStatusRequest.requestStatus(this);
                 }
             }
 

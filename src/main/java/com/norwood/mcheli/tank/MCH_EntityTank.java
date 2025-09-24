@@ -7,6 +7,7 @@ import com.norwood.mcheli.MCH_Math;
 import com.norwood.mcheli.aircraft.*;
 import com.norwood.mcheli.chain.MCH_EntityChain;
 import com.norwood.mcheli.networking.packet.MCH_PacketStatusRequest;
+import com.norwood.mcheli.networking.packet.PacketStatusRequest;
 import com.norwood.mcheli.particles.MCH_ParticleParam;
 import com.norwood.mcheli.particles.MCH_ParticlesUtil;
 import com.norwood.mcheli.weapon.MCH_EntityBaseBullet;
@@ -172,7 +173,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             if (!this.isRequestedSyncStatus) {
                 this.isRequestedSyncStatus = true;
                 if (this.world.isRemote) {
-                    MCH_PacketStatusRequest.requestStatus(this);
+                   PacketStatusRequest.requestStatus(this);
                 }
             }
 
