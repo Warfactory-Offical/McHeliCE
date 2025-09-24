@@ -11,7 +11,6 @@ import com.norwood.mcheli.wrapper.W_Entity;
 import com.norwood.mcheli.wrapper.W_Lib;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.IThreadListener;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -140,45 +139,6 @@ public class MCH_AircraftPacketHandler {
             }
         }
     }
-
-    @HandleSide({Side.SERVER})
-    public static void onPacket_PlayerControl(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-        if (!player.world.isRemote) {
-            MCH_PacketSeatPlayerControl pc = new MCH_PacketSeatPlayerControl();
-            pc.readData(data);
-            scheduler.addScheduledTask(() -> {
-                MCH_EntityAircraft ac;
-                if (player.getRidingEntity() instanceof MCH_EntitySeat seat) {
-                    ac = seat.getParent();
-                } else {
-                    ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
-                }
-
-                if (ac != null) {
-                    if (pc.isUnmount) {
-                        ac.unmountEntityFromSeat(player);
-                    } else if (pc.switchSeat > 0) {
-                        if (pc.switchSeat == 3) {
-                            player.dismountRidingEntity();
-                            ac.keepOnRideRotation = true;
-                            ac.processInitialInteract(player, true, EnumHand.MAIN_HAND);
-                        }
-
-                        if (pc.switchSeat == 1) {
-                            ac.switchNextSeat(player);
-                        }
-
-                        if (pc.switchSeat == 2) {
-                            ac.switchPrevSeat(player);
-                        }
-                    } else if (pc.parachuting) {
-                        ac.unmount(player);
-                    }
-                }
-            });
-        }
-    }
-
 
 
 }

@@ -5,11 +5,12 @@ import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_Key;
 import com.norwood.mcheli.networking.packet.MCH_PacketIndOpenScreen;
 import com.norwood.mcheli.networking.packet.MCH_PacketPlayerControlBase;
-import com.norwood.mcheli.networking.packet.MCH_PacketSeatPlayerControl;
-import com.norwood.mcheli.wrapper.W_Network;
+import com.norwood.mcheli.networking.packet.PacketSeatPlayerControl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.input.Keyboard;
+
+import static com.norwood.mcheli.networking.packet.PacketSeatPlayerControl.PlayerControlState;
 
 public abstract class MCH_AircraftClientTickHandler extends MCH_ClientTickHandlerBase {
     public MCH_Key KeyUp;
@@ -68,28 +69,28 @@ public abstract class MCH_AircraftClientTickHandler extends MCH_ClientTickHandle
     public boolean commonPlayerControl(EntityPlayer player, MCH_EntityAircraft ac, boolean isPilot, MCH_PacketPlayerControlBase pc) {
         if (Keyboard.isKeyDown(MCH_Config.KeyFreeLook.prmInt)) {
             if (this.KeyGUI.isKeyDown() || this.KeyExtra.isKeyDown()) {
-                MCH_PacketSeatPlayerControl psc = new MCH_PacketSeatPlayerControl();
+                PacketSeatPlayerControl psc = new PacketSeatPlayerControl();
                 if (isPilot) {
-                    psc.switchSeat = (byte) (this.KeyGUI.isKeyDown() ? 1 : 2);
+                    psc.switchSeat = this.KeyGUI.isKeyDown() ? PlayerControlState.NEXT : PlayerControlState.PREV;
                 } else {
                     ac.keepOnRideRotation = true;
-                    psc.switchSeat = 3;
+                    psc.switchSeat = PlayerControlState.DISMOUNT;
                 }
 
-                W_Network.sendToServer(psc);
+                psc.sendToServer();
                 return false;
             }
         } else if (!isPilot && ac.getSeatNum() > 1) {
-            MCH_PacketSeatPlayerControl psc = new MCH_PacketSeatPlayerControl();
+            PacketSeatPlayerControl playerControl = new PacketSeatPlayerControl();
             if (this.KeyGUI.isKeyDown()) {
-                psc.switchSeat = 1;
-                W_Network.sendToServer(psc);
+                playerControl.switchSeat = PlayerControlState.NEXT;
+                playerControl.sendToServer();
                 return false;
             }
 
             if (this.KeyExtra.isKeyDown()) {
-                psc.switchSeat = 2;
-                W_Network.sendToServer(psc);
+                playerControl.switchSeat = PlayerControlState.PREV;
+                playerControl.sendToServer();
                 return false;
             }
         }
