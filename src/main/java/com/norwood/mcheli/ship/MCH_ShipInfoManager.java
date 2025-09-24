@@ -1,8 +1,7 @@
 package com.norwood.mcheli.ship;
 
-import com.norwood.mcheli.helper.addon.AddonResourceLocation;
-import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfoManager;
+import com.norwood.mcheli.helper.info.ContentRegistries;
 import net.minecraft.item.Item;
 
 import javax.annotation.Nullable;
@@ -21,10 +20,6 @@ public class MCH_ShipInfoManager extends MCH_AircraftInfoManager<MCH_ShipInfo> {
     @Nullable
     public static MCH_ShipInfo getFromItem(@Nullable Item item) {
         return getInstance().getAcInfoFromItem(item);
-    }
-
-    public MCH_ShipInfo newInfo(AddonResourceLocation name, String filepath) {
-        return new MCH_ShipInfo(name, filepath);
     }
 
     @Nullable

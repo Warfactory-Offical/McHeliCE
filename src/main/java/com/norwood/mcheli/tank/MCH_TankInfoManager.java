@@ -1,8 +1,7 @@
 package com.norwood.mcheli.tank;
 
-import com.norwood.mcheli.helper.addon.AddonResourceLocation;
-import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfoManager;
+import com.norwood.mcheli.helper.info.ContentRegistries;
 import net.minecraft.item.Item;
 
 import javax.annotation.Nullable;
@@ -22,10 +21,6 @@ public class MCH_TankInfoManager extends MCH_AircraftInfoManager<MCH_TankInfo> {
     @Nullable
     public static MCH_TankInfo getFromItem(Item item) {
         return getInstance().getAcInfoFromItem(item);
-    }
-
-    public MCH_TankInfo newInfo(AddonResourceLocation name, String filepath) {
-        return new MCH_TankInfo(name, filepath);
     }
 
     @Nullable

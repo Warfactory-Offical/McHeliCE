@@ -1,8 +1,7 @@
 package com.norwood.mcheli.plane;
 
-import com.norwood.mcheli.helper.addon.AddonResourceLocation;
-import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfoManager;
+import com.norwood.mcheli.helper.info.ContentRegistries;
 import net.minecraft.item.Item;
 
 import javax.annotation.Nullable;
@@ -21,10 +20,6 @@ public class MCP_PlaneInfoManager extends MCH_AircraftInfoManager<MCP_PlaneInfo>
     @Nullable
     public static MCP_PlaneInfo getFromItem(@Nullable Item item) {
         return getInstance().getAcInfoFromItem(item);
-    }
-
-    public MCP_PlaneInfo newInfo(AddonResourceLocation name, String filepath) {
-        return new MCP_PlaneInfo(name, filepath);
     }
 
     @Nullable
