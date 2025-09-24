@@ -5,8 +5,6 @@ import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.MCH_MOD;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_EntitySeat;
-import com.norwood.mcheli.helper.MCH_Utils;
-import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.helper.network.HandleSide;
 import com.norwood.mcheli.networking.packet.*;
 import com.norwood.mcheli.wrapper.W_Entity;
@@ -15,12 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.IThreadListener;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 public class MCH_AircraftPacketHandler {
     @HandleSide({Side.SERVER})
@@ -156,33 +149,6 @@ public class MCH_AircraftPacketHandler {
         }
     }
 
-//    @HandleSide({Side.CLIENT})
-//    public static void onPacketStatusResponse(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-//        if (player.world.isRemote) {
-//            MCH_PacketStatusResponse status = new MCH_PacketStatusResponse();
-//            status.readData(data);
-//            if (status.entityID_AC > 0) {
-//                scheduler.addScheduledTask(() -> {
-//                    StringBuilder msg = new StringBuilder("onPacketStatusResponse:EID=" + status.entityID_AC + ":");
-//                    Entity e = player.world.getEntityByID(status.entityID_AC);
-//                    if (e instanceof MCH_EntityAircraft ac) {
-//                        if (status.seatNum > 0 && status.weaponIDs != null && status.weaponIDs.length == status.seatNum) {
-//                            msg.append("seatNum=").append(status.seatNum).append(":");
-//
-//                            for (int i = 0; i < status.seatNum; i++) {
-//                                ac.updateWeaponID(i, status.weaponIDs[i]);
-//                                msg.append("[").append(i).append(",").append(status.weaponIDs[i]).append("]");
-//                            }
-//                        } else {
-//                            msg.append("Error seatNum=").append(status.seatNum);
-//                        }
-//                    }
-//
-//                    MCH_Lib.DbgLog(true, msg.toString());
-//                });
-//            }
-//        }
-//    }
 
     @HandleSide({Side.CLIENT})
     public static void onPacketNotifyWeaponID(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
@@ -244,31 +210,6 @@ public class MCH_AircraftPacketHandler {
         }
     }
 
-//    @HandleSide({Side.CLIENT})
-//    public static void onPacketNotifyTVMissileEntity(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-//        if (player.world.isRemote) {
-//            MCH_PacketNotifyTVMissileEntity packet = new MCH_PacketNotifyTVMissileEntity();
-//            packet.readData(data);
-//            if (packet.entityID_Ac <= 0) {
-//                return;
-//            }
-//
-//            if (packet.entityID_TVMissile <= 0) {
-//                return;
-//            }
-//
-//            scheduler.addScheduledTask(() -> {
-//                Entity e = player.world.getEntityByID(packet.entityID_Ac);
-//                if (e instanceof MCH_EntityAircraft ac) {
-//                    e = player.world.getEntityByID(packet.entityID_TVMissile);
-//                    if (e instanceof MCH_EntityTvMissile) {
-//                        ((MCH_EntityTvMissile) e).shootingEntity = player;
-//                        ac.setTVMissile((MCH_EntityTvMissile) e);
-//                    }
-//                }
-//            });
-//        }
-//    }
 
     @HandleSide({Side.CLIENT})
     public static void onPacketSeatListResponse(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
@@ -361,51 +302,4 @@ public class MCH_AircraftPacketHandler {
         }
     }
 
-    @HandleSide({Side.SERVER})
-    public static void onPacketNotifyInfoReloaded(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-        if (!player.world.isRemote) {
-            MCH_PacketNotifyInfoReloaded pc = new MCH_PacketNotifyInfoReloaded();
-            pc.readData(data);
-            scheduler.addScheduledTask(() -> {
-                switch (pc.type) {
-                    case 0:
-                        MCH_EntityAircraft ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
-                        if (ac != null && ac.getAcInfo() != null) {
-                            String name = ac.getAcInfo().name;
-
-                            for (WorldServer world : MCH_Utils.getServer().worlds) {
-                                List<Entity> list = new ArrayList<>(world.loadedEntityList);
-
-                                for (Entity entity : list) {
-                                    if (entity instanceof MCH_EntityAircraft) {
-                                        ac = (MCH_EntityAircraft) entity;
-                                        if (ac.getAcInfo() != null && ac.getAcInfo().name.equals(name)) {
-                                            ac.changeType(name);
-                                            ac.createSeats(UUID.randomUUID().toString());
-                                            ac.onAcInfoReloaded();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    case 1:
-                        ContentRegistries.weapon().reloadAll();
-
-                        for (WorldServer world : MCH_Utils.getServer().worlds) {
-                            List<Entity> list = new ArrayList<>(world.loadedEntityList);
-
-                            for (Entity entity : list) {
-                                if (entity instanceof MCH_EntityAircraft entityAircraft) {
-                                    if (entityAircraft.getAcInfo() != null) {
-                                        entityAircraft.changeType(entityAircraft.getAcInfo().name);
-                                        entityAircraft.createSeats(UUID.randomUUID().toString());
-                                    }
-                                }
-                            }
-                        }
-                }
-            });
-        }
-    }
 }

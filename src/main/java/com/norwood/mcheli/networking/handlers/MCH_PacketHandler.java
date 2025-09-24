@@ -1,14 +1,11 @@
-package com.norwood.mcheli.networking.packet;
+package com.norwood.mcheli.networking.handlers;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.norwood.mcheli.MCH_Lib;
-import com.norwood.mcheli.networking.handlers.*;
 import com.norwood.mcheli.block.MCH_DraftingTablePacketHandler;
 import com.norwood.mcheli.gltd.MCH_GLTDPacketHandler;
-import com.norwood.mcheli.networking.handlers.MCH_HeliPacketHandler;
 import com.norwood.mcheli.lweapon.MCH_LightWeaponPacketHandler;
 import com.norwood.mcheli.multiplay.MCH_MultiplayPacketHandler;
-import com.norwood.mcheli.networking.handlers.MCP_PlanePacketHandler;
 import com.norwood.mcheli.wrapper.W_PacketHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IThreadListener;
@@ -39,7 +36,7 @@ public class MCH_PacketHandler extends W_PacketHandler {
             case 536875040 -> MCH_AircraftPacketHandler.onPacket_PlayerControl(entityPlayer, data, handler);
             case 536875059 -> MCH_AircraftPacketHandler.onPacketIndReload(entityPlayer, data, handler);
             case 536875062 -> MCH_AircraftPacketHandler.onPacketIndRotation(entityPlayer, data, handler);
-            case 536875063 -> MCH_AircraftPacketHandler.onPacketNotifyInfoReloaded(entityPlayer, data, handler);
+//            case 536875063 -> MCH_AircraftPacketHandler.onPacketNotifyInfoReloaded(entityPlayer, data, handler);
             case 536875072 -> MCH_AircraftPacketHandler.onPacket_ClientSetting(entityPlayer, data, handler);
             case 536875104 -> MCH_AircraftPacketHandler.onPacketStatusRequest(entityPlayer, data, handler);
             case 536879120 -> MCH_HeliPacketHandler.onPacket_PlayerControl(entityPlayer, data, handler);

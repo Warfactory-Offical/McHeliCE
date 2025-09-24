@@ -5,11 +5,11 @@ import com.norwood.mcheli.MCH_ClientCommonTickHandler;
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.MCH_MOD;
-import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
-import com.norwood.mcheli.networking.packet.MCH_PacketNotifyInfoReloaded;
+import com.norwood.mcheli.helper.info.ContentRegistries;
 import com.norwood.mcheli.multiplay.MCH_GuiTargetMarker;
+import com.norwood.mcheli.networking.packet.PacketContentReload;
 import com.norwood.mcheli.weapon.MCH_WeaponInfo;
 import com.norwood.mcheli.wrapper.W_GuiButton;
 import com.norwood.mcheli.wrapper.W_GuiContainer;
@@ -478,7 +478,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
                 case 401:
                     MCH_Lib.DbgLog(true, "MCH_BaseInfo.reload all weapon info.");
                     ContentRegistries.get(MCH_WeaponInfo.class).reloadAll();
-                    MCH_PacketNotifyInfoReloaded.sendRealodAllWeapon();
+                    new PacketContentReload(PacketContentReload.ReloadType.WEAPON).sendToServer();
                     List<Entity> list = new ArrayList<>(this.mc.world.loadedEntityList);
                     Set<String> reloaded = Sets.newHashSet();
 
@@ -503,7 +503,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
                         String name = ac.getAcInfo().name;
                         MCH_Lib.DbgLog(true, "MCH_BaseInfo.reload : " + name);
                         ContentRegistries.get(ac.getAcInfo().getClass()).reload(name);
-                        List<Entity> entityList =  new ArrayList<>(this.mc.world.loadedEntityList);
+                        List<Entity> entityList = new ArrayList<>(this.mc.world.loadedEntityList);
 
                         for (Entity entity : entityList) {
                             if (entity instanceof MCH_EntityAircraft) {
@@ -515,7 +515,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
                             }
                         }
 
-                        MCH_PacketNotifyInfoReloaded.sendRealodAc();
+                        new PacketContentReload(PacketContentReload.ReloadType.VEHICLE).sendToServer();
                     }
 
                     this.mc.player.closeScreen();
@@ -592,7 +592,7 @@ public class MCH_ConfigGui extends W_GuiContainer {
 
     protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
         W_McClient.MOD_bindTexture("textures/gui/config.png");
-         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         int x = (this.width - this.xSize) / 2;
         int y = (this.height - this.ySize) / 2;
         this.drawTexturedModalRectRotate(x, y, this.xSize, this.ySize, 0.0, 0.0, this.xSize, this.ySize, 0.0F, 512.0, 256.0);
