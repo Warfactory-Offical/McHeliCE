@@ -2,9 +2,8 @@ package com.norwood.mcheli.ship;
 
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_MOD;
-import com.norwood.mcheli.helper.addon.AddonResourceLocation;
 import com.norwood.mcheli.aircraft.MCH_AircraftInfo;
-import com.norwood.mcheli.tank.MCH_ItemTank;
+import com.norwood.mcheli.helper.addon.AddonResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -28,12 +27,10 @@ public class MCH_ShipInfo extends MCH_AircraftInfo {
     public MCH_ShipInfo(AddonResourceLocation location, String path) {
         super(location, path);
     }
-
     @Override
     public Item getItem() {
         return this.item;
     }
-
     @Override
     public float getDefaultRotorSpeed() {
         return 47.94F;
@@ -50,17 +47,14 @@ public class MCH_ShipInfo extends MCH_AircraftInfo {
     public boolean haveWing() {
         return !this.wingList.isEmpty();
     }
-
     @Override
     public float getMaxSpeed() {
         return 1.8F;
     }
-
     @Override
     public int getDefaultMaxZoom() {
         return 8;
     }
-
     @Override
     public String getDefaultHudName(int seatId) {
         if (seatId <= 0) {
@@ -69,7 +63,6 @@ public class MCH_ShipInfo extends MCH_AircraftInfo {
             return seatId == 1 ? "plane" : "gunner";
         }
     }
-
     @Override
     public boolean validate() throws Exception {
         if (this.haveHatch() && this.haveWing()) {
@@ -81,127 +74,14 @@ public class MCH_ShipInfo extends MCH_AircraftInfo {
         this.sweepWingSpeed = (float) (this.sweepWingSpeed * MCH_Config.AllShipSpeed.prmDouble);
         return super.validate();
     }
-
-    @Override
-    public void loadItemData(String item, String data) {
-        super.loadItemData(item, data);
-        if (item.compareTo("addpartrotor") == 0) {
-            String[] s = data.split("\\s*,\\s*");
-            if (s.length >= 6) {
-                float m = s.length >= 7 ? this.toFloat(s[6], -180.0F, 180.0F) / 90.0F : 1.0F;
-                MCH_ShipInfo.Rotor e = new Rotor(
-                        this,
-                        this.toFloat(s[0]),
-                        this.toFloat(s[1]),
-                        this.toFloat(s[2]),
-                        this.toFloat(s[3]),
-                        this.toFloat(s[4]),
-                        this.toFloat(s[5]),
-                        m,
-                        "rotor" + this.rotorList.size()
-                );
-                this.rotorList.add(e);
-            }
-        } else if (item.compareTo("addblade") == 0) {
-            int idx = this.rotorList.size() - 1;
-            MCH_ShipInfo.Rotor r = !this.rotorList.isEmpty() ? this.rotorList.get(idx) : null;
-            if (r != null) {
-                String[] s = data.split("\\s*,\\s*");
-                if (s.length == 8) {
-                    MCH_ShipInfo.Blade b = new Blade(
-                            this,
-                            this.toInt(s[0]),
-                            this.toInt(s[1]),
-                            this.toFloat(s[2]),
-                            this.toFloat(s[3]),
-                            this.toFloat(s[4]),
-                            this.toFloat(s[5]),
-                            this.toFloat(s[6]),
-                            this.toFloat(s[7]),
-                            "blade" + idx
-                    );
-                    r.blades.add(b);
-                }
-            }
-        } else if (item.compareTo("addpartwing") == 0) {
-            String[] s = data.split("\\s*,\\s*");
-            if (s.length == 7) {
-                MCH_ShipInfo.Wing n = new Wing(
-                        this,
-                        this.toFloat(s[0]),
-                        this.toFloat(s[1]),
-                        this.toFloat(s[2]),
-                        this.toFloat(s[3]),
-                        this.toFloat(s[4]),
-                        this.toFloat(s[5]),
-                        this.toFloat(s[6]),
-                        "wing" + this.wingList.size()
-                );
-                this.wingList.add(n);
-            }
-        } else if (item.equalsIgnoreCase("AddPartPylon")) {
-            String[] s = data.split("\\s*,\\s*");
-            if (s.length >= 7 && !this.wingList.isEmpty()) {
-                MCH_ShipInfo.Wing w = this.wingList.get(this.wingList.size() - 1);
-                if (w.pylonList == null) {
-                    w.pylonList = new ArrayList<>();
-                }
-
-                MCH_ShipInfo.Pylon n = new Pylon(
-                        this,
-                        this.toFloat(s[0]),
-                        this.toFloat(s[1]),
-                        this.toFloat(s[2]),
-                        this.toFloat(s[3]),
-                        this.toFloat(s[4]),
-                        this.toFloat(s[5]),
-                        this.toFloat(s[6]),
-                        w.modelName + "_pylon" + w.pylonList.size()
-                );
-                w.pylonList.add(n);
-            }
-        } else if (item.compareTo("addpartnozzle") == 0) {
-            String[] s = data.split("\\s*,\\s*");
-            if (s.length == 6) {
-                MCH_AircraftInfo.DrawnPart n = new DrawnPart(
-                        this,
-                        this.toFloat(s[0]),
-                        this.toFloat(s[1]),
-                        this.toFloat(s[2]),
-                        this.toFloat(s[3]),
-                        this.toFloat(s[4]),
-                        this.toFloat(s[5]),
-                        "nozzle" + this.nozzles.size()
-                );
-                this.nozzles.add(n);
-            }
-        } else if (item.compareTo("variablesweepwing") == 0) {
-            this.isVariableSweepWing = this.toBool(data);
-        } else if (item.compareTo("sweepwingspeed") == 0) {
-            this.sweepWingSpeed = this.toFloat(data, 0.0F, 5.0F);
-        } else if (item.compareTo("enablevtol") == 0) {
-            this.isEnableVtol = this.toBool(data);
-        } else if (item.compareTo("defaultvtol") == 0) {
-            this.isDefaultVtol = this.toBool(data);
-        } else if (item.compareTo("vtolyaw") == 0) {
-            this.vtolYaw = this.toFloat(data, 0.0F, 1.0F);
-        } else if (item.compareTo("vtolpitch") == 0) {
-            this.vtolPitch = this.toFloat(data, 0.01F, 1.0F);
-        } else if (item.compareTo("enableautopilot") == 0) {
-            this.isEnableAutoPilot = this.toBool(data);
-        }
-    }
-
     @Override
     public String getDirectoryName() {
         return "ships";
     }
-
     @Override
     public String getKindName() {
         return "ship";
     }
-
     @Override
     public void onPostReload() {
         item = (MCH_ItemShip) ForgeRegistries.ITEMS.getValue(new ResourceLocation(MCH_MOD.MOD_ID, name));

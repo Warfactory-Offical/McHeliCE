@@ -129,7 +129,7 @@ public class ContentRegistries {
     }
 
     public static IContentData reparseContent(IContentData content, String dir) {
-        AddonPack addonPack = AddonManager.get(content.getLoation().getAddonDomain());
+        AddonPack addonPack = AddonManager.get(content.getLocation().getAddonDomain());
         if (addonPack == null) {
             return content;
         } else {
@@ -143,7 +143,11 @@ public class ContentRegistries {
 
         for (AddonPack addon : AddonManager.getLoadedAddons()) {
             ContentLoader packLoader = getPackLoader(addon, getFilterOnly(registry.getDirectoryName()));
-            list.addAll(packLoader.reloadAndParse(registry.getType(), registry.values(), ContentFactories.getFactory(registry.getDirectoryName())));
+            
+            ContentType type = ContentFactories.getType(registry.getDirectoryName());
+            if (type != null) {
+                list.addAll(packLoader.reloadAndParse(registry.getType(), registry.values(), type));
+            }
         }
 
         return list;

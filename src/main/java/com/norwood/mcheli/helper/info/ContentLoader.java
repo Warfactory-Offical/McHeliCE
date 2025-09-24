@@ -33,31 +33,23 @@ public abstract class ContentLoader {
         return this.fileFilter.test(path);
     }
 
-    @Nullable
-    public IContentFactory getFactory(@Nullable String dirName) {
-        return ContentFactories.getFactory(dirName);
-    }
-
-    public Multimap<ContentType, ContentLoader.ContentEntry> load() {
-        Multimap<ContentType, ContentLoader.ContentEntry> map = LinkedHashMultimap.create();
-
-        for (ContentLoader.ContentEntry entry : this.getEntries()) {
+    public Multimap<ContentType, ContentEntry> load() {
+        Multimap<ContentType, ContentEntry> map = LinkedHashMultimap.create();
+        for (ContentEntry entry : this.getEntries()) {
             map.put(entry.getType(), entry);
         }
-
         return map;
     }
 
-    protected abstract List<ContentLoader.ContentEntry> getEntries();
+    protected abstract List<ContentEntry> getEntries();
 
-    protected abstract InputStream getInputStreamByName(String var1) throws IOException;
+    protected abstract InputStream getInputStreamByName(String name) throws IOException;
 
-    public <TYPE extends IContentData> List<TYPE> reloadAndParse(Class<TYPE> clazz, List<TYPE> oldContents, IContentFactory factory) {
+    public <TYPE extends IContentData> List<TYPE> reloadAndParse(Class<TYPE> clazz, List<TYPE> oldContents, ContentType type) {
         List<TYPE> list = Lists.newLinkedList();
-
         for (TYPE oldContent : oldContents) {
             try {
-                ContentLoader.ContentEntry entry = this.makeEntry(oldContent.getContentPath(), factory, true);
+                ContentEntry entry = this.makeEntry(oldContent.getContentPath(), type, true);
                 IContentData content = entry.parse();
                 if (content != null) {
                     content.onPostReload();
@@ -68,55 +60,59 @@ public abstract class ContentLoader {
                 if (clazz.isInstance(content)) {
                     list.add(clazz.cast(content));
                 }
-            } catch (IOException var9) {
-                MCH_Logger.get().error("IO Error from file loader!", var9);
+            } catch (IOException e) {
+                MCH_Logger.get().error("IO Error from file loader!", e);
             }
         }
-
         return list;
     }
 
     public IContentData reloadAndParseSingle(IContentData oldData, String dir) {
         IContentData content = oldData;
-
         try {
-            ContentLoader.ContentEntry entry = this.makeEntry(oldData.getContentPath(), this.getFactory(dir), true);
+            ContentType type = ContentFactories.getType(dir);
+            if (type == null) {
+                MCH_Logger.get().warn("Unknown content type for directory '{}'", dir);
+                return content;
+            }
+            ContentEntry entry = this.makeEntry(oldData.getContentPath(), type, true);
             content = entry.parse();
             if (content != null) {
                 content.onPostReload();
             } else {
                 content = oldData;
             }
-        } catch (IOException var5) {
-            MCH_Logger.get().error("IO Error from file loader!", var5);
+        } catch (IOException e) {
+            MCH_Logger.get().error("IO Error from file loader!", e);
         }
-
         return content;
     }
 
-    protected ContentLoader.ContentEntry makeEntry(String filepath, @Nullable IContentFactory factory, boolean reload) throws IOException {
+    protected ContentEntry makeEntry(String filepath, ContentType type, boolean reload) throws IOException {
         List<String> lines;
-
-        try (BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(this.getInputStreamByName(filepath), StandardCharsets.UTF_8))) {
-            lines = bufferedreader.lines().collect(Collectors.toList());
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(this.getInputStreamByName(filepath), StandardCharsets.UTF_8))) {
+            lines = reader.lines().collect(Collectors.toList());
         }
-
-        return new ContentLoader.ContentEntry(filepath, this.domain, factory, lines, reload);
+        return new ContentEntry(filepath, this.domain, type, lines, reload);
     }
 
     public static class ContentEntry {
         private final String filepath;
         private final String domain;
-        private final IContentFactory factory;
+        private final ContentType type;
         private final List<String> lines;
         private final boolean reload;
 
-        private ContentEntry(String filepath, String domain, @Nullable IContentFactory factory, List<String> lines, boolean reload) {
+        private ContentEntry(String filepath, String domain, ContentType type, List<String> lines, boolean reload) {
             this.filepath = filepath;
             this.domain = domain;
-            this.factory = factory;
+            this.type = type;
             this.lines = lines;
             this.reload = reload;
+        }
+
+        public ContentType getType() {
+            return this.type;
         }
 
         @Nullable
@@ -126,34 +122,45 @@ public abstract class ContentLoader {
                 MCH_MOD.proxy.onParseStartFile(location);
             }
 
-            IContentData var4;
+            IContentData content;
             try {
-                IContentData content = this.factory.create(location, this.filepath);
-                if (content != null) {
-                    content.parse(this.lines, Files.getFileExtension(this.filepath), this.reload);
-                    if (!content.validate()) {
-                        MCH_Logger.get().debug("Invalid content info: {}", this.filepath);
-                    }
+                String extension = Files.getFileExtension(this.filepath);
+                IParser parser = ContentParsers.get(extension);
+                if (parser == null) {
+                    MCH_Logger.get().warn("No parser registered for extension '{}'", extension);
+                    return null;
                 }
 
+                content = invokeParser(parser, location);
+                if (content != null && !content.validate()) {
+                    MCH_Logger.get().debug("Invalid content info: {}", this.filepath);
+                }
                 return content;
-            } catch (Exception var8) {
+            } catch (Exception ex) {
                 String msg = "An error occurred while file loading ";
-                if (var8 instanceof ContentParseException) {
-                    msg = msg + "at line:" + ((ContentParseException) var8).getLineNo() + ".";
+                if (ex instanceof ContentParseException) {
+                    msg = msg + "at line:" + ((ContentParseException) ex).getLineNo() + ".";
                 }
-
-                MCH_Logger.get().error("{} file:{}, domain:{}", msg, location.getPath(), this.domain, var8);
-                var4 = null;
+                MCH_Logger.get().error("{} file:{}, domain:{}", msg, location.getPath(), this.domain, ex);
+                return null;
             } finally {
                 MCH_MOD.proxy.onParseFinishFile(location);
             }
-
-            return var4;
         }
 
-        public ContentType getType() {
-            return this.factory.getType();
+        @Nullable
+        private IContentData invokeParser(IParser parser, AddonResourceLocation location) throws Exception {
+            return switch (this.type) {
+                case HELICOPTER -> parser.parseHelicopter(location, this.filepath, this.lines, this.reload);
+                case PLANE -> parser.parsePlane(location, this.filepath, this.lines, this.reload);
+                case SHIP -> parser.parseShip(location, this.filepath, this.lines, this.reload);
+                case TANK -> parser.parseTank(location, this.filepath, this.lines, this.reload);
+                case VEHICLE -> parser.parseVehicle(location, this.filepath, this.lines, this.reload);
+                case WEAPON -> parser.parseWeapon(location, this.filepath, this.lines, this.reload);
+                case THROWABLE -> parser.parseThrowable(location, this.filepath, this.lines, this.reload);
+                case HUD -> parser.parseHud(location, this.filepath, this.lines, this.reload);
+                case ITEM -> parser.parseItem(location, this.filepath, this.lines, this.reload);
+            };
         }
     }
 }

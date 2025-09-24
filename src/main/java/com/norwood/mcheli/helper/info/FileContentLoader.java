@@ -21,17 +21,16 @@ public class FileContentLoader extends ContentLoader implements Closeable {
         if (this.resourcePackZipFile == null) {
             this.resourcePackZipFile = new ZipFile(this.dir);
         }
-
         return this.resourcePackZipFile;
     }
 
     @Override
-    protected List<ContentLoader.ContentEntry> getEntries() {
+    protected List<ContentEntry> getEntries() {
         return this.walkEntries("2".equals(this.loaderVersion));
     }
 
-    private List<ContentLoader.ContentEntry> walkEntries(boolean findDeep) {
-        List<ContentLoader.ContentEntry> list = Lists.newLinkedList();
+    private List<ContentEntry> walkEntries(boolean findDeep) {
+        List<ContentEntry> list = Lists.newLinkedList();
 
         try {
             ZipFile zipfile = this.getResourcePackZipFile();
@@ -41,13 +40,13 @@ public class FileContentLoader extends ContentLoader implements Closeable {
                 String name = itr.next().getName();
                 String[] s = name.split("/");
                 String typeDirName = s.length >= 3 ? s[2] : null;
-                IContentFactory factory = this.getFactory(typeDirName);
-                if (factory != null) {
-                    list.add(this.makeEntry(name, factory, false));
+                ContentType type = ContentFactories.getType(typeDirName);
+                if (type != null) {
+                    list.add(this.makeEntry(name, type, false));
                 }
             }
-        } catch (IOException var9) {
-            MCH_Logger.get().error("IO Error from file loader!", var9);
+        } catch (IOException e) {
+            MCH_Logger.get().error("IO Error from file loader!", e);
         }
 
         return list;
@@ -66,9 +65,8 @@ public class FileContentLoader extends ContentLoader implements Closeable {
         ZipEntry zipentry = zipfile.getEntry(name);
         if (zipentry == null) {
             throw new FileNotFoundException(String.format("'%s' in AddonPack '%s'", this.dir, name));
-        } else {
-            return zipfile.getInputStream(zipentry);
         }
+        return zipfile.getInputStream(zipentry);
     }
 
     @Override

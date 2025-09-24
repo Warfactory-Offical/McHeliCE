@@ -1,11 +1,8 @@
 package com.norwood.mcheli;
 
 import com.norwood.mcheli.helper.addon.AddonResourceLocation;
-import com.norwood.mcheli.helper.info.ContentParseException;
 import com.norwood.mcheli.helper.info.IContentData;
 import net.minecraft.util.math.Vec3d;
-
-import java.util.List;
 
 public abstract class MCH_BaseInfo implements IContentData {
     public final String filePath;
@@ -71,36 +68,12 @@ public abstract class MCH_BaseInfo implements IContentData {
         return true;
     }
 
-    protected void loadItemData(String item, String data) {
-    }
-
-
     public boolean canReloadItem(String item) {
         return false;
     }
 
     @Override
-    public void parse(List<String> lines, String fileExtension, boolean reload) {
-        if ("txt".equals(fileExtension)) {
-            int line = 0;
-
-            try {
-                for (String str : lines) {
-                    line++;
-                    str = str.trim();
-                    int eqIdx = str.indexOf(61);
-                    if (eqIdx >= 0 && str.length() > eqIdx + 1) {
-                        this.loadItemData(str.substring(0, eqIdx).trim().toLowerCase(), str.substring(eqIdx + 1).trim());
-                    }
-                }
-            } catch (Exception var8) {
-                throw new ContentParseException(var8, line);
-            }
-        }
-    }
-
-    @Override
-    public AddonResourceLocation getLoation() {
+    public AddonResourceLocation getLocation() {
         return this.location;
     }
 

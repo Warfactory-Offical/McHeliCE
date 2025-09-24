@@ -38,7 +38,7 @@ public class FolderContentLoader extends ContentLoader {
         return walkDir(this.dir, null, loadDeep, 0);
     }
 
-    private List<ContentEntry> walkDir(File node, @Nullable IContentFactory factory, boolean allowDeepFromHere, int depth) {
+    private List<ContentEntry> walkDir(File node, @Nullable ContentType type, boolean allowDeepFromHere, int depth) {
         List<ContentEntry> list = Lists.newArrayList();
 
         if (node == null || !node.exists()) {
@@ -50,12 +50,12 @@ public class FolderContentLoader extends ContentLoader {
                 File[] children = node.listFiles();
                 if (children != null) {
                     for (File child : children) {
-                        IContentFactory nextFactory = factory;
-                        if (nextFactory == null) {
-                            nextFactory = this.getFactory(child.getName());
+                        ContentType nextType = type;
+                        if (nextType == null) {
+                            nextType = ContentFactories.getType(child.getName());
                         }
                         boolean nextAllowDeep = allowDeepFromHere || (depth == 0 && "assets".equals(child.getName()));
-                        list.addAll(walkDir(child, nextFactory, nextAllowDeep, depth + 1));
+                        list.addAll(walkDir(child, nextType, nextAllowDeep, depth + 1));
                     }
                 }
             }
@@ -64,8 +64,8 @@ public class FolderContentLoader extends ContentLoader {
 
         try {
             String rel = relativeForwardSlash(node);
-            if (this.isReadable(rel) && factory != null) {
-                list.add(this.makeEntry(rel, factory, false));
+            if (this.isReadable(rel) && type != null) {
+                list.add(this.makeEntry(rel, type, false));
             }
         } catch (IOException e) {
             e.printStackTrace();
