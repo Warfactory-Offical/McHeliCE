@@ -4704,7 +4704,13 @@ public abstract class MCH_EntityAircraft
                 MCH_WeaponSet ws = this.getCurrentWeapon(entity);
                 ws.onSwitchWeapon(this.world.isRemote, this.isInfinityAmmo(entity));
                 if (!this.world.isRemote) {
-                    PacketSyncWeapon.send(this, sid, id, ws.getAmmoNum(), ws.getRestAllAmmoNum());
+                    new PacketSyncWeapon(
+                            getEntityId(this),
+                            sid,
+                            id,
+                            (short) ws.getAmmoNum(),
+                            (short) ws.getRestAllAmmoNum()
+                    ).sendPacketToAllAround(world, posX, posY, posZ, 150);
                 }
             }
         }

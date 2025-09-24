@@ -4,25 +4,19 @@ import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.weapon.MCH_EntityTvMissile;
 import hohserg.elegant.networking.api.ElegantPacket;
 import hohserg.elegant.networking.api.ServerToClientPacket;
+import lombok.RequiredArgsConstructor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 
 @ElegantPacket
+@RequiredArgsConstructor
 public class PacketNotifyTVMissileEntity extends PacketBase implements ServerToClientPacket {
 
-    public int entityID_Ac = -1;
-    public int entityID_TVMissile = -1;
-
-    public static void send(int heliEntityID, int tvMissileEntityID) {
-        var packet = new PacketNotifyTVMissileEntity();
-        packet.entityID_Ac = heliEntityID;
-        packet.entityID_TVMissile = tvMissileEntityID;
-        packet.sendToClients();
-    }
+    final public int entityID_Ac;
+    final public int entityID_TVMissile;
 
     @Override
     public void onReceive(Minecraft mc) {
-        if (mc.player.world.isRemote) {
             if (this.entityID_Ac <= 0 || this.entityID_TVMissile <= 0) {
                 return;
             }
@@ -36,7 +30,5 @@ public class PacketNotifyTVMissileEntity extends PacketBase implements ServerToC
                     }
                 }
             });
-        }
-
     }
 }

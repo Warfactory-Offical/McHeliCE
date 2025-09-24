@@ -23,7 +23,6 @@ public class MCH_PacketHandler extends W_PacketHandler {
             case 268438032 -> MCH_MultiplayPacketHandler.onPacket_IndClient(entityPlayer, data, handler);
             case 536872992 -> MCH_CommonPacketHandler.onPacketIndOpenScreen(entityPlayer, data, handler);
             case 536873088 -> MCH_MultiplayPacketHandler.onPacket_Command(entityPlayer, data, handler);
-            case 536873216 -> MCH_ToolPacketHandler.onPacket_IndSpotEntity(entityPlayer, data, handler);
             case 536873472 -> MCH_MultiplayPacketHandler.onPacket_LargeData(entityPlayer, data, handler);
             case 536873473 -> MCH_MultiplayPacketHandler.onPacket_ModList(entityPlayer, data, handler);
             case 536879120 -> MCH_HeliPacketHandler.onPacket_PlayerControl(entityPlayer, data, handler);

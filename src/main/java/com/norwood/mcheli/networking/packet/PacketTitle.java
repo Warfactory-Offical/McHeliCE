@@ -3,23 +3,18 @@ package com.norwood.mcheli.networking.packet;
 import com.norwood.mcheli.MCH_MOD;
 import hohserg.elegant.networking.api.ElegantPacket;
 import hohserg.elegant.networking.api.ServerToClientPacket;
+import lombok.RequiredArgsConstructor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.ITextComponent;
 
 @ElegantPacket
+@RequiredArgsConstructor
 public class PacketTitle extends PacketBase implements ServerToClientPacket {
 
-    public String chatComponent = null;
-    public int showTime = 1;
-    public int position = 0;
 
-    public static void send(ITextComponent chat, int showTime, int pos) {
-        var packet = new PacketTitle();
-        packet.chatComponent = ITextComponent.Serializer.componentToJson(chat);
-        packet.showTime = showTime;
-        packet.position = pos;
-        packet.sendToClients();
-    }
+    final public String chatComponent;
+    final public int showTime;
+    final public int position;
 
     @Override
     public void onReceive(Minecraft mc) {

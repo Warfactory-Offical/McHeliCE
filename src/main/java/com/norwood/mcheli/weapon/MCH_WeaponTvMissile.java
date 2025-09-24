@@ -53,7 +53,11 @@ public class MCH_WeaponTvMissile extends MCH_WeaponBase {
                         && !this.lastShotTvMissile.isDead
                         && this.lastShotEntity != null
                         && !this.lastShotEntity.isDead) {
-                    PacketNotifyTVMissileEntity.send(W_Entity.getEntityId(this.lastShotEntity), W_Entity.getEntityId(this.lastShotTvMissile));
+                    int heliEntityID = W_Entity.getEntityId(this.lastShotEntity);
+                    new PacketNotifyTVMissileEntity(
+                    heliEntityID,
+                            W_Entity.getEntityId(this.lastShotTvMissile))
+                   .sendToClients();
                 }
 
                 if (this.tick == 9) {

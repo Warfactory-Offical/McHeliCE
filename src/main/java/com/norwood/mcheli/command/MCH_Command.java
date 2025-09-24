@@ -179,7 +179,11 @@ public class MCH_Command extends CommandBase {
 
                     try {
                         ITextComponent ichatcomponent = Serializer.jsonToComponent(s);
-                        PacketTitle.send(ichatcomponent, 20 * showTime, pos);
+                        new PacketTitle(
+                                Serializer.componentToJson(ichatcomponent),
+                                20 * showTime,
+                                pos
+                        ).sendToClients();
                     } catch (JsonParseException var9) {
                         Throwable throwable = ExceptionUtils.getRootCause(var9);
                         throw new SyntaxErrorException("com.norwood.mcheli.title.jsonException", throwable == null ? "" : throwable.getMessage());
