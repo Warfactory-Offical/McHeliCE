@@ -6,6 +6,7 @@ import com.norwood.mcheli.wrapper.W_Network;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+@Deprecated//Will be replaced with modular
 public class MCH_PacketIndOpenScreen extends MCH_Packet {
     public int guiID = -1;
 

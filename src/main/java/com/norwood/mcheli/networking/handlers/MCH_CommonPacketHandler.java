@@ -11,7 +11,7 @@ import com.norwood.mcheli.helper.world.MCH_ExplosionV2;
 import com.norwood.mcheli.lweapon.MCH_ClientLightWeaponTickHandler;
 import com.norwood.mcheli.networking.packet.MCH_PacketEffectExplosion;
 import com.norwood.mcheli.networking.packet.MCH_PacketIndOpenScreen;
-import com.norwood.mcheli.networking.packet.MCH_PacketNotifyServerSettings;
+import com.norwood.mcheli.networking.packet.PacketSyncServerSettings;
 import com.norwood.mcheli.wrapper.W_Reflection;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -70,64 +70,5 @@ public class MCH_CommonPacketHandler {
         }
     }
 
-    @HandleSide({Side.CLIENT})
-    public static void onPacketNotifyServerSettings(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-        if (player.world.isRemote) {
-            MCH_PacketNotifyServerSettings pkt = new MCH_PacketNotifyServerSettings();
-            pkt.readData(data);
-            scheduler.addScheduledTask(() -> {
-                MCH_Lib.DbgLog(false, "onPacketNotifyServerSettings:" + player);
-                if (!pkt.enableCamDistChange) {
-                    W_Reflection.setThirdPersonDistance(4.0F);
-                }
 
-                MCH_ServerSettings.enableCamDistChange = pkt.enableCamDistChange;
-                MCH_ServerSettings.enableEntityMarker = pkt.enableEntityMarker;
-                MCH_ServerSettings.enablePVP = pkt.enablePVP;
-                MCH_ServerSettings.stingerLockRange = pkt.stingerLockRange;
-                MCH_ServerSettings.enableDebugBoundingBox = pkt.enableDebugBoundingBox;
-                MCH_ServerSettings.enableRotationLimit = pkt.enableRotationLimit;
-                MCH_ServerSettings.pitchLimitMax = pkt.pitchLimitMax;
-                MCH_ServerSettings.pitchLimitMin = pkt.pitchLimitMin;
-                MCH_ServerSettings.rollLimit = pkt.rollLimit;
-                MCH_ClientLightWeaponTickHandler.lockRange = MCH_ServerSettings.stingerLockRange;
-            });
-        }
-    }
-
-//    @HandleSide({Side.CLIENT, Side.SERVER})
-//    public static void onPacketNotifyLock(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-//        MCH_PacketNotifyLock pkt = new MCH_PacketNotifyLock();
-//        pkt.readData(data);
-//        if (!player.world.isRemote) {
-//            if (pkt.entityID >= 0) {
-//                scheduler.addScheduledTask(() -> {
-//                    Entity target = player.world.getEntityByID(pkt.entityID);
-//                    if (target != null) {
-//                        MCH_EntityAircraft ac;
-//                        if (target instanceof MCH_EntityAircraft) {
-//                            ac = (MCH_EntityAircraft) target;
-//                        } else if (target instanceof MCH_EntitySeat) {
-//                            ac = ((MCH_EntitySeat) target).getParent();
-//                        } else {
-//                            ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(target);
-//                        }
-//
-//                        if (ac != null && ac.haveFlare() && !ac.isDestroyed()) {
-//                            for (int i = 0; i < 2; i++) {
-//                                Entity entity = ac.getEntityBySeatId(i);
-//                                if (entity instanceof EntityPlayerMP) {
-//                                    MCH_PacketNotifyLock.sendToPlayer((EntityPlayerMP) entity);
-//                                }
-//                            }
-//                        } else if (target.getRidingEntity() != null && target instanceof EntityPlayerMP) {
-//                            MCH_PacketNotifyLock.sendToPlayer((EntityPlayerMP) target);
-//                        }
-//                    }
-//                });
-//            }
-//        } else {
-//            scheduler.addScheduledTask(() -> MCH_MOD.proxy.clientLocked());
-//        }
-//    }
 }

@@ -2,8 +2,8 @@ package com.norwood.mcheli.aircraft;
 
 import com.norwood.mcheli.multiplay.MCH_PacketIndMultiplayCommand;
 import com.norwood.mcheli.networking.packet.MCH_PacketIndOpenScreen;
-import com.norwood.mcheli.networking.packet.MCH_PacketIndReload;
 import com.norwood.mcheli.networking.packet.PacketCommandSave;
+import com.norwood.mcheli.networking.packet.PacketIndReload;
 import com.norwood.mcheli.weapon.MCH_WeaponDummy;
 import com.norwood.mcheli.weapon.MCH_WeaponInfo;
 import com.norwood.mcheli.weapon.MCH_WeaponSet;
@@ -108,7 +108,7 @@ public class MCH_AircraftGui extends W_GuiContainer {
                 case 1:
                     this.buttonReload.enabled = this.canReload(this.thePlayer);
                     if (this.buttonReload.enabled) {
-                        MCH_PacketIndReload.send(this.aircraft, this.currentWeaponId);
+                        PacketIndReload.send(this.aircraft, this.currentWeaponId);
                         this.aircraft.supplyAmmo(this.currentWeaponId);
                         this.reloadWait = 3;
                         this.buttonReload.enabled = false;

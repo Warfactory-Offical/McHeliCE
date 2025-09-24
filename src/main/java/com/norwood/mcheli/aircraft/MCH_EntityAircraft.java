@@ -1560,7 +1560,7 @@ public abstract class MCH_EntityAircraft
         }
 
         if ((this.aircraftRotChanged || this.aircraftRollRev) && this.world.isRemote && this.getRiddenByEntity() != null) {
-            MCH_PacketIndRotation.send(this);
+            PacketIndRotation.send(this);
             this.aircraftRotChanged = false;
             this.aircraftRollRev = false;
         }
@@ -4488,7 +4488,7 @@ public abstract class MCH_EntityAircraft
         this.cs_planeAutoThrottleDown = MCH_Config.AutoThrottleDownPlane.prmBool;
         this.cs_tankAutoThrottleDown = MCH_Config.AutoThrottleDownTank.prmBool;
         this.camera.setShaderSupport(seatId, W_EntityRenderer.isShaderSupport());
-        MCH_PacketNotifyClientSetting.send();
+        PacketClientSettingsSync.send();
     }
 
     @Override

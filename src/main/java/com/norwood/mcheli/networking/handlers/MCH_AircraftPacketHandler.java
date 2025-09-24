@@ -16,38 +16,6 @@ import net.minecraft.util.IThreadListener;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class MCH_AircraftPacketHandler {
-    @HandleSide({Side.SERVER})
-    public static void onPacketIndRotation(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-        if (player != null && !player.world.isRemote) {
-            MCH_PacketIndRotation req = new MCH_PacketIndRotation();
-            req.readData(data);
-            if (req.entityID_Ac > 0) {
-                scheduler.addScheduledTask(() -> {
-                    Entity e = player.world.getEntityByID(req.entityID_Ac);
-                    if (e instanceof MCH_EntityAircraft ac) {
-                        ac.setRotRoll(req.roll);
-                        if (req.rollRev) {
-                            MCH_Lib.DbgLog(ac.world, "onPacketIndRotation Error:req.rollRev y=%.2f, p=%.2f, r=%.2f", req.yaw, req.pitch, req.roll);
-                            if (ac.getRiddenByEntity() != null) {
-                                ac.getRiddenByEntity().rotationYaw = req.yaw;
-                                ac.getRiddenByEntity().prevRotationYaw = req.yaw;
-                            }
-
-                            for (int sid = 0; sid < ac.getSeatNum(); sid++) {
-                                Entity entity = ac.getEntityBySeatId(1 + sid);
-                                if (entity != null) {
-                                    entity.rotationYaw = entity.rotationYaw + (entity.rotationYaw <= 0.0F ? 180.0F : -180.0F);
-                                }
-                            }
-                        }
-
-                        ac.setRotYaw(req.yaw);
-                        ac.setRotPitch(req.pitch);
-                    }
-                });
-            }
-        }
-    }
 
     @Deprecated
     @HandleSide({Side.SERVER})
@@ -77,75 +45,6 @@ public class MCH_AircraftPacketHandler {
                         }
                     }
             );
-        }
-    }
-
-//    @HandleSide({Side.CLIENT})
-//    public static void onPacketNotifyAmmoNum(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-//        if (player != null && player.world.isRemote) {
-//            MCH_PacketNotifyAmmoNum status = new MCH_PacketNotifyAmmoNum();
-//            status.readData(data);
-//            if (status.entityID_Ac > 0) {
-//                scheduler.addScheduledTask(() -> {
-//                    Entity e = player.world.getEntityByID(status.entityID_Ac);
-//                    if (e instanceof MCH_EntityAircraft ac) {
-//                        StringBuilder msg = new StringBuilder("onPacketNotifyAmmoNum:");
-//                        msg.append(ac.getAcInfo() != null ? ac.getAcInfo().displayName : "null").append(":");
-//                        if (status.all) {
-//                            msg.append("All=true, Num=").append(status.num);
-//
-//                            for (int i = 0; i < ac.getWeaponNum() && i < status.num; i++) {
-//                                ac.getWeapon(i).setAmmoNum(status.ammo[i]);
-//                                ac.getWeapon(i).setRestAllAmmoNum(status.restAmmo[i]);
-//                                msg.append(", [").append(status.ammo[i]).append("/").append(status.restAmmo[i]).append("]");
-//                            }
-//
-//                            MCH_Lib.DbgLog(e.world, msg.toString());
-//                        } else if (status.weaponID < ac.getWeaponNum()) {
-//                            msg.append("All=false, WeaponID=").append(status.weaponID).append(", ").append(status.ammo[0]).append(", ").append(status.restAmmo[0]);
-//                            ac.getWeapon(status.weaponID).setAmmoNum(status.ammo[0]);
-//                            ac.getWeapon(status.weaponID).setRestAllAmmoNum(status.restAmmo[0]);
-//                            MCH_Lib.DbgLog(e.world, msg.toString());
-//                        } else {
-//                            MCH_Lib.DbgLog(e.world, "Error:" + status.weaponID);
-//                        }
-//                    }
-//                });
-//            }
-//        }
-//    }
-
-//    @HandleSide({Side.SERVER})
-//    public static void onPacketStatusRequest(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-//        if (!player.world.isRemote) {
-//            MCH_PacketStatusRequest req = new MCH_PacketStatusRequest();
-//            req.readData(data);
-//            if (req.entityID_AC > 0) {
-//                scheduler.addScheduledTask(() -> {
-//                    Entity e = player.world.getEntityByID(req.entityID_AC);
-//                    if (e instanceof MCH_EntityAircraft) {
-//                        PacketStatusResponse.sendStatus((MCH_EntityAircraft) e, player);
-//                    }
-//                });
-//            }
-//        }
-//    }
-
-
-    @HandleSide({Side.SERVER})
-    public static void onPacketIndReload(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-        if (!player.world.isRemote) {
-            MCH_PacketIndReload ind = new MCH_PacketIndReload();
-            ind.readData(data);
-            if (ind.entityID_Ac > 0) {
-                scheduler.addScheduledTask(() -> {
-                    Entity e = player.world.getEntityByID(ind.entityID_Ac);
-                    if (e instanceof MCH_EntityAircraft ac) {
-                        MCH_Lib.DbgLog(e.world, "onPacketIndReload :%s", ac.getAcInfo().displayName);
-                        ac.supplyAmmo(ind.weaponID);
-                    }
-                });
-            }
         }
     }
 
@@ -280,26 +179,6 @@ public class MCH_AircraftPacketHandler {
         }
     }
 
-    @HandleSide({Side.SERVER})
-    public static void onPacket_ClientSetting(EntityPlayer player, ByteArrayDataInput data, IThreadListener scheduler) {
-        if (!player.world.isRemote) {
-            MCH_PacketNotifyClientSetting pc = new MCH_PacketNotifyClientSetting();
-            pc.readData(data);
-            scheduler.addScheduledTask(() -> {
-                MCH_EntityAircraft ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
-                if (ac != null) {
-                    int sid = ac.getSeatIdByEntity(player);
-                    if (sid == 0) {
-                        ac.cs_dismountAll = pc.dismountAll;
-                        ac.cs_heliAutoThrottleDown = pc.heliAutoThrottleDown;
-                        ac.cs_planeAutoThrottleDown = pc.planeAutoThrottleDown;
-                        ac.cs_tankAutoThrottleDown = pc.tankAutoThrottleDown;
-                    }
 
-                    ac.camera.setShaderSupport(sid, pc.shaderSupport);
-                }
-            });
-        }
-    }
 
 }

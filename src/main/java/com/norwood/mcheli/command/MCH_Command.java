@@ -7,7 +7,7 @@ import com.norwood.mcheli.Tags;
 import com.norwood.mcheli.helper.MCH_Utils;
 import com.norwood.mcheli.multiplay.MCH_MultiplayPacketHandler;
 import com.norwood.mcheli.multiplay.MCH_PacketIndClient;
-import com.norwood.mcheli.networking.packet.MCH_PacketNotifyServerSettings;
+import com.norwood.mcheli.networking.packet.PacketSyncServerSettings;
 import com.norwood.mcheli.networking.packet.PacketTitle;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -145,7 +145,7 @@ public class MCH_Command extends CommandBase {
                     MCH_MOD.proxy.reconfig();
                     sender.getEntityWorld();
                     if (!sender.getEntityWorld().isRemote) {
-                        MCH_PacketNotifyServerSettings.sendAll();
+                        PacketSyncServerSettings.sendAll();
                     }
 
                     if (MCH_MOD.proxy.isSinglePlayer()) {
@@ -201,11 +201,11 @@ public class MCH_Command extends CommandBase {
 
                     if (!parseBoolean(prm[1])) {
                         MCH_Config.EnableDebugBoundingBox.prmBool = false;
-                        MCH_PacketNotifyServerSettings.sendAll();
+                        PacketSyncServerSettings.sendAll();
                         sender.sendMessage(new TextComponentString("Disabled bounding box"));
                     } else {
                         MCH_Config.EnableDebugBoundingBox.prmBool = true;
-                        MCH_PacketNotifyServerSettings.sendAll();
+                        PacketSyncServerSettings.sendAll();
                         sender.sendMessage(new TextComponentString("Enabled bounding box [F3 + b]"));
                     }
 

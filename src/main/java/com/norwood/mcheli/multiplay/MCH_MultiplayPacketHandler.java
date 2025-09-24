@@ -2,7 +2,7 @@ package com.norwood.mcheli.multiplay;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.norwood.mcheli.MCH_Lib;
-import com.norwood.mcheli.networking.packet.MCH_PacketNotifyServerSettings;
+import com.norwood.mcheli.networking.packet.PacketSyncServerSettings;
 import com.norwood.mcheli.helper.MCH_Utils;
 import com.norwood.mcheli.helper.network.HandleSide;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
@@ -55,7 +55,7 @@ public class MCH_MultiplayPacketHandler {
                     case 1024:
                         if (new CommandScoreboard().checkPermission(minecraftServer, player)) {
                             minecraftServer.setAllowPvp(!minecraftServer.isPVPEnabled());
-                            MCH_PacketNotifyServerSettings.send(null);
+                            PacketSyncServerSettings.send(null);
                         }
                         break;
                     case 1280:

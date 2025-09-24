@@ -6,13 +6,15 @@ import com.norwood.mcheli.MCH_MOD;
 import com.norwood.mcheli.MCH_Math;
 import com.norwood.mcheli.aircraft.*;
 import com.norwood.mcheli.chain.MCH_EntityChain;
-import com.norwood.mcheli.networking.packet.MCH_PacketStatusRequest;
 import com.norwood.mcheli.networking.packet.PacketStatusRequest;
 import com.norwood.mcheli.particles.MCH_ParticleParam;
 import com.norwood.mcheli.particles.MCH_ParticlesUtil;
 import com.norwood.mcheli.weapon.MCH_EntityBaseBullet;
 import com.norwood.mcheli.weapon.MCH_WeaponSet;
-import com.norwood.mcheli.wrapper.*;
+import com.norwood.mcheli.wrapper.W_Block;
+import com.norwood.mcheli.wrapper.W_Entity;
+import com.norwood.mcheli.wrapper.W_Lib;
+import com.norwood.mcheli.wrapper.W_WorldFunc;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockFenceGate;
@@ -173,7 +175,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             if (!this.isRequestedSyncStatus) {
                 this.isRequestedSyncStatus = true;
                 if (this.world.isRemote) {
-                   PacketStatusRequest.requestStatus(this);
+                    PacketStatusRequest.requestStatus(this);
                 }
             }
 
@@ -412,60 +414,60 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
 
     /**
      * public void onUpdateAngles(float partialTicks) {
-     *       if(!this.isDestroyed()) {
-     *          if(super.isGunnerMode) {
-     *             this.setRotPitch(this.getRotPitch() * 0.95F);
-     *             this.setRotYaw(this.getRotYaw() + this.getAcInfo().autoPilotRot * 0.2F);
-     *             if(MathHelper.abs(this.getRotRoll()) > 20.0F) {
-     *                this.setRotRoll(this.getRotRoll() * 0.95F);
-     *             }
-     *          }
-     *
-     *          this.updateRecoil(partialTicks);
-     *          this.setRotPitch(this.getRotPitch() + (this.WheelMng.targetPitch - this.getRotPitch()) * partialTicks);
-     *          this.setRotRoll(this.getRotRoll() + (this.WheelMng.targetRoll - this.getRotRoll()) * partialTicks);
-     *          boolean isFly = MCH_Lib.getBlockIdY(this, 3, -3) == 0;
-     *          //System.out.println("isfly" + isFly);
-     *
-     *          //logic for like rotation
-     *          if(!isFly || this.getAcInfo().isFloat && this.getWaterDepth() > 0.0D) {
-     *             float rotonground = 1.0F;
-     *             if(!isFly) {
-     *                rotonground = this.getAcInfo().mobilityYawOnGround;
-     *                if(!this.getAcInfo().canRotOnGround) {
-     *                   Block pivotTurnThrottle = MCH_Lib.getBlockY(this, 3, -2, false);
-     *                   if(!W_Block.isEqual(pivotTurnThrottle, W_Block.getWater()) && !W_Block.isEqual(pivotTurnThrottle, Blocks.air)) {
-     *                      rotonground = 0.0F;
-     *                   }
-     *                }
-     *             }
-     *
-     *             float pivotTurnThrottle1 = this.getAcInfo().pivotTurnThrottle;
-     *             double dx = super.posX - super.prevPosX;
-     *             double dz = super.posZ - super.prevPosZ;
-     *             double dist = dx * dx + dz * dz;
-     *
-     *             if(pivotTurnThrottle1 <= 0.0F || this.getCurrentThrottle() >= (double)pivotTurnThrottle1 || super.throttleBack >= pivotTurnThrottle1 / 10.0F || dist > (double)super.throttleBack * 0.01D) {
-     *                float sf = (float)Math.sqrt(dist <= 1.0D?dist:1.0D);
-     *                if(pivotTurnThrottle1 <= 0.0F) {
-     *                   sf = 1.0F;
-     *                }
-     *
-     *                float flag = !super.throttleUp && super.throttleDown && this.getCurrentThrottle() < (double)pivotTurnThrottle1 + 0.05D?-1.0F:1.0F;
-     *                if(super.moveLeft && !super.moveRight) {
-     *                   this.setRotYaw(this.getRotYaw() - 0.6F * rotonground * partialTicks * flag * sf);
-     *                }
-     *
-     *                if(super.moveRight && !super.moveLeft) {
-     *                   this.setRotYaw(this.getRotYaw() + 0.6F * rotonground * partialTicks * flag * sf);
-     *                }
-     *
-     *             }
-     *          }
-     *
-     *          this.addkeyRotValue = (float)((double)this.addkeyRotValue * (1.0D - (double)(0.1F * partialTicks)));
-     *       }
-     *    }
+     * if(!this.isDestroyed()) {
+     * if(super.isGunnerMode) {
+     * this.setRotPitch(this.getRotPitch() * 0.95F);
+     * this.setRotYaw(this.getRotYaw() + this.getAcInfo().autoPilotRot * 0.2F);
+     * if(MathHelper.abs(this.getRotRoll()) > 20.0F) {
+     * this.setRotRoll(this.getRotRoll() * 0.95F);
+     * }
+     * }
+     * <p>
+     * this.updateRecoil(partialTicks);
+     * this.setRotPitch(this.getRotPitch() + (this.WheelMng.targetPitch - this.getRotPitch()) * partialTicks);
+     * this.setRotRoll(this.getRotRoll() + (this.WheelMng.targetRoll - this.getRotRoll()) * partialTicks);
+     * boolean isFly = MCH_Lib.getBlockIdY(this, 3, -3) == 0;
+     * //System.out.println("isfly" + isFly);
+     * <p>
+     * //logic for like rotation
+     * if(!isFly || this.getAcInfo().isFloat && this.getWaterDepth() > 0.0D) {
+     * float rotonground = 1.0F;
+     * if(!isFly) {
+     * rotonground = this.getAcInfo().mobilityYawOnGround;
+     * if(!this.getAcInfo().canRotOnGround) {
+     * Block pivotTurnThrottle = MCH_Lib.getBlockY(this, 3, -2, false);
+     * if(!W_Block.isEqual(pivotTurnThrottle, W_Block.getWater()) && !W_Block.isEqual(pivotTurnThrottle, Blocks.air)) {
+     * rotonground = 0.0F;
+     * }
+     * }
+     * }
+     * <p>
+     * float pivotTurnThrottle1 = this.getAcInfo().pivotTurnThrottle;
+     * double dx = super.posX - super.prevPosX;
+     * double dz = super.posZ - super.prevPosZ;
+     * double dist = dx * dx + dz * dz;
+     * <p>
+     * if(pivotTurnThrottle1 <= 0.0F || this.getCurrentThrottle() >= (double)pivotTurnThrottle1 || super.throttleBack >= pivotTurnThrottle1 / 10.0F || dist > (double)super.throttleBack * 0.01D) {
+     * float sf = (float)Math.sqrt(dist <= 1.0D?dist:1.0D);
+     * if(pivotTurnThrottle1 <= 0.0F) {
+     * sf = 1.0F;
+     * }
+     * <p>
+     * float flag = !super.throttleUp && super.throttleDown && this.getCurrentThrottle() < (double)pivotTurnThrottle1 + 0.05D?-1.0F:1.0F;
+     * if(super.moveLeft && !super.moveRight) {
+     * this.setRotYaw(this.getRotYaw() - 0.6F * rotonground * partialTicks * flag * sf);
+     * }
+     * <p>
+     * if(super.moveRight && !super.moveLeft) {
+     * this.setRotYaw(this.getRotYaw() + 0.6F * rotonground * partialTicks * flag * sf);
+     * }
+     * <p>
+     * }
+     * }
+     * <p>
+     * this.addkeyRotValue = (float)((double)this.addkeyRotValue * (1.0D - (double)(0.1F * partialTicks)));
+     * }
+     * }
      * 1.7.10 bullshit
      */
 
@@ -515,7 +517,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
             double throttle = this.getCurrentThrottle();
             if (throttle > 0.05D) {
                 // scale down interpolation by up to half when throttle high
-                float throttleFactor = 1.0F - Math.min(0.8F, (float)throttle) * 0.35F;
+                float throttleFactor = 1.0F - Math.min(0.8F, (float) throttle) * 0.35F;
                 baseInterp *= throttleFactor;
             }
 
@@ -657,22 +659,22 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
 
     protected void onUpdate_ControlSub() {
 
-        if(!super.isGunnerMode) {
+        if (!super.isGunnerMode) {
             float throttleUpDown = this.getAcInfo().throttleUpDown;
-            if(super.throttleUp) {
+            if (super.throttleUp) {
                 float f = throttleUpDown;
-                if(this.getRidingEntity() != null) {
+                if (this.getRidingEntity() != null) {
                     double mx = this.getRidingEntity().motionX;
                     double mz = this.getRidingEntity().motionZ;
                     f = throttleUpDown * MathHelper.sqrt(mx * mx + mz * mz) * this.getAcInfo().throttleUpDownOnEntity;
                 }
 
-                if(this.getAcInfo().enableBack && super.throttleBack > 0.0F) {
-                    super.throttleBack = (float)((double)super.throttleBack - 0.01D * (double)f);
+                if (this.getAcInfo().enableBack && super.throttleBack > 0.0F) {
+                    super.throttleBack = (float) ((double) super.throttleBack - 0.01D * (double) f);
                 } else {
                     super.throttleBack = 0.0F;
-                    if(this.getCurrentThrottle() < 1.0D) {
-                        this.addCurrentThrottle(0.01D * (double)f);
+                    if (this.getCurrentThrottle() < 1.0D) {
+                        this.addCurrentThrottle(0.01D * (double) f);
                         //here as well?
                     } else {
                         this.setCurrentThrottle(1.0D);
@@ -681,18 +683,16 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
                 }
 
 
-
-            } else if(super.throttleDown) {
-
+            } else if (super.throttleDown) {
 
 
-                if(this.getCurrentThrottle() > 0.0D) {
-                    this.addCurrentThrottle(-0.01D * (double)throttleUpDown);
+                if (this.getCurrentThrottle() > 0.0D) {
+                    this.addCurrentThrottle(-0.01D * (double) throttleUpDown);
                 } else {
                     this.setCurrentThrottle(0.0D);
-                    if(this.getAcInfo().enableBack) {
+                    if (this.getAcInfo().enableBack) {
                         // super.throttleBack = (float)((double)super.throttleBack + 0.0025D * (double)throttleUpDown);
-                        super.throttleBack = (float)((double)super.throttleBack + 0.0025D * (double)throttleUpDown * getAcInfo().throttleDownFactor);
+                        super.throttleBack = (float) ((double) super.throttleBack + 0.0025D * (double) throttleUpDown * getAcInfo().throttleDownFactor);
 //                  if(super.throttleBack > 0.6F) { //todno: add a new variable here for reversespeed
 //                     super.throttleBack = 0.6F;
 //                  }
@@ -702,7 +702,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
                                 double dx = super.posX - super.prevPosX;
                                 double dz = super.posZ - super.prevPosZ;
                                 double dist = dx * dx + dz * dz;
-                                float sf = (float)Math.sqrt(dist <= 1.0D ? dist : 1.0D);
+                                float sf = (float) Math.sqrt(dist <= 1.0D ? dist : 1.0D);
                                 if (pivotTurnThrottle1 <= 0.0F) {
                                     sf = 1.0F;
                                 }
@@ -720,21 +720,21 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
                                     }
                                 }
 
-                                float flag = !super.throttleUp && super.throttleDown && this.getCurrentThrottle() < (double)pivotTurnThrottle1 + 0.05D ? -1.0F : 1.0F;
-                                if(super.moveLeft && !super.moveRight) {
+                                float flag = !super.throttleUp && super.throttleDown && this.getCurrentThrottle() < (double) pivotTurnThrottle1 + 0.05D ? -1.0F : 1.0F;
+                                if (super.moveLeft && !super.moveRight) {
                                     this.setRotYaw(this.getRotYaw() + 0.6F * rotonground * flag * sf);
                                 }
 
-                                if(super.moveRight && !super.moveLeft) {
+                                if (super.moveRight && !super.moveLeft) {
                                     this.setRotYaw(this.getRotYaw() - 0.6F * rotonground * flag * sf);
                                 }
                             }
                         }
                     }
                 }
-            } else if(super.cs_tankAutoThrottleDown && this.getCurrentThrottle() > 0.0D) {
-                this.addCurrentThrottle(-0.005D * (double)throttleUpDown);
-                if(this.getCurrentThrottle() <= 0.0D) {
+            } else if (super.cs_tankAutoThrottleDown && this.getCurrentThrottle() > 0.0D) {
+                this.addCurrentThrottle(-0.005D * (double) throttleUpDown);
+                if (this.getCurrentThrottle() <= 0.0D) {
                     this.setCurrentThrottle(0.0D);
                 }
             }
@@ -944,114 +944,114 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
     /***
      * 1.7.10 method - for reference
      *
-    private void onUpdate_Server() {
+     private void onUpdate_Server() {
 
-        //1.7.10
+     //1.7.10
 
-        //todo gear shifts here
-        Entity rdnEnt = this.getRiddenByEntity();
-        double prevMotion = Math.sqrt(super.motionX * super.motionX + super.motionZ * super.motionZ);
-        double dp = 0.0D;
-        if(this.canFloatWater()) {
-            dp = this.getWaterDepth();
-        }
+     //todo gear shifts here
+     Entity rdnEnt = this.getRiddenByEntity();
+     double prevMotion = Math.sqrt(super.motionX * super.motionX + super.motionZ * super.motionZ);
+     double dp = 0.0D;
+     if(this.canFloatWater()) {
+     dp = this.getWaterDepth();
+     }
 
-        boolean levelOff = super.isGunnerMode;
-        if(dp == 0.0D) {
-            if(!levelOff) {
-                super.motionY += 0.04D + (double)(!this.isInWater()?this.getAcInfo().gravity:this.getAcInfo().gravityInWater);
-                super.motionY += -0.047D * (1.0D - this.getCurrentThrottle());
-            } else {
-                super.motionY *= 0.8D;
-            }
-        } else {
-            if(MathHelper.abs(this.getRotRoll()) < 40.0F) {
-                ;
-            }
+     boolean levelOff = super.isGunnerMode;
+     if(dp == 0.0D) {
+     if(!levelOff) {
+     super.motionY += 0.04D + (double)(!this.isInWater()?this.getAcInfo().gravity:this.getAcInfo().gravityInWater);
+     super.motionY += -0.047D * (1.0D - this.getCurrentThrottle());
+     } else {
+     super.motionY *= 0.8D;
+     }
+     } else {
+     if(MathHelper.abs(this.getRotRoll()) < 40.0F) {
+     ;
+     }
 
-            if(dp < 1.0D) {
-                super.motionY -= 1.0E-4D;
-                super.motionY += 0.007D * this.getCurrentThrottle();
-            } else {
-                if(super.motionY < 0.0D) {
-                    super.motionY /= 2.0D;
-                }
+     if(dp < 1.0D) {
+     super.motionY -= 1.0E-4D;
+     super.motionY += 0.007D * this.getCurrentThrottle();
+     } else {
+     if(super.motionY < 0.0D) {
+     super.motionY /= 2.0D;
+     }
 
-                super.motionY += 0.007D;
-            }
-        }
+     super.motionY += 0.007D;
+     }
+     }
 
-        float throttle = (float)(this.getCurrentThrottle() / 10.0D);
+     float throttle = (float)(this.getCurrentThrottle() / 10.0D);
 
-        Vec3 v = MCH_Lib.Rot2Vec3(this.getRotYaw(), this.getRotPitch() - 10.0F);
-        if(!levelOff) {
-            super.motionY += v.yCoord * (double)throttle / 8.0D;
-        }
+     Vec3 v = MCH_Lib.Rot2Vec3(this.getRotYaw(), this.getRotPitch() - 10.0F);
+     if(!levelOff) {
+     super.motionY += v.yCoord * (double)throttle / 8.0D;
+     }
 
-        boolean canMove = true;
-        if(!this.getAcInfo().canMoveOnGround) {
-            Block motion = MCH_Lib.getBlockY(this, 3, -2, false);
-            if(!W_Block.isEqual(motion, W_Block.getWater()) && !W_Block.isEqual(motion, Blocks.air)) {
-                canMove = false;
-            }
-        }
+     boolean canMove = true;
+     if(!this.getAcInfo().canMoveOnGround) {
+     Block motion = MCH_Lib.getBlockY(this, 3, -2, false);
+     if(!W_Block.isEqual(motion, W_Block.getWater()) && !W_Block.isEqual(motion, Blocks.air)) {
+     canMove = false;
+     }
+     }
 
-        if(canMove) {
-            if(this.getAcInfo().enableBack && super.throttleBack > 0.0F) {
-                super.motionX -= v.xCoord * (double)super.throttleBack;
-                super.motionZ -= v.zCoord * (double)super.throttleBack;
-            } else {
-                super.motionX += v.xCoord * (double)throttle;
-                super.motionZ += v.zCoord * (double)throttle;
-            }
-        }
+     if(canMove) {
+     if(this.getAcInfo().enableBack && super.throttleBack > 0.0F) {
+     super.motionX -= v.xCoord * (double)super.throttleBack;
+     super.motionZ -= v.zCoord * (double)super.throttleBack;
+     } else {
+     super.motionX += v.xCoord * (double)throttle;
+     super.motionZ += v.zCoord * (double)throttle;
+     }
+     }
 
-        double motion1 = Math.sqrt(super.motionX * super.motionX + super.motionZ * super.motionZ);
-        float speedLimit = this.getMaxSpeed();
-        //todo maybe this is causing the 1.15 max speed hardcap?
-        // we know mcheli is capable of handling way faster speeds so why are ground vehicles limited to 1.15?
-        if(motion1 > (double)speedLimit) {
-            super.motionX *= (double)speedLimit / motion1;
-            super.motionZ *= (double)speedLimit / motion1;
-            motion1 = speedLimit;
-        }
+     double motion1 = Math.sqrt(super.motionX * super.motionX + super.motionZ * super.motionZ);
+     float speedLimit = this.getMaxSpeed();
+     //todo maybe this is causing the 1.15 max speed hardcap?
+     // we know mcheli is capable of handling way faster speeds so why are ground vehicles limited to 1.15?
+     if(motion1 > (double)speedLimit) {
+     super.motionX *= (double)speedLimit / motion1;
+     super.motionZ *= (double)speedLimit / motion1;
+     motion1 = speedLimit;
+     }
 
-        if(motion1 > prevMotion && super.currentSpeed < (double)speedLimit) {
-            super.currentSpeed += ((double)speedLimit - super.currentSpeed) / 35.0D;
-            if(super.currentSpeed > (double)speedLimit) {
-                super.currentSpeed = (double)speedLimit;
-            }
-        } else {
-            super.currentSpeed -= (super.currentSpeed - 0.07D) / 35.0D;
-            if(super.currentSpeed < 0.07D) {
-                super.currentSpeed = 0.07D;
-            }
-        }
+     if(motion1 > prevMotion && super.currentSpeed < (double)speedLimit) {
+     super.currentSpeed += ((double)speedLimit - super.currentSpeed) / 35.0D;
+     if(super.currentSpeed > (double)speedLimit) {
+     super.currentSpeed = (double)speedLimit;
+     }
+     } else {
+     super.currentSpeed -= (super.currentSpeed - 0.07D) / 35.0D;
+     if(super.currentSpeed < 0.07D) {
+     super.currentSpeed = 0.07D;
+     }
+     }
 
-        if(super.onGround || MCH_Lib.getBlockIdY(this, 1, -2) > 0) {
-            super.motionX *= (double)this.getAcInfo().motionFactor;
-            super.motionZ *= (double)this.getAcInfo().motionFactor;
-            if(MathHelper.abs(this.getRotPitch()) < 40.0F) {
-                this.applyOnGroundPitch(0.8F);
-            }
-        }
+     if(super.onGround || MCH_Lib.getBlockIdY(this, 1, -2) > 0) {
+     super.motionX *= (double)this.getAcInfo().motionFactor;
+     super.motionZ *= (double)this.getAcInfo().motionFactor;
+     if(MathHelper.abs(this.getRotPitch()) < 40.0F) {
+     this.applyOnGroundPitch(0.8F);
+     }
+     }
 
-        this.updateWheels();
-        this.moveEntity(super.motionX, super.motionY, super.motionZ);
-        super.motionY *= 0.95D;
-        super.motionX *= (double)this.getAcInfo().motionFactor;
-        super.motionZ *= (double)this.getAcInfo().motionFactor;
-        this.setRotation(this.getRotYaw(), this.getRotPitch());
-        this.onUpdate_updateBlock();
-        this.updateCollisionBox();
-        if(this.getRiddenByEntity() != null && this.getRiddenByEntity().isDead) {
-            this.unmountEntity();
-            super.riddenByEntity = null;
-        }
+     this.updateWheels();
+     this.moveEntity(super.motionX, super.motionY, super.motionZ);
+     super.motionY *= 0.95D;
+     super.motionX *= (double)this.getAcInfo().motionFactor;
+     super.motionZ *= (double)this.getAcInfo().motionFactor;
+     this.setRotation(this.getRotYaw(), this.getRotPitch());
+     this.onUpdate_updateBlock();
+     this.updateCollisionBox();
+     if(this.getRiddenByEntity() != null && this.getRiddenByEntity().isDead) {
+     this.unmountEntity();
+     super.riddenByEntity = null;
+     }
 
-        //if(this.) todo gear check
+     //if(this.) todo gear check
 
-    }
+     }
      **/
 
     private void onUpdate_Server() {
@@ -1191,7 +1191,6 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
     }
 
 
-
     private void collisionEntity(AxisAlignedBB bb) {
         if (bb != null) {
             double speed = Math.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
@@ -1327,7 +1326,7 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
                         int bx = (int) (v.x + x - 0.5);
                         int by = (int) (v.y + y - 1.0);
                         int bz = (int) (v.z + z - 0.5);
-                        BlockPos blockpos = new BlockPos(bx,by,bz);
+                        BlockPos blockpos = new BlockPos(bx, by, bz);
                         IBlockState iblockstate = this.world.getBlockState(blockpos);
                         Block block = by >= 0 && by < 256 ? iblockstate.getBlock() : Blocks.AIR;
                         Material mat = iblockstate.getMaterial();

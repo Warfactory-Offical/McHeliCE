@@ -2,6 +2,7 @@ package com.norwood.mcheli.gltd;
 
 import com.norwood.mcheli.*;
 import com.norwood.mcheli.networking.packet.MCH_PacketGLTDPlayerControl;
+import com.norwood.mcheli.networking.packet.PacketGLTDControl;
 import com.norwood.mcheli.wrapper.W_Network;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -105,7 +106,7 @@ public class MCH_ClientGLTDTickHandler extends MCH_ClientTickHandlerBase {
     }
 
     protected void playerControl(EntityPlayer player, MCH_EntityGLTD gltd) {
-        MCH_PacketGLTDPlayerControl pc = new MCH_PacketGLTDPlayerControl();
+        var pc = new PacketGLTDControl();
         boolean send = false;
         if (this.KeyUnmount.isKeyDown()) {
             pc.unmount = true;
@@ -146,7 +147,7 @@ public class MCH_ClientGLTDTickHandler extends MCH_ClientTickHandlerBase {
         }
 
         if (send) {
-            W_Network.sendToServer(pc);
+            pc.sendToServer();
         }
     }
 }

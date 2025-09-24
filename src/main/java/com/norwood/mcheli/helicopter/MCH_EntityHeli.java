@@ -5,7 +5,6 @@ import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.MCH_ServerSettings;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_EntitySeat;
-import com.norwood.mcheli.networking.packet.MCH_PacketStatusRequest;
 import com.norwood.mcheli.aircraft.MCH_Rotor;
 import com.norwood.mcheli.networking.packet.PacketStatusRequest;
 import com.norwood.mcheli.particles.MCH_ParticleParam;

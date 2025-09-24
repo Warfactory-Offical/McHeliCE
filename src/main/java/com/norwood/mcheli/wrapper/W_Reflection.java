@@ -25,6 +25,7 @@ public class W_Reflection {
         return MCH_CameraManager.getThirdPeasonCameraDistance();
     }
 
+    //Why is this here?
     public static void setThirdPersonDistance(float dist) {
         if (!(dist < 0.1)) {
             MCH_CameraManager.setThirdPeasonCameraDistance(dist);

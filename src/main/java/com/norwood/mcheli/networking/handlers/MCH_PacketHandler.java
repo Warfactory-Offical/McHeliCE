@@ -3,7 +3,6 @@ package com.norwood.mcheli.networking.handlers;
 import com.google.common.io.ByteArrayDataInput;
 import com.norwood.mcheli.MCH_Lib;
 import com.norwood.mcheli.block.MCH_DraftingTablePacketHandler;
-import com.norwood.mcheli.gltd.MCH_GLTDPacketHandler;
 import com.norwood.mcheli.lweapon.MCH_LightWeaponPacketHandler;
 import com.norwood.mcheli.multiplay.MCH_MultiplayPacketHandler;
 import com.norwood.mcheli.wrapper.W_PacketHandler;
@@ -19,7 +18,6 @@ public class MCH_PacketHandler extends W_PacketHandler {
         IThreadListener handler = FMLCommonHandler.instance().getWorldThread(ctx.netHandler);
         switch (msgid) {
             case 268437520 -> MCH_CommonPacketHandler.onPacketEffectExplosion(entityPlayer, data, handler);
-            case 268437568 -> MCH_CommonPacketHandler.onPacketNotifyServerSettings(entityPlayer, data, handler);
             case 268437761 -> MCH_MultiplayPacketHandler.onPacket_NotifySpotedEntity(entityPlayer, data, handler);
             case 268437762 -> MCH_MultiplayPacketHandler.onPacket_NotifyMarkPoint(entityPlayer, data, handler);
             case 268438032 -> MCH_MultiplayPacketHandler.onPacket_IndClient(entityPlayer, data, handler);
@@ -34,18 +32,15 @@ public class MCH_PacketHandler extends W_PacketHandler {
             case 536873473 -> MCH_MultiplayPacketHandler.onPacket_ModList(entityPlayer, data, handler);
             case 536875024 -> MCH_AircraftPacketHandler.onPacketSeatListRequest(entityPlayer, data, handler);
             case 536875040 -> MCH_AircraftPacketHandler.onPacket_PlayerControl(entityPlayer, data, handler);
-            case 536875059 -> MCH_AircraftPacketHandler.onPacketIndReload(entityPlayer, data, handler);
-            case 536875062 -> MCH_AircraftPacketHandler.onPacketIndRotation(entityPlayer, data, handler);
-            case 536875072 -> MCH_AircraftPacketHandler.onPacket_ClientSetting(entityPlayer, data, handler);
             case 536879120 -> MCH_HeliPacketHandler.onPacket_PlayerControl(entityPlayer, data, handler);
-            case 536887312 -> MCH_GLTDPacketHandler.onPacket_GLTDPlayerControl(entityPlayer, data, handler);
             case 536903696 -> MCP_PlanePacketHandler.onPacket_PlayerControl(entityPlayer, data, handler);
             case 536936464 -> MCH_LightWeaponPacketHandler.onPacket_PlayerControl(entityPlayer, data, handler);
             case 537002000 -> MCH_VehiclePacketHandler.onPacket_PlayerControl(entityPlayer, data, handler);
             case 537395216 -> MCH_DraftingTablePacketHandler.onPacketCreate(entityPlayer, data, handler);
             case 537919504 -> MCH_TankPacketHandler.onPacket_PlayerControl(entityPlayer, data, handler);
             case 536903698 -> MCH_ShipPacketHandler.onPacket_PlayerControl(entityPlayer, data, handler);
-            default -> MCH_Lib.DbgLog(entityPlayer.world, "MCH_PacketHandler.onPacket invalid MSGID=0x%X(%d)", msgid, msgid);
+            default ->
+                    MCH_Lib.DbgLog(entityPlayer.world, "MCH_PacketHandler.onPacket invalid MSGID=0x%X(%d)", msgid, msgid);
         }
     }
 
