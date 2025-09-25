@@ -2,17 +2,20 @@ package com.norwood.mcheli.networking.packet;
 
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.weapon.MCH_WeaponParam;
+import hohserg.elegant.networking.api.ClientToServerPacket;
+import hohserg.elegant.networking.api.ElegantPacket;
+import hohserg.elegant.networking.api.ElegantSerializable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
 import static com.norwood.mcheli.networking.packet.PacketPlayerControlBase.HatchSwitch.UNFOLD;
 
-public abstract class PacketPlayerControlBase extends PacketBase {
-    public UnmountAction isUnmount;
-    public VtolSwitch switchVtol;
-    public ModeSwitch switchMode;
-    public HatchSwitch switchHatch;
-    public PacketPlayerControlPlane.GearSwitch switchGear;
+public abstract class PacketPlayerControlBase extends PacketBase implements ClientToServerPacket {
+    public UnmountAction isUnmount = UnmountAction.NONE;
+    public VtolSwitch switchVtol = VtolSwitch.NONE;
+    public ModeSwitch switchMode = ModeSwitch.NONE;
+    public HatchSwitch switchHatch = HatchSwitch.NONE;
+    public GearSwitch switchGear = GearSwitch.NONE;
     public RackAction putDownRack;
     public byte switchCameraMode = 0;
     public byte switchWeapon = -1;
@@ -31,6 +34,7 @@ public abstract class PacketPlayerControlBase extends PacketBase {
     public byte switchFreeLook = 0;
     public boolean ejectSeat = false;
     public boolean switchSearchLight = false;
+    public boolean useBrake = false;
     public boolean switchGunnerStatus = false;
 
 
@@ -104,6 +108,7 @@ public abstract class PacketPlayerControlBase extends PacketBase {
         aircraft.useCurrentWeapon(prm);
     }
 
+    //TODO: integrate br
     protected void handlePilotControls(MCH_EntityAircraft aircraft, EntityPlayer player) {
         if (!aircraft.isPilot(player)) return;
 

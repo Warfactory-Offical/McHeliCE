@@ -4,12 +4,11 @@ import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_EntitySeat;
 import com.norwood.mcheli.plane.MCP_EntityPlane;
 import com.norwood.mcheli.uav.MCH_EntityUavStation;
-import hohserg.elegant.networking.api.ClientToServerPacket;
 import hohserg.elegant.networking.api.ElegantPacket;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 @ElegantPacket
-public class PacketPlayerControlPlane extends PacketPlayerControlBase implements ClientToServerPacket {
+public class PacketPlayerControlPlane extends PacketPlayerControlBase {
 
     @Override
     public void onReceive(EntityPlayerMP player) {
@@ -32,6 +31,7 @@ public class PacketPlayerControlPlane extends PacketPlayerControlBase implements
 
     }
 
+    @Override
     protected void handleHatch(MCH_EntityAircraft aircraft) {
         switch (switchHatch) {
             case FOLD, UNFOLD -> {
@@ -45,6 +45,7 @@ public class PacketPlayerControlPlane extends PacketPlayerControlBase implements
     }
 
 
+    @Override
     protected void handleVtolSwitch(MCH_EntityAircraft aircraft) {
         MCP_EntityPlane plane = (MCP_EntityPlane) aircraft;
         switch (switchVtol) {
