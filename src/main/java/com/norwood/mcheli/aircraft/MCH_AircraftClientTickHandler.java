@@ -3,6 +3,7 @@ package com.norwood.mcheli.aircraft;
 import com.norwood.mcheli.MCH_ClientTickHandlerBase;
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_Key;
+import com.norwood.mcheli.networking.handlers.PlayerControlBaseData;
 import com.norwood.mcheli.networking.packet.MCH_PacketIndOpenScreen;
 import com.norwood.mcheli.networking.packet.MCH_PacketPlayerControlBase;
 import com.norwood.mcheli.networking.packet.PacketPlayerControlBase;
@@ -68,7 +69,8 @@ public abstract class MCH_AircraftClientTickHandler extends MCH_ClientTickHandle
     }
 
 
-    public boolean commonPlayerControl(EntityPlayer player, MCH_EntityAircraft ac, boolean isPilot, PacketPlayerControlBase pc) {
+
+    public boolean commonPlayerControl(EntityPlayer player, MCH_EntityAircraft ac, boolean isPilot, PlayerControlBaseData pc) {
         if (Keyboard.isKeyDown(MCH_Config.KeyFreeLook.prmInt)) {
             if (this.KeyGUI.isKeyDown() || this.KeyExtra.isKeyDown()) {
                 PacketSeatPlayerControl psc = new PacketSeatPlayerControl();
@@ -131,35 +133,35 @@ public abstract class MCH_AircraftClientTickHandler extends MCH_ClientTickHandle
 
         if (isPilot) {
             if (this.KeyUnmount.isKeyDown()) {
-                pc.isUnmount = PacketPlayerControlBase.UnmountAction.UNMOUNT_SELF;
+                pc.isUnmount = PlayerControlBaseData.UnmountAction.UNMOUNT_SELF;
                 send = true;
             }
 
             if (this.KeyPutToRack.isKeyDown()) {
                 ac.checkRideRack();
                 if (ac.canRideRack()) {
-                    pc.putDownRack = PacketPlayerControlBase.RackAction.RIDE;
+                    pc.putDownRack = PlayerControlBaseData.RackAction.RIDE;
                     send = true;
                 } else if (ac.canPutToRack()) {
-                    pc.putDownRack = PacketPlayerControlBase.RackAction.MOUNT;
+                    pc.putDownRack = PlayerControlBaseData.RackAction.MOUNT;
                     send = true;
                 }
             } else if (this.KeyDownFromRack.isKeyDown()) {
                 if (ac.getRidingEntity() != null) {
-                    pc.isUnmount = PacketPlayerControlBase.UnmountAction.UNMOUNT_AIRCRAFT;
+                    pc.isUnmount = PlayerControlBaseData.UnmountAction.UNMOUNT_AIRCRAFT;
                     send = true;
                 } else if (ac.canDownFromRack()) {
-                    pc.putDownRack = PacketPlayerControlBase.RackAction.UNMOUNT;
+                    pc.putDownRack = PlayerControlBaseData.RackAction.UNMOUNT;
                     send = true;
                 }
             }
 
             if (this.KeyGearUpDown.isKeyDown() && ac.getAcInfo().haveLandingGear()) {
                 if (ac.canFoldLandingGear()) {
-                    pc.switchGear = PacketPlayerControlBase.GearSwitch.FOLD;
+                    pc.switchGear = PlayerControlBaseData.GearSwitch.FOLD;
                     send = true;
                 } else if (ac.canUnfoldLandingGear()) {
-                    pc.switchGear = PacketPlayerControlBase.GearSwitch.UNFOLD;
+                    pc.switchGear = PlayerControlBaseData.GearSwitch.UNFOLD;
                     send = true;
                 }
             }

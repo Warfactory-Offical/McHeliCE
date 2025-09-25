@@ -7,6 +7,7 @@ import com.norwood.mcheli.MCH_ViewEntityDummy;
 import com.norwood.mcheli.aircraft.MCH_AircraftClientTickHandler;
 import com.norwood.mcheli.aircraft.MCH_EntitySeat;
 import com.norwood.mcheli.aircraft.MCH_SeatInfo;
+import com.norwood.mcheli.networking.handlers.PlayerControlBaseData;
 import com.norwood.mcheli.networking.packet.MCP_PlanePacketPlayerControl;
 import com.norwood.mcheli.networking.packet.PacketPlayerControlBase;
 import com.norwood.mcheli.networking.packet.PacketPlayerControlPlane;
@@ -141,13 +142,13 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
     }
 
     protected void playerControl(EntityPlayer player, MCP_EntityPlane plane, boolean isPilot) {
-        PacketPlayerControlPlane pc = new PacketPlayerControlPlane();
+        PlayerControlBaseData pc = new PlayerControlBaseData();
         boolean send = this.commonPlayerControl(player, plane, isPilot, pc);
 
         if (isPilot) {
             if (this.KeySwitchMode.isKeyDown()) {
                 if (plane.getIsGunnerMode(player) && plane.canSwitchCameraPos()) {
-                    pc.switchMode = PacketPlayerControlBase.ModeSwitch.GUNNER_OFF;
+                    pc.switchMode = PlayerControlBaseData.ModeSwitch.GUNNER_OFF;
                     plane.switchGunnerMode(false);
                     plane.setCameraId(1);
                     send = true;
@@ -157,7 +158,7 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
                         plane.setCameraId(0);
                     }
                 } else if (plane.canSwitchGunnerMode()) {
-                    pc.switchMode = plane.getIsGunnerMode(player) ? PacketPlayerControlBase.ModeSwitch.GUNNER_OFF : PacketPlayerControlBase.ModeSwitch.GUNNER_ON;
+                    pc.switchMode = plane.getIsGunnerMode(player) ? PlayerControlBaseData.ModeSwitch.GUNNER_OFF : PlayerControlBaseData.ModeSwitch.GUNNER_ON;
                     plane.switchGunnerMode(!plane.getIsGunnerMode(player));
                     plane.setCameraId(0);
                     send = true;
@@ -171,7 +172,7 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
             if (this.KeyExtra.isKeyDown()) {
                 if (plane.canSwitchVtol()) {
                     boolean currentMode = plane.getNozzleStat();
-                    pc.switchVtol = currentMode ? PacketPlayerControlBase.VtolSwitch.VTOL_OFF : PacketPlayerControlBase.VtolSwitch.VTOL_ON;
+                    pc.switchVtol = currentMode ? PlayerControlBaseData.VtolSwitch.VTOL_OFF : PlayerControlBaseData.VtolSwitch.VTOL_ON;
                     plane.swithVtolMode(!currentMode);
                     send = true;
                 } else {
@@ -196,17 +197,17 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
             } else if (isPilot) {
                 if (plane.getAcInfo().haveHatch()) {
                     if (plane.canFoldHatch()) {
-                        pc.switchHatch = PacketPlayerControlBase.HatchSwitch.UNFOLD;
+                        pc.switchHatch = PlayerControlBaseData.HatchSwitch.UNFOLD;
                         send = true;
                     } else if (plane.canUnfoldHatch()) {
-                        pc.switchHatch = PacketPlayerControlBase.HatchSwitch.FOLD;
+                        pc.switchHatch = PlayerControlBaseData.HatchSwitch.FOLD;
                         send = true;
                     }
                 } else if (plane.canFoldWing()) {
-                    pc.switchHatch = PacketPlayerControlBase.HatchSwitch.UNFOLD;
+                    pc.switchHatch = PlayerControlBaseData.HatchSwitch.UNFOLD;
                     send = true;
                 } else if (plane.canUnfoldWing()) {
-                    pc.switchHatch = PacketPlayerControlBase.HatchSwitch.FOLD;
+                    pc.switchHatch = PlayerControlBaseData.HatchSwitch.FOLD;
                     send = true;
                 }
             }
@@ -218,7 +219,7 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
         }
 
         if (send) {
-            pc.sendToServer();
+            new PacketPlayerControlPlane(pc).sendToServer();
         }
 
     }

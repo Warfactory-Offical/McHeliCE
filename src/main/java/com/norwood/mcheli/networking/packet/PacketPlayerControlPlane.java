@@ -2,13 +2,21 @@ package com.norwood.mcheli.networking.packet;
 
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.aircraft.MCH_EntitySeat;
+import com.norwood.mcheli.networking.handlers.PlayerControlBaseData;
 import com.norwood.mcheli.plane.MCP_EntityPlane;
 import com.norwood.mcheli.uav.MCH_EntityUavStation;
 import hohserg.elegant.networking.api.ElegantPacket;
+import hohserg.elegant.networking.api.ElegantSerializable;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Delegate;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 @ElegantPacket
+@RequiredArgsConstructor
 public class PacketPlayerControlPlane extends PacketPlayerControlBase {
+
+    @Delegate
+    public final PlayerControlBaseData controlBaseData;
 
     @Override
     public void onReceive(EntityPlayerMP player) {
@@ -26,19 +34,19 @@ public class PacketPlayerControlPlane extends PacketPlayerControlBase {
                 }
             }
 
-            if (plane != null) process(plane, player);
+            if (plane != null) process(plane, controlBaseData, player);
         });
 
     }
 
     @Override
-    protected void handleHatch(MCH_EntityAircraft aircraft) {
-        switch (switchHatch) {
+    protected void handleHatch(MCH_EntityAircraft aircraft, PlayerControlBaseData data) {
+        switch (data.switchHatch) {
             case FOLD, UNFOLD -> {
                 if (aircraft.getAcInfo().haveHatch()) {
-                    aircraft.foldHatch(switchHatch == HatchSwitch.UNFOLD);
+                    aircraft.foldHatch(controlBaseData.switchHatch == PlayerControlBaseData.HatchSwitch.UNFOLD);
                 } else {
-                    ((MCP_EntityPlane) aircraft).foldWing(switchHatch == HatchSwitch.UNFOLD);
+                    ((MCP_EntityPlane) aircraft).foldWing(data.switchHatch == PlayerControlBaseData.HatchSwitch.UNFOLD);
                 }
             }
         }
@@ -46,9 +54,9 @@ public class PacketPlayerControlPlane extends PacketPlayerControlBase {
 
 
     @Override
-    protected void handleVtolSwitch(MCH_EntityAircraft aircraft) {
+    protected void handleVtolSwitch(MCH_EntityAircraft aircraft, PlayerControlBaseData data) {
         MCP_EntityPlane plane = (MCP_EntityPlane) aircraft;
-        switch (switchVtol) {
+        switch (data.switchVtol) {
             case VTOL_OFF -> plane.swithVtolMode(false);
             case VTOL_ON -> plane.swithVtolMode(true);
         }
