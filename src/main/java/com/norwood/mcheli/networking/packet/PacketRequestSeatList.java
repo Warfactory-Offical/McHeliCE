@@ -22,12 +22,10 @@ public class PacketRequestSeatList extends PacketBase implements ClientToServerP
     public void onReceive(EntityPlayerMP player) {
         if (!player.world.isRemote) {
             if (this.entityID_AC > 0) {
-                getScheduler().addScheduledTask(() -> {
                     Entity e = player.world.getEntityByID(this.entityID_AC);
                     if (e instanceof MCH_EntityAircraft) {
                         PacketSeatList.sendSeatList((MCH_EntityAircraft) e, player);
                     }
-                });
             }
         }
     }

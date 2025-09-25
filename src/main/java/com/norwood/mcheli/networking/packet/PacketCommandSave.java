@@ -18,13 +18,11 @@ public class PacketCommandSave extends PacketBase implements ClientToServerPacke
 
     @Override
     public void onReceive(EntityPlayerMP player) {
-        if (player != null && !player.world.isRemote) {
-            getScheduler().addScheduledTask(() -> {
+        if (player != null) {
                 MCH_EntityAircraft ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
                 if (ac != null) {
                     ac.setCommand(str, player);
                 }
-            });
         }
     }
 }

@@ -23,7 +23,6 @@ public class PacketNotifyHit extends PacketBase implements ServerToClientPacket 
 
     @Override
     public void onReceive(Minecraft mc) {
-        getScheduler().addScheduledTask(() -> {
             if (this.entityID_Ac <= 0) {
                 MCH_MOD.proxy.hitBullet();
             } else {
@@ -32,7 +31,6 @@ public class PacketNotifyHit extends PacketBase implements ServerToClientPacket 
                     ((MCH_EntityAircraft) e).hitBullet();
                 }
             }
-        });
     }
 }
 

@@ -18,8 +18,8 @@ public class PacketTitle extends PacketBase implements ServerToClientPacket {
 
     @Override
     public void onReceive(Minecraft mc) {
-        if (mc.player != null && mc.player.world.isRemote) {
-            mc.addScheduledTask(() -> MCH_MOD.proxy.printChatMessage(ITextComponent.Serializer.jsonToComponent(chatComponent), this.showTime, this.position));
+        if (mc.player != null) {
+            MCH_MOD.proxy.printChatMessage(ITextComponent.Serializer.jsonToComponent(chatComponent), this.showTime, this.position);
         }
     }
 }

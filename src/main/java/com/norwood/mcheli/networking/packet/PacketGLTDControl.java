@@ -22,30 +22,25 @@ public class PacketGLTDControl extends PacketBase implements ClientToServerPacke
 
     @Override
     public void onReceive(EntityPlayerMP player) {
-
-
         if (player.getRidingEntity() instanceof MCH_EntityGLTD gltd) {
-            if (!player.world.isRemote) {
-                getScheduler().addScheduledTask(() -> {
-                    if (this.unmount) {
-                        Entity riddenByEntity = gltd.getRiddenByEntity();
-                        if (riddenByEntity != null) {
-                            riddenByEntity.dismountRidingEntity();
-                        }
-                    } else {
-                        if (this.switchCameraMode >= 0) {
-                            gltd.camera.setMode(0, this.switchCameraMode);
-                        }
 
-                        if (this.switchWeapon >= 0) {
-                            gltd.switchWeapon(this.switchWeapon);
-                        }
+            if (this.unmount) {
+                Entity riddenByEntity = gltd.getRiddenByEntity();
+                if (riddenByEntity != null) {
+                    riddenByEntity.dismountRidingEntity();
+                }
+            } else {
+                if (this.switchCameraMode >= 0) {
+                    gltd.camera.setMode(0, this.switchCameraMode);
+                }
 
-                        if (this.useWeapon) {
-                            gltd.useCurrentWeapon(this.useWeaponOption1, this.useWeaponOption2);
-                        }
-                    }
-                });
+                if (this.switchWeapon >= 0) {
+                    gltd.switchWeapon(this.switchWeapon);
+                }
+
+                if (this.useWeapon) {
+                    gltd.useCurrentWeapon(this.useWeaponOption1, this.useWeaponOption2);
+                }
             }
         }
     }

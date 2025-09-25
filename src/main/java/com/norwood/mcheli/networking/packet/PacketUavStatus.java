@@ -14,16 +14,12 @@ public class PacketUavStatus extends PacketBase implements ClientToServerPacket 
 
     @Override
     public void onReceive(EntityPlayerMP player) {
-        if (!player.world.isRemote) {
-            getScheduler().addScheduledTask(() -> {
                 if (player.getRidingEntity() instanceof MCH_EntityUavStation) {
                     ((MCH_EntityUavStation) player.getRidingEntity()).setUavPosition(this.posUavX, this.posUavY, this.posUavZ);
                     if (this.continueControl) {
                         ((MCH_EntityUavStation) player.getRidingEntity()).controlLastAircraft(player);
                     }
                 }
-            });
-        }
     }
 
 }

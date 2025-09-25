@@ -48,29 +48,27 @@ public class PacketSeatList extends PacketBase implements ServerToClientPacket {
             return;
         }
 
-        getScheduler().addScheduledTask(() -> {
-            Entity entity = mc.player.world.getEntityByID(this.entityID_AC);
-            if (!(entity instanceof MCH_EntityAircraft ac)) {
-                return;
-            }
+        Entity entity = mc.player.world.getEntityByID(this.entityID_AC);
+        if (!(entity instanceof MCH_EntityAircraft ac)) {
+            return;
+        }
 
-            int seatNum = this.seatNum;
-            if (seatNum <= 0 ||
-                    ac.getSeats().length != seatNum ||
-                    this.seatEntityID == null ||
-                    this.seatEntityID.length != seatNum) {
-                return;
-            }
+        int seatNum = this.seatNum;
+        if (seatNum <= 0 ||
+                ac.getSeats().length != seatNum ||
+                this.seatEntityID == null ||
+                this.seatEntityID.length != seatNum) {
+            return;
+        }
 
-            for (int i = 0; i < seatNum; i++) {
-                Entity seatEntity = mc.player.world.getEntityByID(this.seatEntityID[i]);
-                if (seatEntity instanceof MCH_EntitySeat seat) {
-                    seat.seatID = i;
-                    seat.parentUniqueID = ac.getCommonUniqueId();
-                    ac.setSeat(i, seat);
-                    seat.setParent(ac);
-                }
+        for (int i = 0; i < seatNum; i++) {
+            Entity seatEntity = mc.player.world.getEntityByID(this.seatEntityID[i]);
+            if (seatEntity instanceof MCH_EntitySeat seat) {
+                seat.seatID = i;
+                seat.parentUniqueID = ac.getCommonUniqueId();
+                ac.setSeat(i, seat);
+                seat.setParent(ac);
             }
-        });
+        }
     }
 }

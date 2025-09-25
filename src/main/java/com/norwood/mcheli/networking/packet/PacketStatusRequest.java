@@ -21,16 +21,13 @@ public class PacketStatusRequest extends PacketBase implements ClientToServerPac
 
     @Override
     public void onReceive(EntityPlayerMP player) {
-        if (!player.world.isRemote) {
-            if (this.entityID_AC > 0) {
-                getScheduler().addScheduledTask(() -> {
-                    Entity entity = player.world.getEntityByID(this.entityID_AC);
-                    if (entity instanceof MCH_EntityAircraft) {
-                        PacketStatusResponse.sendStatus((MCH_EntityAircraft) entity, player);
-                    }
-                });
+        if (this.entityID_AC > 0) {
+            Entity entity = player.world.getEntityByID(this.entityID_AC);
+            if (entity instanceof MCH_EntityAircraft) {
+                PacketStatusResponse.sendStatus((MCH_EntityAircraft) entity, player);
             }
         }
-
     }
+
 }
+

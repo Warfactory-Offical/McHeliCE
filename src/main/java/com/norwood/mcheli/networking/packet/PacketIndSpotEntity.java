@@ -19,7 +19,6 @@ public class PacketIndSpotEntity extends PacketBase implements ClientToServerPac
 
     @Override
     public void onReceive(EntityPlayerMP player) {
-        getScheduler().addScheduledTask(() -> {
             ItemStack held = player.getHeldItemMainhand();
             if (held.isEmpty() || !(held.getItem() instanceof MCH_ItemRangeFinder)) {
                 return;
@@ -51,7 +50,6 @@ public class PacketIndSpotEntity extends PacketBase implements ClientToServerPac
             }
 
             W_WorldFunc.MOD_playSoundAtEntity(player, success ? "pi" : "ng", 1.0F, 1.0F);
-        });
 
     }
 }

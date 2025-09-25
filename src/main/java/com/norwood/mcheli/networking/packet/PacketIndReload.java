@@ -27,13 +27,11 @@ public class PacketIndReload extends PacketBase implements ClientToServerPacket 
     public void onReceive(EntityPlayerMP player) {
         if (!player.world.isRemote) {
             if (this.entityID_Ac > 0) {
-                getScheduler().addScheduledTask(() -> {
                     Entity e = player.world.getEntityByID(this.entityID_Ac);
                     if (e instanceof MCH_EntityAircraft ac) {
                         MCH_Lib.DbgLog(e.world, "onPacketIndReload :%s", ac.getAcInfo().displayName);
                         ac.supplyAmmo(this.weaponID);
                     }
-                });
             }
         }
     }

@@ -27,31 +27,28 @@ public class PacketStatusResponse extends PacketBase implements ServerToClientPa
         if (this.entityID_AC <= 0) {
             return;
         }
+        Entity entity = mc.player.world.getEntityByID(this.entityID_AC);
+        StringBuilder msg = new StringBuilder("onPacketStatusResponse:EID=").append(this.entityID_AC).append(":");
 
-        getScheduler().addScheduledTask(() -> {
-            Entity entity = mc.player.world.getEntityByID(this.entityID_AC);
-            StringBuilder msg = new StringBuilder("onPacketStatusResponse:EID=").append(this.entityID_AC).append(":");
-
-            if (!(entity instanceof MCH_EntityAircraft ac)) {
-                msg.append("Not an aircraft");
-                MCH_Lib.DbgLog(true, msg.toString());
-                return;
-            }
-
-            if (this.seatNum <= 0 || this.weaponIDs == null || this.weaponIDs.length != this.seatNum) {
-                msg.append("Error seatNum=").append(this.seatNum);
-                MCH_Lib.DbgLog(true, msg.toString());
-                return;
-            }
-
-            msg.append("seatNum=").append(this.seatNum).append(":");
-            for (int i = 0; i < this.seatNum; i++) {
-                ac.updateWeaponID(i, this.weaponIDs[i]);
-                msg.append("[").append(i).append(",").append(this.weaponIDs[i]).append("]");
-            }
-
+        if (!(entity instanceof MCH_EntityAircraft ac)) {
+            msg.append("Not an aircraft");
             MCH_Lib.DbgLog(true, msg.toString());
-        });
+            return;
+        }
+
+        if (this.seatNum <= 0 || this.weaponIDs == null || this.weaponIDs.length != this.seatNum) {
+            msg.append("Error seatNum=").append(this.seatNum);
+            MCH_Lib.DbgLog(true, msg.toString());
+            return;
+        }
+
+        msg.append("seatNum=").append(this.seatNum).append(":");
+        for (int i = 0; i < this.seatNum; i++) {
+            ac.updateWeaponID(i, this.weaponIDs[i]);
+            msg.append("[").append(i).append(",").append(this.weaponIDs[i]).append("]");
+        }
+
+        MCH_Lib.DbgLog(true, msg.toString());
 
     }
 

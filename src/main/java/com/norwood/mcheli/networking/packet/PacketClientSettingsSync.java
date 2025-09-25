@@ -28,20 +28,18 @@ public class PacketClientSettingsSync extends PacketBase implements ClientToServ
     @Override
     public void onReceive(EntityPlayerMP player) {
         if (player.world.isRemote) return;
-        getScheduler().addScheduledTask(() -> {
-            MCH_EntityAircraft ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
-            if (ac != null) {
-                int sid = ac.getSeatIdByEntity(player);
-                if (sid == 0) {
-                    ac.cs_dismountAll = this.dismountAll;
-                    ac.cs_heliAutoThrottleDown = this.heliAutoThrottleDown;
-                    ac.cs_planeAutoThrottleDown = this.planeAutoThrottleDown;
-                    ac.cs_tankAutoThrottleDown = this.tankAutoThrottleDown;
-                }
-
-                ac.camera.setShaderSupport(sid, this.shaderSupport);
+        MCH_EntityAircraft ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
+        if (ac != null) {
+            int sid = ac.getSeatIdByEntity(player);
+            if (sid == 0) {
+                ac.cs_dismountAll = this.dismountAll;
+                ac.cs_heliAutoThrottleDown = this.heliAutoThrottleDown;
+                ac.cs_planeAutoThrottleDown = this.planeAutoThrottleDown;
+                ac.cs_tankAutoThrottleDown = this.tankAutoThrottleDown;
             }
-        });
+
+            ac.camera.setShaderSupport(sid, this.shaderSupport);
+        }
 
 
     }

@@ -25,12 +25,10 @@ public class PacketContentReload extends PacketBase implements ClientToServerPac
     public void onReceive(EntityPlayerMP player) {
         if (player.world.isRemote) return;
 
-        getScheduler().addScheduledTask(() -> {
-            switch (type) {
-                case VEHICLE -> reloadRiddenAircraft(player);
-                case WEAPON -> reloadAllWeapons();
-            }
-        });
+        switch (type) {
+            case VEHICLE -> reloadRiddenAircraft(player);
+            case WEAPON -> reloadAllWeapons();
+        }
     }
 
 

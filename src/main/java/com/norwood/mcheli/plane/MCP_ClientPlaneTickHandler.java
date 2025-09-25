@@ -214,7 +214,7 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
         }
 
         if (this.KeyEjectSeat.isKeyDown() && plane.canEjectSeat(player)) {
-            pc.ejectSeat = true;
+            pc.setEjectSeat(true);
             send = true;
         }
 

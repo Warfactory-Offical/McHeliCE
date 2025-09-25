@@ -69,36 +69,34 @@ public class PacketNotifyAmmoNum extends PacketBase implements ServerToClientPac
 
         if (this.entityID_Ac <= 0) return;
 
-        mc.addScheduledTask(() -> {
-            Entity entity = player.world.getEntityByID(this.entityID_Ac);
-            if (!(entity instanceof MCH_EntityAircraft ac)) return;
+        Entity entity = player.world.getEntityByID(this.entityID_Ac);
+        if (!(entity instanceof MCH_EntityAircraft ac)) return;
 
-            StringBuilder msg = new StringBuilder("onPacketNotifyAmmoNum:");
-            msg.append(ac.getAcInfo() != null ? ac.getAcInfo().displayName : "null").append(":");
+        StringBuilder msg = new StringBuilder("onPacketNotifyAmmoNum:");
+        msg.append(ac.getAcInfo() != null ? ac.getAcInfo().displayName : "null").append(":");
 
-            if (this.all) {
-                msg.append("All=true, Num=").append(this.num);
+        if (this.all) {
+            msg.append("All=true, Num=").append(this.num);
 
-                for (int i = 0; i < ac.getWeaponNum() && i < this.num; i++) {
-                    ac.getWeapon(i).setAmmoNum(this.ammo[i]);
-                    ac.getWeapon(i).setRestAllAmmoNum(this.restAmmo[i]);
-                    msg.append(", [").append(this.ammo[i]).append("/").append(this.restAmmo[i]).append("]");
-                }
-
-            } else if (this.weaponID < ac.getWeaponNum()) {
-                msg.append("All=false, WeaponID=").append(this.weaponID)
-                        .append(", ").append(this.ammo[0])
-                        .append("/").append(this.restAmmo[0]);
-
-                ac.getWeapon(this.weaponID).setAmmoNum(this.ammo[0]);
-                ac.getWeapon(this.weaponID).setRestAllAmmoNum(this.restAmmo[0]);
-
-            } else {
-                msg.append("Error: WeaponID out of bounds: ").append(this.weaponID);
+            for (int i = 0; i < ac.getWeaponNum() && i < this.num; i++) {
+                ac.getWeapon(i).setAmmoNum(this.ammo[i]);
+                ac.getWeapon(i).setRestAllAmmoNum(this.restAmmo[i]);
+                msg.append(", [").append(this.ammo[i]).append("/").append(this.restAmmo[i]).append("]");
             }
 
-            MCH_Lib.DbgLog(entity.world, msg.toString());
-        });
+        } else if (this.weaponID < ac.getWeaponNum()) {
+            msg.append("All=false, WeaponID=").append(this.weaponID)
+                    .append(", ").append(this.ammo[0])
+                    .append("/").append(this.restAmmo[0]);
+
+            ac.getWeapon(this.weaponID).setAmmoNum(this.ammo[0]);
+            ac.getWeapon(this.weaponID).setRestAllAmmoNum(this.restAmmo[0]);
+
+        } else {
+            msg.append("Error: WeaponID out of bounds: ").append(this.weaponID);
+        }
+
+        MCH_Lib.DbgLog(entity.world, msg.toString());
 
     }
 }

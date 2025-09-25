@@ -51,23 +51,22 @@ public class PacketSyncServerSettings extends PacketBase implements ServerToClie
     @Override
     public void onReceive(Minecraft mc) {
         if (!mc.player.world.isRemote) return;
-        getScheduler().addScheduledTask(() -> {
-            MCH_Lib.DbgLog(false, "onPacketNotifyServerSettings:" + mc.player);
-            if (!this.enableCamDistChange) {
-                W_Reflection.setThirdPersonDistance(4.0F);
-            }
+        MCH_Lib.DbgLog(false, "onPacketNotifyServerSettings:" + mc.player);
+        if (!this.enableCamDistChange) {
+            W_Reflection.setThirdPersonDistance(4.0F);
+        }
 
-            MCH_ServerSettings.enableCamDistChange = this.enableCamDistChange;
-            MCH_ServerSettings.enableEntityMarker = this.enableEntityMarker;
-            MCH_ServerSettings.enablePVP = this.enablePVP;
-            MCH_ServerSettings.stingerLockRange = this.stingerLockRange;
-            MCH_ServerSettings.enableDebugBoundingBox = this.enableDebugBoundingBox;
-            MCH_ServerSettings.enableRotationLimit = this.enableRotationLimit;
-            MCH_ServerSettings.pitchLimitMax = this.pitchLimitMax;
-            MCH_ServerSettings.pitchLimitMin = this.pitchLimitMin;
-            MCH_ServerSettings.rollLimit = this.rollLimit;
-            MCH_ClientLightWeaponTickHandler.lockRange = MCH_ServerSettings.stingerLockRange;
-        });
+        MCH_ServerSettings.enableCamDistChange = this.enableCamDistChange;
+        MCH_ServerSettings.enableEntityMarker = this.enableEntityMarker;
+        MCH_ServerSettings.enablePVP = this.enablePVP;
+        MCH_ServerSettings.stingerLockRange = this.stingerLockRange;
+        MCH_ServerSettings.enableDebugBoundingBox = this.enableDebugBoundingBox;
+        MCH_ServerSettings.enableRotationLimit = this.enableRotationLimit;
+        MCH_ServerSettings.pitchLimitMax = this.pitchLimitMax;
+        MCH_ServerSettings.pitchLimitMin = this.pitchLimitMin;
+        MCH_ServerSettings.rollLimit = this.rollLimit;
+        MCH_ClientLightWeaponTickHandler.lockRange = MCH_ServerSettings.stingerLockRange;
+
     }
 
 }

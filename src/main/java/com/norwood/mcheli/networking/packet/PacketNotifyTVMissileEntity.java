@@ -20,15 +20,13 @@ public class PacketNotifyTVMissileEntity extends PacketBase implements ServerToC
             if (this.entityID_Ac <= 0 || this.entityID_TVMissile <= 0) {
                 return;
             }
-            getScheduler().addScheduledTask(() -> {
-                Entity e = mc.player.world.getEntityByID(this.entityID_Ac);
-                if (e instanceof MCH_EntityAircraft ac) {
-                    e = mc.player.world.getEntityByID(this.entityID_TVMissile);
-                    if (e instanceof MCH_EntityTvMissile) {
-                        ((MCH_EntityTvMissile) e).shootingEntity = mc.player;
-                        ac.setTVMissile((MCH_EntityTvMissile) e);
+                Entity entity = mc.player.world.getEntityByID(this.entityID_Ac);
+                if (entity instanceof MCH_EntityAircraft ac) {
+                    entity = mc.player.world.getEntityByID(this.entityID_TVMissile);
+                    if (entity instanceof MCH_EntityTvMissile) {
+                        ((MCH_EntityTvMissile) entity).shootingEntity = mc.player;
+                        ac.setTVMissile((MCH_EntityTvMissile) entity);
                     }
                 }
-            });
     }
 }

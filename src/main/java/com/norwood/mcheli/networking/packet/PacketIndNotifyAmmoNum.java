@@ -23,18 +23,14 @@ public class PacketIndNotifyAmmoNum extends PacketBase implements ClientToServer
 
     @Override
     public void onReceive(EntityPlayerMP player) {
-        if (!player.world.isRemote) {
-            if (this.entityID_Ac > 0) {
-                getScheduler().addScheduledTask(() -> {
-                    Entity e = player.world.getEntityByID(this.entityID_Ac);
-                    if (e instanceof MCH_EntityAircraft) {
-                        if (this.weaponID >= 0) {
-                            PacketNotifyAmmoNum.sendAmmoNum((MCH_EntityAircraft) e, player, this.weaponID);
-                        } else {
-                            PacketNotifyAmmoNum.sendAllAmmoNum((MCH_EntityAircraft) e, player);
-                        }
-                    }
-                });
+        if (this.entityID_Ac > 0) {
+            Entity e = player.world.getEntityByID(this.entityID_Ac);
+            if (e instanceof MCH_EntityAircraft) {
+                if (this.weaponID >= 0) {
+                    PacketNotifyAmmoNum.sendAmmoNum((MCH_EntityAircraft) e, player, this.weaponID);
+                } else {
+                    PacketNotifyAmmoNum.sendAllAmmoNum((MCH_EntityAircraft) e, player);
+                }
             }
         }
 

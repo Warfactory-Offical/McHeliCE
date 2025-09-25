@@ -35,37 +35,35 @@ public class PacketIndRotation extends PacketBase implements ClientToServerPacke
             return;
         }
 
-        getScheduler().addScheduledTask(() -> {
-            Entity entity = player.world.getEntityByID(this.entityID_Ac);
-            if (!(entity instanceof MCH_EntityAircraft ac)) {
-                return;
+        Entity entity = player.world.getEntityByID(this.entityID_Ac);
+        if (!(entity instanceof MCH_EntityAircraft ac)) {
+            return;
+        }
+
+        ac.setRotRoll(this.roll);
+
+        if (this.rollRev) {
+            MCH_Lib.DbgLog(ac.world,
+                    "onPacketIndRotation Error:this.rollRev y=%.2f, p=%.2f, r=%.2f",
+                    this.yaw, this.pitch, this.roll
+            );
+
+            Entity rider = ac.getRiddenByEntity();
+            if (rider != null) {
+                rider.rotationYaw = this.yaw;
+                rider.prevRotationYaw = this.yaw;
             }
 
-            ac.setRotRoll(this.roll);
-
-            if (this.rollRev) {
-                MCH_Lib.DbgLog(ac.world,
-                        "onPacketIndRotation Error:this.rollRev y=%.2f, p=%.2f, r=%.2f",
-                        this.yaw, this.pitch, this.roll
-                );
-
-                Entity rider = ac.getRiddenByEntity();
-                if (rider != null) {
-                    rider.rotationYaw = this.yaw;
-                    rider.prevRotationYaw = this.yaw;
-                }
-
-                for (int sid = 0; sid < ac.getSeatNum(); sid++) {
-                    Entity passenger = ac.getEntityBySeatId(sid);
-                    if (passenger != null) {
-                        passenger.rotationYaw += (passenger.rotationYaw <= 0.0F ? 180.0F : -180.0F);
-                    }
+            for (int sid = 0; sid < ac.getSeatNum(); sid++) {
+                Entity passenger = ac.getEntityBySeatId(sid);
+                if (passenger != null) {
+                    passenger.rotationYaw += (passenger.rotationYaw <= 0.0F ? 180.0F : -180.0F);
                 }
             }
+        }
 
-            ac.setRotYaw(this.yaw);
-            ac.setRotPitch(this.pitch);
-        });
+        ac.setRotYaw(this.yaw);
+        ac.setRotPitch(this.pitch);
 
     }
 }

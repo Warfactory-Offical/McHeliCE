@@ -16,34 +16,32 @@ public class PacketSeatPlayerControl extends PacketBase implements ClientToServe
     @Override
     public void onReceive(EntityPlayerMP player) {
         if (player.world.isRemote) return;
-        getScheduler().addScheduledTask(() -> {
-            MCH_EntityAircraft ac;
-            if (player.getRidingEntity() instanceof MCH_EntitySeat seat) {
-                ac = seat.getParent();
-            } else {
-                ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
+        MCH_EntityAircraft ac;
+        if (player.getRidingEntity() instanceof MCH_EntitySeat seat) {
+            ac = seat.getParent();
+        } else {
+            ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
+        }
+
+        if (ac == null) return;
+
+        switch (switchSeat) {
+            case IDLE -> {
+                break;
             }
-
-            if (ac == null) return;
-
-            switch (switchSeat) {
-                case IDLE -> {
-                    break;
-                }
-                case DISMOUNT -> {
-                    player.dismountRidingEntity();
-                    ac.keepOnRideRotation = true;
-                    ac.processInitialInteract(player, true, EnumHand.MAIN_HAND);
-                }
-                case NEXT -> ac.switchNextSeat(player);
-                case PREV -> ac.switchPrevSeat(player);
+            case DISMOUNT -> {
+                player.dismountRidingEntity();
+                ac.keepOnRideRotation = true;
+                ac.processInitialInteract(player, true, EnumHand.MAIN_HAND);
             }
+            case NEXT -> ac.switchNextSeat(player);
+            case PREV -> ac.switchPrevSeat(player);
+        }
 
-            if (this.parachuting) {
-                ac.unmount(player);
+        if (this.parachuting) {
+            ac.unmount(player);
 
-            }
-        });
+        }
     }
 
 
