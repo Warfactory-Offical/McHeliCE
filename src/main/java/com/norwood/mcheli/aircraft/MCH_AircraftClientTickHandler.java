@@ -6,6 +6,7 @@ import com.norwood.mcheli.MCH_Key;
 import com.norwood.mcheli.networking.handlers.PlayerControlBaseData;
 import com.norwood.mcheli.networking.packet.MCH_PacketIndOpenScreen;
 import com.norwood.mcheli.networking.packet.MCH_PacketPlayerControlBase;
+import com.norwood.mcheli.networking.packet.PacketPlayerControlBase;
 import com.norwood.mcheli.networking.packet.PacketSeatPlayerControl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -67,6 +68,8 @@ public abstract class MCH_AircraftClientTickHandler extends MCH_ClientTickHandle
     protected void commonPlayerControlInGUI(EntityPlayer player, MCH_EntityAircraft ac, boolean isPilot, MCH_PacketPlayerControlBase pc) {
     }
 
+    protected void commonPlayerControlInGUI(EntityPlayer player, MCH_EntityAircraft ac, boolean isPilot, PacketPlayerControlBase pc) {
+    }
 
     public boolean commonPlayerControl(EntityPlayer player, MCH_EntityAircraft ac, boolean isPilot, PlayerControlBaseData pc) {
         if (Keyboard.isKeyDown(MCH_Config.KeyFreeLook.prmInt)) {

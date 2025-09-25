@@ -138,7 +138,7 @@ public class MCP_ClientPlaneTickHandler extends MCH_AircraftClientTickHandler {
     }
 
     protected void playerControlInGUI(EntityPlayer player, MCP_EntityPlane plane, boolean isPilot) {
-        this.commonPlayerControlInGUI(player, plane, isPilot, new MCP_PlanePacketPlayerControl());
+        this.commonPlayerControlInGUI(player, plane, isPilot, new PacketPlayerControlPlane(new PlayerControlBaseData()));
     }
 
     protected void playerControl(EntityPlayer player, MCP_EntityPlane plane, boolean isPilot) {
