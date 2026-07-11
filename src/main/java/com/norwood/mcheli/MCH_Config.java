@@ -377,10 +377,10 @@ public class MCH_Config {
         DisplayHUDThirdPerson = new MCH_ConfigPrm("DisplayHUDThirdPerson", false);
         AutoScaleAircraftGui = new MCH_ConfigPrm("ExperimentalAutoScaleAircraftGui", false);
         AutoScaleAircraftGui.desc = ";ExperimentalAutoScaleAircraftGui = true maps hardcoded aircraft HUD coordinates from the default 427x240 canvas to the current GUI resolution.";
-        ExperimentalQuaternionRotation = new MCH_ConfigPrm("ExperimentalQuaternionRotation", false);
-        ExperimentalRemoveClientTrackingRestrictions = new MCH_ConfigPrm("ExperimentalRemoveClientTrackingRestrictions", false);
+        ExperimentalQuaternionRotation = new MCH_ConfigPrm("ExperimentalQuaternionRotation", true);
+        ExperimentalRemoveClientTrackingRestrictions = new MCH_ConfigPrm("ExperimentalRemoveClientTrackingRestrictions", true);
         ExperimentalRemoveClientTrackingRestrictions.desc = ";Experimental: remove client tracking restrictions - keeps MCHeli entities (e.g. UAVs) tracked, loaded and rendered far beyond the normal view distance by enabling the long-distance ASM patches. Read at startup by the coremod; CHANGING THIS REQUIRES A GAME RESTART.";
-        ExperimentalAsyncOnDemandModelLoading = new MCH_ConfigPrm("ExperimentalAsyncOnDemandModelLoading", false);
+        ExperimentalAsyncOnDemandModelLoading = new MCH_ConfigPrm("ExperimentalAsyncOnDemandModelLoading", true);
         ExperimentalAsyncOnDemandModelLoading.desc = ";Experimental: parse vehicle models + upload their VBOs on demand (when first rendered) on a background thread, instead of parsing/uploading every model at startup. Rendering is skipped for a model until its buffer is ready (no main-thread stall). Models unused for ExperimentalOnDemandModelLifetimeSeconds are deleted to reclaim VRAM and reloaded on demand.";
         ExperimentalOnDemandModelLifetimeSeconds = new MCH_ConfigPrm("ExperimentalOnDemandModelLifetimeSeconds", 720);
         ExperimentalOnDemandModelLifetimeSeconds.desc = ";Seconds an on-demand model stays resident after it was last rendered before its VBO is deleted; -1 disables eviction (load once, keep). Only used when ExperimentalAsyncOnDemandModelLoading = true.";

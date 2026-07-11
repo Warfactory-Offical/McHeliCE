@@ -420,10 +420,6 @@ public abstract class MCH_EntityBaseBullet extends W_Entity {
         }
 
         double factor = getInfo().turningFactor;
-        // Ease speed and heading SEPARATELY. The old per-axis velocity lerp interpolates along a chord,
-        // which shortens the vector mid-turn -- the missile bleeds speed while turning hard. Easing the
-        // scalar speed toward cruise and the unit heading toward the target independently keeps the
-        // launch ramp but holds speed through the turn (and gives a constant, predictable turn rate).
         double curSpeed = Math.sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ);
         if (curSpeed < 1.0e-6D) {
             this.motionX += (mx - this.motionX) * factor;

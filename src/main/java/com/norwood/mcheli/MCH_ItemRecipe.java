@@ -31,7 +31,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -233,15 +232,6 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
                     return null;
                 }
 
-                for (int ix = 0; ix < r.recipeItems.size(); ix++) {
-                    if (r.recipeItems.get(ix) != Ingredient.EMPTY) {
-                        Arrays.stream(r.recipeItems.get(ix).getMatchingStacks()).anyMatch(stack -> {
-                            stack.getItem();
-                            return false;
-                        });
-                    }
-                }
-
                 return r;
             }
         }
@@ -296,15 +286,6 @@ public class MCH_ItemRecipe implements MCH_IRecipeList {
             }
 
             ShapelessRecipes r = getShapelessRecipe(new ItemStack(item, createNum), recipe);
-
-            for (int i = 0; i < r.recipeItems.size(); i++) {
-                Ingredient ingredient = r.recipeItems.get(i);
-                Arrays.stream(ingredient.getMatchingStacks()).anyMatch(stack -> {
-                    stack.getItem();
-                    return false;
-                });
-            }
-
             MCH_Recipes.register(name, r);
             return r;
         }
