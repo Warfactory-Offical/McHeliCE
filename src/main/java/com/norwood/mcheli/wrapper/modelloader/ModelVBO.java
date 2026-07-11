@@ -299,9 +299,34 @@ public class ModelVBO extends W_ModelCustom implements IModelCustom {
 
     private void renderVBO(ModelVBO.VBOBufferData data) {
         if (deleted) return;
-        VertexArraySupport.glBindVertexArray(data.vaoHandle);
-        GlStateManager.glDrawArrays(GL11.GL_TRIANGLES, 0, data.vertices);
+        drawBuffer(data.vaoHandle, data.vboHandle, data.vertices);
+    }
+
+    private static void drawBuffer(int vao, int vbo, int vertexCount) {
+        if (vertexCount <= 0) return;
+        if (ShaderPassCompat.needsClientArrayFallback()) {
+            drawWithClientArrays(vbo, vertexCount);
+        } else {
+            VertexArraySupport.glBindVertexArray(vao);
+            GlStateManager.glDrawArrays(GL11.GL_TRIANGLES, 0, vertexCount);
+            VertexArraySupport.glBindVertexArray(0);
+        }
+    }
+
+    private static void drawWithClientArrays(int vbo, int vertexCount) {
         VertexArraySupport.glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glVertexPointer(3, GL_FLOAT, STRIDE, 0L);
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glTexCoordPointer(3, GL_FLOAT, STRIDE, 3L * Float.BYTES);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        glNormalPointer(GL_FLOAT, STRIDE, 6L * Float.BYTES);
+        glEnableClientState(GL_NORMAL_ARRAY);
+        GlStateManager.glDrawArrays(GL11.GL_TRIANGLES, 0, vertexCount);
+        glDisableClientState(GL_NORMAL_ARRAY);
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
     @Override
@@ -331,14 +356,10 @@ public class ModelVBO extends W_ModelCustom implements IModelCustom {
         if (deleted) return;
         if (staticVAO == -1)
             uploadStatic(info);
-        VertexArraySupport.glBindVertexArray(this.staticVAO);
-        GlStateManager.glDrawArrays(GL11.GL_TRIANGLES, 0, staticVerts);
+        drawBuffer(this.staticVAO, this.staticVBO, staticVerts);
         if (this.bakedTracksVAO != -1) {
-            VertexArraySupport.glBindVertexArray(this.bakedTracksVAO);
-            GlStateManager.glDrawArrays(GL11.GL_TRIANGLES, 0, trackVerts);
+            drawBuffer(this.bakedTracksVAO, this.bakedTracksVBO, trackVerts);
         }
-
-        VertexArraySupport.glBindVertexArray(0);
     }
 
     public void renderTracksBuffer(MCH_AircraftInfo info) {
@@ -350,10 +371,7 @@ public class ModelVBO extends W_ModelCustom implements IModelCustom {
 
         if (bakedTracksVAO == -1)
             uploadTracks(info);
-        VertexArraySupport.glBindVertexArray(this.bakedTracksVAO);
-        GlStateManager.glDrawArrays(GL11.GL_TRIANGLES, 0, trackVerts);
-
-        VertexArraySupport.glBindVertexArray(0);
+        drawBuffer(this.bakedTracksVAO, this.bakedTracksVBO, trackVerts);
     }
 
 
