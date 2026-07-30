@@ -2,6 +2,9 @@ package com.norwood.mcheli.networking.packet;
 
 import com.norwood.mcheli.MCH_MOD;
 import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
+import com.norwood.mcheli.factories.UavStationGuiFactory;
+import com.norwood.mcheli.gui.MCH_GuiCommonHandler;
+import com.norwood.mcheli.uav.MCH_EntityUavStation;
 import hohserg.elegant.networking.api.ClientToServerPacket;
 import hohserg.elegant.networking.api.ElegantPacket;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,7 +25,9 @@ public class PacketOpenScreen implements ClientToServerPacket {
 
     @Override
     public void onReceive(EntityPlayerMP player) {
-        if (this.guiID == 3) {
+        if (this.guiID == MCH_GuiCommonHandler.GUIID_UAV_STATION && player.getRidingEntity() instanceof MCH_EntityUavStation station) {
+            UavStationGuiFactory.INSTANCE.openGui(player, station);
+        } else if (this.guiID == 3) {
             MCH_EntityAircraft ac = MCH_EntityAircraft.getAircraft_RiddenOrControl(player);
             if (ac != null) {
                 ac.displayInventory(player);

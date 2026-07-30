@@ -1,7 +1,7 @@
 package com.norwood.mcheli.weapon;
 
 import com.norwood.mcheli.MCH_Explosion;
-import com.norwood.mcheli.helicopter.MCH_EntityHeli;
+import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -21,9 +21,28 @@ public class MCH_WeaponBomb extends MCH_WeaponBase {
     @Override
     public boolean shot(MCH_WeaponParam prm) {
         if (this.getInfo() != null && this.getInfo().destruct) {
-            if (prm.entity instanceof MCH_EntityHeli ac) {
-                if (ac.isUAV() && ac.getSeatNum() == 0) {
+            if (prm.entity instanceof MCH_EntityAircraft ac) {
+                if (ac.isUAV()) {
                     if (!this.world.isRemote) {
+                        MCH_WeaponInfo info = this.getInfo();
+                        float size = info.explosion;
+                        float sizeBlock = size;
+                        float damagePower = info.explosion;
+                        float blockPower = info.explosionBlock;
+                        float damageRadius = size;
+
+                        if (info.isNewExplosionBreak) {
+                            size = info.explosionRadius > 0.0F ? info.explosionRadius : size;
+                            sizeBlock = size;
+                            blockPower = info.explosionBlock >= 0 ? info.explosionBlock : sizeBlock;
+                        }
+
+                        if (info.isNewExplosionBreak && info.explosionDamageRadius > 0.0F) {
+                            damageRadius = info.explosionDamageRadius;
+                        } else {
+                            damageRadius = size;
+                        }
+
                         MCH_Explosion.newExplosion(
                                 this.world,
                                 null,
@@ -31,11 +50,14 @@ public class MCH_WeaponBomb extends MCH_WeaponBase {
                                 ac.posX,
                                 ac.posY,
                                 ac.posZ,
-                                this.getInfo().explosion,
-                                this.getInfo().explosionBlock,
+                                size,
+                                sizeBlock,
+                                damagePower,
+                                blockPower,
+                                damageRadius,
                                 true,
                                 true,
-                                this.getInfo().flaming,
+                                info.flaming,
                                 true,
                                 0);
                         this.playSound(prm.entity);

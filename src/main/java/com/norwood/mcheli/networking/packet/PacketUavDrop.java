@@ -51,6 +51,5 @@ public class PacketUavDrop extends PacketBase implements ClientToServerPacket {
             uav.setPairedStation(null);
         }
         player.sendMessage(new TextComponentString("Dropped UAV from station."));
-        player.closeScreen();
     }
 }
