@@ -3,7 +3,9 @@ package com.norwood.mcheli.event;
 import com.norwood.mcheli.MCH_Config;
 import com.norwood.mcheli.MCH_Key;
 import com.norwood.mcheli.MCH_ServerSettings;
+import com.norwood.mcheli.gui.MCH_GuiCommonHandler;
 import com.norwood.mcheli.networking.packet.PacketOpenScreen;
+import com.norwood.mcheli.uav.MCH_EntityUavStation;
 import com.norwood.mcheli.wrapper.W_Reflection;
 import net.minecraft.client.Minecraft;
 
@@ -17,6 +19,7 @@ public class KeyboardInputHandler {
     public MCH_Key KeyCamDistDown;
     public MCH_Key KeyScoreboard;
     public MCH_Key KeyMultiplayManager;
+    public MCH_Key KeyGUI;
 
     protected void updateKeys() {
         for (MCH_Key key : Keys) {
@@ -34,7 +37,8 @@ public class KeyboardInputHandler {
         this.KeyCamDistDown = new MCH_Key(MCH_Config.KeyCameraDistDown.prmInt);
         this.KeyScoreboard = new MCH_Key(MCH_Config.KeyScoreboard.prmInt);
         this.KeyMultiplayManager = new MCH_Key(MCH_Config.KeyMultiplayManager.prmInt);
-        this.Keys = new MCH_Key[]{this.KeyCamDistUp, this.KeyCamDistDown, this.KeyScoreboard, this.KeyMultiplayManager};
+        this.KeyGUI = new MCH_Key(MCH_Config.KeyGUI.prmInt);
+        this.Keys = new MCH_Key[]{this.KeyCamDistUp, this.KeyCamDistDown, this.KeyScoreboard, this.KeyMultiplayManager, this.KeyGUI};
 
         for (MCH_ClientTickHandlerBase t : ticks) {
             t.updateKeybind(config);
@@ -47,6 +51,17 @@ public class KeyboardInputHandler {
         if (mc.player != null && mc.currentScreen == null) {
             handleCameraDistance();
             handleScoreboardAndMultiplayer();
+            handleUavStationGuiReopen();
+        }
+    }
+
+    protected void handleUavStationGuiReopen() {
+        if (!KeyGUI.isKeyDown()) return;
+        if (!(mc.player.getRidingEntity() instanceof MCH_EntityUavStation station)) return;
+
+        // Reopen UAV Station pairing UI when mounted but not actively controlling a UAV.
+        if (station.getControlled() == null) {
+            PacketOpenScreen.send(MCH_GuiCommonHandler.GUIID_UAV_STATION);
         }
     }
 
