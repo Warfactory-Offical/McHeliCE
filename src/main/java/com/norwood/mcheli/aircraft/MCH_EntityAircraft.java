@@ -32,6 +32,7 @@ import com.norwood.mcheli.tool.MCH_ItemWrench;
 import com.norwood.mcheli.uav.IPairableUav;
 import com.norwood.mcheli.uav.IUavStation;
 import com.norwood.mcheli.uav.MCH_EntityUavStation;
+import com.norwood.mcheli.uav.MCH_UavControl;
 import com.norwood.mcheli.uav.UAVTracker;
 import com.norwood.mcheli.weapon.*;
 import com.norwood.mcheli.wingman.config.WingmanConfig; //WINGMAN
@@ -1968,9 +1969,7 @@ public abstract class MCH_EntityAircraft extends W_EntityContainer implements IG
 
         Entity ex = this.getRiddenByEntity();
         if (ex != null && !ex.isDead && !this.isDestroyed()) {
-            // Only a player pilot can own the detached turret aim; while it is active,
-            // setDetachedWeaponAim mirrors the rate-limited aim into lastRider*.
-            if (!(ex instanceof EntityPlayer)) {
+            if (!(ex instanceof EntityPlayer) || !this.supportsDetachedTurretAim()) {
                 this.clearDetachedWeaponAim();
             }
             if (!this.detachedWeaponAimActive) {
@@ -4060,8 +4059,15 @@ public abstract class MCH_EntityAircraft extends W_EntityContainer implements IG
         return this.getRotSeatTransformedOffset(pos, this.getRotSeatYaw());
     }
 
+    /**
+     * Whether this vehicle class decouples the weapon aim from the airframe. Only hull-steered
+     * vehicles do (tanks and ground vehicles): their {@code setAngles} never turns the chassis from
+     * mouse input, so the mouse is free to slew a rate-limited turret instead. Mouse-flown aircraft
+     * (helicopters, planes, ships) keep the base {@code false} -- their mouse input IS the flight
+     * control, and handing it to a turret would leave the pilot unable to yaw or pitch the airframe.
+     */
     public boolean supportsDetachedTurretAim() {
-        return this.hasAnyIndependentMountedWeapon();
+        return false;
     }
 
     public void setDetachedWeaponAim(float yaw, float pitch) {
@@ -4295,7 +4301,16 @@ public abstract class MCH_EntityAircraft extends W_EntityContainer implements IG
         return this.getAcInfo().getWeaponById(weaponId);
     }
 
+    /**
+     * True when this rider's current weapon aims independently of the airframe. Requires BOTH a
+     * weapon with its own traverse AND a vehicle class that supports detached aim -- a helicopter
+     * pilot carrying a pitch-limited rocket pod still flies with the mouse, so the aim follows the
+     * airframe, not the other way round.
+     */
     public boolean hasIndependentMountedAim(@Nullable Entity entity) {
+        if (!this.supportsDetachedTurretAim()) {
+            return false;
+        }
         MCH_AircraftInfo.Weapon weapon = this.getCurrentMountedWeapon(entity);
         return weapon != null && hasIndependentMountedAim(weapon);
     }
@@ -6482,10 +6497,17 @@ public abstract class MCH_EntityAircraft extends W_EntityContainer implements IG
             // Signal lost: drop the control link instead of self-destructing. The UAV is cut loose
             // from its station and its throttle/hover are killed, so it falls to the ground
             // (aircraft) or coasts to a stop (ground vehicles) rather than exploding.
-            this.uavStation.setControlled(null);
-            this.setUavStation(null);
+            //
+            // The operator must be released too, not just the link. Clearing the link alone kills
+            // the TrackerHook force-track that kept this far-away UAV visible to them, so the
+            // client is untracked before the UAV_STATION clear can reach it and its station keeps
+            // a stale controlled-UAV reference -- leaving the operator seated in a frozen camera
+            // feed whose exit key resolves no aircraft server-side. Disconnect ends both.
+            IUavStation station = this.uavStation;
             this.isHoveringMode = false;
             this.setCurrentThrottle(0.0);
+            MCH_UavControl.disconnect(station);
+            this.setUavStation(null);
         }
     }
 

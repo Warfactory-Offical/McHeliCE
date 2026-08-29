@@ -7,6 +7,8 @@ import hohserg.elegant.networking.api.ServerToClientPacket;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @ElegantPacket
 @RequiredArgsConstructor
@@ -14,6 +16,7 @@ public class PacketSyncReload implements ServerToClientPacket {
     public final int acID;
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onReceive(Minecraft mc) {
         Entity e = mc.player.world.getEntityByID(this.acID);
         if (e instanceof MCH_EntityAircraft ac) {

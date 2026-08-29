@@ -31,6 +31,10 @@ public class PacketPlayerControlTank extends PacketPlayerControlBase {
             }
         }
 
+        if (tank == null) {
+            handleStationUnmount(player, data);
+            return;
+        }
         process(tank, data, player);
     }
 

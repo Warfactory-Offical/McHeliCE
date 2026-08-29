@@ -8,6 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +74,7 @@ public class PacketSendModlist implements ServerToClientPacket, ClientToServerPa
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onReceive(Minecraft mc) {
         MCH_Logger.debugLog(mc.player.world, "MCH_MultiplayPacketHandler.onPacket_ModList : ID=%d, Num=%d", id, num);
         if (firstData) {

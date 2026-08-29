@@ -5,6 +5,8 @@ import hohserg.elegant.networking.api.ElegantPacket;
 import hohserg.elegant.networking.api.ServerToClientPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Arrays;
 
@@ -33,6 +35,7 @@ public class PacketSpotEnemy implements ServerToClientPacket {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onReceive(Minecraft mc) {
         if (count > 0) {
             for (int i = 0; i < num; i++) {

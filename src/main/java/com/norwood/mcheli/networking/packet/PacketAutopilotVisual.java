@@ -41,6 +41,7 @@ public class PacketAutopilotVisual implements ServerToClientPacket {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onReceive(Minecraft mc) {
         if (Float.isNaN(this.targetYaw)) {
             CLIENT_HEADINGS.remove(this.entityId);

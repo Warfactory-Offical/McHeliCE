@@ -1220,6 +1220,11 @@ public class MCH_EntityTank extends MCH_EntityAircraft {
     }
 
     @Override
+    public boolean supportsDetachedTurretAim() {
+        return this.hasAnyIndependentMountedWeapon();
+    }
+
+    @Override
     public void setAngles(Entity player, boolean fixRot, float fixYaw, float fixPitch, float deltaX, float deltaY,
                           float x, float y, float deltaSeconds) {
         updateAircraftOrientation(deltaSeconds);

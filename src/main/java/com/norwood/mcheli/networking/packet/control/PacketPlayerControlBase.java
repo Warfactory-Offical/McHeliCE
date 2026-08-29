@@ -4,6 +4,8 @@ import com.norwood.mcheli.aircraft.MCH_EntityAircraft;
 import com.norwood.mcheli.networking.data.DataPlayerControlAircraft;
 import com.norwood.mcheli.networking.packet.PacketBase;
 import com.norwood.mcheli.networking.packet.PacketSyncWeapon;
+import com.norwood.mcheli.uav.IUavStation;
+import com.norwood.mcheli.uav.MCH_UavControl;
 import com.norwood.mcheli.weapon.MCH_WeaponParam;
 import com.norwood.mcheli.weapon.MCH_WeaponSet;
 import hohserg.elegant.networking.api.ClientToServerPacket;
@@ -57,6 +59,28 @@ public abstract class PacketPlayerControlBase extends PacketBase implements Clie
 
     // Heli
     protected void handleChain(MCH_EntityAircraft aircraft, DataPlayerControlAircraft data, EntityPlayer player) {}
+
+    /**
+     * Exit path for a UAV station operator whose control link is already gone -- UAV destroyed,
+     * unloaded, or out of comm range. Subclasses resolve the station's controlled UAV to decide
+     * which aircraft a control packet applies to; once the link is severed that resolves to null
+     * and the entire packet is discarded, the unmount request with it. The operator's client can
+     * still be holding a stale reference to the UAV (it is untracked before it can learn the link
+     * dropped), so it keeps rendering the frozen camera feed and keeps sending control packets
+     * into that dead end. Honour the unmount against the station directly instead.
+     *
+     * @return true if the request was consumed here
+     */
+    protected boolean handleStationUnmount(EntityPlayer player, DataPlayerControlAircraft data) {
+        if (data.isUnmount != DataPlayerControlAircraft.UnmountAction.UNMOUNT_SELF) {
+            return false;
+        }
+        if (!(player.getRidingEntity() instanceof IUavStation station)) {
+            return false;
+        }
+        MCH_UavControl.disconnect(station);
+        return true;
+    }
 
     protected void handleUnmount(MCH_EntityAircraft aircraft, DataPlayerControlAircraft data) {
         switch (data.isUnmount) {

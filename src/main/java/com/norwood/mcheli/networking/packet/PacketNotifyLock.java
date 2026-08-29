@@ -9,6 +9,8 @@ import hohserg.elegant.networking.api.ServerToClientPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @ElegantPacket
 public class PacketNotifyLock extends PacketBase implements ServerToClientPacket, ClientToServerPacket {
@@ -51,6 +53,7 @@ public class PacketNotifyLock extends PacketBase implements ServerToClientPacket
     }
 
     @Override// Client
+    @SideOnly(Side.CLIENT)
     public void onReceive(Minecraft mc) {
         mc.addScheduledTask(() -> MCH_MOD.proxy.clientLocked());
     }

@@ -9,6 +9,8 @@ import hohserg.elegant.networking.api.ServerToClientPacket;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @RequiredArgsConstructor
 @ElegantPacket
@@ -23,6 +25,7 @@ public class PacketSyncWeapon extends PacketBase implements ServerToClientPacket
     final public short reloadCooldown;
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onReceive(Minecraft mc) {
         if (this.entityID_Ac > 0) {
             Entity entity = mc.player.world.getEntityByID(this.entityID_Ac);

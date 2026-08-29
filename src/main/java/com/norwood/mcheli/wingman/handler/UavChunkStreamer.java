@@ -68,18 +68,21 @@ public class UavChunkStreamer {
     private static final Map<UUID, PreviewReq> PREVIEW = new ConcurrentHashMap<>();
 
     /**
-     * Snapshot of the out-of-view chunks streamed to each player this tick. Lets the entity tracker
-     * make entities inside a streamed region visible to that player even though their body is far
-     * away (camera-aware visibility — read by {@code TrackerHook#isVisibleFromViewOrigin}). Replaced
-     * wholesale each tick on the server thread.
+     * Snapshot of the out-of-view chunks streamed to each player this tick, keyed by packed chunk
+     * coordinate. Lets the entity tracker make entities inside a streamed region visible to that
+     * player even though their body is far away (camera-aware visibility — read by
+     * {@code TrackerHook#isVisibleFromViewOrigin}). Replaced wholesale each tick on the server thread.
      */
-    private static volatile Map<UUID, Set<ChunkPos>> STREAMED_SNAPSHOT = Collections.emptyMap();
+    private static volatile Map<UUID, Set<Long>> STREAMED_SNAPSHOT = Collections.emptyMap();
 
     /** Out-of-view chunk subscriptions we have added, keyed by player UUID. */
-    private final Map<UUID, Set<ChunkPos>> subscribed = new HashMap<>();
+    private final Map<UUID, Set<Long>> subscribed = new HashMap<>();
 
     /** Body-square chunks we have removed a controlling player from (to restore when control ends). */
-    private final Map<UUID, Set<ChunkPos>> suppressed = new HashMap<>();
+    private final Map<UUID, Set<Long>> suppressed = new HashMap<>();
+
+    /** Entity-visible chunk set published for each player last tick. */
+    private final Map<UUID, Set<Long>> lastVisible = new HashMap<>();
 
     /** Last (body, UAV) chunk positions a controller's body-suppression was computed for. */
     private final Map<UUID, Ctl> lastCtl = new HashMap<>();
@@ -106,8 +109,8 @@ public class UavChunkStreamer {
         if (playerId == null) {
             return false;
         }
-        Set<ChunkPos> set = STREAMED_SNAPSHOT.get(playerId);
-        return set != null && set.contains(new ChunkPos(chunkX, chunkZ));
+        Set<Long> set = STREAMED_SNAPSHOT.get(playerId);
+        return set != null && set.contains(ChunkPos.asLong(chunkX, chunkZ));
     }
 
     /**
@@ -133,54 +136,40 @@ public class UavChunkStreamer {
         long nowTick = ws.getTotalWorldTime();
         MinecraftServer server = ws.getMinecraftServer();
 
-        // playerUUID -> the player (in this world) and the union of chunks they want streamed.
         Map<UUID, EntityPlayerMP> players = new HashMap<>();
-        Map<UUID, Set<ChunkPos>> desired = new HashMap<>();
-        // playerUUID -> the subset of streamed chunks in which entities may be revealed to the player.
-        // UAV control/preview always reveal entities; TV missiles only when the dev debug flag is set.
-        // Terrain streaming uses `desired`; entity visibility (STREAMED_SNAPSHOT) uses this.
-        Map<UUID, Set<ChunkPos>> entityVisible = new HashMap<>();
-        // playerUUID -> (body chunk, UAV chunk) for players ACTIVELY controlling a UAV this tick.
+        Map<UUID, Set<Long>> desired = new HashMap<>();
+        Map<UUID, Set<Long>> entityVisible = new HashMap<>();
+        Map<UUID, Map<Long, Integer>> terrainCovered = new HashMap<>();
+        Map<UUID, Map<Long, Integer>> visibleCovered = new HashMap<>();
         Map<UUID, Ctl> controllers = new HashMap<>();
 
-        // (1) Controlled UAVs — chunks around each actively-flown UAV for its operator.
-        for (Entity entity : new ArrayList<>(ws.loadedEntityList)) {
-            if (!McheliReflect.isAircraft(entity) || entity.isDead) continue;
-            IUavStation station = McheliReflect.getUavStation(entity);
-            if (station == null) continue;
-            Entity rider = McheliReflect.getStationRider(station);
-            // A dead rider is mid-disengagement (the station unmounts it on its own tick, and
-            // onLivingDeath has already released its chunks). Never re-stream to a corpse.
-            if (!(rider instanceof EntityPlayerMP player) || player.isDead) continue;
-            // Actively controlled: stream the operator's full view radius (already clamped to the
-            // server's view distance) so the UAV loads the same area a real player would.
-            addDesired(desired, entityVisible, true, players, player, entity.posX, entity.posZ, viewRadius, viewRadius);
-            controllers.put(player.getUniqueID(), new Ctl(
-                    new ChunkPos((int) Math.floor(player.posX / 16.0), (int) Math.floor(player.posZ / 16.0)),
-                    new ChunkPos((int) Math.floor(entity.posX / 16.0), (int) Math.floor(entity.posZ / 16.0))));
-        }
+        boolean streamTvMissiles = WingmanConfig.tvMissileChunkLoad;
 
-        // (1b) TV/TA missiles in use by a player — stream the operator's full view radius around the
-        // missile, exactly like a controlled UAV, so the missile camera renders real terrain instead of
-        // void even far from the launcher. A TV missile self-destructs the moment its shooter disconnects
-        // or dies, so any live missile with a player shooter is, by definition, in active use. (No
-        // body-suppression: the operator stays seated in their aircraft and its view square is left
-        // intact — the missile stream is purely additive.)
-        //
-        // Entities along the trajectory are NOT revealed for players — that is long-range entity ESP, a
-        // developer-only debug aid gated by MCH_MOD.DEBUG_RENDER_TRAJECTORY_ENTITIES. Terrain still
-        // streams regardless; only the entity-visibility contribution is flagged off.
-        if (WingmanConfig.tvMissileChunkLoad) {
-            for (Entity entity : new ArrayList<>(ws.loadedEntityList)) {
-                if (!(entity instanceof MCH_EntityTvMissile tv) || tv.isDead) continue;
+        for (Entity entity : new ArrayList<>(ws.loadedEntityList)) {
+            if (entity.isDead) continue;
+
+            if (McheliReflect.isAircraft(entity)) {
+                IUavStation station = McheliReflect.getUavStation(entity);
+                if (station == null) continue;
+                Entity rider = McheliReflect.getStationRider(station);
+                if (!(rider instanceof EntityPlayerMP player) || player.isDead) continue;
+                addDesired(desired, entityVisible, terrainCovered, visibleCovered, true, players, player,
+                        entity.posX, entity.posZ, viewRadius, viewRadius);
+                controllers.put(player.getUniqueID(), new Ctl(
+                        (int) Math.floor(player.posX / 16.0), (int) Math.floor(player.posZ / 16.0),
+                        (int) Math.floor(entity.posX / 16.0), (int) Math.floor(entity.posZ / 16.0)));
+                continue;
+            }
+
+            if (streamTvMissiles && entity instanceof MCH_EntityTvMissile tv) {
                 if (!(tv.shootingEntity instanceof EntityPlayerMP player) || player.isDead) continue;
                 if (player.world != ws) continue;
-                addDesired(desired, entityVisible, MCH_MOD.DEBUG_RENDER_TRAJECTORY_ENTITIES,
-                        players, player, tv.posX, tv.posZ, viewRadius, viewRadius);
+                addDesired(desired, entityVisible, terrainCovered, visibleCovered,
+                        MCH_MOD.DEBUG_RENDER_TRAJECTORY_ENTITIES, players, player,
+                        tv.posX, tv.posZ, viewRadius, viewRadius);
             }
         }
 
-        // (2) Previewed UAVs — chunks around the UAV selected in each player's open station screen.
         for (Iterator<Map.Entry<UUID, PreviewReq>> it = PREVIEW.entrySet().iterator(); it.hasNext(); ) {
             Map.Entry<UUID, PreviewReq> e = it.next();
             PreviewReq req = e.getValue();
@@ -192,13 +181,16 @@ public class UavChunkStreamer {
             if (player == null || player.world != ws) continue;
             double[] pos = locateUavXZ(ws, req.uavId());
             if (pos == null) continue;
-            // Previewed only (nobody controlling): a small patch is enough for the camera-feed viewport.
-            addDesired(desired, entityVisible, true, players, player, pos[0], pos[1], PREVIEW_STREAM_RADIUS, viewRadius);
+            addDesired(desired, entityVisible, terrainCovered, visibleCovered, true, players, player,
+                    pos[0], pos[1], PREVIEW_STREAM_RADIUS, viewRadius);
         }
 
-        // (3) Reconcile per player over the union of their desired chunks.
         Set<UUID> all = new HashSet<>(this.subscribed.keySet());
         all.addAll(desired.keySet());
+
+        Map<UUID, Set<Long>> snapshot = new HashMap<>();
+        Set<UUID> visibilityDirty = new HashSet<>();
+
         for (UUID pid : all) {
             EntityPlayerMP player = players.get(pid);
             if (player == null) {
@@ -210,67 +202,70 @@ public class UavChunkStreamer {
                 player = server == null ? null : server.getPlayerList().getPlayerByUUID(pid);
                 if (player == null) {
                     this.subscribed.remove(pid);
+                    this.lastVisible.remove(pid);
                     continue;
                 }
             }
 
             boolean inThisWorld = player.world == ws;
-            Set<ChunkPos> want = inThisWorld ? desired.getOrDefault(pid, Collections.emptySet())
-                                             : Collections.emptySet();
-            Set<ChunkPos> have = this.subscribed.getOrDefault(pid, Collections.emptySet());
-            int plCX = (int) Math.floor(player.posX / 16.0);
-            int plCZ = (int) Math.floor(player.posZ / 16.0);
+            Set<Long> want = inThisWorld ? desired.getOrDefault(pid, Collections.emptySet())
+                                         : Collections.emptySet();
+            Set<Long> have = this.subscribed.getOrDefault(pid, Collections.emptySet());
 
-            for (ChunkPos old : have) {
-                if (want.contains(old)) {
-                    continue;
+            if (!have.equals(want)) {
+                int plCX = (int) Math.floor(player.posX / 16.0);
+                int plCZ = (int) Math.floor(player.posZ / 16.0);
+
+                for (long old : have) {
+                    if (want.contains(old)) {
+                        continue;
+                    }
+                    int cx = chunkX(old);
+                    int cz = chunkZ(old);
+                    if (inThisWorld && isInViewRange(cx, cz, plCX, plCZ, viewRadius)) {
+                        continue;
+                    }
+                    removePlayerFromEntry(pcm, player, cx, cz);
                 }
-                // Keep chunks the player's own (vanilla) view square owns — unless they have left this
-                // world entirely, in which case release everything we added to it.
-                if (inThisWorld && isInViewRange(old, plCX, plCZ, viewRadius)) {
-                    continue;
+                for (long pos : want) {
+                    if (!have.contains(pos)) {
+                        addPlayerToEntry(pcm, player, chunkX(pos), chunkZ(pos));
+                    }
                 }
-                removePlayerFromEntry(pcm, player, old);
-            }
-            for (ChunkPos pos : want) {
-                if (!have.contains(pos)) {
-                    addPlayerToEntry(pcm, player, pos);
+
+                if (want.isEmpty()) {
+                    this.subscribed.remove(pid);
+                } else {
+                    this.subscribed.put(pid, new HashSet<>(want));
                 }
             }
 
-            if (want.isEmpty()) {
-                this.subscribed.remove(pid);
+            Set<Long> ev = entityVisible.get(pid);
+            Set<Long> vis;
+            if (want.isEmpty() || ev == null || ev.isEmpty()) {
+                vis = Collections.emptySet();
             } else {
-                this.subscribed.put(pid, new HashSet<>(want));
+                vis = new HashSet<>(want);
+                vis.retainAll(ev);
+            }
+
+            Set<Long> prevVis = this.lastVisible.getOrDefault(pid, Collections.emptySet());
+            if (!prevVis.equals(vis)) {
+                visibilityDirty.add(pid);
+                if (vis.isEmpty()) {
+                    this.lastVisible.remove(pid);
+                } else {
+                    this.lastVisible.put(pid, vis);
+                }
+            }
+            if (!vis.isEmpty()) {
+                snapshot.put(pid, vis);
             }
         }
 
-        // (4) Publish the per-player streamed-chunk set for camera-aware entity visibility, then force
-        // a deterministic visibility re-evaluation for every player we touched this tick. Vanilla only
-        // re-checks entity visibility on player-BODY movement, which never happens while piloting a UAV
-        // remotely — so without this, entities around a moving/just-detached UAV never spawn (or never
-        // despawn when control ends). updateVisibility re-runs the (now camera-aware) isVisibleTo for
-        // all entities, so they appear inside the streamed region and clear out once it is released.
-        //
-        // The snapshot is the streamed chunks INTERSECTED with the player's entity-visible set: UAV
-        // control/preview chunks (always entity-visible) stay, while TV-missile-only chunks are excluded
-        // unless the dev debug flag opted them in. Terrain (subscribed) is unaffected — only what entities
-        // the player may see is narrowed.
-        Map<UUID, Set<ChunkPos>> snapshot = new HashMap<>();
-        for (Map.Entry<UUID, Set<ChunkPos>> e : this.subscribed.entrySet()) {
-            Set<ChunkPos> ev = entityVisible.get(e.getKey());
-            if (ev == null || ev.isEmpty()) {
-                continue; // terrain still streamed for this player, but no entities revealed
-            }
-            Set<ChunkPos> vis = new HashSet<>(e.getValue());
-            vis.retainAll(ev);
-            if (!vis.isEmpty()) {
-                snapshot.put(e.getKey(), vis);
-            }
-        }
         STREAMED_SNAPSHOT = snapshot;
 
-        for (UUID pid : all) {
+        for (UUID pid : visibilityDirty) {
             EntityPlayerMP p = server == null ? null : server.getPlayerList().getPlayerByUUID(pid);
             if (p != null && p.world == ws) {
                 ws.getEntityTracker().updateVisibility(p);
@@ -292,32 +287,38 @@ public class UavChunkStreamer {
             EntityPlayerMP player = server == null ? null : server.getPlayerList().getPlayerByUUID(pid);
             boolean here = player != null && player.world == ws;
 
-            Set<ChunkPos> nowSuppress = new HashSet<>();
+            Set<Long> streamed = this.subscribed.getOrDefault(pid, Collections.emptySet());
+            Set<Long> nowSuppress = new HashSet<>();
             if (ctl != null && here) {
                 for (int dx = -viewRadius; dx <= viewRadius; dx++) {
                     for (int dz = -viewRadius; dz <= viewRadius; dz++) {
                         if (Math.abs(dx) <= BODY_KEEP_RADIUS && Math.abs(dz) <= BODY_KEEP_RADIUS) {
                             continue; // keep the body core (the chunk(s) the operator/station sit in)
                         }
-                        ChunkPos c = new ChunkPos(ctl.body().x + dx, ctl.body().z + dz);
-                        if (isInViewRange(c, ctl.uav().x, ctl.uav().z, viewRadius)) {
+                        int cx = ctl.bodyX() + dx;
+                        int cz = ctl.bodyZ() + dz;
+                        if (isInViewRange(cx, cz, ctl.uavX(), ctl.uavZ(), viewRadius)) {
                             continue; // the UAV camera can see this chunk — must stay loaded
                         }
-                        nowSuppress.add(c);
+                        long key = ChunkPos.asLong(cx, cz);
+                        if (streamed.contains(key)) {
+                            continue;
+                        }
+                        nowSuppress.add(key);
                     }
                 }
             }
 
-            Set<ChunkPos> wasSuppress = this.suppressed.getOrDefault(pid, Collections.emptySet());
+            Set<Long> wasSuppress = this.suppressed.getOrDefault(pid, Collections.emptySet());
             if (here) {
-                for (ChunkPos c : wasSuppress) {
+                for (long c : wasSuppress) {
                     if (!nowSuppress.contains(c)) {
-                        addPlayerToEntry(pcm, player, c); // restore: control ended or chunk now needed
+                        addPlayerToEntry(pcm, player, chunkX(c), chunkZ(c));
                     }
                 }
-                for (ChunkPos c : nowSuppress) {
+                for (long c : nowSuppress) {
                     if (!wasSuppress.contains(c)) {
-                        removePlayerFromEntry(pcm, player, c);
+                        removePlayerFromEntry(pcm, player, chunkX(c), chunkZ(c));
                     }
                 }
             }
@@ -336,27 +337,61 @@ public class UavChunkStreamer {
         }
     }
 
-    private void addDesired(Map<UUID, Set<ChunkPos>> desired, Map<UUID, Set<ChunkPos>> entityVisible,
+    private void addDesired(Map<UUID, Set<Long>> desired, Map<UUID, Set<Long>> entityVisible,
+                            Map<UUID, Map<Long, Integer>> terrainCovered,
+                            Map<UUID, Map<Long, Integer>> visibleCovered,
                             boolean revealEntities, Map<UUID, EntityPlayerMP> players,
                             EntityPlayerMP player, double x, double z, int streamRadius, int viewRadius) {
-        players.put(player.getUniqueID(), player);
+        UUID pid = player.getUniqueID();
+        players.put(pid, player);
+
         int acCX = (int) Math.floor(x / 16.0);
         int acCZ = (int) Math.floor(z / 16.0);
+        long center = ChunkPos.asLong(acCX, acCZ);
+
+        Map<Long, Integer> tCov = terrainCovered.computeIfAbsent(pid, k -> new HashMap<>());
+        Integer tPrev = tCov.get(center);
+        boolean needTerrain = tPrev == null || tPrev < streamRadius;
+
+        Map<Long, Integer> vCov = null;
+        boolean needVisible = false;
+        if (revealEntities) {
+            vCov = visibleCovered.computeIfAbsent(pid, k -> new HashMap<>());
+            Integer vPrev = vCov.get(center);
+            needVisible = vPrev == null || vPrev < streamRadius;
+        }
+
+        if (!needTerrain && !needVisible) {
+            return;
+        }
+
         int plCX = (int) Math.floor(player.posX / 16.0);
         int plCZ = (int) Math.floor(player.posZ / 16.0);
-        Set<ChunkPos> set = desired.computeIfAbsent(player.getUniqueID(), k -> new HashSet<>());
-        Set<ChunkPos> evSet = revealEntities
-                ? entityVisible.computeIfAbsent(player.getUniqueID(), k -> new HashSet<>()) : null;
+        Set<Long> set = desired.computeIfAbsent(pid, k -> new HashSet<>());
+        Set<Long> evSet = needVisible ? entityVisible.computeIfAbsent(pid, k -> new HashSet<>()) : null;
+
         for (int dx = -streamRadius; dx <= streamRadius; dx++) {
             for (int dz = -streamRadius; dz <= streamRadius; dz++) {
-                ChunkPos pos = new ChunkPos(acCX + dx, acCZ + dz);
-                if (!isInViewRange(pos, plCX, plCZ, viewRadius)) {
-                    set.add(pos);
-                    if (evSet != null) {
-                        evSet.add(pos);
-                    }
+                int cx = acCX + dx;
+                int cz = acCZ + dz;
+                if (isInViewRange(cx, cz, plCX, plCZ, viewRadius)) {
+                    continue;
+                }
+                long key = ChunkPos.asLong(cx, cz);
+                if (needTerrain) {
+                    set.add(key);
+                }
+                if (evSet != null) {
+                    evSet.add(key);
                 }
             }
+        }
+
+        if (needTerrain) {
+            tCov.put(center, streamRadius);
+        }
+        if (needVisible) {
+            vCov.put(center, streamRadius);
         }
     }
 
@@ -400,54 +435,63 @@ public class UavChunkStreamer {
      */
     private void disengage(EntityPlayerMP player) {
         UUID id = player.getUniqueID();
-        Set<ChunkPos> streamed = this.subscribed.remove(id);
+        Set<Long> streamed = this.subscribed.remove(id);
         if (streamed != null && player.world instanceof WorldServer ws) {
             PlayerChunkMap pcm = ws.getPlayerChunkMap();
-            for (ChunkPos c : streamed) {
-                removePlayerFromEntry(pcm, player, c);
+            for (long c : streamed) {
+                removePlayerFromEntry(pcm, player, chunkX(c), chunkZ(c));
             }
         }
         this.suppressed.remove(id);
+        this.lastVisible.remove(id);
         this.lastCtl.remove(id);
         clearPreview(id);
     }
 
-    private void addPlayerToEntry(PlayerChunkMap pcm, EntityPlayerMP player, ChunkPos pos) {
+    private void addPlayerToEntry(PlayerChunkMap pcm, EntityPlayerMP player, int chunkX, int chunkZ) {
         try {
-            PlayerChunkMapEntry entry = pcm.getOrCreateEntry(pos.x, pos.z);
+            PlayerChunkMapEntry entry = pcm.getOrCreateEntry(chunkX, chunkZ);
             if (entry != null && !entry.containsPlayer(player)) {
                 entry.addPlayer(player);
                 McHeliWingman.logger.debug("[UavChunkStreamer] + {} → chunk ({},{})",
-                        player.getName(), pos.x, pos.z);
+                        player.getName(), chunkX, chunkZ);
             }
         } catch (Exception e) {
             McHeliWingman.logger.warn("[UavChunkStreamer] addPlayer ({},{}) failed: {}",
-                    pos.x, pos.z, e.getMessage());
+                    chunkX, chunkZ, e.getMessage());
         }
     }
 
-    private void removePlayerFromEntry(PlayerChunkMap pcm, EntityPlayerMP player, ChunkPos pos) {
+    private void removePlayerFromEntry(PlayerChunkMap pcm, EntityPlayerMP player, int chunkX, int chunkZ) {
         try {
-            PlayerChunkMapEntry entry = pcm.getEntry(pos.x, pos.z);
+            PlayerChunkMapEntry entry = pcm.getEntry(chunkX, chunkZ);
             if (entry != null && entry.containsPlayer(player)) {
                 entry.removePlayer(player);
                 McHeliWingman.logger.debug("[UavChunkStreamer] - {} ← chunk ({},{})",
-                        player.getName(), pos.x, pos.z);
+                        player.getName(), chunkX, chunkZ);
             }
         } catch (Exception e) {
             McHeliWingman.logger.warn("[UavChunkStreamer] removePlayer ({},{}) failed: {}",
-                    pos.x, pos.z, e.getMessage());
+                    chunkX, chunkZ, e.getMessage());
         }
     }
 
-    private static boolean isInViewRange(ChunkPos pos, int plCX, int plCZ, int viewRadius) {
-        return Math.abs(pos.x - plCX) <= viewRadius && Math.abs(pos.z - plCZ) <= viewRadius;
+    private static int chunkX(long packed) {
+        return (int) packed;
+    }
+
+    private static int chunkZ(long packed) {
+        return (int) (packed >> 32);
+    }
+
+    private static boolean isInViewRange(int chunkX, int chunkZ, int plCX, int plCZ, int viewRadius) {
+        return Math.abs(chunkX - plCX) <= viewRadius && Math.abs(chunkZ - plCZ) <= viewRadius;
     }
 
     private record PreviewReq(UUID uavId, long heartbeatTick) {
     }
 
     /** A controlling player's body chunk and the chunk their controlled UAV is in, this tick. */
-    private record Ctl(ChunkPos body, ChunkPos uav) {
+    private record Ctl(int bodyX, int bodyZ, int uavX, int uavZ) {
     }
 }

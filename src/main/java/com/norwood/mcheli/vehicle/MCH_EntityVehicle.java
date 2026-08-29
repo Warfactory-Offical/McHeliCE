@@ -518,4 +518,10 @@ public class MCH_EntityVehicle extends MCH_EntityAircraft {
     public boolean canSwitchFreeLook() {
         return false;
     }
+
+    // Hull-steered: the mouse never turns the chassis, so it can drive the turret instead.
+    @Override
+    public boolean supportsDetachedTurretAim() {
+        return this.hasAnyIndependentMountedWeapon();
+    }
 }

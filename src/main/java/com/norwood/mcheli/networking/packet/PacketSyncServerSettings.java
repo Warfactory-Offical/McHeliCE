@@ -10,6 +10,8 @@ import hohserg.elegant.networking.api.ElegantPacket;
 import hohserg.elegant.networking.api.ServerToClientPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
@@ -49,6 +51,7 @@ public class PacketSyncServerSettings extends PacketBase implements ServerToClie
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onReceive(Minecraft mc) {
         if (!mc.player.world.isRemote) return;
         MCH_Logger.debugLog(false, "onPacketNotifyServerSettings:" + mc.player);

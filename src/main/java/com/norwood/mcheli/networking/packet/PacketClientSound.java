@@ -11,6 +11,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
@@ -59,6 +61,7 @@ public class PacketClientSound implements ServerToClientPacket {
 
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onReceive(Minecraft mc) {
         SoundEvent snd  = ForgeRegistries.SOUND_EVENTS.getValue((new ResourceLocation(sound)));
         if(snd == null) return;

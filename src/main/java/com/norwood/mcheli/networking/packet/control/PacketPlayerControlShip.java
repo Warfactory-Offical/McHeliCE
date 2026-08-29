@@ -29,6 +29,10 @@ public class PacketPlayerControlShip extends PacketPlayerControlBase {
                 ship = (MCH_EntityShip) uavStation.getControlled();
             }
         }
+        if (ship == null) {
+            handleStationUnmount(player, controlBaseData);
+            return;
+        }
         process(ship, controlBaseData, player);
     }
 

@@ -58,6 +58,10 @@ public class PacketPlayerControlHeli extends PacketPlayerControlBase {
                 heli = (MCH_EntityHeli) uavStation.getControlled();
             }
         }
+        if (heli == null) {
+            handleStationUnmount(player, controlBaseData);
+            return;
+        }
         process(heli, controlBaseData, player);
     }
 

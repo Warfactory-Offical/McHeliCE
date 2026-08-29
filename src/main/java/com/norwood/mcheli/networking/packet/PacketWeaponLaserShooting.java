@@ -8,6 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Server -> client: tells nearby clients to render a laser beam (and impact sparks).
@@ -32,6 +34,7 @@ public class PacketWeaponLaserShooting implements ServerToClientPacket {
     public final boolean hitSomething;
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onReceive(Minecraft mc) {
         MCH_RenderLaser.addBeam(new Vec3d(this.srcX, this.srcY, this.srcZ), new Vec3d(this.destX, this.destY, this.destZ),
                 this.argb, this.width, this.life, this.pulsate, this.renderStartDist);
@@ -40,6 +43,7 @@ public class PacketWeaponLaserShooting implements ServerToClientPacket {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     private void spawnImpactParticles(Minecraft mc) {
         ParticleManager pm = mc.effectRenderer;
         for (int i = 0; i < 6; i++) {

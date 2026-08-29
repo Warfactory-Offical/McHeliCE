@@ -466,8 +466,12 @@ public class MCH_EntityUavStation extends W_EntityContainer
         // Wingman: only the SERVER severs the link when the controlled aircraft dies. On the client
         // a UAV is often flagged dead merely because its chunk unloaded at long range; keeping the
         // reference stops the camera from snapping back to the operator while it is re-streamed.
+        // Release the operator along with the link. Cutting the link alone leaves them seated here
+        // while their client -- which cannot tell a destroyed UAV from an unloaded one, hence the
+        // guard above -- keeps rendering the now-frozen camera feed, with no way out: control
+        // packets resolve no aircraft once getControlled() is null, so the exit key does nothing.
         if (!this.world.isRemote && this.getControlled() instanceof MCH_EntityAircraft ac && ac.isDead) {
-            this.setControlled(null);
+            MCH_UavControl.disconnect(this);
         }
         //WINGMAN End
 

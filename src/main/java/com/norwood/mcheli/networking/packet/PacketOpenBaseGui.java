@@ -9,6 +9,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,6 +124,7 @@ public class PacketOpenBaseGui implements ServerToClientPacket {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onReceive(Minecraft mc) {
         mc.addScheduledTask(() -> mc.displayGuiScreen(new GuiBaseConfig(this)));
     }

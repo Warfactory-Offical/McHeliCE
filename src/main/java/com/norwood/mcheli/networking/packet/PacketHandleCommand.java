@@ -14,6 +14,8 @@ import net.minecraft.command.ICommandManager;
 import net.minecraft.command.server.CommandScoreboard;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import static com.norwood.mcheli.multiplay.MultiplayerHandler.destoryAllAircraft;
 
@@ -35,6 +37,7 @@ public class PacketHandleCommand implements ServerToClientPacket, ClientToServer
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onReceive(Minecraft mc) {
         switch (id) {
             case REQUEST_SCREENSHOT -> MCH_MultiplayClient.startSendImageData();

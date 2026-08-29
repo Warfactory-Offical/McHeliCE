@@ -7,6 +7,8 @@ import hohserg.elegant.networking.api.ElegantPacket;
 import hohserg.elegant.networking.api.ServerToClientPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Server → Client: open the marker-block configuration GUI.
@@ -33,6 +35,7 @@ public class PacketOpenMarkerGui implements ServerToClientPacket {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onReceive(Minecraft mc) {
         mc.addScheduledTask(() -> {
             MarkerType type;

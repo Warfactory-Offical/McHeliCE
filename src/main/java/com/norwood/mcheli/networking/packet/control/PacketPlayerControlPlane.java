@@ -31,6 +31,10 @@ public class PacketPlayerControlPlane extends PacketPlayerControlBase {
             }
         }
 
+        if (plane == null) {
+            handleStationUnmount(player, controlBaseData);
+            return;
+        }
         process(plane, controlBaseData, player);
     }
 

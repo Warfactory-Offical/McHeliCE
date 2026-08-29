@@ -9,6 +9,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @ElegantPacket
 public class PacketStatusResponse extends PacketBase implements ServerToClientPacket {
@@ -24,6 +26,7 @@ public class PacketStatusResponse extends PacketBase implements ServerToClientPa
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onReceive(Minecraft mc) {
         if (this.entityID_AC <= 0) {
             return;
